@@ -79,7 +79,7 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
 
 	if (bMissile)
 	{
-		SUNITDMG_CalculateTotalDamage(pGame, pAttacker, pDefender, pDamage);
+		SUNITDMG_CalculateTotalDamage_ESEGame(pGame, pAttacker, pDefender, pDamage);
 	}
 
 	if (!(pDamage->wResultFlags & DAMAGERESULTFLAG_32) && pDamage->wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
@@ -167,10 +167,10 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
 				{
 					if (pDamage->dwManaLeech)
 					{
-						int32_t nLeechedMana = MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, pDamage->dwManaLeech, 100);
+						int32_t nLeechedMana = MONSTERUNIQUE_CalculatePercentage_ESEGame(pDamage->dwPhysDamage, pDamage->dwManaLeech, 100);
 						if (nDrain != 100)
 						{
-							nLeechedMana = MONSTERUNIQUE_CalculatePercentage(nLeechedMana, nDrain, 100);
+							nLeechedMana = MONSTERUNIQUE_CalculatePercentage_ESEGame(nLeechedMana, nDrain, 100);
 						}
 
 						SUNITDMG_AddLeechedMana(pAttacker, nLeechedMana / 64);
@@ -178,10 +178,10 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
 
 					if (pDamage->dwLifeLeech)
 					{
-						int32_t nLeechedHp = MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, pDamage->dwLifeLeech, 100);
+						int32_t nLeechedHp = MONSTERUNIQUE_CalculatePercentage_ESEGame(pDamage->dwPhysDamage, pDamage->dwLifeLeech, 100);
 						if (nDrain != 100)
 						{
-							nLeechedHp = MONSTERUNIQUE_CalculatePercentage(nLeechedHp, nDrain, 100);
+							nLeechedHp = MONSTERUNIQUE_CalculatePercentage_ESEGame(nLeechedHp, nDrain, 100);
 						}
 
 						SUNITDMG_AddLeechedLife(pAttacker, nLeechedHp / 64);
@@ -224,7 +224,7 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
 				{
 					if (nDrain != 100)
 					{
-						nTotalLeech = MONSTERUNIQUE_CalculatePercentage(nTotalLeech, nDrain, 100);
+						nTotalLeech = MONSTERUNIQUE_CalculatePercentage_ESEGame(nTotalLeech, nDrain, 100);
 					}
 
 					const int32_t nMissingHp = STATLIST_GetMaxLifeFromUnit(pAttacker) - STATLIST_UnitGetStatValue(pAttacker, STAT_HITPOINTS, 0);
@@ -409,14 +409,14 @@ void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitS
 	int32_t nDamageReduction = STATLIST_UnitGetStatValue(pDefender, STAT_NORMAL_DAMAGE_REDUCTION, 0) << 8;
 	if (nDamageReduction > 0 && pDamage->dwPiercePct > 0)
 	{
-		nDamageReduction = MONSTERUNIQUE_CalculatePercentage(nDamageReduction, pDamage->dwPiercePct, 1024);
+		nDamageReduction = MONSTERUNIQUE_CalculatePercentage_ESEGame(nDamageReduction, pDamage->dwPiercePct, 1024);
 	}
 	damageInfo.nDamageReduction[1] = nDamageReduction;
 
 	int32_t nMagicDamageReduction = STATLIST_UnitGetStatValue(pDefender, STAT_MAGIC_DAMAGE_REDUCTION, 0) << 8;
 	if (nMagicDamageReduction > 0 && pDamage->dwPiercePct > 0)
 	{
-		nMagicDamageReduction = MONSTERUNIQUE_CalculatePercentage(nMagicDamageReduction, pDamage->dwPiercePct, 1024);
+		nMagicDamageReduction = MONSTERUNIQUE_CalculatePercentage_ESEGame(nMagicDamageReduction, pDamage->dwPiercePct, 1024);
 	}
 	damageInfo.nDamageReduction[2] = nMagicDamageReduction;
 
@@ -464,7 +464,7 @@ void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitS
 					int32_t* pDamageValue = (int32_t*)((char*)damageInfo.pDamage + pDamageStatTableRecord->nOffsetInDamageStrc);
 					if (*pDamageValue > 0)
 					{
-						*pDamageValue = MONSTERUNIQUE_CalculatePercentage(*pDamageValue, nDamagePercent, 100);
+						*pDamageValue = MONSTERUNIQUE_CalculatePercentage_ESEGame(*pDamageValue, nDamagePercent, 100);
 					}
 				}
 			}
@@ -555,19 +555,19 @@ int32_t __fastcall MONSTERUNIQUE_CalculatePercentage_ESEGame(int32_t a1, int32_t
     {
         if (a2 <= 65536)
         {
-            return a2 * (int64_t)a1 / a3;
+            return a2 * a1 / a3;
         }
 
         if (a3 <= a2 >> 4)
         {
-            return a1 * (int64_t)a2 / a3;
+            return a1 * a2 / a3;
         }
     }
     else
     {
         if (a3 <= a1 >> 4)
         {
-            return a2 * (int64_t)a1 / a3;
+            return a2 * a1 / a3;
         }
     }
 
