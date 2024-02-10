@@ -26,8 +26,7 @@ extern "C"
    //void __fastcall SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb);
     static ExtraPatchAction extraPatchActions[] =
     {
-         //{ 0x6FC63FD0 - D2GameImageBase, &sub_6FC63FD0_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FC63FD0_Original},
-         //{ 0x6FCC2420 - D2GameImageBase, &SUNITDMG_AllocCombat_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_AllocCombat_Original},
+         { 0x6FCC2420 - D2GameImageBase, &SUNITDMG_AllocCombat_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_AllocCombat_Original},
          { 0x6FCBFB40 - D2GameImageBase, &SUNITDMG_ApplyResistancesAndAbsorb_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_ApplyResistancesAndAbsorb_Original},
          { 0x6FC6AF70 - D2GameImageBase, &MONSTERUNIQUE_CalculatePercentage_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &MONSTERUNIQUE_CalculatePercentage_Original},
          { 0x6FCBFE90 - D2GameImageBase, &SUNITDMG_ExecuteEvents_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_ExecuteEvents_Original},

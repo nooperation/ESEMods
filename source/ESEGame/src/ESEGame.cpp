@@ -259,25 +259,6 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
         sub_6FC6E890(pGame, pAttacker);
     }
 
-    if (pDamage->dwAbsLife > 0 && !SUNIT_IsDead(pDefender) && !STATES_CheckState(pDefender, STATE_DEATH_DELAY))
-    {
-        const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pDefender);
-
-        auto currentHp = (int64_t)STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0);
-        auto newHpUncapped = currentHp + (int64_t)pDamage->dwAbsLife;
-
-        if (newHpUncapped > nMaxHp)
-        {
-            newHpUncapped = nMaxHp;
-        }
-        else if (newHpUncapped < 0)
-        {
-            newHpUncapped = 0;
-        }
-
-        STATLIST_SetUnitStat(pDefender, STAT_HITPOINTS, (int32_t)newHpUncapped, 0);
-    }
-
     if (pDamage->dwDmgTotal > 0)
     {
         const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pDefender);
@@ -288,7 +269,7 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
         if (nAttackerUnitType == UNIT_PLAYER)
         {
             char buff[512];
-            sprintf(buff, "Damage: %d\n", pDamage->dwDmgTotal >> 8);
+            sprintf(buff, "Unit %u: Damage=%u newHp=%lld absLife=%d\n", pDefender->dwUnitId, pDamage->dwDmgTotal >> 8, newHpUncapped>>8, pDamage->dwAbsLife);
             OutputDebugStringA(buff);
         }
 
@@ -648,7 +629,6 @@ int32_t __fastcall MONSTERUNIQUE_CalculatePercentage_ESEGame(int32_t nValue, int
     return (int32_t)result;
 }
 
-//D2Game.0x6FCBFB40
 void __fastcall SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb)
 {
     auto pValue = (int*)((char*)pDamageInfo->pDamage + pDamageStatTableRecord->nOffsetInDamageStrc);
@@ -751,54 +731,30 @@ void __fastcall SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(D2DamageInfoStrc* pDa
         nValue = MONSTERUNIQUE_CalculatePercentage_ESEGame_64(nValue, 100 - nResValue, 100);
     }
 
-    if (bDontAbsorb || pDamageStatTableRecord->nAbsorbPctStatId == -1)
+    if (!bDontAbsorb && pDamageStatTableRecord->nAbsorbPctStatId != -1)
     {
-        if (nValue > INT32_MAX)
+        auto nAbsorbPctValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbPctStatId, 0);
+        if (nAbsorbPctValue > 0)
         {
-            nValue = INT32_MAX;
-        }
-        else if (nValue < INT32_MIN)
-        {
-            nValue = INT32_MIN;
-        }
+            if (nAbsorbPctValue > 98)
+            {
+                nAbsorbPctValue = 98;
+            }
 
-        *pValue = (int32_t)nValue;
-        return;
-    }
-
-    auto nAbsorbPctValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbPctStatId, 0);
-    if (nAbsorbPctValue > 0)
-    {
-        if (nAbsorbPctValue > 98)
-        {
-            nAbsorbPctValue = 98;
+            auto damageAbsorbed = MONSTERUNIQUE_CalculatePercentage_ESEGame_64(nValue, nAbsorbPctValue, 100);
+            nValue -= damageAbsorbed;
         }
 
-        auto damageAbsorbed = MONSTERUNIQUE_CalculatePercentage_ESEGame_64(nValue, nAbsorbPctValue, 100);
-        nValue -= damageAbsorbed;
-
-        auto absLife = damageAbsorbed;
-        if (absLife > INT32_MAX)
+        auto nAbsorbStatValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbStatId, 0) << 8;
+        if (nAbsorbStatValue > 0)
         {
-            absLife = INT32_MAX;
-        }
-        else if (absLife < INT32_MIN)
-        {
-            absLife = INT32_MIN;
-        }
-        pDamageInfo->pDamage->dwAbsLife = (int32_t)absLife;
-    }
+            if (nAbsorbStatValue >= nValue)
+            {
+                nAbsorbStatValue = nValue;
+            }
 
-    auto nAbsorbStatValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbStatId, 0) << 8;
-    if (nAbsorbStatValue > 0)
-    {
-        if (nAbsorbStatValue >= nValue)
-        {
-            nAbsorbStatValue = nValue;
+            nValue -= nAbsorbStatValue;
         }
-
-        nValue -= nAbsorbStatValue;
-        pDamageInfo->pDamage->dwAbsLife += nAbsorbStatValue;
     }
 
     if (nValue > INT32_MAX)
@@ -865,248 +821,4 @@ void __fastcall SUNITDMG_AllocCombat_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAtt
     memcpy(&pCombat->tDamage, pDamage, sizeof(pCombat->tDamage));
     pCombat->pNext = pAttacker->pCombat;
     pAttacker->pCombat = pCombat;
-}
-
-void __fastcall sub_6FC63FD0_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker)
-{
-    for (D2UnitStrc* i = UNITS_GetRoom(pAttacker)->pUnitFirst; i; i = i->pRoomNext)
-    {
-        if (i->dwUnitType == UNIT_PLAYER && i->dwAnimMode != PLRMODE_DEAD && UNITS_GetDistanceToOtherUnit(pAttacker, i) <= 2 && !UNITS_TestCollisionBetweenInteractingUnits(i, pAttacker, 15361))
-        {
-            D2DamageStrc pDamage = {};
-            pDamage.dwPhysDamage = (int32_t)STATLIST_UnitGetStatValue(i, STAT_HITPOINTS, 0) >> 5;
-            pDamage.wResultFlags = DAMAGERESULTFLAG_SUCCESSFULHIT;
-            if (!STATES_CheckState(i, STATE_UNINTERRUPTABLE))
-            {
-                pDamage.wResultFlags |= DAMAGERESULTFLAG_GETHIT;
-            }
-
-            SUNITDMG_CalculateTotalDamage_ESEGame(pGame, pAttacker, i, &pDamage);
-            SUNITDMG_ExecuteEvents_ESEGame(pGame, pAttacker, i, 1, &pDamage);
-            SUNITDMG_ExecuteMissileDamage_ESEGame(pGame, pAttacker, i, &pDamage);
-        }
-    }
-}
-
-void __fastcall SUNITDMG_ExecuteMissileDamage_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage)
-{
-    D2ActiveRoomStrc* pRoom = UNITS_GetRoom(pUnit);
-    if (pRoom && DUNGEON_IsRoomInTown(pRoom))
-    {
-        if (!pAttacker || pAttacker->dwUnitType != UNIT_MONSTER)
-        {
-            return;
-        }
-
-        D2MonStatsTxt* pMonStatsTxtRecord = MONSTERMODE_GetMonStatsTxtRecord(pAttacker->dwClassId);
-        if (!pMonStatsTxtRecord || !(pMonStatsTxtRecord->dwMonStatsFlags & gdwBitMasks[MONSTATSFLAGINDEX_INTOWN]))
-        {
-            return;
-        }
-    }
-
-    if (pDamage->wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
-    {
-        if (!pDamage->nHitClassActiveSet && !(pDamage->dwHitClass & 0xF0))
-        {
-            pDamage->dwHitClass = SUNITDMG_GetHitClass(pDamage, pDamage->dwHitClass);
-        }
-        pUnit->dwLastHitClass = pDamage->dwHitClass;
-    }
-
-    if (STATES_CheckState(pUnit, STATE_UNINTERRUPTABLE))
-    {
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_WILLDIE)
-        {
-            STATES_ToggleState(pUnit, STATE_DEATH_DELAY, 1);
-        }
-        return;
-    }
-
-    if (!pUnit || !pAttacker)
-    {
-        return;
-    }
-
-    if (pUnit->dwUnitType == UNIT_PLAYER)
-    {
-        int32_t nState = 0;
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_DODGE)
-        {
-            nState = STATE_DODGE;
-        }
-        else if (pDamage->wResultFlags & DAMAGERESULTFLAG_AVOID)
-        {
-            nState = STATE_AVOID;
-        }
-        else if (pDamage->wResultFlags & DAMAGERESULTFLAG_EVADE)
-        {
-            D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_EVADE);
-            if (pStatList)
-            {
-                const int32_t nSkillId = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
-
-                if (SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId))
-                {
-                    D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(nSkillId);
-                    if (pSkillsTxtRecord && pSkillsTxtRecord->wStSound > 0)
-                    {
-                        SUNIT_AttachSound(pUnit, 12, pUnit);
-                    }
-                }
-            }
-            return;
-        }
-        else if (pDamage->wResultFlags & (DAMAGERESULTFLAG_BLOCK | DAMAGERESULTFLAG_WEAPONBLOCK))
-        {
-            if (!(pDamage->wResultFlags & DAMAGERESULTFLAG_SOFTHIT) && (int32_t)(pGame->dwGameFrame - STATLIST_UnitGetStatValue(pUnit, STAT_LASTBLOCKFRAME, 0)) > STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_FASTERBLOCKRATE, 0) / 8 + 15)
-            {
-                sub_6FC817D0(pGame, pUnit, 0, 9, 0, 0, 0);
-                STATLIST_SetUnitStat(pUnit, STAT_LASTBLOCKFRAME, pGame->dwGameFrame, 0);
-            }
-            return;
-        }
-        else if (pDamage->wResultFlags & DAMAGERESULTFLAG_WILLDIE)
-        {
-            if (pUnit && pUnit->dwAnimMode != PLRMODE_DEATH && pUnit->dwAnimMode != PLRMODE_DEAD)
-            {
-                D2GAME_PLAYERMODE_Change_6FC81A00(pGame, pUnit, 0, 0, pAttacker->dwUnitType, pAttacker->dwUnitId, 0);
-            }
-            return;
-        }
-        else if (pDamage->wResultFlags & DAMAGERESULTFLAG_KNOCKBACK)
-        {
-            D2GAME_PLAYERMODE_Change_6FC81A00(pGame, pUnit, 0, 19, pAttacker->dwUnitType, pAttacker->dwUnitId, 0);
-            return;
-        }
-        else
-        {
-            if (pDamage->wResultFlags & DAMAGERESULTFLAG_GETHIT)
-            {
-                if (STATLIST_GetStatListFromUnitAndState(pUnit, STATE_STUNNED) || !sub_6FCC1870(pUnit, pDamage, pDamage->dwHitClass))
-                {
-                    sub_6FC817D0(pGame, pUnit, nullptr, 4, pDamage->dwDmgTotal, 0, 0);
-                    return;
-                }
-            }
-            else
-            {
-                if (!(pDamage->wResultFlags & DAMAGERESULTFLAG_SOFTHIT))
-                {
-                    return;
-                }
-            }
-
-            UNITROOM_RefreshUnit(pUnit);
-            if (pUnit)
-            {
-                pUnit->dwFlags |= UNITFLAG_UPGRLIFENHITCLASS;
-            }
-            return;
-        }
-
-        D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, nState);
-        if (pStatList)
-        {
-            D2SkillStrc* pSkill = SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0));
-            if (pSkill)
-            {
-                SKILLS_SetFlags(pSkill, SKILLS_GetFlags(pSkill) | 4);
-                D2GAME_PLAYERMODE_Change_6FC81A00(pGame, pUnit, pSkill, 13u, pAttacker->dwUnitType, pAttacker->dwUnitId, 0);
-            }
-        }
-        return;
-    }
-    else if (pUnit->dwUnitType == UNIT_MONSTER)
-    {
-        if (pUnit->dwAnimMode == MONMODE_DEATH || pUnit->dwAnimMode == MONMODE_DEAD)
-        {
-            return;
-        }
-
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_KNOCKBACK)
-        {
-            D2MonStats2Txt* pMonStats2TxtRecord = MONSTERREGION_GetMonStats2TxtRecord(pUnit->dwClassId);
-            if (!pMonStats2TxtRecord || !(pMonStats2TxtRecord->dwModeFlags & gdwBitMasks[MONMODE_KNOCKBACK]))
-            {
-                pDamage->wResultFlags = pDamage->wResultFlags & (uint16_t)(~DAMAGERESULTFLAG_KNOCKBACK) | DAMAGERESULTFLAG_GETHIT;
-            }
-        }
-
-        sub_6FC62DF0(pUnit, pDamage);
-
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_WILLDIE)
-        {
-            SUNITDMG_KillMonster(pGame, pUnit, pAttacker, 1);
-            return;
-        }
-
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_KNOCKBACK)
-        {
-            D2ModeChangeStrc modeChange = {};
-            MONSTERMODE_GetModeChangeInfo(pUnit, MONMODE_KNOCKBACK, &modeChange);
-            modeChange.pTargetUnit = pAttacker;
-            D2GAME_ModeChange_6FC65220(pGame, &modeChange, 1);
-            return;
-        }
-
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_BLOCK)
-        {
-            if (!(pDamage->wResultFlags & DAMAGERESULTFLAG_SOFTHIT))
-            {
-                if (pUnit->dwClassId != MONSTER_DIABLO && pUnit->dwClassId != MONSTER_DIABLOCLONE)
-                {
-                    D2MonStats2Txt* pMonStats2TxtRecord = MONSTERREGION_GetMonStats2TxtRecord(pUnit->dwClassId);
-                    if (pMonStats2TxtRecord && pMonStats2TxtRecord->dwModeFlags & gdwBitMasks[MONMODE_BLOCK])
-                    {
-                        D2ModeChangeStrc modeChange = {};
-                        MONSTERMODE_GetModeChangeInfo(pUnit, MONMODE_BLOCK, &modeChange);
-                        D2GAME_ModeChange_6FC65220(pGame, &modeChange, 1);
-                        return;
-                    }
-                }
-            }
-
-            MONSTER_SetAiState(pUnit, 19u);
-            return;
-        }
-
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_GETHIT)
-        {
-            if (STATLIST_GetStatListFromUnitAndState(pUnit, STATE_STUNNED) || !sub_6FCC1870(pUnit, pDamage, pDamage->dwHitClass))
-            {
-                D2ModeChangeStrc modeChange = {};
-                MONSTERMODE_GetModeChangeInfo(pUnit, MONMODE_GETHIT, &modeChange);
-                D2GAME_ModeChange_6FC65220(pGame, &modeChange, 1);
-                sub_6FC6E8A0(pGame, pUnit);
-                return;
-            }
-
-            UNITROOM_RefreshUnit(pUnit);
-            pUnit->dwFlags |= UNITFLAG_UPGRLIFENHITCLASS;
-            MONSTER_SetAiState(pUnit, 19u);
-            sub_6FC6E8A0(pGame, pUnit);
-            return;
-        }
-
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_SOFTHIT)
-        {
-            UNITROOM_RefreshUnit(pUnit);
-            pUnit->dwFlags |= UNITFLAG_UPGRLIFENHITCLASS;
-            MONSTER_SetAiState(pUnit, 19u);
-            sub_6FC6E8A0(pGame, pUnit);
-            return;
-        }
-
-        if (pDamage->wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT && pDamage->dwDmgTotal > 0)
-        {
-            const int32_t nHpDiff = std::abs((int32_t)STATLIST_UnitGetStatValue(pUnit, STAT_LAST_SENT_HP_PCT, 0) - sub_6FC62F50(pUnit));
-            if (nHpDiff > 4)
-            {
-                UNITROOM_RefreshUnit(pUnit);
-                pUnit->dwFlags |= UNITFLAG_UPGRLIFENHITCLASS;
-                return;
-            }
-        }
-    }
 }
