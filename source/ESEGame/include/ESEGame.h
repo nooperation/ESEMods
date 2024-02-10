@@ -3,11 +3,16 @@
 #include <chrono>
 #include <thread>
 #include <type_traits>
+#include <cstdlib>
 
 #include "ESEGame.h"
 #include <GAME/Game.h>
 #include <UNIT/SUnitDmg.h>
 #include <MONSTER/MonsterUnique.h>
+
+extern decltype(&SUNITDMG_ApplyResistancesAndAbsorb) SUNITDMG_ApplyResistancesAndAbsorb_Original;
+void __fastcall SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb);
+static_assert(std::is_same_v<decltype(&SUNITDMG_ApplyResistancesAndAbsorb), decltype(&SUNITDMG_ApplyResistancesAndAbsorb_ESEGame)>, "SUNITDMG_ApplyResistancesAndAbsorb_ESEGame has a different type than previously known.");
 
 extern decltype(&SUNITDMG_CalculateTotalDamage) SUNITDMG_CalculateTotalDamage_Original;
 void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);

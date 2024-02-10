@@ -2,6 +2,7 @@
 
 #include <D2Dungeon.h>
 #include <D2StatList.h>
+#include <D2Math.h>
 #include <D2Skills.h>
 #include <D2States.h>
 #include <SKILLS/Skills.h>
@@ -13,6 +14,8 @@
 
 decltype(&SUNITDMG_CalculateTotalDamage) SUNITDMG_CalculateTotalDamage_Original = nullptr;
 decltype(&SUNITDMG_ExecuteEvents) SUNITDMG_ExecuteEvents_Original = nullptr;
+decltype(&MONSTERUNIQUE_CalculatePercentage) MONSTERUNIQUE_CalculatePercentage_Original = nullptr;
+decltype(&SUNITDMG_ApplyResistancesAndAbsorb) SUNITDMG_ApplyResistancesAndAbsorb_Original = nullptr;
 
 uint32_t damageCounter = 0;
 
@@ -20,6 +23,9 @@ uint32_t damageCounter = 0;
 
 void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, D2DamageStrc* pDamage)
 {
+	SUNITDMG_ExecuteEvents_Original(pGame, pAttacker, pDefender, bMissile, pDamage);
+	return;
+
 	if (!sub_6FCBD900(pGame, pAttacker, pDefender) && !(pDamage->dwHitFlags & DAMAGEHITFLAG_4096))
 	{
 		pDamage->wResultFlags &= (uint16_t)(~(DAMAGERESULTFLAG_SUCCESSFULHIT | DAMAGERESULTFLAG_WILLDIE));
@@ -533,10 +539,11 @@ void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitS
 			break;
 		}
 
-		SUNITDMG_ApplyResistancesAndAbsorb(&damageInfo, pDamageStatTableRecord, bDontAbsorb);
+		SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(&damageInfo, pDamageStatTableRecord, bDontAbsorb);
 	}
 
-	pDamage->dwDmgTotal = pDamage->dwPhysDamage + pDamage->dwFireDamage + pDamage->dwLtngDamage + pDamage->dwMagDamage + pDamage->dwColdDamage + pDamage->dwPoisDamage;
+	auto dmgTotal = (int64_t)pDamage->dwPhysDamage + (int64_t)pDamage->dwFireDamage + (int64_t)pDamage->dwLtngDamage + (int64_t)pDamage->dwMagDamage + (int64_t)pDamage->dwColdDamage + (int64_t)pDamage->dwPoisDamage;
+	pDamage->dwDmgTotal = std::max(0, (int32_t)std::min((int64_t)INT32_MAX, dmgTotal));
 
 	if (damageInfo.bAttackerIsMonster)
 	{
@@ -544,32 +551,213 @@ void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitS
 	}
 }
 
+int64_t __fastcall MONSTERUNIQUE_CalculatePercentage_ESEGame_Helper(int64_t a1, int64_t a2, int64_t a3)
+{
+	if (!a3)
+	{
+		return 0;
+	}
+
+	if (a1 <= 1048576)
+	{
+		if (a2 <= 65536)
+		{
+			return a2 * a1 / a3;
+		}
+
+		if (a3 <= a2 >> 4)
+		{
+			return a1 * a2 / a3;
+		}
+	}
+	else
+	{
+		if (a3 <= a1 >> 4)
+		{
+			return a2 * a1 / a3;
+		}
+	}
+
+	return a2 * (int64_t)a1 / a3;
+}
+
 int32_t __fastcall MONSTERUNIQUE_CalculatePercentage_ESEGame(int32_t a1, int32_t a2, int32_t a3)
 {
-    if (!a3)
-    {
-        return 0;
-    }
+	const auto result = MONSTERUNIQUE_CalculatePercentage_ESEGame_Helper(a1, a2, a3);
+	if (result > INT32_MAX)
+	{
+		return INT32_MAX;
+	}
 
-    if (a1 <= 1048576)
-    {
-        if (a2 <= 65536)
-        {
-            return a2 * a1 / a3;
-        }
+	if (result < INT32_MIN)
+	{
+		return INT32_MIN;
+	}
 
-        if (a3 <= a2 >> 4)
-        {
-            return a1 * a2 / a3;
-        }
-    }
-    else
-    {
-        if (a3 <= a1 >> 4)
-        {
-            return a2 * a1 / a3;
-        }
-    }
+	return (int32_t)result;
+}
 
-    return a2 * (int64_t)a1 / a3;
+int64_t CalculatePercentage(int32_t a1, int32_t a2, int32_t a3)
+{
+	if (a1 <= 0x100000)
+	{
+		if (a2 <= 0x10000)
+		{
+			return (a1 * a2) / a3;
+		}
+		if ((a2 >> 4) >= a3)
+		{
+			return a1 * (a2 / a3);
+		}
+	}
+	else if ((a2 >> 4) >= a3)
+	{
+		return a2 * (a1 / a3);
+	}
+
+	return a1 * (__int64)a2 / a3;
+}
+
+//D2Game.0x6FCBFB40
+void __fastcall SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb)
+{
+	auto pValue = (int*)((char*)pDamageInfo->pDamage + pDamageStatTableRecord->nOffsetInDamageStrc);
+	auto nValue = *pValue;
+	auto nPreviousValue = *pValue;
+
+	if (*pValue <= 0)
+	{
+		*pValue = 0;
+		return;
+	}
+
+	auto nResValue = 0;
+
+	if (pDamageStatTableRecord->nResStatId != -1)
+	{
+		nResValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nResStatId, 0);
+	}
+
+	if (pDamageStatTableRecord->nPierceStatId != -1 && (nResValue < 100 || !pDamageInfo->bDefenderIsMonster))
+	{
+		auto nPierceValue = STATLIST_UnitGetStatValue(pDamageInfo->pAttacker, pDamageStatTableRecord->nPierceStatId, 0);
+		if (nPierceValue)
+		{
+			nResValue -= nPierceValue;
+		}
+	}
+
+	if (!pDamageInfo->bDefenderIsMonster)
+	{
+		if (pDamageStatTableRecord->nResStatId != STAT_DAMAGERESIST && pDamageStatTableRecord->nResStatId != STAT_MAGICRESIST)
+		{
+			if (pDamageInfo->pGame->bExpansion)
+			{
+				nResValue += pDamageInfo->pDifficultyLevelsTxt->dwResistPenalty;
+			}
+			else if (pDamageInfo->pGame->nDifficulty == DIFFMODE_NIGHTMARE)
+			{
+				nResValue -= 20;
+			}
+			else if (pDamageInfo->pGame->nDifficulty == DIFFMODE_HELL)
+			{
+				nResValue -= 50;
+			}
+		}
+	}
+
+	if (nResValue > 0)
+	{
+		if (!pDamageInfo->bDefenderIsMonster)
+		{
+			auto nMaxResValue = 95;
+			if (pDamageStatTableRecord->nMaxResStatId == -1)
+			{
+				if (pDamageStatTableRecord->nResStatId == STAT_DAMAGERESIST)
+				{
+					nMaxResValue = 90;
+				}
+			}
+			else
+			{
+				nMaxResValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nMaxResStatId, pDamageInfo->bDefenderIsMonster) + 75;
+				if (nMaxResValue >= 95)
+				{
+					nMaxResValue = 95;
+				}
+			}
+			if (nResValue >= nMaxResValue)
+			{
+				nResValue = nMaxResValue;
+			}
+		}
+		if (pDamageStatTableRecord->nResStatId == STAT_DAMAGERESIST
+			&& STATES_CheckState(pDamageInfo->pAttacker, STATE_SANCTUARY)
+			&& MONSTERS_IsUndead(pDamageInfo->pDefender))
+		{
+			nResValue = 0;
+		}
+	}
+
+	if (bDontAbsorb)
+	{
+		if (nResValue > 0)
+		{
+			nResValue = 0;
+		}
+	}
+	else
+	{
+		nValue = nPreviousValue - pDamageInfo->nDamageReduction[pDamageStatTableRecord->nDamageReductionType];
+	}
+
+	if (nValue > 0 && nResValue)
+	{
+		if (nResValue >= 100)
+		{
+			nResValue = 100;
+		}
+
+		nValue = CalculatePercentage(nValue, 100 - nResValue, 100);
+	}
+
+	if (bDontAbsorb)
+	{
+		*pValue = nValue;
+		return;
+	}
+
+	if (pDamageStatTableRecord->nAbsorbPctStatId == -1)
+	{
+		*pValue = nValue;
+		return;
+	}
+
+	auto nAbsorbPctValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbPctStatId, 0);
+	if (nAbsorbPctValue > 0)
+	{
+		if (nAbsorbPctValue > 98)
+		{
+			nAbsorbPctValue = 98;
+		}
+
+		auto damageAbsorbed = CalculatePercentage(nValue, nAbsorbPctValue, 100);
+
+		nValue -= damageAbsorbed;
+		pDamageInfo->pDamage->dwAbsLife = HIDWORD(damageAbsorbed);
+	}
+
+	auto nAbsorbStatId = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbStatId, 0) << 8;
+	if (nAbsorbStatId > 0)
+	{
+		if (nAbsorbStatId >= nValue)
+		{
+			nAbsorbStatId = nValue;
+		}
+
+		nValue -= nAbsorbStatId;
+		pDamageInfo->pDamage->dwAbsLife += nAbsorbStatId;
+	}
+
+	*pValue = nValue;
 }
