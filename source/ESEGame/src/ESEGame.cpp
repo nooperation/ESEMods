@@ -17,13 +17,13 @@
 #include <PLAYER/PlrModes.h>
 #include <ITEMS/Items.h>
 
-decltype(&SUNITDMG_ExecuteMissileDamage) SUNITDMG_ExecuteMissileDamage_Original = nullptr;
-decltype(&sub_6FC63FD0) sub_6FC63FD0_Original = nullptr;
 decltype(&SUNITDMG_CalculateTotalDamage) SUNITDMG_CalculateTotalDamage_Original = nullptr;
 decltype(&SUNITDMG_ExecuteEvents) SUNITDMG_ExecuteEvents_Original = nullptr;
 decltype(&MONSTERUNIQUE_CalculatePercentage) MONSTERUNIQUE_CalculatePercentage_Original = nullptr;
-decltype(&SUNITDMG_ApplyResistancesAndAbsorb) SUNITDMG_ApplyResistancesAndAbsorb_Original = nullptr;
 decltype(&SUNITDMG_AllocCombat) SUNITDMG_AllocCombat_Original = nullptr;
+
+int64_t SUNITDMG_CalculateTotalDamage_ESEGame_64(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
+int64_t SUNITDMG_ApplyResistancesAndAbsorb_ESEGame_64(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb);
 
 uint32_t damageCounter = 0;
 
@@ -31,9 +31,6 @@ uint32_t damageCounter = 0;
 
 void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, D2DamageStrc* pDamage)
 {
-    //SUNITDMG_ExecuteEvents_Original(pGame, pAttacker, pDefender, bMissile, pDamage);
-    //return;
-
     if (!sub_6FCBD900(pGame, pAttacker, pDefender) && !(pDamage->dwHitFlags & DAMAGEHITFLAG_4096))
     {
         pDamage->wResultFlags &= (uint16_t)(~(DAMAGERESULTFLAG_SUCCESSFULHIT | DAMAGERESULTFLAG_WILLDIE));
@@ -91,9 +88,16 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
 
     UNITS_StoreLastAttacker(pDefender, pAttacker);
 
+    int64_t damageTotal = 0;
     if (bMissile)
     {
         SUNITDMG_CalculateTotalDamage_ESEGame(pGame, pAttacker, pDefender, pDamage);
+        damageTotal = (int64_t)(((uint64_t)pDamage->dwAbsLife << 32) | (uint64_t)pDamage->dwDmgTotal);
+        pDamage->dwAbsLife = 0;
+    }
+    else
+    {
+        damageTotal = pDamage->dwDmgTotal;
     }
 
     if (!(pDamage->wResultFlags & DAMAGERESULTFLAG_32) && pDamage->wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
@@ -259,17 +263,17 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
         sub_6FC6E890(pGame, pAttacker);
     }
 
-    if (pDamage->dwDmgTotal > 0)
+    if (damageTotal > 0)
     {
         const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pDefender);
 
         auto oldHp = (int64_t)STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0);
-        auto newHpUncapped = oldHp - (int64_t)pDamage->dwDmgTotal;
+        auto newHpUncapped = oldHp - damageTotal;
 
         if (nAttackerUnitType == UNIT_PLAYER)
         {
             char buff[512];
-            sprintf(buff, "Unit %u: Damage=%u newHp=%lld absLife=%d\n", pDefender->dwUnitId, pDamage->dwDmgTotal >> 8, newHpUncapped>>8, pDamage->dwAbsLife);
+            sprintf(buff, "Unit %u: Damage=%lld newHp=%lld absLife=%d\n", pDefender->dwUnitId, damageTotal >> 8, newHpUncapped>>8, pDamage->dwAbsLife);
             OutputDebugStringA(buff);
         }
 
@@ -380,7 +384,7 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
     else
     {
         pDamage->wResultFlags &= (uint16_t)(~DAMAGERESULTFLAG_WILLDIE);
-        if (pDamage->dwDmgTotal && nDefenderUnitType == UNIT_MONSTER)
+        if (damageTotal > 0 && nDefenderUnitType == UNIT_MONSTER)
         {
             if (STATLIST_UnitGetStatValue(pDefender, STAT_HPREGEN, 0))
             {
@@ -396,6 +400,14 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
         SUNITEVENT_EventFunc_Handler(pGame, EVENT_KILLED, pDefender, pAttacker, pDamage);
         SUNITEVENT_EventFunc_Handler(pGame, EVENT_KILL, pAttacker, pDefender, pDamage);
     }
+}
+
+int64_t SUNITDMG_CalculateTotalDamage_ESEGame_64(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
+{
+    SUNITDMG_CalculateTotalDamage_ESEGame(pGame, pAttacker, pDefender, pDamage);
+
+    int64_t totalDamage = (int64_t)(((uint64_t)pDamage->dwDmgTotal) | ((uint64_t)pDamage->dwAbsLife << 32));
+    return totalDamage;
 }
 
 void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
@@ -489,6 +501,7 @@ void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitS
 
         if (nDamagePercent != 100)
         {
+            // TODO: What is this case?
             for (int32_t i = 0; i < std::size(sgDamageStatTable); ++i)
             {
                 const D2DamageStatTableStrc* pDamageStatTableRecord = &sgDamageStatTable[i];
@@ -558,6 +571,7 @@ void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitS
         }
     }
 
+    int64_t dmgTotal = 0;
     for (int32_t i = 0; i < std::size(sgDamageStatTable); ++i)
     {
         const D2DamageStatTableStrc* pDamageStatTableRecord = &sgDamageStatTable[i];
@@ -566,30 +580,22 @@ void __fastcall SUNITDMG_CalculateTotalDamage_ESEGame(D2GameStrc* pGame, D2UnitS
             break;
         }
 
-        SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(&damageInfo, pDamageStatTableRecord, bDontAbsorb);
+        auto damage = SUNITDMG_ApplyResistancesAndAbsorb_ESEGame_64(&damageInfo, pDamageStatTableRecord, bDontAbsorb);
+        dmgTotal += damage;
     }
-
-    auto dmgTotal = (int64_t)pDamage->dwPhysDamage +
-        (int64_t)pDamage->dwFireDamage +
-        (int64_t)pDamage->dwLtngDamage +
-        (int64_t)pDamage->dwMagDamage +
-        (int64_t)pDamage->dwColdDamage +
-        (int64_t)pDamage->dwPoisDamage;
 
     if (damageInfo.bAttackerIsMonster)
     {
         dmgTotal += pDamage->dwLifeLeech;
     }
 
-    if (dmgTotal > UINT32_MAX)
-    {
-        dmgTotal = UINT32_MAX;
-    }
-    else if (dmgTotal < 0)
+    if (dmgTotal < 0)
     {
         dmgTotal = 0;
     }
-    pDamage->dwDmgTotal = (uint32_t)dmgTotal;
+
+    pDamage->dwDmgTotal = (uint32_t)(dmgTotal & 0xFFFFFFFF);
+    pDamage->dwAbsLife = (uint32_t)(dmgTotal >> 32);
 }
 
 int64_t __fastcall MONSTERUNIQUE_CalculatePercentage_ESEGame_64(int64_t nValue, int64_t nPercentage, int64_t divisor)
@@ -629,7 +635,7 @@ int32_t __fastcall MONSTERUNIQUE_CalculatePercentage_ESEGame(int32_t nValue, int
     return (int32_t)result;
 }
 
-void __fastcall SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb)
+int64_t SUNITDMG_ApplyResistancesAndAbsorb_ESEGame_64(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb)
 {
     auto pValue = (int*)((char*)pDamageInfo->pDamage + pDamageStatTableRecord->nOffsetInDamageStrc);
     int64_t nValue = *pValue;
@@ -638,7 +644,7 @@ void __fastcall SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(D2DamageInfoStrc* pDa
     if (*pValue <= 0)
     {
         *pValue = 0;
-        return;
+        return 0;
     }
 
     auto nResValue = 0;
@@ -759,13 +765,18 @@ void __fastcall SUNITDMG_ApplyResistancesAndAbsorb_ESEGame(D2DamageInfoStrc* pDa
 
     if (nValue > INT32_MAX)
     {
-        nValue = INT32_MAX;
+        *pValue = INT32_MAX;
     }
     else if (nValue < INT32_MIN)
     {
-        nValue = INT32_MIN;
+        *pValue = INT32_MIN;
     }
-    *pValue = nValue;
+    else
+    {
+        *pValue = (int32_t)nValue;
+    }
+
+    return nValue;
 }
 
 void __fastcall SUNITDMG_AllocCombat_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage, uint8_t nSrcDam)
@@ -785,19 +796,7 @@ void __fastcall SUNITDMG_AllocCombat_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAtt
             SUNITDMG_FillDamageValues(pGame, pAttacker, pDefender, pDamage, 0, nSrcDam);
         }
 
-        SUNITDMG_CalculateTotalDamage_ESEGame(pGame, pAttacker, pDefender, pDamage);
-
-        auto nTotalDamage = (int64_t)pDamage->dwPhysDamage +
-            (int64_t)pDamage->dwFireDamage +
-            (int64_t)pDamage->dwLtngDamage +
-            (int64_t)pDamage->dwMagDamage +
-            (int64_t)pDamage->dwColdDamage +
-            (int64_t)pDamage->dwPoisDamage;
-
-        if (pAttacker->dwUnitType == UNIT_MONSTER)
-        {
-            nTotalDamage += pDamage->dwLifeLeech;
-        }
+        auto nTotalDamage = SUNITDMG_CalculateTotalDamage_ESEGame_64(pGame, pAttacker, pDefender, pDamage);
 
         const int64_t nHitpoints = STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0);
 
