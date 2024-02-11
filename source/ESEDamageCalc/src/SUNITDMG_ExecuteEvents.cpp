@@ -8,6 +8,7 @@
 #include <UNIT/SUnitEvent.h>
 #include <ITEMS/Items.h>
 #include <GAME/SCmd.h>
+#include <AI/AiGeneral.h>
 
 void __fastcall SUNITDMG_ExecuteEvents_ESEDamageCalc(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, D2DamageStrc* pDamage)
 {
@@ -250,21 +251,35 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEDamageCalc(D2GameStrc* pGame, D2UnitSt
         auto oldHp = (int64_t)STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0);
         auto newHpUncapped = oldHp - damageTotal;
 
+        D2ClientStrc* ownerClient = nullptr;
         if (nAttackerUnitType == UNIT_PLAYER)
         {
-            if (pAttacker != nullptr && pAttacker->pPlayerData != nullptr && pAttacker->pPlayerData->pClient != nullptr)
+            if (pAttacker != nullptr && pAttacker->pPlayerData != nullptr)
             {
-                DamageReportPacket packet;
-                packet.packetId = 0x45;
-                packet.unitId = pDefender->dwUnitId;
-                packet.damage = damageTotal;
-                packet.unknownA = 1;
-                packet.unknownB = 0;
-                packet.unknownC = 0;
-                packet.unknownD = 0;
-
-                D2GAME_PACKETS_SendPacket_6FC3C710(pAttacker->pPlayerData->pClient, &packet, sizeof(packet));
+                ownerClient = pAttacker->pPlayerData->pClient;
             }
+        }
+        else if (nAttackerUnitType == UNIT_MONSTER) 
+        {
+            auto owner = AIGENERAL_GetMinionOwner(pAttacker);
+            if (owner != nullptr && owner->pPlayerData != nullptr)
+            {
+                ownerClient = owner->pPlayerData->pClient;
+            }
+        }
+
+        if (ownerClient != nullptr)
+        {
+            DamageReportPacket packet;
+            packet.packetId = 0x45;
+            packet.unitId = pDefender->dwUnitId;
+            packet.damage = damageTotal;
+            packet.unknownA = 1;
+            packet.unknownB = 0;
+            packet.unknownC = 0;
+            packet.unknownD = 0;
+
+            D2GAME_PACKETS_SendPacket_6FC3C710(ownerClient, &packet, sizeof(packet));
         }
 
         if (newHpUncapped > nMaxHp)
