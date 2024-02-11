@@ -26,3 +26,16 @@ static_assert(std::is_same_v<decltype(&SUNITDMG_ExecuteEvents), decltype(&SUNITD
 extern decltype(&MONSTERUNIQUE_CalculatePercentage) MONSTERUNIQUE_CalculatePercentage_Original;
 int32_t __fastcall MONSTERUNIQUE_CalculatePercentage_ESEGame(int32_t a1, int32_t a2, int32_t a3);
 static_assert(std::is_same_v<decltype(&MONSTERUNIQUE_CalculatePercentage), decltype(&MONSTERUNIQUE_CalculatePercentage_ESEGame)>, "MONSTERUNIQUE_CalculatePercentage_ESEGame has a different type than previously known.");
+
+#pragma pack(push, 1)
+struct DamageReportPacket
+{
+    uint8_t packetId;
+    uint8_t unknownA;
+    uint8_t unknownB;
+    uint8_t unknownC;
+    uint32_t unitId;
+    uint32_t damage;
+    uint8_t unknownD;
+};
+#pragma pack(pop)

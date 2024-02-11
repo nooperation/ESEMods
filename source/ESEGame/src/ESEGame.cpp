@@ -16,6 +16,7 @@
 #include <MONSTER/MonsterRegion.h>
 #include <PLAYER/PlrModes.h>
 #include <ITEMS/Items.h>
+#include <GAME/SCmd.h>
 
 decltype(&SUNITDMG_CalculateTotalDamage) SUNITDMG_CalculateTotalDamage_Original = nullptr;
 decltype(&SUNITDMG_ExecuteEvents) SUNITDMG_ExecuteEvents_Original = nullptr;
@@ -272,9 +273,19 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
 
         if (nAttackerUnitType == UNIT_PLAYER)
         {
-            char buff[512];
-            sprintf(buff, "Unit %u: Damage=%lld newHp=%lld absLife=%d\n", pDefender->dwUnitId, damageTotal >> 8, newHpUncapped>>8, pDamage->dwAbsLife);
-            OutputDebugStringA(buff);
+            if (pAttacker != nullptr && pAttacker->pPlayerData != nullptr && pAttacker->pPlayerData->pClient != nullptr)
+            {
+                DamageReportPacket packet;
+                packet.packetId = 0x45;
+                packet.unitId = pDefender->dwUnitId;
+                packet.damage = damageTotal;
+                packet.unknownA = 1;
+                packet.unknownB = 0;
+                packet.unknownC = 0;
+                packet.unknownD = 0;
+
+                D2GAME_PACKETS_SendPacket_6FC3C710(pAttacker->pPlayerData->pClient, &packet, sizeof(packet));
+            }
         }
 
         if (newHpUncapped > nMaxHp)
