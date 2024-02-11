@@ -15,6 +15,7 @@ target_link_libraries(ESEDamageCalc
   PRIVATE
     D2Common
     D2Game
+    D2GameObjects
 )
 
 # Include D2MOO's headers

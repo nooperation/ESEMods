@@ -4,6 +4,7 @@ project(ESEMods)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Should we build shared libraries (.DLLs) instead of static libraries.")
 
 set(ENABLE_D2DETOURS_EMBEDDED_PATCHES ON)
 
