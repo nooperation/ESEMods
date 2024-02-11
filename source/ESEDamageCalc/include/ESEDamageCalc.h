@@ -39,3 +39,7 @@ struct DamageReportPacket
     uint8_t unknownD;
 };
 #pragma pack(pop)
+
+int64_t MONSTERUNIQUE_CalculatePercentage_ESEDamageCalc_64(int64_t nValue, int64_t nPercentage, int64_t divisor);
+int64_t SUNITDMG_ApplyResistancesAndAbsorb_ESEDamageCalc_64(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb);
+int64_t SUNITDMG_CalculateTotalDamage_ESEDamageCalc_64(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
