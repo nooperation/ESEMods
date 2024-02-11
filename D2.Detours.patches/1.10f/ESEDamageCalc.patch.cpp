@@ -3,7 +3,7 @@
 #include <thread>
 
 #include <GAME/Game.h>
-#include "ESEGame.h"
+#include "ESEDamageCalc.h"
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wmicrosoft-cast"
@@ -24,10 +24,10 @@ extern "C"
 
     static ExtraPatchAction extraPatchActions[] =
     {
-         { 0x6FCC2420 - D2GameImageBase, &SUNITDMG_AllocCombat_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_AllocCombat_Original},
-         { 0x6FC6AF70 - D2GameImageBase, &MONSTERUNIQUE_CalculatePercentage_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &MONSTERUNIQUE_CalculatePercentage_Original},
-         { 0x6FCBFE90 - D2GameImageBase, &SUNITDMG_ExecuteEvents_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_ExecuteEvents_Original},
-         { 0x6FCBF620 - D2GameImageBase, &SUNITDMG_CalculateTotalDamage_ESEGame, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_CalculateTotalDamage_Original},
+         { 0x6FCC2420 - D2GameImageBase, &SUNITDMG_AllocCombat_ESEDamageCalc, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_AllocCombat_Original},
+         { 0x6FC6AF70 - D2GameImageBase, &MONSTERUNIQUE_CalculatePercentage_ESEDamageCalc, PatchAction::FunctionReplaceOriginalByPatch, &MONSTERUNIQUE_CalculatePercentage_Original},
+         { 0x6FCBFE90 - D2GameImageBase, &SUNITDMG_ExecuteEvents_ESEDamageCalc, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_ExecuteEvents_Original},
+         { 0x6FCBF620 - D2GameImageBase, &SUNITDMG_CalculateTotalDamage_ESEDamageCalc, PatchAction::FunctionReplaceOriginalByPatch, &SUNITDMG_CalculateTotalDamage_Original},
          { 0, 0, PatchAction::Ignore}, // Here because we need at least one element in the array
     };
 

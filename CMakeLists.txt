@@ -11,7 +11,7 @@ set(CMAKE_FOLDER D2MOO)
 add_subdirectory(external/d2moo)
 
 set(CMAKE_FOLDER )
-add_subdirectory(source/ESEGame)
+add_subdirectory(source/ESEDamageCalc)
 
 
 set(ENABLE_D2DETOURS_EMBEDDED_PATCHES ON)
