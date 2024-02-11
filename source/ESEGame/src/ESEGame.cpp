@@ -17,6 +17,7 @@
 #include <PLAYER/PlrModes.h>
 #include <ITEMS/Items.h>
 #include <GAME/SCmd.h>
+#include <UNIT/SUnitDmg.h>
 
 decltype(&SUNITDMG_CalculateTotalDamage) SUNITDMG_CalculateTotalDamage_Original = nullptr;
 decltype(&SUNITDMG_ExecuteEvents) SUNITDMG_ExecuteEvents_Original = nullptr;
@@ -25,10 +26,6 @@ decltype(&SUNITDMG_AllocCombat) SUNITDMG_AllocCombat_Original = nullptr;
 
 int64_t SUNITDMG_CalculateTotalDamage_ESEGame_64(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
 int64_t SUNITDMG_ApplyResistancesAndAbsorb_ESEGame_64(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb);
-
-uint32_t damageCounter = 0;
-
-#include <UNIT/SUnitDmg.h>
 
 void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, D2DamageStrc* pDamage)
 {
@@ -348,7 +345,9 @@ void __fastcall SUNITDMG_ExecuteEvents_ESEGame(D2GameStrc* pGame, D2UnitStrc* pA
             bApplyStun = 1;
         }
 
-        if ((!MONSTERUNIQUE_CheckMonTypeFlag(pDefender, 8u) || ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 100) >= 90) && !MONSTERS_IsBoss(0, pDefender) && MONSTERMODE_GetMonStatsTxtRecord(pDefender->dwClassId)->nVelocity)
+        if ((!MONSTERUNIQUE_CheckMonTypeFlag(pDefender, MONTYPEFLAG_UNIQUE) || ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 100) >= 90) &&
+            !MONSTERS_IsBoss(0, pDefender) &&
+            MONSTERMODE_GetMonStatsTxtRecord(pDefender->dwClassId)->nVelocity)
         {
             if (MONSTERS_GetHirelingTypeId(pDefender) && nStunLength >= 13)
             {
