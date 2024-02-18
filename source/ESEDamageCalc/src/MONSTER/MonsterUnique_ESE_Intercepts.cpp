@@ -1,0 +1,520 @@
+#include <MONSTER/MonsterUnique_ESE_Intercepts.h>
+
+decltype(&MONSTERUNIQUE_ToggleUnitFlag) MONSTERUNIQUE_ToggleUnitFlag_Original = nullptr;
+decltype(&MONSTERUNIQUE_GetUMods) MONSTERUNIQUE_GetUMods_Original = nullptr;
+decltype(&MONSTERUNIQUE_GetNameSeed) MONSTERUNIQUE_GetNameSeed_Original = nullptr;
+decltype(&MONSTERUNIQUE_CheckMonTypeFlag) MONSTERUNIQUE_CheckMonTypeFlag_Original = nullptr;
+decltype(&MONSTERUNIQUE_ToggleMonTypeFlag) MONSTERUNIQUE_ToggleMonTypeFlag_Original = nullptr;
+decltype(&MONSTERUNIQUE_GetBossHcIdx) MONSTERUNIQUE_GetBossHcIdx_Original = nullptr;
+decltype(&MONSTERUNIQUE_HasUMods) MONSTERUNIQUE_HasUMods_Original = nullptr;
+decltype(&MONSTERUNIQUE_GetSuperUniqueBossHcIdx) MONSTERUNIQUE_GetSuperUniqueBossHcIdx_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod1_RandomName) MONSTERUNIQUE_UMod1_RandomName_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod2_HealthBonus) MONSTERUNIQUE_UMod2_HealthBonus_Original = nullptr;
+decltype(&MONSTERUNIQUE_CalculatePercentage) MONSTERUNIQUE_CalculatePercentage_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod4_LevelBonus) MONSTERUNIQUE_UMod4_LevelBonus_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod16_Champion) MONSTERUNIQUE_UMod16_Champion_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod36_Ghostly) MONSTERUNIQUE_UMod36_Ghostly_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod37_Fanatic) MONSTERUNIQUE_UMod37_Fanatic_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod38_Possessed) MONSTERUNIQUE_UMod38_Possessed_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod39_Berserk) MONSTERUNIQUE_UMod39_Berserk_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod41_AlwaysRun) MONSTERUNIQUE_UMod41_AlwaysRun_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod8_Resistant) MONSTERUNIQUE_UMod8_Resistant_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod26_Teleport) MONSTERUNIQUE_UMod26_Teleport_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod30_AuraEnchanted) MONSTERUNIQUE_UMod30_AuraEnchanted_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod5_Strong) MONSTERUNIQUE_UMod5_Strong_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod6_Fast) MONSTERUNIQUE_UMod6_Fast_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod9_FireEnchanted) MONSTERUNIQUE_UMod9_FireEnchanted_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod17_LightningEnchanted) MONSTERUNIQUE_UMod17_LightningEnchanted_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod18_ColdEnchanted) MONSTERUNIQUE_UMod18_ColdEnchanted_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod23_PoisonEnchanted) MONSTERUNIQUE_UMod23_PoisonEnchanted_Original = nullptr;
+decltype(&MONSTERUNIQUE_UMod25_ManaSteal) MONSTERUNIQUE_UMod25_ManaSteal_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastAmplifyDamage) MONSTERUNIQUE_CastAmplifyDamage_Original = nullptr;
+decltype(&MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage) MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage_Original = nullptr;
+decltype(&MONSTERUNIQUE_FireEnchantedModeChange) MONSTERUNIQUE_FireEnchantedModeChange_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastCorpseExplode) MONSTERUNIQUE_CastCorpseExplode_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastCorpseExplode2) MONSTERUNIQUE_CastCorpseExplode2_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastNova) MONSTERUNIQUE_CastNova_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastLightUniqueMissile) MONSTERUNIQUE_CastLightUniqueMissile_Original = nullptr;
+decltype(&sub_6FC6CD30) sub_6FC6CD30_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastColdUniqueMissile) MONSTERUNIQUE_CastColdUniqueMissile_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastCorpsePoisonCloud) MONSTERUNIQUE_CastCorpsePoisonCloud_Original = nullptr;
+decltype(&MONSTERUNIQUE_KillMinions) MONSTERUNIQUE_KillMinions_Original = nullptr;
+decltype(&MONSTERUNIQUE_MinionCallback_KillMinion) MONSTERUNIQUE_MinionCallback_KillMinion_Original = nullptr;
+decltype(&sub_6FC6CF10) sub_6FC6CF10_Original = nullptr;
+decltype(&sub_6FC6CF90) sub_6FC6CF90_Original = nullptr;
+decltype(&MONSTERUNIQUE_ScarabModeChange) MONSTERUNIQUE_ScarabModeChange_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastBugLightningMissile) MONSTERUNIQUE_CastBugLightningMissile_Original = nullptr;
+decltype(&MONSTERUNIQUE_ApplyElementalDamage) MONSTERUNIQUE_ApplyElementalDamage_Original = nullptr;
+decltype(&MONSTERUNIQUE_GetMonUModTxtRecord) MONSTERUNIQUE_GetMonUModTxtRecord_Original = nullptr;
+decltype(&sub_6FC6D440) sub_6FC6D440_Original = nullptr;
+decltype(&MONSTERUNIQUE_StealBeltItem) MONSTERUNIQUE_StealBeltItem_Original = nullptr;
+decltype(&MONSTERUNIQUE_QuestCompleteModeChange) MONSTERUNIQUE_QuestCompleteModeChange_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastQueenPoisonCloudMissile) MONSTERUNIQUE_CastQueenPoisonCloudMissile_Original = nullptr;
+decltype(&sub_6FC6DA40) sub_6FC6DA40_Original = nullptr;
+decltype(&MONSTERUNIQUE_LightningEnchantedModeChange) MONSTERUNIQUE_LightningEnchantedModeChange_Original = nullptr;
+decltype(&MONSTERUNIQUE_ColdEnchantedModeChange) MONSTERUNIQUE_ColdEnchantedModeChange_Original = nullptr;
+decltype(&sub_6FC6DD20) sub_6FC6DD20_Original = nullptr;
+decltype(&sub_6FC6DDE0) sub_6FC6DDE0_Original = nullptr;
+decltype(&MONSTERUNIQUE_ApplyShatterState) MONSTERUNIQUE_ApplyShatterState_Original = nullptr;
+decltype(&sub_6FC6DFC0) sub_6FC6DFC0_Original = nullptr;
+decltype(&MONSTERUNIQUE_SetTrapDamage) MONSTERUNIQUE_SetTrapDamage_Original = nullptr;
+decltype(&sub_6FC6E240) sub_6FC6E240_Original = nullptr;
+decltype(&MONSTERUNIQUE_SuicideModeChange) MONSTERUNIQUE_SuicideModeChange_Original = nullptr;
+decltype(&MONSTERUNIQUE_CastSuicideExplodeMissile) MONSTERUNIQUE_CastSuicideExplodeMissile_Original = nullptr;
+decltype(&MONSTERUNIQUE_CreatePainWorm) MONSTERUNIQUE_CreatePainWorm_Original = nullptr;
+decltype(&sub_6FC6E730) sub_6FC6E730_Original = nullptr;
+decltype(&sub_6FC6E770) sub_6FC6E770_Original = nullptr;
+decltype(&sub_6FC6E780) sub_6FC6E780_Original = nullptr;
+decltype(&sub_6FC6E860) sub_6FC6E860_Original = nullptr;
+decltype(&D2GAME_MONSTERS_AiFunction08_6FC6E870) D2GAME_MONSTERS_AiFunction08_6FC6E870_Original = nullptr;
+decltype(&sub_6FC6E890) sub_6FC6E890_Original = nullptr;
+decltype(&sub_6FC6E8A0) sub_6FC6E8A0_Original = nullptr;
+decltype(&sub_6FC6E8B0) sub_6FC6E8B0_Original = nullptr;
+decltype(&sub_6FC6E8D0) sub_6FC6E8D0_Original = nullptr;
+decltype(&sub_6FC6E940) sub_6FC6E940_Original = nullptr;
+decltype(&MONSTERUNIQUE_GetMonsterData) MONSTERUNIQUE_GetMonsterData_Original = nullptr;
+decltype(&MONSTERUNIQUE_GetUModCount) MONSTERUNIQUE_GetUModCount_Original = nullptr;
+decltype(&sub_6FC6EC10) sub_6FC6EC10_Original = nullptr;
+decltype(&sub_6FC6EE90) sub_6FC6EE90_Original = nullptr;
+decltype(&MONSTERUNIQUE_CheckMonModeFlag) MONSTERUNIQUE_CheckMonModeFlag_Original = nullptr;
+decltype(&MONSTERUNIQUE_CheckMonStatsFlag) MONSTERUNIQUE_CheckMonStatsFlag_Original = nullptr;
+decltype(&D2GAME_SpawnMonster_6FC6F220) D2GAME_SpawnMonster_6FC6F220_Original = nullptr;
+decltype(&D2GAME_SpawnMinions_6FC6F440) D2GAME_SpawnMinions_6FC6F440_Original = nullptr;
+decltype(&sub_6FC6F670) sub_6FC6F670_Original = nullptr;
+decltype(&D2GAME_SpawnSuperUnique_6FC6F690) D2GAME_SpawnSuperUnique_6FC6F690_Original = nullptr;
+decltype(&sub_6FC6FBA0) sub_6FC6FBA0_Original = nullptr;
+decltype(&sub_6FC6FDC0) sub_6FC6FDC0_Original = nullptr;
+decltype(&D2GAME_BOSSES_AssignUMod_6FC6FF10) D2GAME_BOSSES_AssignUMod_6FC6FF10_Original = nullptr;
+decltype(&D2GAME_MONSTERS_Unk_6FC6FFD0) D2GAME_MONSTERS_Unk_6FC6FFD0_Original = nullptr;
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_ToggleUnitFlag(D2UnitStrc* pUnit, int32_t nFlag, int32_t bSet)
+{
+    ESE_MONSTERUNIQUE_ToggleUnitFlag(pUnit, nFlag, bSet);
+}
+
+uint8_t* __fastcall ESE_INTERCEPT_MONSTERUNIQUE_GetUMods(D2UnitStrc* pUnit)
+{
+    return ESE_MONSTERUNIQUE_GetUMods(pUnit);
+}
+
+uint16_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_GetNameSeed(D2UnitStrc* pUnit)
+{
+    return ESE_MONSTERUNIQUE_GetNameSeed(pUnit);
+}
+
+int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CheckMonTypeFlag(D2UnitStrc* pUnit, uint16_t nFlag)
+{
+    return ESE_MONSTERUNIQUE_CheckMonTypeFlag(pUnit, nFlag);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_ToggleMonTypeFlag(D2UnitStrc* pUnit, uint16_t nFlag, int32_t bSet)
+{
+    ESE_MONSTERUNIQUE_ToggleMonTypeFlag(pUnit, nFlag, bSet);
+}
+
+int16_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_GetBossHcIdx(D2UnitStrc* pUnit)
+{
+    return ESE_MONSTERUNIQUE_GetBossHcIdx(pUnit);
+}
+
+int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_HasUMods(D2UnitStrc* pUnit)
+{
+    return ESE_MONSTERUNIQUE_HasUMods(pUnit);
+}
+
+int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_GetSuperUniqueBossHcIdx(D2GameStrc* pGame, D2UnitStrc* pUnit)
+{
+    return ESE_MONSTERUNIQUE_GetSuperUniqueBossHcIdx(pGame, pUnit);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod1_RandomName(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod1_RandomName(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod2_HealthBonus(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod2_HealthBonus(pUnit, nUMod, bUnique);
+}
+
+int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CalculatePercentage(int32_t a1, int32_t a2, int32_t a3)
+{
+    return ESE_MONSTERUNIQUE_CalculatePercentage(a1, a2, a3);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod4_LevelBonus(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod4_LevelBonus(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod16_Champion(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod36_Ghostly(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod36_Ghostly(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod37_Fanatic(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod37_Fanatic(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod38_Possessed(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod38_Possessed(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod39_Berserk(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod39_Berserk(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod41_AlwaysRun(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod41_AlwaysRun(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod8_Resistant(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod26_Teleport(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod26_Teleport(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod30_AuraEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod30_AuraEnchanted(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod5_Strong(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod5_Strong(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod6_Fast(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod6_Fast(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod9_FireEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod9_FireEnchanted(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod17_LightningEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod17_LightningEnchanted(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod18_ColdEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod18_ColdEnchanted(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod23_PoisonEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod23_PoisonEnchanted(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod25_ManaSteal(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_UMod25_ManaSteal(pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastAmplifyDamage(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a3, int32_t a4)
+{
+    ESE_MONSTERUNIQUE_CastAmplifyDamage(pGame, pUnit, a3, a4);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int32_t nSkillLevel)
+{
+    ESE_MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage(pGame, pUnit, pTarget, nSkillLevel);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_FireEnchantedModeChange(D2GameStrc* pGame, D2UnitStrc* pBoss, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_FireEnchantedModeChange(pGame, pBoss, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastCorpseExplode(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastCorpseExplode(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastCorpseExplode2(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastCorpseExplode2(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastNova(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastNova(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastLightUniqueMissile(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastLightUniqueMissile(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6CD30(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6CD30(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastColdUniqueMissile(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastColdUniqueMissile(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastCorpsePoisonCloud(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastCorpsePoisonCloud(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_KillMinions(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_KillMinions(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_MinionCallback_KillMinion(D2UnitStrc* pUnit, void* pGameArg, void* pUnused)
+{
+    ESE_MONSTERUNIQUE_MinionCallback_KillMinion(pUnit, pGameArg, pUnused);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6CF10(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6CF10(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6CF90(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6CF90(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_ScarabModeChange(D2GameStrc* pGame, D2UnitStrc* pBoss, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_ScarabModeChange(pGame, pBoss, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastBugLightningMissile(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastBugLightningMissile(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_ApplyElementalDamage(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_ApplyElementalDamage(pGame, pUnit, nUMod, bUnique);
+}
+
+D2MonUModTxt* __fastcall ESE_INTERCEPT_MONSTERUNIQUE_GetMonUModTxtRecord(uint32_t nUMod)
+{
+    return ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nUMod);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6D440(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6D440(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_StealBeltItem(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_StealBeltItem(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_QuestCompleteModeChange(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_QuestCompleteModeChange(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastQueenPoisonCloudMissile(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastQueenPoisonCloudMissile(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6DA40(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6DA40(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_LightningEnchantedModeChange(D2GameStrc* pGame, D2UnitStrc* pBoss, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_LightningEnchantedModeChange(pGame, pBoss, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_ColdEnchantedModeChange(D2GameStrc* pGame, D2UnitStrc* pBoss, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_ColdEnchantedModeChange(pGame, pBoss, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6DD20(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6DD20(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6DDE0(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6DDE0(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_ApplyShatterState(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_ApplyShatterState(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6DFC0(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6DFC0(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_SetTrapDamage(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_SetTrapDamage(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E240(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6E240(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_SuicideModeChange(D2GameStrc* pGame, D2UnitStrc* pBoss, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_SuicideModeChange(pGame, pBoss, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastSuicideExplodeMissile(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CastSuicideExplodeMissile(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CreatePainWorm(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_MONSTERUNIQUE_CreatePainWorm(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E730(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6E730(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E770(D2GameStrc* pGame, D2UnitStrc* pUnit)
+{
+    ESE_sub_6FC6E770(pGame, pUnit);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E780(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pMissile, int32_t nIndex)
+{
+    ESE_sub_6FC6E780(pGame, pUnit, pMissile, nIndex);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E860(D2GameStrc* pGame, D2UnitStrc* pUnit)
+{
+    ESE_sub_6FC6E860(pGame, pUnit);
+}
+
+void __fastcall ESE_INTERCEPT_D2GAME_MONSTERS_AiFunction08_6FC6E870(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_D2GAME_MONSTERS_AiFunction08_6FC6E870(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E890(D2GameStrc* pGame, D2UnitStrc* pUnit)
+{
+    ESE_sub_6FC6E890(pGame, pUnit);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E8A0(D2GameStrc* pGame, D2UnitStrc* pUnit)
+{
+    ESE_sub_6FC6E8A0(pGame, pUnit);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E8B0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pMissile)
+{
+    ESE_sub_6FC6E8B0(pGame, pUnit, pMissile);
+}
+
+D2UnitStrc* __fastcall ESE_INTERCEPT_sub_6FC6E8D0(D2GameStrc* pGame, D2ActiveRoomStrc* pRoom, D2RoomCoordListStrc* pRoomCoordList, int32_t nSuperUniqueId, int32_t a5, uint16_t nX, uint16_t nY, int32_t a8)
+{
+    return ESE_sub_6FC6E8D0(pGame, pRoom, pRoomCoordList, nSuperUniqueId, a5, nX, nY, a8);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6E940(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a3)
+{
+    ESE_sub_6FC6E940(pGame, pUnit, a3);
+}
+
+D2MonsterDataStrc* __fastcall ESE_INTERCEPT_MONSTERUNIQUE_GetMonsterData(D2UnitStrc* pUnit)
+{
+    return ESE_MONSTERUNIQUE_GetMonsterData(pUnit);
+}
+
+int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_GetUModCount(uint8_t* pUMods)
+{
+    return ESE_MONSTERUNIQUE_GetUModCount(pUMods);
+}
+
+int32_t __fastcall ESE_INTERCEPT_sub_6FC6EC10(D2UnitStrc* pUnit, D2MonUModTxt* pMonUModTxtRecord, int32_t bExpansion)
+{
+    return ESE_sub_6FC6EC10(pUnit, pMonUModTxtRecord, bExpansion);
+}
+
+int32_t __fastcall ESE_INTERCEPT_sub_6FC6EE90(D2GameStrc* pGame, D2UnitStrc* pUnit, uint8_t* a3)
+{
+    return ESE_sub_6FC6EE90(pGame, pUnit, a3);
+}
+
+uint32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CheckMonModeFlag(int32_t nMonsterId, int32_t nFlag)
+{
+    return ESE_MONSTERUNIQUE_CheckMonModeFlag(nMonsterId, nFlag);
+}
+
+uint32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CheckMonStatsFlag(int32_t nMonsterId, int32_t nFlag)
+{
+    return ESE_MONSTERUNIQUE_CheckMonStatsFlag(nMonsterId, nFlag);
+}
+
+D2UnitStrc* __fastcall ESE_INTERCEPT_D2GAME_SpawnMonster_6FC6F220(D2GameStrc* pGame, D2ActiveRoomStrc* pRoom, D2RoomCoordListStrc* pRoomCoordList, int32_t nX, int32_t nY, int32_t nUnitGUID, int32_t nClassId, int32_t a8)
+{
+    return ESE_D2GAME_SpawnMonster_6FC6F220(pGame, pRoom, pRoomCoordList, nX, nY, nUnitGUID, nClassId, a8);
+}
+
+void __fastcall ESE_INTERCEPT_D2GAME_SpawnMinions_6FC6F440(D2GameStrc* pGame, D2ActiveRoomStrc* pRoom, D2RoomCoordListStrc* pRoomCoordList, D2UnitStrc* pUnit, int32_t bSpawnMinions, int32_t nMinGroup, int32_t nMaxGroup)
+{
+    ESE_D2GAME_SpawnMinions_6FC6F440(pGame, pRoom, pRoomCoordList, pUnit, bSpawnMinions, nMinGroup, nMaxGroup);
+}
+
+void __fastcall ESE_INTERCEPT_sub_6FC6F670(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_sub_6FC6F670(pUnit, nUMod, bUnique);
+}
+
+D2UnitStrc* __fastcall ESE_INTERCEPT_D2GAME_SpawnSuperUnique_6FC6F690(D2GameStrc* pGame, D2ActiveRoomStrc* pRoom, int32_t nX, int32_t nY, int32_t nSuperUnique)
+{
+    return ESE_D2GAME_SpawnSuperUnique_6FC6F690(pGame, pRoom, nX, nY, nSuperUnique);
+}
+
+D2UnitStrc* __fastcall ESE_INTERCEPT_sub_6FC6FBA0(D2GameStrc* pGame, D2ActiveRoomStrc* pRoom, int32_t nX, int32_t nY, int32_t nClassId, int32_t nUnitGUID, uint16_t nNameSeed, int32_t bChampion, int32_t bSuperUnique, int16_t nBossHcIdx, uint8_t* pUMods)
+{
+    return ESE_sub_6FC6FBA0(pGame, pRoom, nX, nY, nClassId, nUnitGUID, nNameSeed, bChampion, bSuperUnique, nBossHcIdx, pUMods);
+}
+
+D2UnitStrc* __fastcall ESE_INTERCEPT_sub_6FC6FDC0(D2GameStrc* pGame, D2ActiveRoomStrc* pRoom, int32_t nX, int32_t nY, int32_t nClassId, int32_t nUnitGUID, uint8_t* pUMods)
+{
+    return ESE_sub_6FC6FDC0(pGame, pRoom, nX, nY, nClassId, nUnitGUID, pUMods);
+}
+
+void __fastcall ESE_INTERCEPT_D2GAME_BOSSES_AssignUMod_6FC6FF10(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
+{
+    ESE_D2GAME_BOSSES_AssignUMod_6FC6FF10(pGame, pUnit, nUMod, bUnique);
+}
+
+void __fastcall ESE_INTERCEPT_D2GAME_MONSTERS_Unk_6FC6FFD0(D2GameStrc* pGame, D2UnitStrc* pUnit, uint8_t nUMod)
+{
+    ESE_D2GAME_MONSTERS_Unk_6FC6FFD0(pGame, pUnit, nUMod);
+}
+
+
