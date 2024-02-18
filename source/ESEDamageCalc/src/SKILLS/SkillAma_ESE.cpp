@@ -93,7 +93,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt06_PowerStrike_ChargedStrike(D2GameStrc* pGam
 
     D2DamageStrc damage = {};
 
-    damage.wResultFlags = SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
+    damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
         damage.dwEnDmgPct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
@@ -109,7 +109,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt06_PowerStrike_ChargedStrike(D2GameStrc* pGam
         D2GAME_RollElementalDamage_6FD14DD0(pUnit, &damage, nSkillId, nSkillLevel);
     }
 
-    SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, pSkillsTxtRecord->nSrcDam);
+    ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, pSkillsTxtRecord->nSrcDam);
     return 1;
 }
 
@@ -135,10 +135,10 @@ int32_t __fastcall ESE_SKILLS_SrvSt07_Impale(D2GameStrc* pGame, D2UnitStrc* pUni
 
     D2DamageStrc damage = {};
 
-    damage.wResultFlags = SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
+    damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
-        damage.dwPhysDamage = SUNITDMG_ApplyDamageBonuses(pUnit, 1, nullptr, 0, 0, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 0, pSkillsTxtRecord->nSrcDam);
+        damage.dwPhysDamage = ESE_SUNITDMG_ApplyDamageBonuses(pUnit, 1, nullptr, 0, 0, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 0, pSkillsTxtRecord->nSrcDam);
         if (pSkillsTxtRecord->nEType)
         {
             damage.dwConvPct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[3], nSkillId, nSkillLevel);
@@ -183,7 +183,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt07_Impale(D2GameStrc* pGame, D2UnitStrc* pUni
         }
     }
 
-    SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
+    ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
     return 1;
 }
 
@@ -352,7 +352,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt10_LightningStrike(D2GameStrc* pGame, D2UnitS
 
     D2DamageStrc damage = {};
 
-    damage.wResultFlags = SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
+    damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
         const int32_t nMinDamage = SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1);
@@ -376,7 +376,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt10_LightningStrike(D2GameStrc* pGame, D2UnitS
         nSrcDam = 0x80u;
     }
 
-    SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
+    ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
     return 1;
 }
 
@@ -398,7 +398,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo006_InnerSight_SlowMissiles(D2GameStrc* pGame
     args.nAuraStatId = pSkillsTxtRecord->wAuraStat[0];
     args.nAuraStatCalcValue = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraStatCalc[0], nSkillId, nSkillLevel);
 
-    sub_6FD0FE80(pGame, pUnit, 0, 0, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraRangeCalc, nSkillId, nSkillLevel), pSkillsTxtRecord->dwAuraFilter, SKILLS_AuraCallback_InnerSight_SlowMissiles, &args, 1, __FILE__, __LINE__);
+    sub_6FD0FE80(pGame, pUnit, 0, 0, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraRangeCalc, nSkillId, nSkillLevel), pSkillsTxtRecord->dwAuraFilter, ESE_SKILLS_AuraCallback_InnerSight_SlowMissiles, &args, 1, __FILE__, __LINE__);
     return 1;
 }
 
@@ -445,7 +445,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo007_Jab(D2GameStrc* pGame, D2UnitStrc* pUnit,
     }
 
     D2DamageStrc damage = {};
-    damage.wResultFlags = SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, nToHit, 0);
+    damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, nToHit, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
         damage.dwEnDmgPct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
@@ -467,8 +467,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo007_Jab(D2GameStrc* pGame, D2UnitStrc* pUnit,
         nSrcDam = 0x80;
     }
 
-    SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
-    SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
+    ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
+    ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
     return 1;
 }
 
@@ -615,7 +615,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo010_GuidedArrow_BoneSpirit(D2GameStrc* pGame,
 
     if (nParam)
     {
-        missileParams.pInitFunc = SKILLS_AddDamagePercentBonus;
+        missileParams.pInitFunc = ESE_SKILLS_AddDamagePercentBonus;
     }
     missileParams.pInitArgs = nParam;
 
@@ -673,14 +673,14 @@ int32_t __fastcall ESE_SKILLS_SrvDo011_ChargedStrike(D2GameStrc* pGame, D2UnitSt
         return 0;
     }
 
-    SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
+    ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
 
     const int32_t nMissileCount = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
 
     const int32_t nTargetX = CLIENTS_GetUnitX(pTarget);
     const int32_t nTargetY = CLIENTS_GetUnitY(pTarget);
 
-    const int32_t nMissileId = SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
+    const int32_t nMissileId = ESE_SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
     if (nMissileId < 0 || nMissileId >= sgptDataTables->nMissilesTxtRecordCount)
     {
         return 0;
@@ -770,7 +770,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo012_Strafe(D2GameStrc* pGame, D2UnitStrc* pUn
     missileParams.nTargetY = nTargetY;
     missileParams.nSkill = nSkillId;
     missileParams.nMissile = nMissileId;
-    missileParams.pInitFunc = SKILLS_AddDamagePercentBonus;
+    missileParams.pInitFunc = ESE_SKILLS_AddDamagePercentBonus;
     missileParams.pInitArgs = v15;
     MISSILES_CreateMissileFromParams(pGame, &missileParams);
 
@@ -822,7 +822,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo013_Fend_Zeal_Fury(D2GameStrc* pGame, D2UnitS
 
     D2DamageStrc damage = {};
 
-    damage.wResultFlags = SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
+    damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
         damage.dwEnDmgPct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
@@ -844,8 +844,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo013_Fend_Zeal_Fury(D2GameStrc* pGame, D2UnitS
         nSrcDam = 0x80;
     }
 
-    SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
-    SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 4);
+    ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
+    ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 4);
 
     const int32_t v14 = SKILLS_GetParam1(pSkill) - 1;
     SKILLS_SetParam1(pSkill, v14);
@@ -882,7 +882,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo014_LightningStrike(D2GameStrc* pGame, D2Unit
         return 0;
     }
 
-    SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
+    ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
     const int32_t nParam0 = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
 
     D2UnitStrc* v13 = sub_6FD107F0(pGame, pUnit, CLIENTS_GetUnitX(pTarget), CLIENTS_GetUnitY(pTarget), nParam0, 3, pTarget->dwUnitId, 0);
@@ -891,7 +891,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo014_LightningStrike(D2GameStrc* pGame, D2Unit
         return 0;
     }
 
-    const int32_t nMissileId = SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
+    const int32_t nMissileId = ESE_SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
     if (nMissileId < 0 || nMissileId >= sgptDataTables->nMissilesTxtRecordCount)
     {
         return 0;
@@ -961,7 +961,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo015_Dopplezon(D2GameStrc* pGame, D2UnitStrc* 
     }
 
     UNITS_StoreOwner(pPet, pUnit);
-    const int32_t nHitpoints = MONSTERUNIQUE_CalculatePercentage(STATLIST_GetMaxLifeFromUnit(pUnit), SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel), 100);
+    const int32_t nHitpoints = ESE_MONSTERUNIQUE_CalculatePercentage(STATLIST_GetMaxLifeFromUnit(pUnit), SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel), 100);
 
     STATLIST_SetUnitStat(pPet, STAT_HITPOINTS, nHitpoints, 0);
     STATLIST_SetUnitStat(pPet, STAT_MAXHP, nHitpoints, 0);

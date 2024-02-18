@@ -112,7 +112,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt16_PoisonDagger(D2GameStrc* pGame, D2UnitStrc
             if (pSkillsTxtRecord)
             {
                 D2DamageStrc damage = {};
-                damage.wResultFlags = SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
+                damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
                 if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
                 {
                     damage.dwEnDmgPct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
@@ -134,7 +134,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt16_PoisonDagger(D2GameStrc* pGame, D2UnitStrc
                     nSrcDam = 0x80u;
                 }
 
-                SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
+                ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
                 return 1;
             }
         }
@@ -242,7 +242,7 @@ int32_t __fastcall ESE_sub_6FD0B2B0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2Unit
             return 0;
         }
 
-        if (MONSTERUNIQUE_CheckMonTypeFlag(pTarget, 0x20u))
+        if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pTarget, 0x20u))
         {
             return 0;
         }
@@ -1038,7 +1038,7 @@ int32_t __fastcall ESE_D2GAME_SetSummonPassiveStats_6FD0C530(D2GameStrc* pGame, 
     }
 
     const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pPet);
-    const int32_t nNewMaxHp = MONSTERUNIQUE_CalculatePercentage(nMaxHp, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100) + nMaxHp;
+    const int32_t nNewMaxHp = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxHp, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100) + nMaxHp;
     STATLIST_SetUnitStat(pPet, STAT_MAXHP, nNewMaxHp, 0);
     STATLIST_SetUnitStat(pPet, STAT_HITPOINTS, nNewMaxHp, 0);
 
@@ -1087,13 +1087,13 @@ int32_t __fastcall ESE_D2GAME_SetSummonPassiveStats_6FD0C530(D2GameStrc* pGame, 
 
     if (nItemLevel)
     {
-        sub_6FCF9580(pGame, pUnit, pPet, nSkillId, nSkillLevel, nItemLevel, 0);
+        ESE_sub_6FCF9580(pGame, pUnit, pPet, nSkillId, nSkillLevel, nItemLevel, 0);
     }
     else
     {
         const int32_t nLevel = STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
         nItemLevel = D2Clamp(3 * nSkillLevel, 1, nLevel);
-        sub_6FCF9580(pGame, pUnit, pPet, nSkillId, nSkillLevel, nItemLevel, 0);
+        ESE_sub_6FCF9580(pGame, pUnit, pPet, nSkillId, nSkillLevel, nItemLevel, 0);
     }
 
     return 1;
@@ -1176,8 +1176,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo031_RaiseSkeleton_Mage(D2GameStrc* pGame, D2U
         damage.dwPhysDamage = nMaxHp / 8;
         damage.dwDmgTotal = nMaxHp / 8;
 
-        SUNITDMG_ExecuteEvents(pGame, pUnit, pUnit, 0, &damage);
-        SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pUnit, &damage);
+        ESE_SUNITDMG_ExecuteEvents(pGame, pUnit, pUnit, 0, &damage);
+        ESE_SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pUnit, &damage);
     }
 
     D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(nSkillId);
@@ -1271,7 +1271,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo032_PoisonDagger(D2GameStrc* pGame, D2UnitStr
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
     if (pTarget)
     {
-        SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
+        ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
         return 1;
     }
 
@@ -1292,8 +1292,8 @@ int32_t __fastcall ESE_sub_6FD0D000(D2AuraCallbackStrc* pAuraCallback, D2UnitStr
             damage.dwPhysDamage = 0;
         }
 
-        SUNITDMG_ExecuteEvents(pAuraCallback->pGame, pAuraCallback->pOwner, pUnit, 1, &damage);
-        SUNITDMG_ExecuteMissileDamage(pAuraCallback->pGame, pAuraCallback->pOwner, pUnit, &damage);
+        ESE_SUNITDMG_ExecuteEvents(pAuraCallback->pGame, pAuraCallback->pOwner, pUnit, 1, &damage);
+        ESE_SUNITDMG_ExecuteMissileDamage(pAuraCallback->pGame, pAuraCallback->pOwner, pUnit, &damage);
         return 1;
     }
 
@@ -1333,8 +1333,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo055_CorpseExplosion(D2GameStrc* pGame, D2Unit
     const int32_t nAuraRange = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraRangeCalc, nSkillId, nSkillLevel);
     const int32_t nHalfRange = nAuraRange / 2;
     const int32_t nRange = (nAuraRange + 1) / 2;
-    const int32_t nMinDamage = MONSTERUNIQUE_CalculatePercentage(SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), nMaxHp, 100);
-    const int32_t nMaxDamage = MONSTERUNIQUE_CalculatePercentage(SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel), nMaxHp, 100);
+    const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), nMaxHp, 100);
+    const int32_t nMaxDamage = ESE_MONSTERUNIQUE_CalculatePercentage(SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel), nMaxHp, 100);
     
     int32_t nDamage = ITEMS_RollLimitedRandomNumber(&pTarget->pSeed, nMaxDamage - nMinDamage) + nMinDamage;
     
@@ -1343,7 +1343,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo055_CorpseExplosion(D2GameStrc* pGame, D2Unit
 
     if (nTargetLevel && nUnitLevel < nTargetLevel)
     {
-        nDamage = MONSTERUNIQUE_CalculatePercentage(nDamage, nUnitLevel, nTargetLevel);
+        nDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nDamage, nUnitLevel, nTargetLevel);
     }
 
     D2DamageStrc damage = {};
@@ -1360,9 +1360,9 @@ int32_t __fastcall ESE_SKILLS_SrvDo055_CorpseExplosion(D2GameStrc* pGame, D2Unit
 
     if (nPercentage > 0 && pSkillsTxtRecord->nEType)
     {
-        sub_6FD11E40(pUnit, &damage, pSkillsTxtRecord->nEType, MONSTERUNIQUE_CalculatePercentage(nDamage, nPercentage, 100), SKILLS_GetElementalLength(pUnit, nSkillId, nSkillLevel, 1), 0, 0);
+        sub_6FD11E40(pUnit, &damage, pSkillsTxtRecord->nEType, ESE_MONSTERUNIQUE_CalculatePercentage(nDamage, nPercentage, 100), SKILLS_GetElementalLength(pUnit, nSkillId, nSkillLevel, 1), 0, 0);
 
-        nDamage = MONSTERUNIQUE_CalculatePercentage(nDamage, 100 - nPercentage, 100);
+        nDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nDamage, 100 - nPercentage, 100);
     }
 
     damage.dwPhysDamage = nDamage;
@@ -1532,8 +1532,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo058_Revive(D2GameStrc* pGame, D2UnitStrc* pUn
         damage.dwHitFlags |= 0x1000u;
         damage.dwPhysDamage = nMaxHp / 8;
         damage.dwDmgTotal = nMaxHp / 8;
-        SUNITDMG_ExecuteEvents(pGame, pUnit, pUnit, 0, &damage);
-        SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pUnit, &damage);
+        ESE_SUNITDMG_ExecuteEvents(pGame, pUnit, pUnit, 0, &damage);
+        ESE_SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pUnit, &damage);
     }
 
     D2CoordStrc coords = {};
@@ -1545,11 +1545,11 @@ int32_t __fastcall ESE_SKILLS_SrvDo058_Revive(D2GameStrc* pGame, D2UnitStrc* pUn
     D2ActiveRoomStrc* pRoom = COLLISION_GetFreeCoordinates(UNITS_GetRoom(pTarget), &coords, UNITS_GetUnitSizeX(pTarget), 0x3C01u, 1);
     if (pRoom)
     {
-        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_CANBEATTACKED, 1);
-        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_ISVALIDTARGET, 1);
-        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_TARGETABLE, 1);
-        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOXP, 1);
-        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOTC, 1);
+        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_CANBEATTACKED, 1);
+        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_ISVALIDTARGET, 1);
+        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_TARGETABLE, 1);
+        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOXP, 1);
+        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOTC, 1);
         MONSTER_UpdateAiCallbackEvent(pGame, pTarget);
 
         D2ModeChangeStrc modeChange = {};
@@ -1577,7 +1577,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo058_Revive(D2GameStrc* pGame, D2UnitStrc* pUn
     const int32_t nTargetLevel = STATLIST_UnitGetStatValue(pTarget, STAT_LEVEL, 0);
     if (nTargetLevel && nUnitLevel < nTargetLevel)
     {
-        int32_t nHitpoints = MONSTERUNIQUE_CalculatePercentage(nNewHp, nUnitLevel, nTargetLevel);
+        int32_t nHitpoints = ESE_MONSTERUNIQUE_CalculatePercentage(nNewHp, nUnitLevel, nTargetLevel);
         if (nHitpoints < 1)
         {
             nHitpoints = 1;
@@ -1870,7 +1870,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo063_PoisonExplosion(D2GameStrc* pGame, D2Unit
 
         STATES_ToggleState(pTarget, STATE_CORPSE_NOSELECT, 1);
         UNITROOM_RefreshUnit(pTarget);
-        MISSMODE_CreatePoisonCloudHitSubmissiles(pGame, pUnit, pTarget, pSkillsTxtRecord->wSrvMissileA, nSkillId, nSkillLevel, 0, 2, 0);
+        ESE_MISSMODE_CreatePoisonCloudHitSubmissiles(pGame, pUnit, pTarget, pSkillsTxtRecord->wSrvMissileA, nSkillId, nSkillLevel, 0, 2, 0);
     }
 
     return 1;
@@ -1925,12 +1925,12 @@ int32_t __fastcall ESE_D2GAME_EventFunc04_6FD0E840(D2GameStrc* pGame, int32_t nE
     }
 
     D2DamageStrc damage = {};
-    damage.dwPhysDamage = MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, nDamagePercent, 100);
+    damage.dwPhysDamage = ESE_MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, nDamagePercent, 100);
     damage.wResultFlags |= pSkillsTxtRecord->wResultFlags | 0x20;
     damage.dwHitFlags |= pSkillsTxtRecord->dwHitFlags;
     damage.dwHitClass = pSkillsTxtRecord->dwHitClass;
-    SUNITDMG_ExecuteEvents(pGame, pUnit, pAttacker, 1, &damage);
-    SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pAttacker, &damage);
+    ESE_SUNITDMG_ExecuteEvents(pGame, pUnit, pAttacker, 1, &damage);
+    ESE_SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pAttacker, &damage);
 
     if (pUnit->dwUnitType != UNIT_MONSTER || pUnit->dwClassId != MONSTER_BLOODGOLEM || !pUnit->pMonsterData || !pUnit->pMonsterData->pMonstatsTxt)
     {
@@ -1946,7 +1946,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc04_6FD0E840(D2GameStrc* pGame, int32_t nE
     int32_t nBaseDamage = damage.dwPhysDamage;
     if (nDrain != 100)
     {
-        nBaseDamage = MONSTERUNIQUE_CalculatePercentage(damage.dwPhysDamage, nDrain, 100);
+        nBaseDamage = ESE_MONSTERUNIQUE_CalculatePercentage(damage.dwPhysDamage, nDrain, 100);
     }
 
     D2UnitStrc* pOwner = AIGENERAL_GetMinionOwner(pAttacker);
@@ -1955,7 +1955,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc04_6FD0E840(D2GameStrc* pGame, int32_t nE
         return 1;
     }
 
-    int32_t nDamage = MONSTERUNIQUE_CalculatePercentage(nBaseDamage, 20, 100);
+    int32_t nDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nBaseDamage, 20, 100);
     if (nDamage <= 0)
     {
         return 1;
@@ -1963,7 +1963,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc04_6FD0E840(D2GameStrc* pGame, int32_t nE
 
     if (pOwner)
     {
-        int32_t nReducedDamage = MONSTERUNIQUE_CalculatePercentage(nDamage, 50, 100);
+        int32_t nReducedDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nDamage, 50, 100);
         if (nReducedDamage > 0)
         {
             const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pOwner);
@@ -2062,7 +2062,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc05_6FD0EDE0(D2GameStrc* pGame, int32_t nE
     }
 
     D2UnitStrc* pOwner = SUNIT_GetServerUnit(pGame, STATLIST_GetOwnerType(pStatList), STATLIST_GetOwnerGUID(pStatList));
-    const int32_t nHeal = MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
+    const int32_t nHeal = ESE_MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
 
     const int32_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
     const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
@@ -2147,7 +2147,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc22_6FD0F000(D2GameStrc* pGame, int32_t nE
                             return 1;
                         }
 
-                        const int32_t nParam = MONSTERUNIQUE_CalculatePercentage(nValue0, 100, nValue1);
+                        const int32_t nParam = ESE_MONSTERUNIQUE_CalculatePercentage(nValue0, 100, nValue1);
                         int32_t nParamDiff = nParam - STATLIST_GetStatValue(pStatList, STAT_UNSENTPARAM1, 0);
                         nParamDiff = std::abs(nParamDiff);
 
@@ -2198,7 +2198,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc23_6FD0F1F0(D2GameStrc* pGame, int32_t nE
     int32_t nDamage = pDamage->dwPhysDamage;
     if (nDrain != 100)
     {
-        nDamage = MONSTERUNIQUE_CalculatePercentage(nDamage, nDrain, 100);
+        nDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nDamage, nDrain, 100);
     }
 
     const int32_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
@@ -2219,7 +2219,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc23_6FD0F1F0(D2GameStrc* pGame, int32_t nE
         return 0;
     }
 
-    int32_t nBaseDamage = MONSTERUNIQUE_CalculatePercentage(nDamage, nPercentage, 100);
+    int32_t nBaseDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nDamage, nPercentage, 100);
     if (nBaseDamage <= 0)
     {
         return 0;
@@ -2234,7 +2234,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc23_6FD0F1F0(D2GameStrc* pGame, int32_t nE
 
     if (pOwner && nParam > 0)
     {
-        nBaseDamage -= sub_6FD0F590(pOwner, MONSTERUNIQUE_CalculatePercentage(nBaseDamage, nParam, 100));
+        nBaseDamage -= sub_6FD0F590(pOwner, ESE_MONSTERUNIQUE_CalculatePercentage(nBaseDamage, nParam, 100));
     }
 
     const int32_t nFinalDamage = nBaseDamage - sub_6FD0F590(pAttacker, nBaseDamage);
@@ -2307,7 +2307,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc26_6FD0F5E0(D2GameStrc* pGame, int32_t nE
         nPercentage = pSkillsTxtRecord->dwParam[4];
     }
 
-    const int32_t nReducedDamage = MONSTERUNIQUE_CalculatePercentage(pDamage->dwDmgTotal, nPercentage, 100);
+    const int32_t nReducedDamage = ESE_MONSTERUNIQUE_CalculatePercentage(pDamage->dwDmgTotal, nPercentage, 100);
 
     int32_t nNewHp = nHitpoints - nReducedDamage;
     if (nNewHp < 256)
@@ -2348,7 +2348,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc27_6FD0F7A0(D2GameStrc* pGame, int32_t nE
             return 0;
         }
 
-        if (MONSTERUNIQUE_CheckMonTypeFlag(pUnit, 12u))
+        if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pUnit, 12u))
         {
             if (nSlow >= 50)
             {

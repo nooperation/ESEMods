@@ -197,19 +197,19 @@ void __fastcall ESE_MONSTERUNIQUE_UMod2_HealthBonus(D2UnitStrc* pUnit, int32_t n
         int32_t nHitpoints = 0;
         if (pUnit->pMonsterData && pUnit->pMonsterData->nTypeFlag & MONTYPEFLAG_CHAMPION)
         {
-            D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 4);
+            D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 4);
             const int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
             nHitpoints = STATLIST_GetMaxLifeFromUnit(pUnit);
-            nHitpoints += MONSTERUNIQUE_CalculatePercentage(nHitpoints, nPercentage, 100);
+            nHitpoints += ESE_MONSTERUNIQUE_CalculatePercentage(nHitpoints, nPercentage, 100);
         }
         else
         {
-            D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 7);
+            D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 7);
             const int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
             nHitpoints = STATLIST_GetMaxLifeFromUnit(pUnit);
-            nHitpoints += MONSTERUNIQUE_CalculatePercentage(nHitpoints, nPercentage, 100);
+            nHitpoints += ESE_MONSTERUNIQUE_CalculatePercentage(nHitpoints, nPercentage, 100);
         }
 
         STATLIST_SetUnitStat(pUnit, STAT_MAXHP, nHitpoints, 0);
@@ -218,11 +218,11 @@ void __fastcall ESE_MONSTERUNIQUE_UMod2_HealthBonus(D2UnitStrc* pUnit, int32_t n
     }
     else
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 1);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 1);
         const int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         int32_t nHitpoints = STATLIST_GetMaxLifeFromUnit(pUnit);
-        nHitpoints += MONSTERUNIQUE_CalculatePercentage(nHitpoints, nPercentage, 100);
+        nHitpoints += ESE_MONSTERUNIQUE_CalculatePercentage(nHitpoints, nPercentage, 100);
 
         STATLIST_SetUnitStat(pUnit, STAT_MAXHP, nHitpoints, 0);
         STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nHitpoints, 0);
@@ -294,9 +294,9 @@ void __fastcall ESE_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUM
     const int32_t nExperience = STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
     STATLIST_SetUnitStat(pUnit, STAT_EXPERIENCE, nExperience - 2 * nExperience / 5u, 0);
 
-    D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(11);
+    D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(11);
     int32_t nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
-    pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(10);
+    pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(10);
     int32_t nToHitPercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
     D2DifficultyLevelsTxt* pDifficultyLevelsTxtRecord = DATATBLS_GetDifficultyLevelsTxtRecord(pGame->nDifficulty);
@@ -350,7 +350,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod36_Ghostly(D2UnitStrc* pUnit, int32_t nUMo
     }
 
     STATLIST_SetUnitStat(pUnit, STAT_DAMAGERESIST, 80, 0);
-    MONSTERUNIQUE_UMod16_Champion(pUnit, nUMod, bUnique);
+    ESE_MONSTERUNIQUE_UMod16_Champion(pUnit, nUMod, bUnique);
 
     const uint8_t nDifficulty = D2Clamp(pGame->nDifficulty, 0ui8, 2ui8);
     const int32_t nGameType = pGame->nGameType || pGame->dwGameType;
@@ -364,12 +364,12 @@ void __fastcall ESE_MONSTERUNIQUE_UMod36_Ghostly(D2UnitStrc* pUnit, int32_t nUMo
 
     const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
 
-    D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 22);
+    D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 22);
     int32_t nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
     STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, nDamage * nDamagePercent / 100, 0);
 
-    pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 25);
+    pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 25);
     nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
     STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, nDamage * nDamagePercent / 100, 0);
@@ -382,7 +382,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod37_Fanatic(D2UnitStrc* pUnit, int32_t nUMo
     if (pUnit && pUnit->dwUnitType == UNIT_MONSTER && bUnique)
     {
         STATLIST_SetUnitStat(pUnit, STAT_ITEM_ARMOR_PERCENT, -70, 0);
-        MONSTERUNIQUE_UMod16_Champion(pUnit, nUMod, bUnique);
+        ESE_MONSTERUNIQUE_UMod16_Champion(pUnit, nUMod, bUnique);
     }
 }
 
@@ -402,7 +402,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod38_Possessed(D2UnitStrc* pUnit, int32_t nU
     const int32_t nMaxHp = 2 * STATLIST_GetMaxLifeFromUnit(pUnit);
     STATLIST_SetUnitStat(pUnit, STAT_MAXHP, nMaxHp, 0);
     STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nMaxHp, 0);
-    MONSTERUNIQUE_UMod16_Champion(pUnit, nUMod, bUnique);
+    ESE_MONSTERUNIQUE_UMod16_Champion(pUnit, nUMod, bUnique);
 }
 
 //D2Game.0x6FC6B4B0
@@ -414,7 +414,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod39_Berserk(D2UnitStrc* pUnit, int32_t nUMo
     }
 
     const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
-    const int32_t nNewHp = MONSTERUNIQUE_CalculatePercentage(nMaxHp, -75, 100) + nMaxHp;
+    const int32_t nNewHp = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxHp, -75, 100) + nMaxHp;
     STATLIST_SetUnitStat(pUnit, STAT_MAXHP, nNewHp, 0);
     STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
 
@@ -631,9 +631,9 @@ void __fastcall ESE_MONSTERUNIQUE_UMod30_AuraEnchanted(D2UnitStrc* pUnit, int32_
 
     D2SeedStrc seed = {};
     SEED_InitSeed(&seed);
-    SEED_InitLowSeed(&seed, MONSTERUNIQUE_GetNameSeed(pUnit));
+    SEED_InitLowSeed(&seed, ESE_MONSTERUNIQUE_GetNameSeed(pUnit));
 
-    const int32_t nIndex = MONSTERUNIQUE_GetBossHcIdx(pUnit) != SUPERUNIQUE_LORD_DE_SEIS ? ITEMS_RollLimitedRandomNumber(&seed, nMax) : 5;
+    const int32_t nIndex = ESE_MONSTERUNIQUE_GetBossHcIdx(pUnit) != SUPERUNIQUE_LORD_DE_SEIS ? ITEMS_RollLimitedRandomNumber(&seed, nMax) : 5;
     const int32_t nSkillLevel = D2Clamp(gAuraMods[nIndex].nMultiplier * (nLevel + gAuraMods[nIndex].nLevelOffset) / gAuraMods[nIndex].nDivisor, 1, 99);
     D2GAME_SetSkills_6FD14C60(pUnit, gAuraMods[nIndex].nSkillId, nSkillLevel, 1);
     D2GAME_AssignSkill_6FD13800(pUnit, 0, gAuraMods[nIndex].nSkillId, -1);
@@ -657,18 +657,18 @@ void __fastcall ESE_MONSTERUNIQUE_UMod5_Strong(D2UnitStrc* pUnit, int32_t nUMod,
     int32_t nToHitPercent = 0;
     if (bUnique)
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(15);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(15);
         nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(13);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(13);
         nToHitPercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
     }
     else
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(14);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(14);
         nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(12);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(12);
         nToHitPercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
     }
 
@@ -727,30 +727,30 @@ void __fastcall ESE_MONSTERUNIQUE_UMod9_FireEnchanted(D2UnitStrc* pUnit, int32_t
     const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_FIREMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_FIREMAXDAM, nDamage * nPercentage / 100, 0);
     }
     else
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_FIREMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_FIREMAXDAM, nDamage * nPercentage / 100, 0);
     }
 
-    MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
+    ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
 }
 
 //D2Game.0x6FC6BDD0
@@ -779,30 +779,30 @@ void __fastcall ESE_MONSTERUNIQUE_UMod17_LightningEnchanted(D2UnitStrc* pUnit, i
     const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_LIGHTMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_LIGHTMAXDAM, nDamage * nPercentage / 100, 0);
     }
     else
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_LIGHTMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_LIGHTMAXDAM, nDamage * nPercentage / 100, 0);
     }
 
-    MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
+    ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
 }
 
 //D2Game.0x6FC6BF90
@@ -831,24 +831,24 @@ void __fastcall ESE_MONSTERUNIQUE_UMod18_ColdEnchanted(D2UnitStrc* pUnit, int32_
     const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, nDamage * nPercentage / 100, 0);
     }
     else
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, nDamage * nPercentage / 100, 0);
@@ -856,7 +856,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod18_ColdEnchanted(D2UnitStrc* pUnit, int32_
 
     STATLIST_AddUnitStat(pUnit, STAT_COLDLENGTH, 5 * nLevel + 100, 0);
 
-    MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
+    ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
 }
 
 //D2Game.0x6FC6C160
@@ -885,24 +885,24 @@ void __fastcall ESE_MONSTERUNIQUE_UMod23_PoisonEnchanted(D2UnitStrc* pUnit, int3
     const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_POISONMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_POISONMAXDAM, nDamage * nPercentage / 100, 0);
     }
     else
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_POISONMINDAM, nDamage * nPercentage / 100, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_POISONMAXDAM, nDamage * nPercentage / 100, 0);
@@ -910,7 +910,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod23_PoisonEnchanted(D2UnitStrc* pUnit, int3
 
     STATLIST_AddUnitStat(pUnit, STAT_POISONLENGTH, 2 * (5 * nLevel + 150), 0);
 
-    MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
+    ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
 }
 
 //D2Game.0x6FC6C340
@@ -939,30 +939,30 @@ void __fastcall ESE_MONSTERUNIQUE_UMod25_ManaSteal(D2UnitStrc* pUnit, int32_t nU
     const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMINDAM, (nDamage * nPercentage / 100) << 8, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMAXDAM, (nDamage * nPercentage / 100) << 8, 0);
     }
     else
     {
-        D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
+        D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMINDAM, (nDamage * nPercentage / 100) << 8, 0);
 
-        pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
+        pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
         STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMAXDAM, (nDamage * nPercentage / 100) << 8, 0);
     }
 
-    MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
+    ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
 }
 
 //D2Game.0x6FC6C4F0
@@ -981,7 +981,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastAmplifyDamage(D2GameStrc* pGame, D2UnitStr
     }
 
     const int32_t nRange = D2Clamp(SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraRangeCalc, SKILL_AMPLIFYDAMAGE, nSkillLevel), 1, 40);
-    sub_6FD14770(pGame, 3, pUnit, nSkillLevel, nRange, MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage);
+    sub_6FD14770(pGame, 3, pUnit, nSkillLevel, nRange, ESE_MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage);
 }
 
 //D2Game.0x6FC6C5B0
@@ -1064,14 +1064,14 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode(D2GameStrc* pGame, D2UnitStr
         return;
     }
 
-    const int32_t nMaxDamage = MONSTERUNIQUE_CalculatePercentage(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
-    const int32_t nMinDamage = MONSTERUNIQUE_CalculatePercentage(nMaxDamage, 60, 100);
+    const int32_t nMaxDamage = ESE_MONSTERUNIQUE_CalculatePercentage(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
+    const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxDamage, 60, 100);
     const int32_t nDamage = ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
 
     D2DamageStrc damage = {};
     damage.dwPhysDamage = (nMinDamage + nDamage) << 6;
     damage.dwFireDamage = damage.dwPhysDamage;
-    SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, pGame->nDifficulty + 4, &damage, 0, 0, nullptr, 0x581u);
+    ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, pGame->nDifficulty + 4, &damage, 0, 0, nullptr, 0x581u);
 }
 
 //D2Game.0x6FC6C9E0
@@ -1089,7 +1089,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode2(D2GameStrc* pGame, D2UnitSt
     D2DamageStrc damage = {};
     damage.dwPhysDamage = 0x6400u;
     damage.dwFireDamage = 0x6400u;
-    SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, 6, &damage, 0, 0, nullptr, 0x583);
+    ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, 6, &damage, 0, 0, nullptr, 0x583);
 }
 
 //D2Game.0x6FC6CAB0
@@ -1182,7 +1182,7 @@ void __fastcall ESE_sub_6FC6CD30(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
 {
     if (bUnique && (!pUnit || pUnit->dwAnimMode != MONMODE_GETHIT))
     {
-        MONSTERUNIQUE_CastLightUniqueMissile(pGame, pUnit, nUMod, bUnique);
+        ESE_MONSTERUNIQUE_CastLightUniqueMissile(pGame, pUnit, nUMod, bUnique);
     }
 }
 
@@ -1219,7 +1219,7 @@ void __fastcall ESE_MONSTERUNIQUE_KillMinions(D2GameStrc* pGame, D2UnitStrc* pUn
         return;
     }
 
-    AIGENERAL_ExecuteCallbackOnMinions(pUnit, pGame, nullptr, MONSTERUNIQUE_MinionCallback_KillMinion);
+    AIGENERAL_ExecuteCallbackOnMinions(pUnit, pGame, nullptr, ESE_MONSTERUNIQUE_MinionCallback_KillMinion);
     AIGENERAL_SetOwnerData(pGame, pOwner, -1, 1, 0, 0);
     if (pOwner == pUnit || pOwner->dwUnitType != UNIT_MONSTER)
     {
@@ -1373,10 +1373,10 @@ void __fastcall ESE_MONSTERUNIQUE_ApplyElementalDamage(D2GameStrc* pGame, D2Unit
 
     const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
 
-    D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(28);
+    D2MonUModTxt* pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(28);
     const int32_t nMinPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-    pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(31);
+    pMonUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(31);
     const int32_t nMaxPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
     D2StatListStrc* pStatList = nullptr;
@@ -1425,7 +1425,7 @@ void __fastcall ESE_sub_6FC6D440(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
 {
     if (pUnit && pUnit->dwUnitType == UNIT_MISSILE)
     {
-        MONSTERUNIQUE_ApplyElementalDamage(pGame, pUnit, nUMod, bUnique);
+        ESE_MONSTERUNIQUE_ApplyElementalDamage(pGame, pUnit, nUMod, bUnique);
     }
 }
 
@@ -1822,7 +1822,7 @@ void __fastcall ESE_sub_6FC6E240(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
     D2DamageStrc damage = {};
     damage.dwFireDamage = (ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, pMonStatsTxtRecord->nElMaxD[0][0] - pMonStatsTxtRecord->nElMinD[0][0]) + pMonStatsTxtRecord->nElMinD[0][0]) << 8;
 
-    SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pUnit, CLIENTS_GetUnitX(pUnit), CLIENTS_GetUnitY(pUnit), pMonStatsTxtRecord->wAiParam[2][pGame->nDifficulty] * STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), &damage, 0, 0, nullptr, 0);
+    ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pUnit, CLIENTS_GetUnitX(pUnit), CLIENTS_GetUnitY(pUnit), pMonStatsTxtRecord->wAiParam[2][pGame->nDifficulty] * STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), &damage, 0, 0, nullptr, 0);
 }
 
 //D2Game.0x6FC6E390
@@ -1894,7 +1894,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastSuicideExplodeMissile(D2GameStrc* pGame, D
     D2UnitStrc* pMissile = sub_6FD11420(pGame, nMissileId, pUnit, 0, 1, 0, 0, nX, nY, 1);
     if (pMissile)
     {
-        SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, pMonStatsTxtRecord->wAiParam[3][pGame->nDifficulty], &damage, 0, 0, nullptr, 0x581);
+        ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, pMonStatsTxtRecord->wAiParam[3][pGame->nDifficulty], &damage, 0, 0, nullptr, 0x581);
     }
 }
 
@@ -1938,42 +1938,42 @@ void __fastcall ESE_sub_6FC6E780(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStr
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      nullptr,                                    nullptr,                                    MONSTERUNIQUE_CastAmplifyDamage,    nullptr,        nullptr },
+        { nullptr,                                      nullptr,                                    nullptr,                                    ESE_MONSTERUNIQUE_CastAmplifyDamage,    nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_FireEnchantedModeChange,      MONSTERUNIQUE_CastCorpseExplode,            nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_ColdEnchantedModeChange,      MONSTERUNIQUE_CastCorpsePoisonCloud,        nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_FireEnchantedModeChange,      ESE_MONSTERUNIQUE_CastCorpseExplode,            nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_ColdEnchantedModeChange,      ESE_MONSTERUNIQUE_CastCorpsePoisonCloud,        nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { MONSTERUNIQUE_SetTrapDamage,                  nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_KillMinions,                  nullptr,                                    nullptr,                            nullptr,        nullptr },
+        { ESE_MONSTERUNIQUE_SetTrapDamage,                  nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_KillMinions,                  nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_LightningEnchantedModeChange, MONSTERUNIQUE_CastLightUniqueMissile,       nullptr,                            sub_6FC6CD30,   nullptr },
-        { nullptr,                                      MONSTERUNIQUE_ColdEnchantedModeChange,      MONSTERUNIQUE_CastColdUniqueMissile,        nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_LightningEnchantedModeChange, ESE_MONSTERUNIQUE_CastLightUniqueMissile,       nullptr,                            sub_6FC6CD30,   nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_ColdEnchantedModeChange,      ESE_MONSTERUNIQUE_CastColdUniqueMissile,        nullptr,                            nullptr,        nullptr },
         { sub_6FC6CF10,                                 nullptr,                                    nullptr,                                    nullptr,                            nullptr,        sub_6FC6CF90 },
-        { nullptr,                                      MONSTERUNIQUE_ScarabModeChange,             MONSTERUNIQUE_CastBugLightningMissile,      nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_ScarabModeChange,             ESE_MONSTERUNIQUE_CastBugLightningMissile,      nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    sub_6FC6DFC0,                               nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_QuestCompleteModeChange,      nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { MONSTERUNIQUE_CastQueenPoisonCloudMissile,    nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      nullptr,                                    nullptr,                                    MONSTERUNIQUE_StealBeltItem,        nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_QuestCompleteModeChange,      nullptr,                                    nullptr,                            nullptr,        nullptr },
+        { ESE_MONSTERUNIQUE_CastQueenPoisonCloudMissile,    nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      nullptr,                                    nullptr,                                    ESE_MONSTERUNIQUE_StealBeltItem,        nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { MONSTERUNIQUE_ApplyElementalDamage,           nullptr,                                    nullptr,                                    nullptr,                            nullptr,        sub_6FC6D440 },
+        { ESE_MONSTERUNIQUE_ApplyElementalDamage,           nullptr,                                    nullptr,                                    nullptr,                            nullptr,        sub_6FC6D440 },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        sub_6FC6DA40 },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_ColdEnchantedModeChange,      MONSTERUNIQUE_CastCorpseExplode2,           nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_ColdEnchantedModeChange,      sub_6FC6E240,                               nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_SuicideModeChange,            MONSTERUNIQUE_CastSuicideExplodeMissile,    nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_ColdEnchantedModeChange,      ESE_MONSTERUNIQUE_CastCorpseExplode2,           nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_ColdEnchantedModeChange,      sub_6FC6E240,                               nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_SuicideModeChange,            ESE_MONSTERUNIQUE_CastSuicideExplodeMissile,    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      sub_6FC6DD20,                               sub_6FC6DDE0,                               nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_ApplyShatterState,            nullptr,                                    nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_ApplyShatterState,            nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    nullptr,                                    nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_CreatePainWorm,               nullptr,                                    nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_CreatePainWorm,               nullptr,                                    nullptr,                            nullptr,        nullptr },
         { nullptr,                                      nullptr,                                    sub_6FC6E730,                               nullptr,                            nullptr,        nullptr },
-        { nullptr,                                      MONSTERUNIQUE_ColdEnchantedModeChange,      MONSTERUNIQUE_CastNova,                     nullptr,                            nullptr,        nullptr },
+        { nullptr,                                      ESE_MONSTERUNIQUE_ColdEnchantedModeChange,      ESE_MONSTERUNIQUE_CastNova,                     nullptr,                            nullptr,        nullptr },
     };
 
     int32_t bUnique = 0;
@@ -1982,7 +1982,7 @@ void __fastcall ESE_sub_6FC6E780(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStr
         bUnique = (pUnit->pMonsterData->nTypeFlag & MONTYPEFLAG_UNIQUE) != 0;
     }
 
-    uint8_t* pUMods = MONSTERUNIQUE_GetUMods(pUnit);
+    uint8_t* pUMods = ESE_MONSTERUNIQUE_GetUMods(pUnit);
     if (!pUMods || *pUMods == 0)
     {
         return;
@@ -2067,7 +2067,7 @@ void __fastcall ESE_sub_6FC6E940(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a
         return;
     }
 
-    uint8_t* pMonUmods = MONSTERUNIQUE_GetUMods(pUnit);
+    uint8_t* pMonUmods = ESE_MONSTERUNIQUE_GetUMods(pUnit);
     if (!pMonUmods)
     {
         return;
@@ -2139,7 +2139,7 @@ void __fastcall ESE_sub_6FC6E940(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a
                 nRand -= nPick;
             }
 
-            const int32_t nUModIndex = MONSTERUNIQUE_GetUModCount(pMonUmods);
+            const int32_t nUModIndex = ESE_MONSTERUNIQUE_GetUModCount(pMonUmods);
             if (nUModIndex < 9)
             {
                 pMonUmods[nUModIndex] = nAccumulatedPicks;
@@ -2448,7 +2448,7 @@ void __fastcall ESE_D2GAME_SpawnMinions_6FC6F440(D2GameStrc* pGame, D2ActiveRoom
 {
     if (bSpawnMinions)
     {
-        D2MonsterDataStrc* pMonsterData = MONSTERUNIQUE_GetMonsterData(pUnit);
+        D2MonsterDataStrc* pMonsterData = ESE_MONSTERUNIQUE_GetMonsterData(pUnit);
         if (!pMonsterData || !(pMonsterData->nTypeFlag & 4))
         {
             int32_t nMinionId = pUnit->dwClassId;
@@ -2476,11 +2476,11 @@ void __fastcall ESE_D2GAME_SpawnMinions_6FC6F440(D2GameStrc* pGame, D2ActiveRoom
 
                     if (pMinion)
                     {
-                        uint8_t* pOwnerUMods = MONSTERUNIQUE_GetUMods(pUnit);
-                        uint8_t* pMinionUMods = MONSTERUNIQUE_GetUMods(pMinion);
+                        uint8_t* pOwnerUMods = ESE_MONSTERUNIQUE_GetUMods(pUnit);
+                        uint8_t* pMinionUMods = ESE_MONSTERUNIQUE_GetUMods(pMinion);
                         if (pOwnerUMods && pMinionUMods)
                         {
-                            int32_t nUModIndex = MONSTERUNIQUE_GetUModCount(pMinionUMods);
+                            int32_t nUModIndex = ESE_MONSTERUNIQUE_GetUModCount(pMinionUMods);
                             uint8_t* pMinionUMod = &pMinionUMods[nUModIndex];
                             while (nUModIndex < 9)
                             {
@@ -2490,7 +2490,7 @@ void __fastcall ESE_D2GAME_SpawnMinions_6FC6F440(D2GameStrc* pGame, D2ActiveRoom
                                     break;
                                 }
 
-                                D2MonUModTxt* pUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nOwnerUMod);
+                                D2MonUModTxt* pUModTxtRecord = ESE_MONSTERUNIQUE_GetMonUModTxtRecord(nOwnerUMod);
                                 if (!pUModTxtRecord)
                                 {
                                     break;
@@ -2510,7 +2510,7 @@ void __fastcall ESE_D2GAME_SpawnMinions_6FC6F440(D2GameStrc* pGame, D2ActiveRoom
                         AIGENERAL_SetOwnerData(pGame, pMinion, pUnit->dwUnitId, 1, 0, 0);
                         AIGENERAL_AllocMinionList(pGame, pUnit, pMinion);
                         AIUTIL_SetOwnerGUIDAndType(pMinion, pUnit);
-                        MONSTERUNIQUE_ToggleMonTypeFlag(pMinion, 16, 1);
+                        ESE_MONSTERUNIQUE_ToggleMonTypeFlag(pMinion, 16, 1);
                     }
                 }
             }
@@ -2529,7 +2529,7 @@ void __fastcall ESE_D2GAME_SpawnMinions_6FC6F440(D2GameStrc* pGame, D2ActiveRoom
         AIGENERAL_ExecuteCallbackOnMinions(pUnit, (void*)(uintptr_t)mods[i], FALSE, (void(__fastcall*)(D2UnitStrc*, void*, void*))sub_6FC6F670);
     }
 
-    if (uint8_t * pMonUmods = MONSTERUNIQUE_GetUMods(pUnit))
+    if (uint8_t * pMonUmods = ESE_MONSTERUNIQUE_GetUMods(pUnit))
     {
         for (int32_t i = 0; i < 9; ++i)
         {
@@ -2552,47 +2552,47 @@ void __fastcall ESE_sub_6FC6F670(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUniq
     constexpr UModInitFunc dword_6FD2F018[] =
     {
         nullptr,
-        MONSTERUNIQUE_UMod1_RandomName,
-        MONSTERUNIQUE_UMod2_HealthBonus,
+        ESE_MONSTERUNIQUE_UMod1_RandomName,
+        ESE_MONSTERUNIQUE_UMod2_HealthBonus,
         nullptr,
-        MONSTERUNIQUE_UMod4_LevelBonus,
-        MONSTERUNIQUE_UMod5_Strong,
-        MONSTERUNIQUE_UMod6_Fast,
+        ESE_MONSTERUNIQUE_UMod4_LevelBonus,
+        ESE_MONSTERUNIQUE_UMod5_Strong,
+        ESE_MONSTERUNIQUE_UMod6_Fast,
         nullptr,
-        MONSTERUNIQUE_UMod8_Resistant,
-        MONSTERUNIQUE_UMod9_FireEnchanted,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        MONSTERUNIQUE_UMod16_Champion,
-        MONSTERUNIQUE_UMod17_LightningEnchanted,
-        MONSTERUNIQUE_UMod18_ColdEnchanted,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        MONSTERUNIQUE_UMod23_PoisonEnchanted,
-        nullptr,
-        MONSTERUNIQUE_UMod25_ManaSteal,
-        MONSTERUNIQUE_UMod26_Teleport,
-        MONSTERUNIQUE_UMod8_Resistant,
-        MONSTERUNIQUE_UMod8_Resistant,
-        nullptr,
-        MONSTERUNIQUE_UMod30_AuraEnchanted,
+        ESE_MONSTERUNIQUE_UMod8_Resistant,
+        ESE_MONSTERUNIQUE_UMod9_FireEnchanted,
         nullptr,
         nullptr,
         nullptr,
         nullptr,
         nullptr,
-        MONSTERUNIQUE_UMod36_Ghostly,
-        MONSTERUNIQUE_UMod37_Fanatic,
-        MONSTERUNIQUE_UMod38_Possessed,
-        MONSTERUNIQUE_UMod39_Berserk,
         nullptr,
-        MONSTERUNIQUE_UMod41_AlwaysRun,
+        ESE_MONSTERUNIQUE_UMod16_Champion,
+        ESE_MONSTERUNIQUE_UMod17_LightningEnchanted,
+        ESE_MONSTERUNIQUE_UMod18_ColdEnchanted,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        ESE_MONSTERUNIQUE_UMod23_PoisonEnchanted,
+        nullptr,
+        ESE_MONSTERUNIQUE_UMod25_ManaSteal,
+        ESE_MONSTERUNIQUE_UMod26_Teleport,
+        ESE_MONSTERUNIQUE_UMod8_Resistant,
+        ESE_MONSTERUNIQUE_UMod8_Resistant,
+        nullptr,
+        ESE_MONSTERUNIQUE_UMod30_AuraEnchanted,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        ESE_MONSTERUNIQUE_UMod36_Ghostly,
+        ESE_MONSTERUNIQUE_UMod37_Fanatic,
+        ESE_MONSTERUNIQUE_UMod38_Possessed,
+        ESE_MONSTERUNIQUE_UMod39_Berserk,
+        nullptr,
+        ESE_MONSTERUNIQUE_UMod41_AlwaysRun,
         nullptr,
         nullptr,
     };
@@ -2637,7 +2637,7 @@ D2UnitStrc* __fastcall ESE_D2GAME_SpawnSuperUnique_6FC6F690(D2GameStrc* pGame, D
     {
         return nullptr;
     }
-    uint8_t* pMonUmods = MONSTERUNIQUE_GetUMods(pMonster);
+    uint8_t* pMonUmods = ESE_MONSTERUNIQUE_GetUMods(pMonster);
     if (!pMonUmods)
     {
         return pMonster;
@@ -2649,7 +2649,7 @@ D2UnitStrc* __fastcall ESE_D2GAME_SpawnSuperUnique_6FC6F690(D2GameStrc* pGame, D
     pMonster->pMonsterData->wBossHcIdx = nSuperUnique;
 
 
-    const int32_t nCounter = MONSTERUNIQUE_GetUModCount(pMonUmods);
+    const int32_t nCounter = ESE_MONSTERUNIQUE_GetUModCount(pMonUmods);
     if (nCounter >= 5)
     {
         return pMonster;
@@ -2710,7 +2710,7 @@ D2UnitStrc* __fastcall ESE_D2GAME_SpawnSuperUnique_6FC6F690(D2GameStrc* pGame, D
 
     if (bAuraEnchanted)
     {
-        MONSTERUNIQUE_UMod30_AuraEnchanted(pMonster, MONUMOD_AURACHANT, 1);
+        ESE_MONSTERUNIQUE_UMod30_AuraEnchanted(pMonster, MONUMOD_AURACHANT, 1);
     }
 
     switch (pSuperUniquesTxtRecord->dwHcIdx)
@@ -2797,7 +2797,7 @@ D2UnitStrc* __fastcall ESE_D2GAME_SpawnSuperUnique_6FC6F690(D2GameStrc* pGame, D
 D2UnitStrc* __fastcall ESE_sub_6FC6FBA0(D2GameStrc* pGame, D2ActiveRoomStrc* pRoom, int32_t nX, int32_t nY, int32_t nClassId, int32_t nUnitGUID, uint16_t nNameSeed, int32_t bChampion, int32_t bSuperUnique, int16_t nBossHcIdx, uint8_t* pUMods)
 {
     D2UnitStrc* pMonster = D2GAME_SpawnMonster_6FC6F220(pGame, pRoom, 0, nX, nY, nUnitGUID, nClassId, 1);
-    D2MonsterDataStrc* pMonsterData = MONSTERUNIQUE_GetMonsterData(pMonster);
+    D2MonsterDataStrc* pMonsterData = ESE_MONSTERUNIQUE_GetMonsterData(pMonster);
     if (!pMonsterData)
     {
         return pMonster;
@@ -2828,7 +2828,7 @@ D2UnitStrc* __fastcall ESE_sub_6FC6FBA0(D2GameStrc* pGame, D2ActiveRoomStrc* pRo
 
     if (bIsAuraEnchanted)
     {
-        MONSTERUNIQUE_UMod30_AuraEnchanted(pMonster, MONUMOD_AURACHANT, 1);
+        ESE_MONSTERUNIQUE_UMod30_AuraEnchanted(pMonster, MONUMOD_AURACHANT, 1);
     }
 
     if (bSuperUnique)
@@ -2888,7 +2888,7 @@ D2UnitStrc* __fastcall ESE_sub_6FC6FDC0(D2GameStrc* pGame, D2ActiveRoomStrc* pRo
         }
     }
 
-    uint8_t* pMonUmods = MONSTERUNIQUE_GetUMods(pMonster);
+    uint8_t* pMonUmods = ESE_MONSTERUNIQUE_GetUMods(pMonster);
     if (!pMonUmods)
     {
         return nullptr;
@@ -2921,7 +2921,7 @@ D2UnitStrc* __fastcall ESE_sub_6FC6FDC0(D2GameStrc* pGame, D2ActiveRoomStrc* pRo
 //D2Game.0x6FC6FF10
 void __fastcall ESE_D2GAME_BOSSES_AssignUMod_6FC6FF10(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
 {
-    uint8_t* pUMods = MONSTERUNIQUE_GetUMods(pUnit);
+    uint8_t* pUMods = ESE_MONSTERUNIQUE_GetUMods(pUnit);
     if (!pUMods)
     {
         return;

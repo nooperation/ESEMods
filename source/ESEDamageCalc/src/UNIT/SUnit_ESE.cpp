@@ -1171,7 +1171,7 @@ int32_t __fastcall ESE_sub_6FCBC930(D2GameStrc* pGame, D2UnitStrc* pMissile)
 //D2Game.0x6FCBC9A0
 void __fastcall ESE_SUNIT_SetCombatMode(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nMode)
 {
-    SUNITDMG_FreeAttackerCombatList(pGame, pUnit);
+    ESE_SUNITDMG_FreeAttackerCombatList(pGame, pUnit);
     UNITS_ChangeAnimMode(pUnit, nMode);
 }
 
@@ -2106,11 +2106,11 @@ void __fastcall ESE_sub_6FCBDE90(D2UnitStrc* pUnit, int32_t bSetUninterruptable)
         {
             D2DamageStrc damage = {};
             damage.wResultFlags |= DAMAGERESULTFLAG_WILLDIE;
-            SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
+            ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
         }
         else
         {
-            SUNITDMG_KillMonster(pGame, pUnit, nullptr, 1);
+            ESE_SUNITDMG_KillMonster(pGame, pUnit, nullptr, 1);
         }
     }
 

@@ -83,7 +83,7 @@ void __fastcall ESE_OBJEVAL_ApplyTrapObjectDamage(D2GameStrc* pGame, D2UnitStrc*
         damage.wResultFlags |= DAMAGERESULTFLAG_GETHIT;
     }
 
-    SUNITDMG_CalculateTotalDamage(pGame, pSrcUnit, pTargetUnit, &damage);
-    SUNITDMG_ExecuteEvents(pGame, pSrcUnit, pTargetUnit, 0, &damage);
-    SUNITDMG_ExecuteMissileDamage(pGame, pSrcUnit, pTargetUnit, &damage);
+    ESE_SUNITDMG_CalculateTotalDamage(pGame, pSrcUnit, pTargetUnit, &damage);
+    ESE_SUNITDMG_ExecuteEvents(pGame, pSrcUnit, pTargetUnit, 0, &damage);
+    ESE_SUNITDMG_ExecuteMissileDamage(pGame, pSrcUnit, pTargetUnit, &damage);
 }

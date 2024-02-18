@@ -165,7 +165,7 @@ int32_t __fastcall ESE_SKILLS_StartInferno(D2GameStrc* pGame, D2UnitStrc* pUnit,
 
     EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + 20, 0, 0);
     D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
-    STATLIST_SetStatRemoveCallback(pStatList, SKILLS_StatRemoveCallback_RemoveState);
+    STATLIST_SetStatRemoveCallback(pStatList, ESE_SKILLS_StatRemoveCallback_RemoveState);
     STATLIST_SetState(pStatList, STATE_INFERNO);
     STATES_ToggleState(pUnit, STATE_INFERNO, 1);
     SKILLS_SetParam1(UNITS_GetUsedSkill(pUnit), 0);
@@ -288,7 +288,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo017_ChargedBolt_BoltSentry(D2GameStrc* pGame,
         return 0;
     }
 
-    const int32_t nMissileId = SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
+    const int32_t nMissileId = ESE_SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
     if (nMissileId < 0 || nMissileId >= sgptDataTables->nMissilesTxtRecordCount)
     {
         return 0;
@@ -357,7 +357,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo018_DefensiveBuff(D2GameStrc* pGame, D2UnitSt
     curse.nStat = -1;
     curse.nDuration = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraLenCalc, nSkillId, nSkillLevel);
     curse.nState = pSkillsTxtRecord->nAuraState;
-    curse.pStateRemoveCallback = SKILLS_CurseStateCallback_DefensiveBuff;
+    curse.pStateRemoveCallback = ESE_SKILLS_CurseStateCallback_DefensiveBuff;
 
     D2StatListStrc* pStatList = sub_6FD10EC0(&curse);
     if (!pStatList)
@@ -429,7 +429,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo020_StaticField(D2GameStrc* pGame, D2UnitStrc
 	staticField.nElementalType = pSkillsTxtRecord->nEType;
 
     const int32_t nAuraRange = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraRangeCalc, nSkillId, nSkillLevel);
-	sub_6FD0FE80(pGame, pUnit, 0, 0, nAuraRange, pSkillsTxtRecord->dwAuraFilter, SKILLS_AuraCallback_StaticField, &staticField, 0, __FILE__, __LINE__);
+	sub_6FD0FE80(pGame, pUnit, 0, 0, nAuraRange, pSkillsTxtRecord->dwAuraFilter, ESE_SKILLS_AuraCallback_StaticField, &staticField, 0, __FILE__, __LINE__);
 	return 1;
 }
 
@@ -446,14 +446,14 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
 
     if (pStaticFieldCallbackArg->nStaticFieldMin)
     {
-        const int32_t nMinDamage = MONSTERUNIQUE_CalculatePercentage(STATLIST_GetMaxLifeFromUnit(pDefender) >> 8, pStaticFieldCallbackArg->nStaticFieldMin, 100);
+        const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(STATLIST_GetMaxLifeFromUnit(pDefender) >> 8, pStaticFieldCallbackArg->nStaticFieldMin, 100);
         if (nHitpoints <= nMinDamage)
         {
             return 0;
         }
     }
 
-    int32_t nShiftedDamage = MONSTERUNIQUE_CalculatePercentage(nHitpoints, pStaticFieldCallbackArg->nDamagePct, 100);
+    int32_t nShiftedDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nHitpoints, pStaticFieldCallbackArg->nDamagePct, 100);
     if (nShiftedDamage > nHitpoints - 1)
     {
         nShiftedDamage = nHitpoints - 1;
@@ -475,7 +475,7 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
         const int32_t nValue = STATLIST_UnitGetStatValue(pDefender, nStatId, 0);
         if (nValue < 0)
         {
-            nDamage = MONSTERUNIQUE_CalculatePercentage(100, nDamage, 100 - nValue);
+            nDamage = ESE_MONSTERUNIQUE_CalculatePercentage(100, nDamage, 100 - nValue);
         }
     }
 
@@ -486,8 +486,8 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
     damage.nHitClassActiveSet = 1;
     damage.wResultFlags = 0x4001u;
 
-    SUNITDMG_ExecuteEvents(pAuraCallback->pGame, pAuraCallback->pOwner, pDefender, 1, &damage);
-    SUNITDMG_ExecuteMissileDamage(pAuraCallback->pGame, pAuraCallback->pOwner, pDefender, &damage);
+    ESE_SUNITDMG_ExecuteEvents(pAuraCallback->pGame, pAuraCallback->pOwner, pDefender, 1, &damage);
+    ESE_SUNITDMG_ExecuteMissileDamage(pAuraCallback->pGame, pAuraCallback->pOwner, pDefender, &damage);
 
     return 1;
 }
@@ -536,8 +536,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo021_Telekinesis(D2GameStrc* pGame, D2UnitStrc
             damage.wResultFlags |= 9u;
         }
 
-        SUNITDMG_ExecuteEvents(pGame, pUnit, pTarget, 1, &damage);
-        SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pTarget, &damage);
+        ESE_SUNITDMG_ExecuteEvents(pGame, pUnit, pTarget, 1, &damage);
+        ESE_SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pTarget, &damage);
         break;
     }
     case UNIT_ITEM:
@@ -587,7 +587,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo022_NovaAttack(D2GameStrc* pGame, D2UnitStrc*
         return 0;
     }
 
-    const int32_t nMissileId = SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
+    const int32_t nMissileId = ESE_SKILLS_GetProgressiveSkillMissileId(pUnit, nSkillId);
     if (nMissileId < 0 || nMissileId >= sgptDataTables->nMissilesTxtRecordCount)
     {
         return 0;
@@ -957,7 +957,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo029_ThunderStorm(D2GameStrc* pGame, D2UnitStr
                 D2UnitStrc* pMissile = D2GAME_CreateMissile_6FD115E0(pGame, pUnit, nSkillId, nSkillLevel, pSkillsTxtRecord->wSrvMissileA, CLIENTS_GetUnitX(pTarget), CLIENTS_GetUnitY(pTarget));
                 if (pMissile)
                 {
-                    MISSMODE_SrvDmgHitHandler(pGame, pMissile, pTarget, 1);
+                    ESE_MISSMODE_SrvDmgHitHandler(pGame, pMissile, pTarget, 1);
                     SUNIT_RemoveUnit(pGame, pMissile);
                     sub_6FCC6300(pUnit, pTarget, nSkillId, nSkillLevel, 0, 0, 0);
                 }
@@ -1034,15 +1034,15 @@ int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_
             int32_t* pDamageValue = (int32_t*)((char*)pDamage + pEnergyShieldData->nDamageOffset);
             if (*pDamageValue > 0)
             {
-                int32_t nAbsorb = MONSTERUNIQUE_CalculatePercentage(*pDamageValue, nMultiplier, 100);
-                const int32_t nMax = MONSTERUNIQUE_CalculatePercentage(nMana, 16, nDivisor);
+                int32_t nAbsorb = ESE_MONSTERUNIQUE_CalculatePercentage(*pDamageValue, nMultiplier, 100);
+                const int32_t nMax = ESE_MONSTERUNIQUE_CalculatePercentage(nMana, 16, nDivisor);
 
                 if (nAbsorb >= nMax)
                 {
                     nAbsorb = nMax;
                 }
 
-                nMana -= MONSTERUNIQUE_CalculatePercentage(nAbsorb, nDivisor, 16);
+                nMana -= ESE_MONSTERUNIQUE_CalculatePercentage(nAbsorb, nDivisor, 16);
                 *pDamageValue -= nAbsorb;
                 nAbsorbedDamage += nAbsorb;
 
@@ -1243,7 +1243,7 @@ int32_t __fastcall ESE_SKILLS_EventFunc02_FrozenArmor(D2GameStrc* pGame, int32_t
     D2DamageStrc damage = {};
     damage.wResultFlags |= 0x20u;
     damage.dwFrzLen = SKILLS_EvaluateSkillFormula(pAttacker, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
-    SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
+    ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
 
     if (pSkillsTxtRecord->wCltOverlayA >= 0 && pSkillsTxtRecord->wCltOverlayA < sgptDataTables->nOverlayTxtRecordCount)
     {
@@ -1277,8 +1277,8 @@ int32_t __fastcall ESE_SKILLS_EventFunc03_ShiverArmor(D2GameStrc* pGame, int32_t
     damage.nHitClassActiveSet = 1;
     damage.dwHitClass |= 0xDu;
     damage.wResultFlags = 16417;
-    SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
-    SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
+    ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
+    ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
 
     if (pSkillsTxtRecord->wCltOverlayA >= 0 && pSkillsTxtRecord->wCltOverlayA < sgptDataTables->nOverlayTxtRecordCount)
     {

@@ -151,7 +151,7 @@ void __fastcall ESE_sub_6FC62780(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D
 {
     if (pAttacker && pDefender && !(pDefender->dwFlags & 0x04000000))
     {
-        SUNITDMG_DistributeExperience(pGame, pAttacker, pDefender);
+        ESE_SUNITDMG_DistributeExperience(pGame, pAttacker, pDefender);
     }
 }
 
@@ -359,8 +359,8 @@ void __fastcall ESE_sub_6FC62D90(D2UnitStrc* pUnit, D2GameStrc* pGame)
     if (pTarget)
     {
         D2DamageStrc damage = {};
-        damage.wResultFlags = SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
-        SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
+        damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
+        ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
     }
 }
 
@@ -388,7 +388,7 @@ void __fastcall ESE_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(D2UnitStrc* pAtt
             pDamage->dwColdDamage *= 2;
             pDamage->dwPoisDamage *= 2;
 
-            if (pDefender && !SUNITDMG_SetHitClass(pDamage, 0x10u))
+            if (pDefender && !ESE_SUNITDMG_SetHitClass(pDamage, 0x10u))
             {
                 UNITS_SetOverlay(pDefender, 54, 0);
             }
@@ -503,7 +503,7 @@ void __fastcall ESE_sub_6FC631B0(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a
     short nTCId = 0;
 
     const int32_t nItemLevel = ITEMS_GetItemLevelForNewItem(pUnit, nLevelId);
-    const int32_t nSuperUniqueId = MONSTERUNIQUE_GetSuperUniqueBossHcIdx(pGame, pUnit);
+    const int32_t nSuperUniqueId = ESE_MONSTERUNIQUE_GetSuperUniqueBossHcIdx(pGame, pUnit);
     if (nSuperUniqueId != -1)
     {
         D2SuperUniquesTxt* pSuperUniquesTxtRecord = DATATBLS_GetSuperUniquesTxtRecord(nSuperUniqueId);
@@ -518,11 +518,11 @@ void __fastcall ESE_sub_6FC631B0(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a
     }
     else
     {
-        if (MONSTERUNIQUE_CheckMonTypeFlag(pUnit, MONTYPEFLAG_CHAMPION))
+        if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pUnit, MONTYPEFLAG_CHAMPION))
         {
             nTCId = pMonStatsTxtRecord->wTreasureClass[pGame->nDifficulty][1];
         }
-        else if (MONSTERUNIQUE_CheckMonTypeFlag(pUnit, MONTYPEFLAG_UNIQUE))
+        else if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pUnit, MONTYPEFLAG_UNIQUE))
         {
             nTCId = pMonStatsTxtRecord->wTreasureClass[pGame->nDifficulty][2];
         }
@@ -655,7 +655,7 @@ void __fastcall ESE_D2GAME_ApplyPeriodicStatDamage_6FC63440(D2GameStrc* pGame, D
                 }
                 else
                 {
-                    SUNITDMG_KillMonster(pGame, pUnit, pStatListOwner, 1);
+                    ESE_SUNITDMG_KillMonster(pGame, pUnit, pStatListOwner, 1);
                     SUNITEVENT_EventFunc_Handler(pGame, EVENT_KILLED, pUnit, pStatListOwner, 0);
 
                     if (pStatListOwner)
@@ -894,12 +894,12 @@ int32_t __fastcall ESE_sub_6FC63B30(D2GameStrc* pGame, D2ModeChangeStrc* pModeCh
                     D2MonStatsInitStrc monStatsInit = {};
                     DATATBLS_CalculateMonsterStatsByLevel(pModeChange->pUnit->dwClassId, pGame->dwGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pModeChange->pUnit, STAT_LEVEL, 0), 1, &monStatsInit);
 
-                    const int32_t nMaxDamage = MONSTERUNIQUE_CalculatePercentage(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
-                    const int32_t nMinDamage = MONSTERUNIQUE_CalculatePercentage(nMaxDamage, 60, 100);
+                    const int32_t nMaxDamage = ESE_MONSTERUNIQUE_CalculatePercentage(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
+                    const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxDamage, 60, 100);
                     
                     D2DamageStrc damage = {};
                     damage.dwPhysDamage = (nMinDamage + ITEMS_RollLimitedRandomNumber(&pModeChange->pUnit->pSeed, nMaxDamage - nMinDamage)) << 7;
-                    SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, 5, &damage, 0, 0, nullptr, 0x581);
+                    ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, 5, &damage, 0, 0, nullptr, 0x581);
                     return 1;
 
                 }
@@ -973,9 +973,9 @@ void __fastcall ESE_sub_6FC63FD0(D2GameStrc* pGame, D2UnitStrc* pAttacker)
                 pDamage.wResultFlags |= DAMAGERESULTFLAG_GETHIT;
             }
 
-            SUNITDMG_CalculateTotalDamage(pGame, pAttacker, i, &pDamage);
-            SUNITDMG_ExecuteEvents(pGame, pAttacker, i, 1, &pDamage);
-            SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, i, &pDamage);
+            ESE_SUNITDMG_CalculateTotalDamage(pGame, pAttacker, i, &pDamage);
+            ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, i, 1, &pDamage);
+            ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, i, &pDamage);
         }
     }
 }
@@ -999,7 +999,7 @@ void __fastcall ESE_sub_6FC64090(D2GameStrc* pGame, D2UnitStrc* pUnit)
             }
             else
             {
-                SUNITDMG_KillMonster(pGame, pMonster, 0, 1);
+                ESE_SUNITDMG_KillMonster(pGame, pMonster, 0, 1);
             }
         }
     }
@@ -1029,7 +1029,7 @@ void __fastcall ESE_sub_6FC641D0(D2GameStrc* pGame, D2UnitStrc* pAttacker)
                 D2UnitStrc* pOwner = SUNIT_GetOwner(pGame, pAttacker);
                 if (pOwner)
                 {
-                    SUNITDMG_KillMonster(pGame, pOwner, 0, 1);
+                    ESE_SUNITDMG_KillMonster(pGame, pOwner, 0, 1);
                 }
             }
         }
@@ -1399,7 +1399,7 @@ int32_t __fastcall ESE_sub_6FC64790(D2GameStrc* pGame, D2UnitStrc* pUnit)
             D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
             if (pTarget)
             {
-                SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
+                ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
             }
         }
 
