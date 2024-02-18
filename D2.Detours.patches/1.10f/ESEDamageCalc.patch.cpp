@@ -7,6 +7,8 @@
 
 #include "ESEDamageCalc.h"
 #include "UNIT/SUnitDmg_ESE_INTERCEPTS.h"
+#include "UNIT/SUnitEvent_ESE_Intercepts.h"
+#include "UNIT/SUnit_ESE_Intercepts.h"
 #include "OBJECTS/ObjEval_ESE_Intercepts.h"
 #include "SKILLS/SkillAma_ESE_Intercepts.h"
 #include "SKILLS/SkillAss_ESE_Intercepts.h"
@@ -44,6 +46,72 @@ extern "C"
     // TODO: AITHINK_GetTargetScore uses some sort of damage in score calcualtion
     static ExtraPatchAction extraPatchActions[] =
     {
+        // SUnitEvent
+        {0x6FCC3610 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_FreeTimerList, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_FreeTimerList_Original},
+        {0x6FCC3650 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_AllocTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_AllocTimer_Original},
+        {0x6FCC36D0 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_FreeTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_FreeTimer_Original},
+        {0x6FCC3750 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_GetTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_GetTimer_Original},
+        {0x6FCC3790 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_EventFunc_Handler, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_EventFunc_Handler_Original},
+
+        // SUnit
+        {0x6FCBAEE0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_RemoveUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_RemoveUnit_Original},
+        {0x6FCBB160 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetNextUnitFromList, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetNextUnitFromList_Original},
+        {0x6FCBB190 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBB190, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBB190_Original},
+        {0x6FCBB440 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_WarpPlayer, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_WarpPlayer_Original},
+        {0x6FCBB630 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_InitSeed, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_InitSeed_Original},
+        {0x6FCBB6C0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_AllocUnitData, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_AllocUnitData_Original},
+        {0x6FCBBB00 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetServerUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetServerUnit_Original},
+        {0x6FCBBB70 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetOwner, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetOwner_Original},
+        {0x6FCBBC00 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetLastAttacker, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetLastAttacker_Original},
+        {0x6FCBBCB0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_Add, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_Add_Original},
+        {0x6FCBBFE0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_Restore, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_Restore_Original},
+        {0x6FCBC280 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_InitClientInPlayerData, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_InitClientInPlayerData_Original},
+        {0x6FCBC2E0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetClientFromPlayer, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetClientFromPlayer_Original},
+        {0x6FCBC300 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBC300, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBC300_Original},
+        {0x6FCBC480 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_AttachSound, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_AttachSound_Original},
+        {0x6FCBC4D0 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBC4D0, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBC4D0_Original},
+        {0x6FCBC590 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_CreatePresetUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_CreatePresetUnit_Original},
+        {0x6FCBC6F0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_SpawnPresetUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_SpawnPresetUnit_Original},
+        {0x6FCBC780 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_SpawnPresetUnitsInRoom, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_SpawnPresetUnitsInRoom_Original},
+        {0x6FCBC7E0 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBC7E0, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBC7E0_Original},
+        {0x6FCBC900 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetTargetUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetTargetUnit_Original},
+        {0x6FCBC930 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBC930, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBC930_Original},
+        {0x6FCBC9A0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_SetCombatMode, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_SetCombatMode_Original},
+        {0x6FCBC9C0 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBC9C0, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBC9C0_Original},
+        {0x6FCBCB30 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetPortalOwner, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetPortalOwner_Original},
+        {0x6FCBCC40 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_IterateUnitsOfType, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_IterateUnitsOfType_Original},
+        {0x6FCBCD70 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_IterateLivingPlayers, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_IterateLivingPlayers_Original},
+        {0x6FCBCE30 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_SetTimerOnUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_SetTimerOnUnit_Original},
+        {0x6FCBCE40 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetTimerFromUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetTimerFromUnit_Original},
+        {0x6FCBCE50 - D2GameImageBase, &ESE_INTERCEPT_D2GAME_DeletePlayerPerFrameEvents_6FCBCE50, PatchAction::FunctionReplaceOriginalByPatch, &D2GAME_DeletePlayerPerFrameEvents_6FCBCE50_Original},
+        {0x6FCBCE70 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBCE70, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBCE70_Original},
+        {0x6FCBCFD0 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBCFD0, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBCFD0_Original},
+        {0x6FCBD120 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBD120, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBD120_Original},
+        {0x6FCBD260 - D2GameImageBase, &ESE_INTERCEPT_D2GAME_SKILLS_RewindSkillEx_6FCBD260, PatchAction::FunctionReplaceOriginalByPatch, &D2GAME_SKILLS_RewindSkillEx_6FCBD260_Original},
+        {0x6FCBD3A0 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBD3A0, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBD3A0_Original},
+        {0x6FCBD3D0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_FillUnitInfo, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_FillUnitInfo_Original},
+        {0x6FCBD4D0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetInteractUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetInteractUnit_Original},
+        {0x6FCBD550 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_RemoveAllItemsFromInventory, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_RemoveAllItemsFromInventory_Original},
+        {0x6FCBD730 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetGameFromUnit, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetGameFromUnit_Original},
+        {0x6FCBD760 - D2GameImageBase, &ESE_INTERCEPT_D2GAME_SetNecropetFlag_6FCBD760, PatchAction::FunctionReplaceOriginalByPatch, &D2GAME_SetNecropetFlag_6FCBD760_Original},
+        {0x6FCBD790 - D2GameImageBase, &ESE_INTERCEPT_D2GAME_GetNecropetFlag_6FCBD790, PatchAction::FunctionReplaceOriginalByPatch, &D2GAME_GetNecropetFlag_6FCBD790_Original},
+        {0x6FCBD7C0 - D2GameImageBase, &ESE_INTERCEPT_D2GAME_SetSparkChest_6FCBD7C0, PatchAction::FunctionReplaceOriginalByPatch, &D2GAME_SetSparkChest_6FCBD7C0_Original},
+        {0x6FCBD7F0 - D2GameImageBase, &ESE_INTERCEPT_D2GAME_CheckIfSparklyChest_6FCBD7F0, PatchAction::FunctionReplaceOriginalByPatch, &D2GAME_CheckIfSparklyChest_6FCBD7F0_Original},
+        {0x6FCBD820 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetInteractInfo, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetInteractInfo_Original},
+        {0x6FCBD840 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_SetInteractInfo, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_SetInteractInfo_Original},
+        {0x6FCBD890 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_ResetInteractInfo, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_ResetInteractInfo_Original},
+        {0x6FCBD8B0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_IsDead, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_IsDead_Original},
+        {0x6FCBD900 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBD900, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBD900_Original},
+        {0x6FCBDA10 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetUnitList, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetUnitList_Original},
+        {0x6FCBDA40 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_CanPetBeTargetedBySkill, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_CanPetBeTargetedBySkill_Original},
+        {0x6FCBDAD0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_CanAllyBeTargetedBySkill, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_CanAllyBeTargetedBySkill_Original},
+        {0x6FCBDC60 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_AreUnitsAligned, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_AreUnitsAligned_Original},
+        {0x6FCBDD30 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBDD30, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBDD30_Original},
+        {0x6FCBDE90 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBDE90, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBDE90_Original},
+        {0x6FCBDF90 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBDF90, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBDF90_Original},
+        {0x6FCBDFE0 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBDFE0, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBDFE0_Original},
+        {0x6FCBE2D0 - D2GameImageBase, &ESE_INTERCEPT_SUNIT_GetPartyId, PatchAction::FunctionReplaceOriginalByPatch, &SUNIT_GetPartyId_Original},
+
         // SkillAma
         // {0x6FCF30D0 - D2GameImageBase, &ESE_INTERCEPT_D2Game_10049_Return1, PatchAction::FunctionReplaceOriginalByPatch, &D2Game_10049_Return1_Original},
         // {0x6FCF30E0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt04_Arrow_Bolt, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt04_Arrow_Bolt_Original},
@@ -155,7 +223,7 @@ extern "C"
         // {0x6FCFDC40 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_FindLeapAttackTarget, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_FindLeapAttackTarget_Original},
         // 
         // // SkillDruid
-        {0x6FCFDCF0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo114_Raven, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo114_Raven_Original},
+        // {0x6FCFDCF0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo114_Raven, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo114_Raven_Original},
         // {0x6FCFDE90 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo115_Vines, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo115_Vines_Original},
         // {0x6FCFE030 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCFE030, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCFE030_Original},
         // {0x6FCFE0E0 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCFE0E0, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCFE0E0_Original},

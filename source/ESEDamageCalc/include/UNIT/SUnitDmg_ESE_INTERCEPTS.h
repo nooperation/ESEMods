@@ -1,11 +1,10 @@
 #pragma once
 
+#include <UNIT/SUnitDmg_ESE.h>
 #include <type_traits>
 #include <cstdlib>
 #include <Units/Units.h>
 #include <D2DataTbls.h>
-
-#include <UNIT/SUnitDmg_ESE.h>
 
 //D2Game.0x6FCBE2F0
 int32_t __fastcall ESE_INTERCEPT_SUNITDMG_SetHitClass(D2DamageStrc* pDamage, uint32_t nHitClass);
