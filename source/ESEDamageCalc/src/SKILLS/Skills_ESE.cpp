@@ -3844,7 +3844,7 @@ void __fastcall ESE_D2GAME_RollPhysicalDamage_6FD14EC0(D2UnitStrc* pUnit, D2Dama
 //D2Game.0x6FD14F70
 void __fastcall ESE_sub_6FD14F70(D2GameStrc* pGame, D2UnitStrc* pUnused, D2UnitStrc* pUnit, int32_t nDelay)
 {
-    if (!STATES_CheckState(pUnit, STATE_UNINTERRUPTABLE) && pUnit && pUnit->dwUnitType == UNIT_MONSTER && !ESE_MONSTERUNIQUE_CheckMonTypeFlag(pUnit, MONTYPEFLAG_UNIQUE) && !MONSTERS_IsBoss(nullptr, pUnit))
+    if (!STATES_CheckState(pUnit, STATE_UNINTERRUPTABLE) && pUnit && pUnit->dwUnitType == UNIT_MONSTER && !MONSTERUNIQUE_CheckMonTypeFlag(pUnit, MONTYPEFLAG_UNIQUE) && !MONSTERS_IsBoss(nullptr, pUnit))
     {
         D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, nDelay);
         if (pStatList)

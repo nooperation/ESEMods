@@ -242,7 +242,7 @@ int32_t __fastcall ESE_sub_6FD0B2B0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2Unit
             return 0;
         }
 
-        if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pTarget, 0x20u))
+        if (MONSTERUNIQUE_CheckMonTypeFlag(pTarget, 0x20u))
         {
             return 0;
         }
@@ -1545,11 +1545,11 @@ int32_t __fastcall ESE_SKILLS_SrvDo058_Revive(D2GameStrc* pGame, D2UnitStrc* pUn
     D2ActiveRoomStrc* pRoom = COLLISION_GetFreeCoordinates(UNITS_GetRoom(pTarget), &coords, UNITS_GetUnitSizeX(pTarget), 0x3C01u, 1);
     if (pRoom)
     {
-        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_CANBEATTACKED, 1);
-        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_ISVALIDTARGET, 1);
-        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_TARGETABLE, 1);
-        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOXP, 1);
-        ESE_MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOTC, 1);
+        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_CANBEATTACKED, 1);
+        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_ISVALIDTARGET, 1);
+        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_TARGETABLE, 1);
+        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOXP, 1);
+        MONSTERUNIQUE_ToggleUnitFlag(pTarget, UNITFLAG_NOTC, 1);
         MONSTER_UpdateAiCallbackEvent(pGame, pTarget);
 
         D2ModeChangeStrc modeChange = {};
@@ -2348,7 +2348,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc27_6FD0F7A0(D2GameStrc* pGame, int32_t nE
             return 0;
         }
 
-        if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pUnit, 12u))
+        if (MONSTERUNIQUE_CheckMonTypeFlag(pUnit, 12u))
         {
             if (nSlow >= 50)
             {

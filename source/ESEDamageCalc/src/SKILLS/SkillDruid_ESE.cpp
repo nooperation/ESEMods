@@ -2359,8 +2359,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo140_BaalTentacle(D2GameStrc* pGame, D2UnitStr
             D2UnitStrc* pMinion = D2GAME_SpawnMonster_6FC69F10(pGame, pRoom, nMinionX, nMinionY, nMinionId, nMinionSpawnMode, -1, 0);
             if (pMinion)
             {
-                ESE_MONSTERUNIQUE_ToggleUnitFlag(pMinion, UNITFLAG_NOXP, 1);
-                ESE_MONSTERUNIQUE_ToggleUnitFlag(pMinion, UNITFLAG_NOTC, 1);
+                MONSTERUNIQUE_ToggleUnitFlag(pMinion, UNITFLAG_NOXP, 1);
+                MONSTERUNIQUE_ToggleUnitFlag(pMinion, UNITFLAG_NOTC, 1);
                 AITACTICS_Idle(pGame, pMinion, 15);
                 UNITS_StoreOwner(pMinion, pUnit);
             }

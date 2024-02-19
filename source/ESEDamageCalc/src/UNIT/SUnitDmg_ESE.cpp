@@ -1330,7 +1330,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 			bApplyStun = 1;
 		}
 
-		if ((!ESE_MONSTERUNIQUE_CheckMonTypeFlag(pDefender, 8u) || ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 100) >= 90) && !MONSTERS_IsBoss(0, pDefender) && MONSTERMODE_GetMonStatsTxtRecord(pDefender->dwClassId)->nVelocity)
+		if ((!MONSTERUNIQUE_CheckMonTypeFlag(pDefender, 8u) || ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 100) >= 90) && !MONSTERS_IsBoss(0, pDefender) && MONSTERMODE_GetMonStatsTxtRecord(pDefender->dwClassId)->nVelocity)
 		{
 			if (MONSTERS_GetHirelingTypeId(pDefender) && nStunLength >= 13)
 			{
@@ -1662,7 +1662,7 @@ void __fastcall ESE_SUNITDMG_ApplyFreezeState(D2UnitStrc* pAttacker, D2UnitStrc*
 		}
 
 		D2MonStatsTxt* pMonStatsTxtRecord = MONSTERMODE_GetMonStatsTxtRecord(pDefender->dwClassId);
-		if (MONSTERS_IsBoss(pMonStatsTxtRecord, pDefender) || ESE_MONSTERUNIQUE_CheckMonTypeFlag(pDefender, 8u) || MONSTERS_GetHirelingTypeId(pDefender))
+		if (MONSTERS_IsBoss(pMonStatsTxtRecord, pDefender) || MONSTERUNIQUE_CheckMonTypeFlag(pDefender, 8u) || MONSTERS_GetHirelingTypeId(pDefender))
 		{
 			ESE_SUNITDMG_ApplyColdState(pAttacker, pDefender, nFreezeLength);
 			return;
@@ -2439,7 +2439,7 @@ int32_t __fastcall ESE_SUNITDMG_IsHitSuccessful(D2UnitStrc* pAttacker, D2UnitStr
 	else
 	{
 		nAttackRate = UNITS_GetAttackRate(pAttacker);
-		if (STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, STAT_ITEM_IGNORETARGETAC, 0) && pDefender->dwUnitType == UNIT_MONSTER && !ESE_MONSTERUNIQUE_CheckMonTypeFlag(pDefender, MONTYPEFLAG_UNIQUE | MONTYPEFLAG_SUPERUNIQUE) && !MONSTERS_IsBoss(nullptr, pDefender) && !MONSTERS_GetHirelingTypeId(pDefender))
+		if (STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, STAT_ITEM_IGNORETARGETAC, 0) && pDefender->dwUnitType == UNIT_MONSTER && !MONSTERUNIQUE_CheckMonTypeFlag(pDefender, MONTYPEFLAG_UNIQUE | MONTYPEFLAG_SUPERUNIQUE) && !MONSTERS_IsBoss(nullptr, pDefender) && !MONSTERS_GetHirelingTypeId(pDefender))
 		{
 			nTotalDefense = 0;
 		}
@@ -2447,7 +2447,7 @@ int32_t __fastcall ESE_SUNITDMG_IsHitSuccessful(D2UnitStrc* pAttacker, D2UnitStr
 		int32_t nFractionalTargetAc = STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, STAT_ITEM_FRACTIONALTARGETAC, 0);
 		if (nFractionalTargetAc > 0)
 		{
-			if (pDefender->dwUnitType == UNIT_PLAYER || pDefender->dwUnitType == UNIT_MONSTER && (MONSTERS_IsBoss(0, pDefender) || ESE_MONSTERUNIQUE_CheckMonTypeFlag(pDefender, MONTYPEFLAG_SUPERUNIQUE) || MONSTERS_GetHirelingTypeId(pDefender)))
+			if (pDefender->dwUnitType == UNIT_PLAYER || pDefender->dwUnitType == UNIT_MONSTER && (MONSTERS_IsBoss(0, pDefender) || MONSTERUNIQUE_CheckMonTypeFlag(pDefender, MONTYPEFLAG_SUPERUNIQUE) || MONSTERS_GetHirelingTypeId(pDefender)))
 			{
 				nFractionalTargetAc /= 2;
 			}

@@ -132,7 +132,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo033_PsychicHammer(D2GameStrc* pGame, D2UnitSt
     {
         nCalc = pSkillsTxtRecord->dwCalc[2];
     }
-    else if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pTargetUnit, 8u))
+    else if (MONSTERUNIQUE_CheckMonTypeFlag(pTargetUnit, 8u))
     {
         nCalc = pSkillsTxtRecord->dwCalc[1];
     }
@@ -1291,7 +1291,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo042_DragonTalon(D2GameStrc* pGame, D2UnitStrc
         {
             nChance = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nLevel);
         }
-        else if (ESE_MONSTERUNIQUE_CheckMonTypeFlag(pTarget, MONTYPEFLAG_UNIQUE))
+        else if (MONSTERUNIQUE_CheckMonTypeFlag(pTarget, MONTYPEFLAG_UNIQUE))
         {
             nChance = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nLevel);
         }
