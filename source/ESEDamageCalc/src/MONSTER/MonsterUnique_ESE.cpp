@@ -587,7 +587,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod26_Teleport(D2UnitStrc* pUnit, int32_t nUM
 {
     if (pUnit && pUnit->dwUnitType == UNIT_MONSTER && bUnique)
     {
-        D2GAME_SetSkills_6FD14C60(pUnit, SKILL_MONTELEPORT, 1, 1);
+        ESE_D2GAME_SetSkills_6FD14C60(pUnit, SKILL_MONTELEPORT, 1, 1);
         SKILLS_SetSkillMode(SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, SKILL_MONTELEPORT), 4);
         AIUTIL_ToggleAiControlFlag0x20(pUnit, 1);
     }
@@ -635,8 +635,8 @@ void __fastcall ESE_MONSTERUNIQUE_UMod30_AuraEnchanted(D2UnitStrc* pUnit, int32_
 
     const int32_t nIndex = ESE_MONSTERUNIQUE_GetBossHcIdx(pUnit) != SUPERUNIQUE_LORD_DE_SEIS ? ITEMS_RollLimitedRandomNumber(&seed, nMax) : 5;
     const int32_t nSkillLevel = D2Clamp(gAuraMods[nIndex].nMultiplier * (nLevel + gAuraMods[nIndex].nLevelOffset) / gAuraMods[nIndex].nDivisor, 1, 99);
-    D2GAME_SetSkills_6FD14C60(pUnit, gAuraMods[nIndex].nSkillId, nSkillLevel, 1);
-    D2GAME_AssignSkill_6FD13800(pUnit, 0, gAuraMods[nIndex].nSkillId, -1);
+    ESE_D2GAME_SetSkills_6FD14C60(pUnit, gAuraMods[nIndex].nSkillId, nSkillLevel, 1);
+    ESE_D2GAME_AssignSkill_6FD13800(pUnit, 0, gAuraMods[nIndex].nSkillId, -1);
 }
 
 //D2Game.0x6FC6BA70
@@ -974,14 +974,14 @@ void __fastcall ESE_MONSTERUNIQUE_CastAmplifyDamage(D2GameStrc* pGame, D2UnitStr
     }
 
     const int32_t nSkillLevel = std::max(STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0) / 5 + 1, 1);
-    D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(SKILL_AMPLIFYDAMAGE);
+    D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(SKILL_AMPLIFYDAMAGE);
     if (!pSkillsTxtRecord)
     {
         return;
     }
 
     const int32_t nRange = D2Clamp(SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraRangeCalc, SKILL_AMPLIFYDAMAGE, nSkillLevel), 1, 40);
-    sub_6FD14770(pGame, 3, pUnit, nSkillLevel, nRange, ESE_MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage);
+    ESE_sub_6FD14770(pGame, 3, pUnit, nSkillLevel, nRange, ESE_MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage);
 }
 
 //D2Game.0x6FC6C5B0
@@ -992,7 +992,7 @@ void __fastcall ESE_MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage(D2GameStrc* p
         return;
     }
 
-    D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(SKILL_AMPLIFYDAMAGE);
+    D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(SKILL_AMPLIFYDAMAGE);
     if (!pSkillsTxtRecord || pSkillsTxtRecord->wAuraStat[0] < -1 || pSkillsTxtRecord->wAuraStat[0] >= sgptDataTables->nItemStatCostTxtRecordCount)
     {
         return;
@@ -1015,7 +1015,7 @@ void __fastcall ESE_MONSTERUNIQUE_CurseCallback_ApplyAmplifyDamage(D2GameStrc* p
     curse.nState = pSkillsTxtRecord->wAuraTargetState;
     curse.pStateRemoveCallback = nullptr;
 
-    D2StatListStrc* pStatList = sub_6FD10EC0(&curse);
+    D2StatListStrc* pStatList = ESE_sub_6FD10EC0(&curse);
     if (!pStatList)
     {
         return;
@@ -1049,7 +1049,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode(D2GameStrc* pGame, D2UnitStr
     const int32_t nX = CLIENTS_GetUnitX(pUnit);
     const int32_t nY = CLIENTS_GetUnitY(pUnit);
 
-    D2UnitStrc* pMissile = sub_6FD11420(pGame, MISSILE_MONSTERCORPSEEXPLODE, pUnit, 0, 1, 0, 0, nX, nY, 1);
+    D2UnitStrc* pMissile = ESE_sub_6FD11420(pGame, MISSILE_MONSTERCORPSEEXPLODE, pUnit, 0, 1, 0, 0, nX, nY, 1);
     if (!pMissile)
     {
         return;
@@ -1080,7 +1080,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode2(D2GameStrc* pGame, D2UnitSt
     const int32_t nX = CLIENTS_GetUnitX(pUnit);
     const int32_t nY = CLIENTS_GetUnitY(pUnit);
 
-    D2UnitStrc* pMissile = sub_6FD11420(pGame, MISSILE_MONSTERCORPSEEXPLODE, pUnit, 0, 1, 0, 0, nX, nY, 1);
+    D2UnitStrc* pMissile = ESE_sub_6FD11420(pGame, MISSILE_MONSTERCORPSEEXPLODE, pUnit, 0, 1, 0, 0, nX, nY, 1);
     if (!pMissile)
     {
         return;
@@ -1116,7 +1116,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastNova(D2GameStrc* pGame, D2UnitStrc* pUnit,
         nSkillLevel = 1;
     }
 
-    sub_6FD14170(pGame, pUnit, pUnit, MISSILE_NOVA, 0, nSkillLevel, DATATBLS_GetMissileVelocityFromMissilesTxt(MISSILE_NOVA, 0));
+    ESE_sub_6FD14170(pGame, pUnit, pUnit, MISSILE_NOVA, 0, nSkillLevel, DATATBLS_GetMissileVelocityFromMissilesTxt(MISSILE_NOVA, 0));
 }
 
 //D2Game.0x6FC6CB40
@@ -1157,7 +1157,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastLightUniqueMissile(D2GameStrc* pGame, D2Un
     missileParams.nX = CLIENTS_GetUnitX(pUnit);
     missileParams.nY = CLIENTS_GetUnitY(pUnit);
     missileParams.nMissile = MISSILE_LIGHTUNIQUE;
-    missileParams.pInitFunc = SKILLS_MissileInit_ChargedBolt;
+    missileParams.pInitFunc = ESE_SKILLS_MissileInit_ChargedBolt;
 
     constexpr int32_t nXOffsets[] = { 0, 1, 0, -1 };
     constexpr int32_t nYOffsets[] = { -1, 0, 1, 0 };
@@ -1195,14 +1195,14 @@ void __fastcall ESE_MONSTERUNIQUE_CastColdUniqueMissile(D2GameStrc* pGame, D2Uni
     }
 
     const int32_t nLevel = std::max(STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0) / 2, 1);
-    sub_6FD14170(pGame, pUnit, pUnit, MISSILE_COLDUNIQUE, 0, nLevel, DATATBLS_GetMissileVelocityFromMissilesTxt(MISSILE_FROSTNOVA, 0));
+    ESE_sub_6FD14170(pGame, pUnit, pUnit, MISSILE_COLDUNIQUE, 0, nLevel, DATATBLS_GetMissileVelocityFromMissilesTxt(MISSILE_FROSTNOVA, 0));
 }
 
 //D2Game.0x6FC6CDB0
 void __fastcall ESE_MONSTERUNIQUE_CastCorpsePoisonCloud(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
 {
     const int32_t nLevel = std::max(STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 1);
-    sub_6FD11420(pGame, MISSILE_CORPSEPOISONCLOUD, pUnit, 0, nLevel, 0, 0, CLIENTS_GetUnitX(pUnit), CLIENTS_GetUnitY(pUnit), 1);
+    ESE_sub_6FD11420(pGame, MISSILE_CORPSEPOISONCLOUD, pUnit, 0, nLevel, 0, 0, CLIENTS_GetUnitX(pUnit), CLIENTS_GetUnitY(pUnit), 1);
 }
 
 //D2Game.0x6FC6CE50
@@ -1311,7 +1311,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastBugLightningMissile(D2GameStrc* pGame, D2U
     missileParams.nY = CLIENTS_GetUnitY(pUnit);
     missileParams.nMissile = MISSILE_BUGLIGHTNING;
     missileParams.nSkillLevel = STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
-    missileParams.pInitFunc = SKILLS_MissileInit_ChargedBolt;
+    missileParams.pInitFunc = ESE_SKILLS_MissileInit_ChargedBolt;
 
     constexpr int32_t nXOffsets[] = { 0, 1, 0, -1 };
     constexpr int32_t nYOffsets[] = { -1, 0, 1, 0 };
@@ -1355,7 +1355,7 @@ void __fastcall ESE_MONSTERUNIQUE_ApplyElementalDamage(D2GameStrc* pGame, D2Unit
 
     if (pUnit && pUnit->dwUnitType == UNIT_MISSILE)
     {
-        D2MissilesTxt* pMissilesTxtRecord = SKILLS_GetMissilesTxtRecord(pUnit->dwClassId);
+        D2MissilesTxt* pMissilesTxtRecord = ESE_SKILLS_GetMissilesTxtRecord(pUnit->dwClassId);
         if (!pMissilesTxtRecord || pMissilesTxtRecord->dwMissileFlags & gdwBitMasks[MISSILESFLAGINDEX_NOUNIQUEMOD])
         {
             return;
@@ -1537,7 +1537,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastQueenPoisonCloudMissile(D2GameStrc* pGame,
     missileParams.nY = CLIENTS_GetUnitY(pUnit);
     missileParams.nMissile = MISSILE_QUEENPOISONCLOUD;
     missileParams.nSkillLevel = STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
-    missileParams.pInitFunc = SKILLS_MissileInit_ChargedBolt;
+    missileParams.pInitFunc = ESE_SKILLS_MissileInit_ChargedBolt;
 
     constexpr int32_t nXOffsets[] = { 0, 1, 0, -1 };
     constexpr int32_t nYOffsets[] = { -1, 0, 1, 0 };
@@ -1571,7 +1571,7 @@ void __fastcall ESE_sub_6FC6DA40(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
         return;
     }
 
-    D2MissilesTxt* pMissilesTxtRecord = SKILLS_GetMissilesTxtRecord(pUnit->dwClassId);
+    D2MissilesTxt* pMissilesTxtRecord = ESE_SKILLS_GetMissilesTxtRecord(pUnit->dwClassId);
     if (!pMissilesTxtRecord || pMissilesTxtRecord->dwMissileFlags & gdwBitMasks[MISSILESFLAGINDEX_NOMULTISHOT])
     {
         return;
@@ -1617,8 +1617,8 @@ void __fastcall ESE_sub_6FC6DA40(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
 
     const int32_t nMissileLevel = MISSILE_GetLevel(pUnit);
     const int32_t nSkillId = MISSILE_GetSkill(pUnit);
-    sub_6FD11420(pGame, pUnit->dwClassId, pOwner, nSkillId, nMissileLevel, 0, 0, nX - nYDiff, nY + nXDiff, 0);
-    sub_6FD11420(pGame, pUnit->dwClassId, pOwner, nSkillId, nMissileLevel, 0, 0, nX + nYDiff, nY - nXDiff, 0);
+    ESE_sub_6FD11420(pGame, pUnit->dwClassId, pOwner, nSkillId, nMissileLevel, 0, 0, nX - nYDiff, nY + nXDiff, 0);
+    ESE_sub_6FD11420(pGame, pUnit->dwClassId, pOwner, nSkillId, nMissileLevel, 0, 0, nX + nYDiff, nY - nXDiff, 0);
 
     if (pOwner->dwUnitType == UNIT_MONSTER && pOwner->pMonsterData)
     {
@@ -1891,7 +1891,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastSuicideExplodeMissile(D2GameStrc* pGame, D
         nMissileId = MISSILE_SUICIDEICEEXPLODE;
     }
 
-    D2UnitStrc* pMissile = sub_6FD11420(pGame, nMissileId, pUnit, 0, 1, 0, 0, nX, nY, 1);
+    D2UnitStrc* pMissile = ESE_sub_6FD11420(pGame, nMissileId, pUnit, 0, 1, 0, 0, nX, nY, 1);
     if (pMissile)
     {
         ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, pMonStatsTxtRecord->wAiParam[3][pGame->nDifficulty], &damage, 0, 0, nullptr, 0x581);

@@ -1889,7 +1889,7 @@ int32_t __fastcall ESE_SUNIT_CanPetBeTargetedBySkill(D2GameStrc* pGame, D2UnitSt
         return 0;
     }
 
-    D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(nSkillId);
+    D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
     if (!pSkillsTxtRecord || !(pSkillsTxtRecord->dwFlags[0] & gdwBitMasks[SKILLSFLAGINDEX_TARGETPET]))
     {
         return 0;
@@ -1920,7 +1920,7 @@ int32_t __fastcall ESE_SUNIT_CanAllyBeTargetedBySkill(D2GameStrc* pGame, D2UnitS
         return 0;
     }
     
-    D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(nSkillId);
+    D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
     if (!pSkillsTxtRecord || !(pSkillsTxtRecord->dwFlags[0] & gdwBitMasks[SKILLSFLAGINDEX_TARGETALLY]))
     {
         return 0;

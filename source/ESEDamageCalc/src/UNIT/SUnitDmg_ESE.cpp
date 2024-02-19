@@ -1358,7 +1358,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 				D2StatListStrc* pNewStatList = STATLIST_AllocStatList(pAttacker->pGame->pMemoryPool, 2u, nStunEndFrame, pAttacker->dwUnitType, pAttacker->dwUnitId);
 				EVENT_SetEvent(pAttacker->pGame, pDefender, UNITEVENTCALLBACK_REMOVESTATE, nStunEndFrame, 0, 0);
 				STATLIST_SetState(pNewStatList, STATE_STUNNED);
-				STATLIST_SetStatRemoveCallback(pNewStatList, sub_6FD10E50);
+				STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
 				D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 				STATES_ToggleState(pDefender, STATE_STUNNED, 1);
 			}
@@ -1491,7 +1491,7 @@ void __fastcall ESE_SUNITDMG_ApplyPoisonDamage(D2UnitStrc* pAttacker, D2UnitStrc
 
 	STATLIST_SetStatIfListIsValid(pNewStatList, STAT_HPREGEN, -nPoisonDamage, 0);
 	STATLIST_SetState(pNewStatList, STATE_POISON);
-	STATLIST_SetStatRemoveCallback(pNewStatList, sub_6FD10E50);
+	STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
 	D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 }
 
@@ -1538,7 +1538,7 @@ void __fastcall ESE_SUNITDMG_ApplyBurnDamage(D2UnitStrc* pAttacker, D2UnitStrc* 
 
 	STATLIST_SetStatIfListIsValid(pNewStatList, STAT_HPREGEN, -nBurnDamage, 0);
 	STATLIST_SetState(pNewStatList, STATE_BURNING);
-	STATLIST_SetStatRemoveCallback(pNewStatList, sub_6FD10E50);
+	STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
 	D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 }
 
@@ -1982,7 +1982,7 @@ void __fastcall ESE_SUNITDMG_ExecuteMissileDamage(D2GameStrc* pGame, D2UnitStrc*
 
 				if (SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId))
 				{
-					D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(nSkillId);
+					D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
 					if (pSkillsTxtRecord && pSkillsTxtRecord->wStSound > 0)
 					{
 						SUNIT_AttachSound(pUnit, 12, pUnit);
@@ -2544,7 +2544,7 @@ int32_t __fastcall ESE_SUNITDMG_IsHitSuccessful(D2UnitStrc* pAttacker, D2UnitStr
 		curse.nStat = STAT_ARMORCLASS;
 		curse.nStatValue = 0;
 		curse.nState = STATE_PREVENTHEAL;
-		sub_6FD10EC0(&curse);
+		ESE_sub_6FD10EC0(&curse);
 	}
 
 	return 1;
@@ -2883,18 +2883,18 @@ int32_t __fastcall ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(D2GameStrc* 
 //D2Game.0x6FCC2BC0
 void __fastcall ESE_SUNITDMG_RollDamage(D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel, D2DamageStrc* pDamage)
 {
-	D2GAME_RollPhysicalDamage_6FD14EC0(pUnit, pDamage, nSkillId, nSkillLevel);
+	ESE_D2GAME_RollPhysicalDamage_6FD14EC0(pUnit, pDamage, nSkillId, nSkillLevel);
 
-	D2GAME_RollElementalDamage_6FD14DD0(pUnit, pDamage, nSkillId, nSkillLevel);
+	ESE_D2GAME_RollElementalDamage_6FD14DD0(pUnit, pDamage, nSkillId, nSkillLevel);
 }
 
 //D2Game.0x6FCC2BF0
 void __fastcall ESE_SUNITDMG_RollSuckBloodDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nSkillId, int32_t nSkillLevel, D2DamageStrc* pDamage)
 {
-    if (SKILLS_GetSkillsTxtRecord(nSkillId))
+    if (ESE_SKILLS_GetSkillsTxtRecord(nSkillId))
     {
         pDamage->dwPhysDamage = ESE_SUNITDMG_ApplyDamageBonuses(pAttacker, 0, nullptr, SKILLS_GetMinPhysDamage(pAttacker, nSkillId, nSkillLevel, 0), SKILLS_GetMaxPhysDamage(pAttacker, nSkillId, nSkillLevel, 0), 0, 0, 128);
-        D2GAME_RollElementalDamage_6FD14DD0(pAttacker, pDamage, nSkillId, nSkillLevel);
+        ESE_D2GAME_RollElementalDamage_6FD14DD0(pAttacker, pDamage, nSkillId, nSkillLevel);
     }
 }
 

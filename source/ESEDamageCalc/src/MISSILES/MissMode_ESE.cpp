@@ -1152,7 +1152,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo13_BoneWallMaker(D2GameStrc* pGame, D2UnitS
 
     D2SummonArgStrc summonArg = {};
     int32_t nSpawnMode;
-    const int32_t nSummonId = D2GAME_GetSummonIdFromSkill_6FD15580(pOwner, 0, nSkillId, nLevel, &nSpawnMode, 0, 0);
+    const int32_t nSummonId = ESE_D2GAME_GetSummonIdFromSkill_6FD15580(pOwner, 0, nSkillId, nLevel, &nSpawnMode, 0, 0);
     if (nSummonId < 0)
     {
         return 0;
@@ -1177,13 +1177,13 @@ int32_t __fastcall ESE_MISSMODE_SrvDo13_BoneWallMaker(D2GameStrc* pGame, D2UnitS
         summonArg.pPosition.nY = CLIENTS_GetUnitY(pMissile);
         summonArg.nPetType = nPetType;
 
-        D2UnitStrc* pPet = D2GAME_SummonPet_6FD14430(pGame, &summonArg);
+        D2UnitStrc* pPet = ESE_D2GAME_SummonPet_6FD14430(pGame, &summonArg);
         if (pPet)
         {
             AIGENERAL_SetOwnerData(pGame, pPet, pMonster->dwUnitId, 1, 0, 0);
             AIGENERAL_AllocMinionList(pGame, pMonster, pPet);
             D2GAME_BOSSES_AssignUMod_6FC6FF10(pGame, pPet, 15, 0);
-            D2GAME_SetSummonPassiveStats_6FD0C530(pGame, pOwner, pPet, nSkillId, nLevel, 0);
+            ESE_D2GAME_SetSummonPassiveStats_6FD0C530(pGame, pOwner, pPet, nSkillId, nLevel, 0);
             UNITS_StoreOwner(pPet, pOwner);
             sub_6FC40280(pGame, pPet, 0, 9);
             MISSILE_SetTargetY(pMissile, MISSILE_GetTargetY(pMissile) - 1);
@@ -1218,7 +1218,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo14_GrimWard(D2GameStrc* pGame, D2UnitStrc* 
     const int32_t nLevel = MISSILE_GetLevel(pMissile);
     if (nSkillId > 0 && nLevel > 0)
     {
-        sub_6FD14400(pGame, pMissile, pMissilesTxtRecord->dwParam[1], nSkillId, nLevel);
+        ESE_sub_6FD14400(pGame, pMissile, pMissilesTxtRecord->dwParam[1], nSkillId, nLevel);
         return ESE_MISSMODE_HandleMissileCollision(pGame, pMissile);
     }
 
@@ -1335,7 +1335,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo17_CairnStones(D2GameStrc* pGame, D2UnitStr
         MISSILE_SetTargetX(pMissile, 1);
         D2UnitStrc* pOwner = SUNIT_GetOwner(pGame, pMissile);
         D2ActiveRoomStrc* pRoom = UNITS_GetRoom(pMissile);
-        D2GAME_CreatePortalObject_6FD13DF0(pGame, pOwner, pRoom, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissilesTxtRecord->dwParam[3], 0, 60u, 1);
+        ESE_D2GAME_CreatePortalObject_6FD13DF0(pGame, pOwner, pRoom, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissilesTxtRecord->dwParam[3], 0, 60u, 1);
         DUNGEON_ToggleHasPortalFlag(pRoom, 1);
     }
 
@@ -1457,7 +1457,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo21_Distraction(D2GameStrc* pGame, D2UnitStr
     D2UnitStrc* pOwner = SUNIT_GetOwner(pGame, pMissile);
     if (pMissilesTxtRecord->wSubMissile[0] && D2Common_10234(pMissile->pDynamicPath))
     {
-        D2GAME_CreateMissile_6FD115E0(pGame, pOwner, MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile), pMissilesTxtRecord->wSubMissile[0], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
+        ESE_D2GAME_CreateMissile_6FD115E0(pGame, pOwner, MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile), pMissilesTxtRecord->wSubMissile[0], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
     }
 
     if (!pOwner || SUNIT_IsDead(pOwner))
@@ -1608,7 +1608,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo26_Vines_PlagueVines(D2GameStrc* pGame, D2U
     if (!(nFrames % nParam))
     {
         D2UnitStrc* pOwner = SUNIT_GetOwner(pGame, pMissile);
-        D2GAME_CreateMissile_6FD115E0(pGame, pOwner, MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile), pMissilesTxtRecord->wSubMissile[0], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
+        ESE_D2GAME_CreateMissile_6FD115E0(pGame, pOwner, MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile), pMissilesTxtRecord->wSubMissile[0], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
     }
 
     return ESE_MISSMODE_HandleMissileCollision(pGame, pMissile);
@@ -1659,7 +1659,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo27_Tornado(D2GameStrc* pGame, D2UnitStrc* p
         damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
         damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
 
-        sub_6FD10200(pGame, pMissile, 0, 0, nParam1, &damage, pSkillsTxtRecord->dwAuraFilter);
+        ESE_sub_6FD10200(pGame, pMissile, 0, 0, nParam1, &damage, pSkillsTxtRecord->dwAuraFilter);
     }
 
     return ESE_MISSMODE_HandleMissileCollision(pGame, pMissile);
@@ -2119,7 +2119,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit01_Fireball_ExplodingArrow_FreezingArrowEx
     ESE_MISSMODE_GetDamageValue(pGame, pMissile, pUnit, &damage);
     damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
-    sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nParam, &damage, 0);
+    ESE_sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nParam, &damage, 0);
     return 1;
 }
 
@@ -2162,7 +2162,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit24_PantherPotOrange(D2GameStrc* pGame, D2U
     ESE_MISSMODE_FillDamageParams(pMissile, pUnit, &damage);
     damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
-    sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nParam, &damage, 0);
+    ESE_sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nParam, &damage, 0);
     return 1;
 }
 
@@ -2227,7 +2227,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit44_ExplodingJavelin(D2GameStrc* pGame, D2U
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
     damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
 
-    if (sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nRange, &damage, 0))
+    if (ESE_sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nRange, &damage, 0))
     {
         return 1;
     }
@@ -2419,7 +2419,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit09_ImmolationArrow(D2GameStrc* pGame, D2Un
     damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
 
-    sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nCalc1, &damage, 0);
+    ESE_sub_6FD10200(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nCalc1, &damage, 0);
 
     return 3;
 }
@@ -2477,7 +2477,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit10_GuidedArrow_BoneSpirit(D2GameStrc* pGam
         return 1;
     }
 
-    D2UnitStrc* pTarget = sub_6FD107F0(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissilesTxtRecord->dwParam[1], 3, -1, 0);
+    D2UnitStrc* pTarget = ESE_sub_6FD107F0(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissilesTxtRecord->dwParam[1], 3, -1, 0);
     if (pTarget && SUNIT_IsDead(pTarget))
     {
         pTarget = nullptr;
@@ -2558,7 +2558,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit12_ChainLightning_LightningStrike(D2GameSt
         nRange = std::max(SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwAuraRangeCalc, nSkillId, nLevel), 1);
     }
 
-    D2UnitStrc* pTarget = sub_6FD107F0(pGame, pOwner, nX, nY, nRange, 0x88583u, pUnit->dwUnitId, 0);
+    D2UnitStrc* pTarget = ESE_sub_6FD107F0(pGame, pOwner, nX, nY, nRange, 0x88583u, pUnit->dwUnitId, 0);
     if (pTarget && pTarget != pUnit)
     {
         D2MissileStrc missileParams = {};
@@ -2658,7 +2658,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit13_GlacialSpike_HellMeteorDown(D2GameStrc*
     damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
 
-    if (sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0))
+    if (ESE_sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0))
     {
         return 1;
     }
@@ -2783,7 +2783,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit14_MeteorCenter_CatapultMeteor_RoyalStrike
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
 
     int32_t nResult = 1;
-    if (!sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0))
+    if (!ESE_sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0))
     {
         nResult = 3;
     }
@@ -2920,14 +2920,14 @@ int32_t __fastcall ESE_MISSMODE_SrvHit16_SpiderGoo_VinesTrail_VinesWither(D2Game
         }
 
         STATLIST_SetState(pNewStatList, pSkillsTxtRecord->wAuraTargetState);
-        STATLIST_SetStatRemoveCallback(pNewStatList, sub_6FD10E50);
+        STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
         D2COMMON_10475_PostStatToStatList(pUnit, pNewStatList, 1);
         STATES_ToggleState(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
 
         // TODO: pStatList = pNewStatList; ????
     }
 
-    sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
+    ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
     STATES_ToggleGfxStateFlag(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
     D2COMMON_10476(pStatList, nLength + pGame->dwGameFrame);
     EVENT_SetEvent(pGame, pUnit, 12, nLength + pGame->dwGameFrame, 0, 0);
@@ -3035,14 +3035,14 @@ int32_t __fastcall ESE_MISSMODE_SrvHit19_FingerMageSpider(D2GameStrc* pGame, D2U
         }
 
         STATLIST_SetState(pNewStatList, pSkillsTxtRecord->wAuraTargetState);
-        STATLIST_SetStatRemoveCallback(pNewStatList, sub_6FD10E50);
+        STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
         D2COMMON_10475_PostStatToStatList(pUnit, pNewStatList, 1);
         STATES_ToggleState(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
 
         // TODO: pStatList = pNewStatList; ????
     }
 
-    sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
+    ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
     STATES_ToggleGfxStateFlag(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
     D2COMMON_10476(pStatList, nTimeout);
     EVENT_SetEvent(pGame, pUnit, 12, nTimeout, 0, 0);
@@ -3104,7 +3104,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit20_LightningFury(D2GameStrc* pGame, D2Unit
     params.nParam = nParam;
     params.nHitSubMissile = pMissilesTxtRecord->wHitSubMissile[0];
 
-    sub_6FD0FE80(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nAuraRange, nAuraFilter, ESE_MISSMODE_LightningFury_AuraCallback, &params, 1, __FILE__, __LINE__);
+    ESE_sub_6FD0FE80(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nAuraRange, nAuraFilter, ESE_MISSMODE_LightningFury_AuraCallback, &params, 1, __FILE__, __LINE__);
     return 3;
 }
 
@@ -3155,7 +3155,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit21_BattleCry(D2GameStrc* pGame, D2UnitStrc
         nAuraFilter = 42883;
     }
 
-    if (!sub_6FD0FA00(pOwner, pUnit, nAuraFilter))
+    if (!ESE_sub_6FD0FA00(pOwner, pUnit, nAuraFilter))
     {
         return 1;
     }
@@ -3170,10 +3170,10 @@ int32_t __fastcall ESE_MISSMODE_SrvHit21_BattleCry(D2GameStrc* pGame, D2UnitStrc
     curse.nState = pSkillsTxtRecord->wAuraTargetState;
     curse.pStateRemoveCallback = nullptr;
 
-    D2StatListStrc* pStatList = sub_6FD10EC0(&curse);
+    D2StatListStrc* pStatList = ESE_sub_6FD10EC0(&curse);
     if (pStatList)
     {
-        sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
+        ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
     }
 
     return 0;
@@ -3252,7 +3252,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit22_FistOfTheHeavensDelay(D2GameStrc* pGame
     params.nLevel = nLevel;
     params.nParam = nParam;
     params.nHitSubMissile = pMissilesTxtRecord->wHitSubMissile[0];
-    sub_6FD0FE80(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nAuraRange, nAuraFilter, ESE_MISSMODE_FistOfTheHeavensDelay_AuraCallback, &params, 0, __FILE__, __LINE__);
+    ESE_sub_6FD0FE80(pGame, pOwner, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), nAuraRange, nAuraFilter, ESE_MISSMODE_FistOfTheHeavensDelay_AuraCallback, &params, 0, __FILE__, __LINE__);
     return 1;
 }
 
@@ -3600,7 +3600,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit32_CairnStones(D2GameStrc* pGame, D2UnitSt
         MISSILE_SetTargetX(pMissile, 1);
         D2UnitStrc* pOwner = SUNIT_GetOwner(pGame, pMissile);
         D2ActiveRoomStrc* pRoom = UNITS_GetRoom(pMissile);
-        D2GAME_CreatePortalObject_6FD13DF0(pGame, pOwner, pRoom, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissilesTxtRecord->dwParam[3], 0, 60u, 1);
+        ESE_D2GAME_CreatePortalObject_6FD13DF0(pGame, pOwner, pRoom, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissilesTxtRecord->dwParam[3], 0, 60u, 1);
         DUNGEON_ToggleHasPortalFlag(pRoom, 1);
     }
 
@@ -3677,7 +3677,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit36_MissileInAir(D2GameStrc* pGame, D2UnitS
     const int32_t nLevel = MISSILE_GetLevel(pMissile);
     const int32_t nSkillId = MISSILE_GetSkill(pMissile);
     D2UnitStrc* pOwner = SUNIT_GetOwner(pGame, pMissile);
-    D2UnitStrc* pHitSubMissile = D2GAME_CreateMissile_6FD115E0(pGame, pOwner, nSkillId, nLevel, pMissilesTxtRecord->wHitSubMissile[0], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
+    D2UnitStrc* pHitSubMissile = ESE_D2GAME_CreateMissile_6FD115E0(pGame, pOwner, nSkillId, nLevel, pMissilesTxtRecord->wHitSubMissile[0], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
     if (pHitSubMissile)
     {
         MISSILE_SetTargetX(pHitSubMissile, MISSILE_GetTargetX(pMissile));
@@ -3757,7 +3757,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit38_CatapultChargedBall(D2GameStrc* pGame, 
         nCalc = std::max(SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[3], nSkillId, nLevel), 1);
     }
 
-    sub_6FD14260(pGame, nCalc, &missileParams);
+    ESE_sub_6FD14260(pGame, nCalc, &missileParams);
     return 1;
 }
 
@@ -3876,7 +3876,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit45_LightningTrailingJavelin(D2GameStrc* pG
         missileParams.pInitFunc = ESE_MISSMODE_CatapultChargedBall_LightningTrailingJavelin_SubmissileInitFunc;
     }
 
-    sub_6FD14260(pGame, pMissilesTxtRecord->dwHitPar[0], &missileParams);
+    ESE_sub_6FD14260(pGame, pMissilesTxtRecord->dwHitPar[0], &missileParams);
     return 1;
 }
 
@@ -3936,7 +3936,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit47_MoltenBoulder(D2GameStrc* pGame, D2Unit
     damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
 
-    if (!sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0))
+    if (!ESE_sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0))
     {
         nResult = 3;
     }
@@ -4105,7 +4105,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit53_RabiesContagion(D2GameStrc* pGame, D2Un
 
         if (nFrame >= 10 && nFrame <= SKILLS_GetElementalLength(pOwner, nSkillId, nLevel, 1))
         {
-            sub_6FCFEDD0(pGame, pOwner, pUnit, nFrame, nSkillId, nLevel);
+            ESE_sub_6FCFEDD0(pGame, pOwner, pUnit, nFrame, nSkillId, nLevel);
             return 2;
         }
     }
@@ -4206,11 +4206,11 @@ int32_t __fastcall ESE_MISSMODE_SrvHit56_ArmageddonControl(D2GameStrc* pGame, D2
 
     damage.dwHitFlags |= pMissilesTxtRecord->dwHitFlags;
     damage.wResultFlags |= pMissilesTxtRecord->wResultFlags;
-    sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0);
+    ESE_sub_6FD10200(pGame, pOwner, nX, nY, nRange, &damage, 0);
 
     if (pMissilesTxtRecord->wHitSubMissile[0] >= 0)
     {
-        D2GAME_CreateMissile_6FD115E0(pGame, pOwner, nSkillId, nLevel, pMissilesTxtRecord->wHitSubMissile[0], nX, nY);
+        ESE_D2GAME_CreateMissile_6FD115E0(pGame, pOwner, nSkillId, nLevel, pMissilesTxtRecord->wHitSubMissile[0], nX, nY);
     }
 
     return 1;
@@ -4302,7 +4302,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit23_Unused(D2GameStrc* pGame, D2UnitStrc* p
         {
             UNITS_SetTargetUnitForDynamicUnit(pMissile, pUnit);
         }
-        sub_6FD14400(pGame, pMissile, pMissilesTxtRecord->dwHitPar[0], nSkillId, nLevel);
+        ESE_sub_6FD14400(pGame, pMissile, pMissilesTxtRecord->dwHitPar[0], nSkillId, nLevel);
     }
     return 1;
 }
@@ -4762,11 +4762,11 @@ int32_t __fastcall ESE_MISSMODE_SrvDo19_RadamentDeath(D2GameStrc* pGame, D2UnitS
     const int32_t nCurrentFrame = MISSILE_GetCurrentFrame(pMissile);
     if (nCurrentFrame > 1 && nCurrentFrame < 25)
     {
-        sub_6FD14BD0(pGame, 0x3002, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissile, 124, 1, ESE_MISSMODE_RadamentDeathAreaEffectCallback);
+        ESE_sub_6FD14BD0(pGame, 0x3002, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissile, 124, 1, ESE_MISSMODE_RadamentDeathAreaEffectCallback);
     }
     else if (nCurrentFrame == 1)
     {
-        sub_6FD14BD0(pGame, 0x3002, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissile, 124, 1, ESE_MISSMODE_RadamentDeathAreaEffectCallbackFirstFrame);
+        ESE_sub_6FD14BD0(pGame, 0x3002, CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile), pMissile, 124, 1, ESE_MISSMODE_RadamentDeathAreaEffectCallbackFirstFrame);
     }
 
     return ESE_MISSMODE_HandleMissileCollision(pGame, pMissile);
@@ -4837,19 +4837,19 @@ int32_t __fastcall ESE_MISSMODE_SrvDo37_Unused(D2GameStrc* pGame, D2UnitStrc* pM
 
     if (pMissilesTxtRecord->wSubMissile[0] > 0 && MISSILE_GetRemainingFrames(pMissile) == pMissilesTxtRecord->dwParam[0])
     {
-        D2GAME_CreateMissile_6FD115E0(pGame, SUNIT_GetOwner(pGame, pMissile), MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile),
+        ESE_D2GAME_CreateMissile_6FD115E0(pGame, SUNIT_GetOwner(pGame, pMissile), MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile),
                                       pMissilesTxtRecord->wSubMissile[0], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
     }
 
     if (pMissilesTxtRecord->wSubMissile[1] > 0 && MISSILE_GetRemainingFrames(pMissile) == pMissilesTxtRecord->dwParam[1])
     {
-        D2GAME_CreateMissile_6FD115E0(pGame, SUNIT_GetOwner(pGame, pMissile), MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile),
+        ESE_D2GAME_CreateMissile_6FD115E0(pGame, SUNIT_GetOwner(pGame, pMissile), MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile),
                                       pMissilesTxtRecord->wSubMissile[1], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
     }
 
     if (pMissilesTxtRecord->wSubMissile[2] > 0 && MISSILE_GetRemainingFrames(pMissile) == pMissilesTxtRecord->dwParam[2])
     {
-        D2GAME_CreateMissile_6FD115E0(pGame, SUNIT_GetOwner(pGame, pMissile), MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile),
+        ESE_D2GAME_CreateMissile_6FD115E0(pGame, SUNIT_GetOwner(pGame, pMissile), MISSILE_GetSkill(pMissile), MISSILE_GetLevel(pMissile),
                                       pMissilesTxtRecord->wSubMissile[2], CLIENTS_GetUnitX(pMissile), CLIENTS_GetUnitY(pMissile));
     }
 

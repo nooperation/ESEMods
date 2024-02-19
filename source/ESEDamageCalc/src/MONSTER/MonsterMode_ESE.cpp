@@ -72,19 +72,19 @@ constexpr D2MonModeInfoTableStrc stru_6FD28738[16] =
 using MonEventFunc = void(__fastcall*)(D2GameStrc*, D2UnitStrc*, int32_t, int32_t);
 constexpr MonEventFunc monEvents[15] =
 {
-    D2GAME_MONSTERS_AiFunction01_6FC65080,
-    D2GAME_MONSTERS_AiFunction02_6FC65150,
+    ESE_D2GAME_MONSTERS_AiFunction01_6FC65080,
+    ESE_D2GAME_MONSTERS_AiFunction02_6FC65150,
     D2GAME_MONSTERS_AiFunction03_6FCF0A70,
-    D2GAME_ApplyPeriodicStatDamage_6FC63440,
+    ESE_D2GAME_ApplyPeriodicStatDamage_6FC63440,
     nullptr,
-    D2GAME_MONSTERS_AiFunction06_6FD14370,
-    D2GAME_MONSTERS_AiFunction07_6FC658B0,
-    D2GAME_MONSTERS_AiFunction08_6FC6E870,
-    D2GAME_MONSTERS_AiFunction09_6FD13470,
-    D2GAME_MONSTERS_AiFunction10_6FD13610,
-    D2GAME_MONSTERS_AiFunction11_6FC65920,
+    ESE_D2GAME_MONSTERS_AiFunction06_6FD14370,
+    ESE_D2GAME_MONSTERS_AiFunction07_6FC658B0,
+    ESE_D2GAME_MONSTERS_AiFunction08_6FC6E870,
+    ESE_D2GAME_MONSTERS_AiFunction09_6FD13470,
+    ESE_D2GAME_MONSTERS_AiFunction10_6FD13610,
+    ESE_D2GAME_MONSTERS_AiFunction11_6FC65920,
     nullptr,
-    D2GAME_MONSTERS_AiFunction13_6FC65890,
+    ESE_D2GAME_MONSTERS_AiFunction13_6FC65890,
     nullptr,
     nullptr,
 };
@@ -175,7 +175,7 @@ void __fastcall ESE_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode)
     }
     
     D2MonSkillInfoStrc monSkillInfo = {};
-    sub_6FD14D20(pUnit, nMode, &monSkillInfo);
+    ESE_sub_6FD14D20(pUnit, nMode, &monSkillInfo);
 
     D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndFlag(pUnit, 1);
     if (!pStatList)
@@ -885,7 +885,7 @@ int32_t __fastcall ESE_sub_6FC63B30(D2GameStrc* pGame, D2ModeChangeStrc* pModeCh
         {
             const int32_t nX = CLIENTS_GetUnitX(pModeChange->pUnit);
             const int32_t nY = CLIENTS_GetUnitY(pModeChange->pUnit);
-            D2UnitStrc* pMissile = sub_6FD11420(pGame, MISSILE_MONSTERCORPSEEXPLODE, pModeChange->pUnit, 0, 1, 0, 0, nX, nY, 1);
+            D2UnitStrc* pMissile = ESE_sub_6FD11420(pGame, MISSILE_MONSTERCORPSEEXPLODE, pModeChange->pUnit, 0, 1, 0, 0, nX, nY, 1);
             if (pMissile)
             {
                 D2DifficultyLevelsTxt* pDifficultyLevelsTxtRecord = DATATBLS_GetDifficultyLevelsTxtRecord(pGame->nDifficulty);
@@ -1160,12 +1160,12 @@ int32_t __fastcall ESE_sub_6FC64480(D2GameStrc* pGame, D2UnitStrc* pUnit)
 {
     if (STATES_CheckState(pUnit, STATE_BLAZE))
     {
-        SKILLS_CreateBlazeMissile(pGame, pUnit);
+        ESE_SKILLS_CreateBlazeMissile(pGame, pUnit);
     }
 
     if (STATES_CheckState(pUnit, STATE_SPIDERLAY))
     {
-        SKILLS_CreateSpiderLayMissile(pGame, pUnit);
+        ESE_SKILLS_CreateSpiderLayMissile(pGame, pUnit);
     }
 
     if (sub_6FCBC930(pGame, pUnit) == 2)
@@ -1273,7 +1273,7 @@ int32_t __fastcall ESE_sub_6FC645E0(D2GameStrc* pGame, D2ModeChangeStrc* pModeCh
 
     if (UNITS_GetUsedSkill(pModeChange->pUnit))
     {
-        sub_6FD12FD0(pGame, pModeChange->pUnit);
+        ESE_sub_6FD12FD0(pGame, pModeChange->pUnit);
     }
 
     return 1;
@@ -1342,7 +1342,7 @@ int32_t __fastcall ESE_sub_6FC64790(D2GameStrc* pGame, D2UnitStrc* pUnit)
                 nSkillLevel = STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
             }
 
-            if (sub_6FD11420(pGame, nMissileId, pUnit, 0, nSkillLevel, 0, 0, 0, 0, 1))
+            if (ESE_sub_6FD11420(pGame, nMissileId, pUnit, 0, nSkillLevel, 0, 0, 0, 0, 1))
             {
                 const int32_t nBaseId = D2GAME_GetMonsterBaseId_6FC64B10(pUnit);
                 if (nBaseId == MONSTER_QUILLRAT1)
@@ -1384,7 +1384,7 @@ int32_t __fastcall ESE_sub_6FC64790(D2GameStrc* pGame, D2UnitStrc* pUnit)
                         }
 
                         D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nX + nXOffset, nY + nYOffset);
-                        sub_6FD11420(pGame, nMissileId, pUnit, 0, 1, 0, 0, 0, 0, 0);
+                        ESE_sub_6FD11420(pGame, nMissileId, pUnit, 0, 1, 0, 0, 0, 0, 0);
                     }
 
                     PATH_SetTargetUnit(pUnit->pDynamicPath, pTarget);
@@ -1409,7 +1409,7 @@ int32_t __fastcall ESE_sub_6FC64790(D2GameStrc* pGame, D2UnitStrc* pUnit)
     const int32_t nSkillFlags = SKILLS_GetFlags(pSkill);
     if (!(nSkillFlags & 1))
     {
-        sub_6FD13410(pGame, pUnit);
+        ESE_sub_6FD13410(pGame, pUnit);
         UNITS_StopSequence(pUnit);
         return 1;
     }
@@ -1418,27 +1418,27 @@ int32_t __fastcall ESE_sub_6FC64790(D2GameStrc* pGame, D2UnitStrc* pUnit)
 
     if (sub_6FCBC930(pGame, pUnit) != 2)
     {
-        sub_6FD13410(pGame, pUnit);
+        ESE_sub_6FD13410(pGame, pUnit);
         UNITS_StopSequence(pUnit);
         return 1;
     }
 
     SKILLS_SetFlags(pSkill, nSkillFlags | 2);
 
-    sub_6FD13410(pGame, pUnit);
+    ESE_sub_6FD13410(pGame, pUnit);
 
     if (pUnit && pUnit->dwAnimMode == MONMODE_SEQUENCE)
     {
         if (pUnit->dwFlags & UNITFLAG_SKSRVDOFUNC)
         {
-            sub_6FD13410(pGame, pUnit);
+            ESE_sub_6FD13410(pGame, pUnit);
         }
     }
     else
     {
         if (pUnit->nActionFrame == 1)
         {
-            sub_6FD13410(pGame, pUnit);
+            ESE_sub_6FD13410(pGame, pUnit);
         }
     }
 
@@ -1578,7 +1578,7 @@ int32_t __fastcall ESE_sub_6FC64E60(D2GameStrc* pGame, D2ModeChangeStrc* pModeCh
         pModeChange->pUnit->dwFlags &= 0xFFFFFFBF;
     }
 
-    return sub_6FD12FD0(pGame, pModeChange->pUnit);
+    return ESE_sub_6FD12FD0(pGame, pModeChange->pUnit);
 }
 
 //D2Game.0x6FC64E90
@@ -1600,7 +1600,7 @@ int32_t __fastcall ESE_sub_6FC64E90(D2GameStrc* pGame, D2UnitStrc* pUnit)
         if (sub_6FCBC930(pGame, pUnit) == 2)
         {
             SKILLS_SetFlags(pSkill, nSkillFlags | 2);
-            sub_6FD13410(pGame, pUnit);
+            ESE_sub_6FD13410(pGame, pUnit);
             bCheck = 0;
         }
     }
@@ -1608,7 +1608,7 @@ int32_t __fastcall ESE_sub_6FC64E90(D2GameStrc* pGame, D2UnitStrc* pUnit)
     const int32_t nActionFrame = pUnit->nActionFrame;
     if (nActionFrame == 4 || bCheck && !((pUnit->dwFlags >> 6) & 1) && (nActionFrame == 1 || nActionFrame == 2))
     {
-        sub_6FD13410(pGame, pUnit);
+        ESE_sub_6FD13410(pGame, pUnit);
     }
 
     UNITS_StopSequence(pUnit);
