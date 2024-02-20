@@ -11,5 +11,4 @@ void __fastcall ESE_INTERCEPT_OBJEVAL_ApplyTrapObjectDamage(D2GameStrc* pGame, D
 
 extern decltype(&OBJEVAL_ApplyTrapObjectDamage) OBJEVAL_ApplyTrapObjectDamage_Original;
 void __fastcall ESE_INTERCEPT_OBJEVAL_ApplyTrapObjectDamage(D2GameStrc* pGame, D2UnitStrc* pSrcUnit, D2UnitStrc* pTargetUnit, int32_t nDamageType);
-static_assert(std::is_same_v<decltype(&OBJEVAL_ApplyTrapObjectDamage), decltype(&ESE_INTERCEPT_OBJEVAL_ApplyTrapObjectDamage)>, "ESE_INTERCEPT_OBJEVAL_ApplyTrapObjectDamage has a different type than previously known.");
 

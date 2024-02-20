@@ -92,7 +92,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt15_RaiseSkeleton_Mage(D2GameStrc* pGame, D2Un
         D2ActiveRoomStrc* pRoom = UNITS_GetRoom(pTarget);
         if (!DUNGEON_IsRoomInTown(pRoom))
         {
-            return D2COMMON_11017_CheckUnitIfConsumeable(pTarget, 0);
+            return D2Common_11017_CheckUnitIfConsumeable(pTarget, 0);
         }
     }
 
@@ -152,7 +152,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt17_Poison_CorpseExplosion(D2GameStrc* pGame, 
         D2ActiveRoomStrc* pRoom = UNITS_GetRoom(pTarget);
         if (!DUNGEON_IsRoomInTown(pRoom))
         {
-            return D2COMMON_11021(pTarget);
+            return D2Common_11021(pTarget);
         }
     }
 
@@ -192,7 +192,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt21_Revive(D2GameStrc* pGame, D2UnitStrc* pUni
         D2MonStats2Txt* pMonStats2TxtRecord = MONSTERREGION_GetMonStats2TxtRecord(pTarget->dwClassId);
         if (pMonStats2TxtRecord && pMonStats2TxtRecord->dwFlags & gdwBitMasks[8])
         {
-            if (SUNIT_IsDead(pTarget) && D2COMMON_11017_CheckUnitIfConsumeable(pTarget, 0))
+            if (SUNIT_IsDead(pTarget) && D2Common_11017_CheckUnitIfConsumeable(pTarget, 0))
             {
                 return ESE_sub_6FD15190(pTarget, 7) != 0;
             }
@@ -425,7 +425,7 @@ int32_t __fastcall ESE_sub_6FD0B450(D2UnitStrc* pUnit, void* pArgs)
 
     if (v2->bUpdateAnimRate)
     {
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
     }
 
     if (v2->nAuraEvent[0] >= 0 && v2->nAuraEventFunc[0] > 0)
@@ -818,7 +818,7 @@ int32_t __fastcall ESE_sub_6FD0C060(D2UnitStrc* pUnit, void* pArg)
 
     if (pParam->bUpdateAnimRate)
     {
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
     }
 
     sub_6FCBDD30(pUnit, 1u, 1);
@@ -857,7 +857,7 @@ void __fastcall ESE_D2GAME_SetSummonResistance_6FD0C2E0(D2UnitStrc* pUnit, D2Uni
         D2StatListStrc* pStatList = STATLIST_AllocStatList(pMemPool, 0, 0, nUnitType, nUnitGUID);
         if (pStatList)
         {
-            D2COMMON_10475_PostStatToStatList(pPet, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pPet, pStatList, 1);
 
             if ((int32_t)STATLIST_UnitGetStatValue(pPet, STAT_ITEM_ABSORBFIRE_PERCENT, 0) <= 0)
             {
@@ -1005,7 +1005,7 @@ int32_t __fastcall ESE_D2GAME_SetSummonPassiveStats_6FD0C530(D2GameStrc* pGame, 
                             return 0;
                         }
 
-                        D2COMMON_10475_PostStatToStatList(pPet, pStatList, 1);
+                        D2Common_10475_PostStatToStatList(pPet, pStatList, 1);
                     }
 
                     STATLIST_SetStatIfListIsValid(pStatList, pSkillsTxtRecord->wAuraStat[i], nValue, 0);
@@ -1160,7 +1160,7 @@ int32_t __fastcall ESE_D2GAME_SKILLS_SetSummonBaseStats_6FD0CB10(D2GameStrc* pGa
 int32_t __fastcall ESE_SKILLS_SrvDo031_RaiseSkeleton_Mage(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)
 {
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
-    if (!pTarget || !D2COMMON_11017_CheckUnitIfConsumeable(pTarget, 0))
+    if (!pTarget || !D2Common_11017_CheckUnitIfConsumeable(pTarget, 0))
     {
         return 0;
     }
@@ -1225,8 +1225,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo031_RaiseSkeleton_Mage(D2GameStrc* pGame, D2U
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_ITEMFULLSET);
             if (pStatList)
             {
-                //STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
-                nLevel = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
+                //D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+                nLevel = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
             }
         }
 
@@ -1246,8 +1246,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo031_RaiseSkeleton_Mage(D2GameStrc* pGame, D2U
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_ITEMFULLSET);
             if (pStatList)
             {
-                //STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
-                nLevel = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
+                //D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+                nLevel = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
             }
         }
 
@@ -1305,7 +1305,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo055_CorpseExplosion(D2GameStrc* pGame, D2Unit
 {
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
 
-    if (!pTarget || !D2COMMON_11021(pTarget))
+    if (!pTarget || !D2Common_11021(pTarget))
     {
         return 0;
     }
@@ -1518,7 +1518,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo058_Revive(D2GameStrc* pGame, D2UnitStrc* pUn
     }
 
     D2MonStats2Txt* pMonStats2TxtRecord = MONSTERREGION_GetMonStats2TxtRecord(pTarget->dwClassId);
-    if (!pMonStats2TxtRecord || !(pMonStats2TxtRecord->dwFlags & gdwBitMasks[MONSTATS2FLAGINDEX_REVIVE]) || !SUNIT_IsDead(pTarget) || !D2COMMON_11017_CheckUnitIfConsumeable(pTarget, 0) || !ESE_sub_6FD15190(pTarget, 7))
+    if (!pMonStats2TxtRecord || !(pMonStats2TxtRecord->dwFlags & gdwBitMasks[MONSTATS2FLAGINDEX_REVIVE]) || !SUNIT_IsDead(pTarget) || !D2Common_11017_CheckUnitIfConsumeable(pTarget, 0) || !ESE_sub_6FD15190(pTarget, 7))
     {
         return 0;
     }
@@ -1863,7 +1863,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo063_PoisonExplosion(D2GameStrc* pGame, D2Unit
     if (nMissileId >= 0 && nMissileId < sgptDataTables->nMissilesTxtRecordCount)
     {
         D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
-        if (!pTarget || !D2COMMON_11021(pTarget))
+        if (!pTarget || !D2Common_11021(pTarget))
         {
             return 0;
         }
@@ -2115,13 +2115,13 @@ int32_t __fastcall ESE_D2GAME_EventFunc22_6FD0F000(D2GameStrc* pGame, int32_t nE
             int32_t nStat1 = pSkillsTxtRecord->wAuraStat[1];
             if (nStat1 >= 0 && nStat1 < sgptDataTables->nItemStatCostTxtRecordCount)
             {
-                int32_t nValue1 = STATLIST_GetStatValue(pStatList, nStat1, 0);
+                int32_t nValue1 = D2Common_10466_STATLIST_GetStatValue(pStatList, nStat1, 0);
                 if (nValue1 > 0)
                 {
                     int32_t nStat0 = pSkillsTxtRecord->wAuraStat[0];
                     if (nStat0 >= 0 && nStat0 < sgptDataTables->nItemStatCostTxtRecordCount)
                     {
-                        int32_t nValue0 = STATLIST_GetStatValue(pStatList, nStat0, 0);
+                        int32_t nValue0 = D2Common_10466_STATLIST_GetStatValue(pStatList, nStat0, 0);
                         
                         if (nValue0 > 0)
                         {
@@ -2148,7 +2148,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc22_6FD0F000(D2GameStrc* pGame, int32_t nE
                         }
 
                         const int32_t nParam = ESE_MONSTERUNIQUE_CalculatePercentage(nValue0, 100, nValue1);
-                        int32_t nParamDiff = nParam - STATLIST_GetStatValue(pStatList, STAT_UNSENTPARAM1, 0);
+                        int32_t nParamDiff = nParam - D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_UNSENTPARAM1, 0);
                         nParamDiff = std::abs(nParamDiff);
 
                         if (nParamDiff >= 5)
@@ -2386,7 +2386,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc27_6FD0F7A0(D2GameStrc* pGame, int32_t nE
     {
         STATLIST_SetStat(pStatList, STAT_ATTACKRATE, -nSlow, 0);
         STATLIST_SetStat(pStatList, STAT_OTHER_ANIMRATE, -nSlow, 0);
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
         return 1;
     }
 

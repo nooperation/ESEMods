@@ -599,7 +599,7 @@ int32_t __fastcall ESE_sub_6FD0FA00(D2UnitStrc* pUnit, D2UnitStrc* pTarget, uint
         targetCoords.nX = CLIENTS_GetUnitX(pTarget);
         targetCoords.nY = CLIENTS_GetUnitY(pTarget);
         
-        if (COLLISION_RayTrace(pRoom, &coords, &targetCoords, 4u))
+        if (D2Common_11263_COLLISION_RayTrace(pRoom, &coords, &targetCoords, 4u))
         {
             return 0;
         }
@@ -629,7 +629,7 @@ void __fastcall ESE_sub_6FD0FDD0(D2UnitStrc* pUnit)
         STATLIST_SetUnitStat(pUnit, STAT_STAMINA, nMaxStamina, 0);
     }
 
-    UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+    D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
 }
 
 //D2Game.0x6FD0FE50
@@ -819,7 +819,7 @@ void __fastcall ESE_sub_6FD10250(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStr
         {
             STATLIST_SetState(pStatList, nState);
             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-            D2COMMON_10475_PostStatToStatList(pTarget, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pTarget, pStatList, 1);
             STATES_ToggleState(pTarget, nState, 1);
             EVENT_SetEvent(pGame, pTarget, UNITEVENTCALLBACK_REMOVESTATE, nAuraLength + pGame->dwGameFrame, 0, 0);
             ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nSkillLevel);
@@ -846,8 +846,8 @@ int32_t __fastcall ESE_sub_6FD10360(D2GameStrc* pGame, uint32_t nFlags, D2UnitSt
     }
     else
     {
-        nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-        nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+        nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+        nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
     }
 
     if (!nX || !nY)
@@ -1124,7 +1124,7 @@ int32_t __fastcall ESE_D2GAME_SKILLMANA_Consume_6FD10A50(D2GameStrc* pGame, D2Un
     }
     
     const int32_t nLayer = (nChargeSkillLevel & sgptDataTables->nShiftedStuff) + (nChargeSkillId << sgptDataTables->nStuff);
-    const int32_t nStatValue = STATLIST_GetStatValue(pStatList, STAT_ITEM_CHARGED_SKILL, nLayer);
+    const int32_t nStatValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_ITEM_CHARGED_SKILL, nLayer);
     if (!nStatValue)
     {
         return 0;
@@ -1148,7 +1148,7 @@ int32_t __fastcall ESE_D2GAME_SKILLMANA_Consume_6FD10A50(D2GameStrc* pGame, D2Un
     }
 
     const int32_t nNewValue = (uint8_t)nCharges + (nMaxCharges << 8);
-    STATLIST_SetBaseStat2(pStatList, STAT_ITEM_CHARGED_SKILL, nNewValue, nLayer, pItem);
+    D2Common_11295_STATLIST_SetBaseStat2(pStatList, STAT_ITEM_CHARGED_SKILL, nNewValue, nLayer, pItem);
     D2GAME_PACKETS_SendPacket0x3E_6FC3EC20(SUNIT_GetClientFromPlayer(pPlayer, __FILE__, __LINE__), pItem, 1, STAT_ITEM_CHARGED_SKILL, nNewValue, nLayer);
     return 1;
 }
@@ -1248,7 +1248,7 @@ void __fastcall ESE_sub_6FD10E50(D2UnitStrc* pUnit, int32_t nState, D2StatListSt
     if (!SUNIT_IsDead(pUnit) || !STATES_CheckStateMaskStayDeathOnUnitByStateId(pUnit, nState))
     {
         STATES_ToggleState(pUnit, nState, 0);
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
         SKILLS_RefreshPassiveSkills(pUnit);
 
         if (pUnit && pUnit->dwUnitType == UNIT_PLAYER)
@@ -1382,7 +1382,7 @@ D2StatListStrc* __fastcall ESE_sub_6FD10EC0(D2CurseStrc* pCurse)
         STATLIST_SetStatIfListIsValid(pStatList, pCurse->nStat, pCurse->nStatValue, 0);
     }
 
-    D2COMMON_10475_PostStatToStatList(pCurse->pTarget, pStatList, 1);
+    D2Common_10475_PostStatToStatList(pCurse->pTarget, pStatList, 1);
 
     if (pCurse->pStateRemoveCallback)
     {
@@ -1486,8 +1486,8 @@ D2UnitStrc* __fastcall ESE_sub_6FD11420(D2GameStrc* pGame, int32_t nMissileId, D
         }
         else
         {
-            missileParams.nTargetX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-            missileParams.nTargetY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+            missileParams.nTargetX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+            missileParams.nTargetY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
         }
 
         if (!missileParams.nTargetX || !missileParams.nTargetY)
@@ -1536,8 +1536,8 @@ D2UnitStrc* __fastcall ESE_D2GAME_CreateMissile_6FD115E0(D2GameStrc* pGame, D2Un
         }
         else
         {
-            x = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-            y = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+            x = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+            y = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
         }
 
         if (!x && !y)
@@ -1546,7 +1546,7 @@ D2UnitStrc* __fastcall ESE_D2GAME_CreateMissile_6FD115E0(D2GameStrc* pGame, D2Un
         }
     }
 
-    if (UNITS_GetDistanceToCoordinates(pUnit, x, y) > 100)
+    if (D2Common_10398_UNITS_GetDistanceToCoordinates(pUnit, x, y) > 100)
     {
         return 0;
     }
@@ -1591,8 +1591,8 @@ D2UnitStrc* __fastcall ESE_sub_6FD11710(D2GameStrc* pGame, int32_t nMissileId, D
         }
         else
         {
-            missileParams.nTargetX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-            missileParams.nTargetY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+            missileParams.nTargetX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+            missileParams.nTargetY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
         }
 
         if (!missileParams.nTargetX || !missileParams.nTargetY)
@@ -1620,7 +1620,7 @@ int32_t __fastcall ESE_sub_6FD118C0(D2GameStrc* pGame, D2UnitStrc* pUnit)
     D2UnitStrc* pWeapon = sub_6FC7C7B0(pUnit);
     int32_t bNoBow = 1;
 
-    if (ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_BOW) || ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_CROSSBOW))
+    if (D2Common_10731_ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_BOW) || D2Common_10731_ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_CROSSBOW))
     {
         bNoBow = 0;
     }
@@ -1757,11 +1757,11 @@ void __fastcall ESE_D2GAME_SKILLS_SetDelay_6FD11C00(D2GameStrc* pGame, D2UnitStr
 
             STATLIST_SetState(pStatList, STATE_SKILLDELAY);
             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-            D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
             STATES_ToggleState(pUnit, STATE_SKILLDELAY, 1);
         }
 
-        D2COMMON_10476(pStatList, nExpireFrame);
+        D2Common_10476(pStatList, nExpireFrame);
         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
     }
 }
@@ -2037,7 +2037,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo001_Attack_LeftHandSwing(D2GameStrc* pGame, D
 
     if (COMPOSIT_IsWeaponBowOrXBow(pUnit))
     {
-        const int32_t nItemType = D2COMMON_11039_CheckWeaponIsMissileBased(pUnit, &nSkillLevel);
+        const int32_t nItemType = D2Common_11039_CheckWeaponIsMissileBased(pUnit, &nSkillLevel);
         if (nItemType == ITEMTYPE_BOW)
         {
             ESE_sub_6FD11420(pGame, ITEMTYPE_BOW, pUnit, nSkillId, nSkillLevel, 0, 0, 0, 0, 0);
@@ -2154,7 +2154,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo002_Kick_PowerStrike_MonIceSpear_Impale_Bash_
             EVENT_SetEvent(pGame, pTarget, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + nLength, 0, 0);
             STATES_ToggleState(pTarget, pSkillsTxtRecord->wAuraTargetState, 1);
             STATLIST_SetState(pStatList, pSkillsTxtRecord->wAuraTargetState);
-            D2COMMON_10475_PostStatToStatList(pTarget, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pTarget, pStatList, 1);
             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
             ESE_sub_6FCFE0E0(pTarget, pStatList, pSkillsTxtRecord, nSkillId, nSkillLevel);
         }
@@ -2180,7 +2180,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo002_Kick_PowerStrike_MonIceSpear_Impale_Bash_
             }
 
             STATLIST_SetState(pStatList, pSkillsTxtRecord->nAuraState);
-            D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
         }
 
@@ -2252,7 +2252,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo003_Throw(D2GameStrc* pGame, D2UnitStrc* pUni
             const int32_t nMissileType = ITEMS_GetMissileType(pWeapon);
 
             D2UnitStrc* pMissile = nullptr;
-            if (ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_MISSILE_POTION))
+            if (D2Common_10731_ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_MISSILE_POTION))
             {
                 pMissile = ESE_sub_6FD11710(pGame, nMissileType, pUnit, nSkillId, nSkillLevel, 0, 0, 0, 0, 1);
             }
@@ -2310,7 +2310,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo005_LeftHandThrow(D2GameStrc* pGame, D2UnitSt
             const int32_t nMissileType = ITEMS_GetMissileType(pWeapon);
 
             D2UnitStrc* pMissile = nullptr;
-            if (ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_MISSILE_POTION))
+            if (D2Common_10731_ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_MISSILE_POTION))
             {
                 pMissile = ESE_sub_6FD11710(pGame, nMissileType, pUnit, nSkillId, nSkillLevel, 0, 0, 0, 0, 1);
             }
@@ -2374,8 +2374,8 @@ int32_t __fastcall ESE_sub_6FD12950(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_
         }
         else
         {
-            nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-            nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+            nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+            nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
         }
 
         if (nX && nY)
@@ -2524,8 +2524,8 @@ int32_t __fastcall ESE_D2GAME_SKILLS_Handler_6FD12BA0(D2GameStrc* pGame, D2UnitS
             }
             else
             {
-                nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-                nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+                nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+                nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
             }
 
             if (nX && nY)
@@ -2807,8 +2807,8 @@ void __fastcall ESE_D2GAME_MONSTERS_AiFunction09_6FD13470(D2GameStrc* pGame, D2U
             return;
         }
 
-        const int32_t nSkillLevel = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
-        if (SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillIdArg) && nSkillIdArg == STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0))
+        const int32_t nSkillLevel = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
+        if (SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillIdArg) && nSkillIdArg == D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0))
         {
             ESE_D2GAME_SKILLS_Handler_6FD12BA0(pGame, pUnit, nSkillIdArg, nSkillLevel, 1, 0, 0);
             ESE_sub_6FD13260(pGame, pUnit, nSkillIdArg, nSkillLevel, 0);
@@ -3000,7 +3000,7 @@ void __fastcall ESE_D2GAME_AssignSkill_6FD13800(D2UnitStrc* pUnit, int32_t a2, i
                                 STATLIST_SetState(pStatList, pSkillsTxtRecord->nAuraState);
                                 STATLIST_SetSkillId(pStatList, nSkillId);
                                 STATLIST_SetSkillLevel(pStatList, nSkillLevel);
-                                D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+                                D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
                                 STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_SKILL, nSkillId, 0);
                                 STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_LEVEL, nSkillLevel, 0);
                             }
@@ -3158,8 +3158,8 @@ int32_t __fastcall ESE_D2GAME_GetXAndYFromTargetUnit_6FD14020(D2GameStrc* pGame,
     }
     else
     {
-        *pX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-        *pY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+        *pX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+        *pY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
     }
 
     return *pX && *pY;
@@ -3539,8 +3539,8 @@ D2UnitStrc* __fastcall ESE_D2GAME_SummonPet_6FD14430(D2GameStrc* pGame, D2Summon
         }
         else
         {
-            nX = D2COMMON_10175_PathGetFirstPointX(pSummonArg->pOwner->pDynamicPath);
-            nY = D2COMMON_10176_PathGetFirstPointY(pSummonArg->pOwner->pDynamicPath);
+            nX = D2Common_10175_PathGetFirstPointX(pSummonArg->pOwner->pDynamicPath);
+            nY = D2Common_10176_PathGetFirstPointY(pSummonArg->pOwner->pDynamicPath);
         }
     }
     else
@@ -3657,8 +3657,8 @@ void __fastcall ESE_sub_6FD14770(D2GameStrc* pGame, int32_t nFlags, D2UnitStrc* 
     }
     else
     {
-        nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-        nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+        nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+        nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
     }
 
     if (nX && nY)
@@ -3849,7 +3849,7 @@ void __fastcall ESE_sub_6FD14F70(D2GameStrc* pGame, D2UnitStrc* pUnused, D2UnitS
         D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, nDelay);
         if (pStatList)
         {
-            D2COMMON_10476(pStatList, pGame->dwGameFrame + nDelay);
+            D2Common_10476(pStatList, pGame->dwGameFrame + nDelay);
             EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + nDelay, 0, 0);
         }
         else
@@ -3860,7 +3860,7 @@ void __fastcall ESE_sub_6FD14F70(D2GameStrc* pGame, D2UnitStrc* pUnused, D2UnitS
                 EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + 100, 0, 0);
                 STATLIST_SetState(pStatList, STATE_STUNNED);
                 STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-                D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+                D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
                 STATES_ToggleState(pUnit, STATE_STUNNED, 1);
             }
         }
@@ -3968,7 +3968,7 @@ D2UnitStrc* __fastcall ESE_sub_6FD15210(D2UnitStrc* pUnit, D2UnitStrc* pTarget, 
 //D2Game.0x6FD15320
 int32_t __fastcall ESE_sub_6FD15320(D2UnitStrc* pUnit, D2UnitFindArgStrc* pArg)
 {
-    if (D2COMMON_11021(pUnit))
+    if (D2Common_11021(pUnit))
     {
         return UNITFINDS_TestUnit(pUnit, pArg);
     }
@@ -3995,8 +3995,8 @@ int32_t __fastcall ESE_sub_6FD15340(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_
         }
         else
         {
-            nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-            nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+            nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+            nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
         }
 
         if (nX && nY)
@@ -4028,9 +4028,9 @@ void __fastcall ESE_sub_6FD15470(D2UnitStrc* pUnit, int32_t nAttackRate)
     D2StatListStrc* pStatList = STATLIST_AllocStatList(0, 4u, 0, nUnitType, nUnitGUID);
     if (pStatList)
     {
-        D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+        D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
         STATLIST_SetStatIfListIsValid(pStatList, STAT_ATTACKRATE, nAttackRate, 0);
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
     }
 }
 

@@ -283,7 +283,7 @@ void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAt
 		{
 			int32_t nUndeadDamagePct = 0;
 			D2UnitStrc* pWeapon = sub_6FC7C7B0(pAttacker);
-			if (pWeapon && ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_BLUNT))
+			if (pWeapon && D2Common_10731_ITEMS_CheckItemTypeId(pWeapon, ITEMTYPE_BLUNT))
 			{
 				nUndeadDamagePct = 50;
 			}
@@ -1187,7 +1187,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 						nUnitType = pAttacker->dwUnitType;
 						int32_t nClassId = pAttacker->dwClassId;
 						int32_t nAnimMode = pAttacker->dwAnimMode;
-						D2COMMON_11013_ConvertMode(pAttacker, &nUnitType, &nClassId, &nAnimMode, __FILE__, __LINE__);
+						D2Common_11013_ConvertMode(pAttacker, &nUnitType, &nClassId, &nAnimMode, __FILE__, __LINE__);
 					}
 				}
 			}
@@ -1196,7 +1196,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 				nUnitType = 6;
 				int32_t nClassId = -1;
 				int32_t nAnimMode = 0;
-				D2COMMON_11013_ConvertMode(pAttacker, &nUnitType, &nClassId, &nAnimMode, __FILE__, __LINE__);
+				D2Common_11013_ConvertMode(pAttacker, &nUnitType, &nClassId, &nAnimMode, __FILE__, __LINE__);
 			}
 
 			if (!nUnitType)
@@ -1359,7 +1359,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 				EVENT_SetEvent(pAttacker->pGame, pDefender, UNITEVENTCALLBACK_REMOVESTATE, nStunEndFrame, 0, 0);
 				STATLIST_SetState(pNewStatList, STATE_STUNNED);
 				STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
-				D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
+				D2Common_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 				STATES_ToggleState(pDefender, STATE_STUNNED, 1);
 			}
 		}
@@ -1467,9 +1467,9 @@ void __fastcall ESE_SUNITDMG_ApplyPoisonDamage(D2UnitStrc* pAttacker, D2UnitStrc
 	const int32_t nExpireFrame = nPoisonLength + pGame->dwGameFrame;
 	if (pStatList)
 	{
-		if (-STATLIST_GetStatValue(pStatList, STAT_HPREGEN, 0) <= nPoisonDamage)
+		if (-D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_HPREGEN, 0) <= nPoisonDamage)
 		{
-			D2COMMON_10476(pStatList, nExpireFrame);
+			D2Common_10476(pStatList, nExpireFrame);
 			EVENT_SetEvent(pGame, pDefender, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
 			STATLIST_SetStatIfListIsValid(pStatList, STAT_HPREGEN, -nPoisonDamage, 0);
 		}
@@ -1492,7 +1492,7 @@ void __fastcall ESE_SUNITDMG_ApplyPoisonDamage(D2UnitStrc* pAttacker, D2UnitStrc
 	STATLIST_SetStatIfListIsValid(pNewStatList, STAT_HPREGEN, -nPoisonDamage, 0);
 	STATLIST_SetState(pNewStatList, STATE_POISON);
 	STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
-	D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
+	D2Common_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 }
 
 //D2Game.0x6FCC0800
@@ -1514,9 +1514,9 @@ void __fastcall ESE_SUNITDMG_ApplyBurnDamage(D2UnitStrc* pAttacker, D2UnitStrc* 
 	const int32_t nExpireFrame = nBurnLength + pGame->dwGameFrame;
 	if (pStatList)
 	{
-		if (-STATLIST_GetStatValue(pStatList, STAT_HPREGEN, 0) <= nBurnDamage)
+		if (-D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_HPREGEN, 0) <= nBurnDamage)
 		{
-			D2COMMON_10476(pStatList, nExpireFrame);
+			D2Common_10476(pStatList, nExpireFrame);
 			EVENT_SetEvent(pGame, pDefender, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
 			STATLIST_SetStatIfListIsValid(pStatList, STAT_HPREGEN, -nBurnDamage, 0);
 		}
@@ -1539,7 +1539,7 @@ void __fastcall ESE_SUNITDMG_ApplyBurnDamage(D2UnitStrc* pAttacker, D2UnitStrc* 
 	STATLIST_SetStatIfListIsValid(pNewStatList, STAT_HPREGEN, -nBurnDamage, 0);
 	STATLIST_SetState(pNewStatList, STATE_BURNING);
 	STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
-	D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
+	D2Common_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 }
 
 //D2Game.0x6FCC0940
@@ -1596,11 +1596,11 @@ void __fastcall ESE_SUNITDMG_ApplyColdState(D2UnitStrc* pAttacker, D2UnitStrc* p
 
 		STATLIST_SetState(pNewStatList, STATE_COLD);
 		STATLIST_SetStatRemoveCallback(pNewStatList, ESE_SUNITDMG_RemoveShatterState);
-		D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
+		D2Common_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 		STATLIST_SetStatIfListIsValid(pNewStatList, STAT_VELOCITYPERCENT, nColdEffect, 0);
 		STATLIST_SetStatIfListIsValid(pNewStatList, STAT_ATTACKRATE, nColdEffect, 0);
 		STATLIST_SetStatIfListIsValid(pNewStatList, STAT_OTHER_ANIMRATE, nColdEffect, 0);
-		UNITS_UpdateAnimRateAndVelocity(pDefender, __FILE__, __LINE__);
+		D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pDefender, __FILE__, __LINE__);
 	}
 
 	if ((ITEMS_RollRandomNumber(&pDefender->pSeed) % 100) >= 20 && pDefender && pDefender->dwUnitType == UNIT_MONSTER)
@@ -1632,7 +1632,7 @@ void __fastcall ESE_SUNITDMG_RemoveShatterState(D2UnitStrc* pUnit, int32_t nStat
 		STATES_ToggleState(pUnit, STATE_SHATTER, 0);
 	}
 
-	UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+	D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
 }
 
 //D2Game.0x6FCC0BE0
@@ -1712,7 +1712,7 @@ void __fastcall ESE_SUNITDMG_ApplyFreezeState(D2UnitStrc* pAttacker, D2UnitStrc*
 		D2StatListStrc* pNewStatList = STATLIST_AllocStatList(pGame->pMemoryPool, 2u, nExpireFrame, nAttackerType, nAttackerGUID);
 		STATLIST_SetState(pNewStatList, 1u);
 		STATLIST_SetStatRemoveCallback(pNewStatList, ESE_SUNITDMG_RemoveFreezeState);
-		D2COMMON_10475_PostStatToStatList(pDefender, pNewStatList, 1);
+		D2Common_10475_PostStatToStatList(pDefender, pNewStatList, 1);
 	}
 
 	EVENT_SetEvent(pGame, pDefender, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
@@ -1978,7 +1978,7 @@ void __fastcall ESE_SUNITDMG_ExecuteMissileDamage(D2GameStrc* pGame, D2UnitStrc*
 			D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_EVADE);
 			if (pStatList)
 			{
-				const int32_t nSkillId = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+				const int32_t nSkillId = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
 
 				if (SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId))
 				{
@@ -2042,7 +2042,7 @@ void __fastcall ESE_SUNITDMG_ExecuteMissileDamage(D2GameStrc* pGame, D2UnitStrc*
 		D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, nState);
 		if (pStatList)
 		{
-			D2SkillStrc* pSkill = SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0));
+			D2SkillStrc* pSkill = SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0));
 			if (pSkill)
 			{
 				SKILLS_SetFlags(pSkill, SKILLS_GetFlags(pSkill) | 4);
@@ -2334,7 +2334,7 @@ void __fastcall ESE_SUNITDMG_DrainItemDurability(D2GameStrc* pGame, D2UnitStrc* 
 			for (int32_t i = 0; i < std::size(sgDurabilityLossWeights); ++i)
 			{
 				D2UnitStrc* pItem = INVENTORY_GetItemFromBodyLoc(pDefender->pInventory, sgDurabilityLossWeights[i].nBodyLoc);
-				if (pItem && ITEMS_CheckItemTypeId(pItem, ITEMTYPE_ANY_ARMOR))
+				if (pItem && D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_ANY_ARMOR))
 				{
 					pItems[i] = pItem;
 					nTotalWeight += sgDurabilityLossWeights[i].nWeight;
@@ -2805,7 +2805,7 @@ int32_t __fastcall ESE_SUNITDMG_GetWeaponBlock(D2UnitStrc* pUnit)
 	{
 		const int32_t nValue = stats[i].nValue;
 		const int32_t nItemType = stats[i].nLayer;
-		if (nItemType <= 0 || (pLeftHandItem && ITEMS_CheckItemTypeId(pLeftHandItem, nItemType) || pRightHandItem && ITEMS_CheckItemTypeId(pRightHandItem, nItemType)) && nValue > nMax)
+		if (nItemType <= 0 || (pLeftHandItem && D2Common_10731_ITEMS_CheckItemTypeId(pLeftHandItem, nItemType) || pRightHandItem && D2Common_10731_ITEMS_CheckItemTypeId(pRightHandItem, nItemType)) && nValue > nMax)
 		{
 			nMax = nValue;
 		}

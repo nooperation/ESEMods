@@ -625,8 +625,8 @@ int32_t __fastcall ESE_sub_6FC64790(D2GameStrc* pGame, D2UnitStrc* pUnit)
                     }
                     else
                     {
-                        nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-                        nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+                        nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+                        nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
                     }
 
                     int32_t nYOffset = 5;
@@ -651,7 +651,7 @@ int32_t __fastcall ESE_sub_6FC64790(D2GameStrc* pGame, D2UnitStrc* pUnit)
                             nYOffset = -nYOffset;
                         }
 
-                        D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nX + nXOffset, nY + nYOffset);
+                        D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, nX + nXOffset, nY + nYOffset);
                         ESE_sub_6FD11420(pGame, nMissileId, pUnit, 0, 1, 0, 0, 0, 0, 0);
                     }
 

@@ -234,15 +234,15 @@ int32_t __fastcall ESE_SKILLS_SrvDo034_TigerStrike_CobraStrike_RoyalStrike(D2Gam
 
             STATLIST_SetState(pStatList, pSkillsTxtRecord->nAuraState);
             STATLIST_SetStatRemoveCallback(pStatList, ESE_SKILLS_StatRemoveCallback_ProgressiveStrike);
-            D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
             STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_SKILL, nSkillId, 0);
             STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_LEVEL, nSkillLevel, 0);
         }
 
-        D2COMMON_10476(pStatList, nExpireFrame);
+        D2Common_10476(pStatList, nExpireFrame);
         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
 
-        const int32_t nOldValue = STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
+        const int32_t nOldValue = D2Common_10466_STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
 
         int32_t nNewValue = nOldValue + 1;
         if (nNewValue > 3)
@@ -280,7 +280,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo035_FistsOfFire_ClawsOfThunder_BladesOfIce(D2
         pLeftWeapon = INVENTORY_GetItemFromBodyLoc(pUnit->pInventory, BODYLOC_LARM);
     }
 
-    if (!pUnit->pInventory || pRightWeapon != pLeftWeapon && pRightWeapon && pLeftWeapon && ITEMS_CanBeEquipped(pRightWeapon) && ITEMS_CanBeEquipped(pLeftWeapon) && ITEMS_CheckItemTypeId(pRightWeapon, ITEMTYPE_WEAPON) && ITEMS_CheckItemTypeId(pLeftWeapon, ITEMTYPE_WEAPON))
+    if (!pUnit->pInventory || pRightWeapon != pLeftWeapon && pRightWeapon && pLeftWeapon && ITEMS_CanBeEquipped(pRightWeapon) && ITEMS_CanBeEquipped(pLeftWeapon) && D2Common_10731_ITEMS_CheckItemTypeId(pRightWeapon, ITEMTYPE_WEAPON) && D2Common_10731_ITEMS_CheckItemTypeId(pLeftWeapon, ITEMTYPE_WEAPON))
     {
         if (((pUnit->dwSeqFrame >> 8) % 2) != 0)
         {
@@ -315,18 +315,18 @@ void __fastcall ESE_sub_6FCF5680(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, sgptDataTables->pProgressiveStates[i]);
             if (pStatList)
             {
-                const int32_t nSkillId = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+                const int32_t nSkillId = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
                 D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
                 if (pSkillsTxtRecord && pSkillsTxtRecord->nPrgDamage == 1)
                 {
                     const int32_t nMaxLevel = SKILLS_GetSkillLevel(pUnit, SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId), 1);
-                    const int32_t nSkillLevel = std::max(STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0), nMaxLevel);
+                    const int32_t nSkillLevel = std::max(D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0), nMaxLevel);
                     if (nSkillLevel > 0)
                     {
                         const int32_t nAuraStat = pSkillsTxtRecord->wAuraStat[0];
                         if (nAuraStat >= 0 && nAuraStat < sgptDataTables->nItemStatCostTxtRecordCount)
                         {
-                            const int32_t nValue = STATLIST_GetStatValue(pStatList, nAuraStat, 0);
+                            const int32_t nValue = D2Common_10466_STATLIST_GetStatValue(pStatList, nAuraStat, 0);
                             if (nValue > 0)
                             {
                                 pDamage->dwEnDmgPct += nValue * SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
@@ -360,7 +360,7 @@ void __fastcall ESE_sub_6FCF5870(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, sgptDataTables->pProgressiveStates[i]);
             if (pStatList)
             {
-                const int32_t nSkillId = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+                const int32_t nSkillId = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
                 D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
                 if (pSkillsTxtRecord)
                 {
@@ -369,10 +369,10 @@ void __fastcall ESE_sub_6FCF5870(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
                     case 2:
                     {
                         const int32_t nMaxSkillLevel = SKILLS_GetSkillLevel(pUnit, SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId), 1);
-                        const int32_t nSkillLevel = std::max(STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0), nMaxSkillLevel);
+                        const int32_t nSkillLevel = std::max(D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0), nMaxSkillLevel);
                         if (nSkillLevel > 0 && pSkillsTxtRecord->wAuraStat[0] >= 0 && pSkillsTxtRecord->wAuraStat[0] < sgptDataTables->nItemStatCostTxtRecordCount)
                         {
-                            const int32_t nValue = STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
+                            const int32_t nValue = D2Common_10466_STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
                             if (nValue > 0)
                             {
                                 int32_t nLeech = pSkillsTxtRecord->dwParam[0] + (nSkillLevel - 1) * pSkillsTxtRecord->dwParam[1];
@@ -403,7 +403,7 @@ void __fastcall ESE_sub_6FCF5870(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
                     }
                     case 3:
                     {
-                        int32_t nSkillLevel = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
+                        int32_t nSkillLevel = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
                         const int32_t nMaxSkillLevel = SKILLS_GetSkillLevel(pUnit, SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId), 1);
                         if (nMaxSkillLevel > nSkillLevel)
                         {
@@ -412,7 +412,7 @@ void __fastcall ESE_sub_6FCF5870(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 
                         if (nSkillLevel > 0 && pSkillsTxtRecord->wAuraStat[0] >= 0 && pSkillsTxtRecord->wAuraStat[0] < sgptDataTables->nItemStatCostTxtRecordCount)
                         {
-                            const int32_t nValue = STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
+                            const int32_t nValue = D2Common_10466_STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
                             if (nValue > 0)
                             {
                                 ESE_D2GAME_RollElementalDamage_6FD14DD0(pUnit, pDamage, nSkillId, nSkillLevel);
@@ -452,14 +452,14 @@ D2SkillsTxt* __fastcall ESE_SKILLS_GetSkillsTxtRecord(int32_t nSkillId)
 //D2Game.0x6FCF5BC0
 void __fastcall ESE_sub_6FCF5BC0(D2UnitStrc* pUnit, D2StatListStrc* pStatList, D2DamageStrc* pDamage)
 {
-    const int32_t nSkillId = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+    const int32_t nSkillId = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
     D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
     if (!pSkillsTxtRecord)
     {
         return;
     }
 
-    int32_t nSkillLevel = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
+    int32_t nSkillLevel = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
     D2SkillStrc* pSkill = SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId);
     const int32_t nLevel = SKILLS_GetSkillLevel(pUnit, pSkill, 1);
     if (nLevel > nSkillLevel)
@@ -472,7 +472,7 @@ void __fastcall ESE_sub_6FCF5BC0(D2UnitStrc* pUnit, D2StatListStrc* pStatList, D
         const int32_t nAuraStat = pSkillsTxtRecord->wAuraStat[0];
         if (nAuraStat >= 0 && nAuraStat < sgptDataTables->nItemStatCostTxtRecordCount)
         {
-            const int32_t nValue = STATLIST_GetStatValue(pStatList, nAuraStat, 0);
+            const int32_t nValue = D2Common_10466_STATLIST_GetStatValue(pStatList, nAuraStat, 0);
             if (nValue > 0)
             {
                 ESE_D2GAME_RollElementalDamage_6FD14DD0(pUnit, pDamage, nSkillId, nSkillLevel);
@@ -527,7 +527,7 @@ int32_t __fastcall ESE_SKILLS_GetProgressiveSkillMissileId(D2UnitStrc* pUnit, in
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, pSkillsTxtRecord->nAuraState);
             if (pStatList)
             {
-                int32_t nIndex = STATLIST_GetStatValue(pStatList, nAuraStat, 0);
+                int32_t nIndex = D2Common_10466_STATLIST_GetStatValue(pStatList, nAuraStat, 0);
                 if (nIndex > 1)
                 {
                     if (nIndex >= 3)
@@ -561,7 +561,7 @@ int32_t __fastcall ESE_SKILLS_EvaluateProgressiveSkillCalc(D2UnitStrc* pUnit, in
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, pSkillsTxtRecord->nAuraState);
             if (pStatList)
             {
-                int32_t nIndex = STATLIST_GetStatValue(pStatList, nAuraStat, 0);
+                int32_t nIndex = D2Common_10466_STATLIST_GetStatValue(pStatList, nAuraStat, 0);
                 if (nIndex > 1)
                 {
                     if (nIndex >= 3)
@@ -906,7 +906,7 @@ void __fastcall ESE_sub_6FCF7390(D2UnitStrc* pMissile, int32_t nInitSeed)
 
     int32_t nX = CLIENTS_GetUnitX(pMissile);
     int32_t nY = CLIENTS_GetUnitY(pMissile);
-    int32_t nDirection = UNITS_GetDirectionToCoords(pMissile, D2COMMON_10175_PathGetFirstPointX(pMissile->pDynamicPath), D2COMMON_10176_PathGetFirstPointY(pMissile->pDynamicPath));
+    int32_t nDirection = UNITS_GetDirectionToCoords(pMissile, D2Common_10175_PathGetFirstPointX(pMissile->pDynamicPath), D2Common_10176_PathGetFirstPointY(pMissile->pDynamicPath));
 
     int32_t nSign = 2 * ((ITEMS_RollRandomNumber(&pMissile->pSeed) & 1) != 0) - 1;
     int32_t nStep = dword_6FD40508 + ITEMS_RollRandomNumber(&pMissile->pSeed) % 3;
@@ -1043,12 +1043,12 @@ void __fastcall ESE_sub_6FCF77E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2DamageS
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, sgptDataTables->pProgressiveStates[i]);
             if (pStatList)
             {
-                const int32_t nSkillId = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+                const int32_t nSkillId = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
 
                 D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
                 if (pSkillsTxtRecord)
                 {
-                    int32_t nSkillLevel = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
+                    int32_t nSkillLevel = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
                     const int32_t nMaxSkillLevel = SKILLS_GetSkillLevel(pUnit, SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, nSkillId), 1);
                     if (nSkillLevel < nMaxSkillLevel)
                     {
@@ -1057,7 +1057,7 @@ void __fastcall ESE_sub_6FCF77E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2DamageS
 
                     if (nSkillLevel > 0 && pSkillsTxtRecord->wAuraStat[0] >= 0 && pSkillsTxtRecord->wAuraStat[0] < sgptDataTables->nItemStatCostTxtRecordCount)
                     {
-                        int32_t nValue = STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
+                        int32_t nValue = D2Common_10466_STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
                         if (nValue < 1)
                         {
                             nValue = 1;
@@ -1218,7 +1218,7 @@ void __fastcall ESE_sub_6FCF7CE0(D2GameStrc* pGame, D2DamageStrc* pDamage, D2Uni
         pSecondaryWeapon = INVENTORY_GetItemFromBodyLoc(pUnit->pInventory, (ITEMS_GetBodyLocation(pMainWeapon) == BODYLOC_RARM) ? BODYLOC_LARM : BODYLOC_RARM);
     }
 
-    if (ITEMS_CheckItemTypeId(pMainWeapon, ITEMTYPE_WEAPON) && ITEMS_CanBeEquipped(pMainWeapon) && STATLIST_GetOwner(pMainWeapon, 0))
+    if (D2Common_10731_ITEMS_CheckItemTypeId(pMainWeapon, ITEMTYPE_WEAPON) && ITEMS_CanBeEquipped(pMainWeapon) && STATLIST_GetOwner(pMainWeapon, 0))
     {
         STATLIST_MergeStatLists(pUnit, pMainWeapon, 0);
     }
@@ -1227,7 +1227,7 @@ void __fastcall ESE_sub_6FCF7CE0(D2GameStrc* pGame, D2DamageStrc* pDamage, D2Uni
         pMainWeapon = nullptr;
     }
 
-    if (pSecondaryWeapon && pSecondaryWeapon != pMainWeapon && ITEMS_CheckItemTypeId(pSecondaryWeapon, ITEMTYPE_WEAPON) && ITEMS_CanBeEquipped(pSecondaryWeapon) && STATLIST_GetOwner(pSecondaryWeapon, 0))
+    if (pSecondaryWeapon && pSecondaryWeapon != pMainWeapon && D2Common_10731_ITEMS_CheckItemTypeId(pSecondaryWeapon, ITEMTYPE_WEAPON) && ITEMS_CanBeEquipped(pSecondaryWeapon) && STATLIST_GetOwner(pSecondaryWeapon, 0))
     {
         STATLIST_MergeStatLists(pUnit, pSecondaryWeapon, 0);
     }
@@ -1614,7 +1614,7 @@ void __fastcall ESE_sub_6FCF8DD0(D2UnitStrc* pDefender)
     const int32_t nRecords = (sgptDataTables->nStatesTxtRecordCount + 31) / 32;
 
     uint32_t nFlags[8] = {};
-    memcpy(nFlags, D2COMMON_10494_STATES_GetStatFlags(pDefender), sizeof(uint32_t) * nRecords);
+    memcpy(nFlags, D2Common_10494_STATES_GetStatFlags(pDefender), sizeof(uint32_t) * nRecords);
 
     for (int32_t i = 0; i < nRecords; ++i)
     {
@@ -1838,7 +1838,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt26_BladeFury(D2GameStrc* pGame, D2UnitStrc* p
     D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_INFERNO);
     if (pStatList)
     {
-        D2COMMON_10476(pStatList, pGame->dwGameFrame + 7);
+        D2Common_10476(pStatList, pGame->dwGameFrame + 7);
         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + 7, 0, 0);
 
         if (SKILLS_GetParam1(pSkill) <= pGame->dwGameFrame)
@@ -1876,7 +1876,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt26_BladeFury(D2GameStrc* pGame, D2UnitStrc* p
     }
 
     EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + 21, 0, 0);
-    D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+    D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
     STATLIST_SetStatRemoveCallback(pStatList, ESE_SKILLS_StatRemoveCallback_RemoveState);
     STATLIST_SetState(pStatList, STATE_INFERNO);
     STATES_ToggleState(pUnit, STATE_INFERNO, 1);
@@ -2019,7 +2019,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo049_ShadowWarrior_Master(D2GameStrc* pGame, D
         D2StatListStrc* pStatList = STATLIST_AllocStatList(pGame->pMemoryPool, 0, 0, pPet->dwUnitType, pPet->dwUnitId);
         if (pStatList)
         {
-            D2COMMON_10475_PostStatToStatList(pPet, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pPet, pStatList, 1);
 
             for (int32_t i = 0; i < 6; ++i)
             {
@@ -2176,8 +2176,8 @@ void __fastcall ESE_SKILLS_StatRemoveCallback_MindBlast(D2UnitStrc* pItem, int32
     D2StatListStrc* pConversionStatList = STATLIST_GetStatListFromUnitAndState(pItem, STATE_CONVERSION_SAVE);
     if (pConversionStatList)
     {
-        const int32_t nLevel = STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_LEVEL, 0);
-        const int32_t nConversionMaxHp = STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_MAXHP, 0);
+        const int32_t nLevel = D2Common_10466_STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_LEVEL, 0);
+        const int32_t nConversionMaxHp = D2Common_10466_STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_MAXHP, 0);
         int32_t nNewHp = STATLIST_GetMaxLifeFromUnit(pItem) >> 8;
         const int32_t nHitpoints = STATLIST_UnitGetStatValue(pItem, STAT_HITPOINTS, 0) >> 8;
         
@@ -2234,14 +2234,14 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_MindBlast(D2AuraCallbackStrc* pAuraCa
             {
                 STATLIST_SetState(pConversionStatList, STATE_CONVERSION);
                 STATLIST_SetStatRemoveCallback(pConversionStatList, ESE_SKILLS_StatRemoveCallback_MindBlast);
-                D2COMMON_10475_PostStatToStatList(pUnit, pConversionStatList, 1);
+                D2Common_10475_PostStatToStatList(pUnit, pConversionStatList, 1);
                 STATES_ToggleState(pUnit, STATE_CONVERSION, STATE_FREEZE);
             }
         }
 
         if (pConversionStatList)
         {
-            D2COMMON_10476(pConversionStatList, nExpireFrame);
+            D2Common_10476(pConversionStatList, nExpireFrame);
             EVENT_SetEvent(pAuraCallback->pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
             ESE_sub_6FD154D0(pUnit);
             sub_6FCBDD30(pUnit, 2u, 1);
@@ -2269,7 +2269,7 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_MindBlast(D2AuraCallbackStrc* pAuraCa
             }
 
             STATLIST_SetState(pConversionSaveStatList, STATE_CONVERSION_SAVE);
-            D2COMMON_10475_PostStatToStatList(pUnit, pConversionSaveStatList, 1);
+            D2Common_10475_PostStatToStatList(pUnit, pConversionSaveStatList, 1);
             const int32_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0) >> 8;
             const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit) >> 8;
             STATLIST_SetStatIfListIsValid(pConversionSaveStatList, STAT_CONVERSION_LEVEL, nLevel, 0);
@@ -2335,7 +2335,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo051_MindBlast(D2GameStrc* pGame, D2UnitStrc* 
 
     D2SrvDo51Strc args = {};
     args.pDamage = &damage;
-    args.nMonCurseResSubstraction = D2COMMON_11036_GetMonCurseResistanceSubtraction(nSkillLevel, nSkillId);
+    args.nMonCurseResSubstraction = D2Common_11036_GetMonCurseResistanceSubtraction(nSkillLevel, nSkillId);
     args.nParam1 = pSkillsTxtRecord->dwParam[2];
     args.nParam2 = pSkillsTxtRecord->dwParam[3];
 

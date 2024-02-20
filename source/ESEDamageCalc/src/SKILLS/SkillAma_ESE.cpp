@@ -157,7 +157,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt07_Impale(D2GameStrc* pGame, D2UnitStrc* pUni
         {
             const int32_t nChance = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
             const int32_t nAmount = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel);
-            if (ITEMS_CheckItemTypeId(pItem, ITEMTYPE_WEAPON))
+            if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_WEAPON))
             {
                 if (ITEMS_CheckIfStackable(pItem))
                 {

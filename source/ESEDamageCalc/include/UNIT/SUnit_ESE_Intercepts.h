@@ -12,4 +12,3 @@ void __fastcall ESE_INTERCEPT_sub_6FCBDE90(D2UnitStrc* pUnit, int32_t bSetUninte
 
 extern decltype(&sub_6FCBDE90) sub_6FCBDE90_Original;
 void __fastcall ESE_INTERCEPT_sub_6FCBDE90(D2UnitStrc* pUnit, int32_t bSetUninterruptable);
-static_assert(std::is_same_v<decltype(&sub_6FCBDE90), decltype(&ESE_INTERCEPT_sub_6FCBDE90)>, "ESE_INTERCEPT_sub_6FCBDE90 has a different type than previously known.");

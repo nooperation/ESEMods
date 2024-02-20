@@ -624,7 +624,7 @@ void __fastcall ESE_MISSMODE_CreateImmolationArrowHitSubmissiles(D2GameStrc* pGa
                 coord2.nX = nX + x;
                 coord2.nY = nY + y;
 
-                if (!COLLISION_RayTrace(pRoom, &coord1, &coord2, 4u))
+                if (!D2Common_11263_COLLISION_RayTrace(pRoom, &coord1, &coord2, 4u))
                 {
                     D2ActiveRoomStrc* pTargetRoom = D2GAME_GetRoom_6FC52070(pRoom, nX, nY);
                     if (pTargetRoom && !DUNGEON_IsRoomInTown(pTargetRoom))
@@ -708,7 +708,7 @@ int32_t __fastcall ESE_MISSMODE_HandleMissileCollision(D2GameStrc* pGame, D2Unit
     const int32_t nSize = UNITS_GetUnitSizeX(pMissile);
 
     D2PathPointStrc* pathPoints = nullptr;
-    const int32_t nPathPoints = D2COMMON_10198_PathGetSaveStep(pMissile->pDynamicPath, &pathPoints);
+    const int32_t nPathPoints = D2Common_10198_PathGetSaveStep(pMissile->pDynamicPath, &pathPoints);
 
     for (int32_t i = 0; i < nPathPoints; ++i)
     {
@@ -1082,7 +1082,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo11_FingerMageSpider(D2GameStrc* pGame, D2Un
             const int32_t nX = D2signum(nTargetX - nMissileX) * nParam;
             const int32_t nY = D2signum(nTargetY - nMissileY) * nParam;
 
-            D2COMMON_10170_PathSetTargetPos(pMissile->pDynamicPath, nX + CLIENTS_GetUnitX(pMissile), nY + CLIENTS_GetUnitY(pMissile));
+            D2Common_10170_PathSetTargetPos(pMissile->pDynamicPath, nX + CLIENTS_GetUnitX(pMissile), nY + CLIENTS_GetUnitY(pMissile));
             D2Common_10142(pMissile->pDynamicPath, pMissile, 0);
         }
     }
@@ -1301,7 +1301,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo16_FrozenOrbNova(D2GameStrc* pGame, D2UnitS
         const int32_t nDiff = nTargetX - nTargetY;
         const int32_t nSum = nTargetX + nTargetY;
 
-        D2COMMON_10170_PathSetTargetPos(pMissile->pDynamicPath, nDiff / 2 + CLIENTS_GetUnitX(pMissile), nSum / 2 + CLIENTS_GetUnitY(pMissile));
+        D2Common_10170_PathSetTargetPos(pMissile->pDynamicPath, nDiff / 2 + CLIENTS_GetUnitX(pMissile), nSum / 2 + CLIENTS_GetUnitY(pMissile));
         D2Common_10142(pMissile->pDynamicPath, pMissile, 0);
         MISSILE_SetTargetX(pMissile, nDiff / 2);
         MISSILE_SetTargetY(pMissile, nSum / 2);
@@ -1495,8 +1495,8 @@ int32_t __fastcall ESE_MISSMODE_SrvDo22_LightningTrailingJavelin(D2GameStrc* pGa
 
     if (MISSILE_GetRemainingFrames(pMissile) < 2)
     {
-        const int32_t nParam1 = D2COMMON_10175_PathGetFirstPointX(pMissile->pDynamicPath) - nX;
-        const int32_t nParam2 = D2COMMON_10176_PathGetFirstPointY(pMissile->pDynamicPath) - nY;
+        const int32_t nParam1 = D2Common_10175_PathGetFirstPointX(pMissile->pDynamicPath) - nX;
+        const int32_t nParam2 = D2Common_10176_PathGetFirstPointY(pMissile->pDynamicPath) - nY;
         MISSILE_SetTargetX(pMissile, -nParam2);
         MISSILE_SetTargetY(pMissile, nParam1);
     }
@@ -1876,7 +1876,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo30_RabiesPlague(D2GameStrc* pGame, D2UnitSt
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pOwner, pSkillsTxtRecord->wAuraTargetState);
             if (pSubMissile && pStatList)
             {
-                MISSILE_SetTargetX(pSubMissile, D2COMMON_10473(pStatList));
+                MISSILE_SetTargetX(pSubMissile, D2Common_10473(pStatList));
             }
         }
     }
@@ -2071,7 +2071,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo35_RoyalStrikeChaosIce(D2GameStrc* pGame, D
         nY = 1;
     }
 
-    D2COMMON_10170_PathSetTargetPos(pMissile->pDynamicPath, nX + CLIENTS_GetUnitX(pMissile), nY + CLIENTS_GetUnitY(pMissile));
+    D2Common_10170_PathSetTargetPos(pMissile->pDynamicPath, nX + CLIENTS_GetUnitX(pMissile), nY + CLIENTS_GetUnitY(pMissile));
     D2Common_10142(pMissile->pDynamicPath, pMissile, 0);
 
     MISSILE_SetTargetX(pMissile, SEED_GetLowSeed(&pMissile->pSeed));
@@ -2502,10 +2502,10 @@ int32_t __fastcall ESE_MISSMODE_SrvHit10_GuidedArrow_BoneSpirit(D2GameStrc* pGam
         const int32_t nParam = MISSILE_GetTargetY(pMissile);
         const int32_t nX = CLIENTS_GetUnitX(pMissile) + (int16_t)nParam;
         const int32_t nY = CLIENTS_GetUnitY(pMissile) + (int16_t)(nParam >> 16);
-        D2COMMON_10170_PathSetTargetPos(pMissile->pDynamicPath, nX, nY);
+        D2Common_10170_PathSetTargetPos(pMissile->pDynamicPath, nX, nY);
         MISSILE_SetTargetX(pMissile, 6);
 
-        if (UNITS_GetDistanceToCoordinates(pMissile, nX, nY) >= 25)
+        if (D2Common_10398_UNITS_GetDistanceToCoordinates(pMissile, nX, nY) >= 25)
         {
             return 4;
         }
@@ -2921,7 +2921,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit16_SpiderGoo_VinesTrail_VinesWither(D2Game
 
         STATLIST_SetState(pNewStatList, pSkillsTxtRecord->wAuraTargetState);
         STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
-        D2COMMON_10475_PostStatToStatList(pUnit, pNewStatList, 1);
+        D2Common_10475_PostStatToStatList(pUnit, pNewStatList, 1);
         STATES_ToggleState(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
 
         // TODO: pStatList = pNewStatList; ????
@@ -2929,7 +2929,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit16_SpiderGoo_VinesTrail_VinesWither(D2Game
 
     ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
     STATES_ToggleGfxStateFlag(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
-    D2COMMON_10476(pStatList, nLength + pGame->dwGameFrame);
+    D2Common_10476(pStatList, nLength + pGame->dwGameFrame);
     EVENT_SetEvent(pGame, pUnit, 12, nLength + pGame->dwGameFrame, 0, 0);
     return 0;
 }
@@ -3036,7 +3036,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit19_FingerMageSpider(D2GameStrc* pGame, D2U
 
         STATLIST_SetState(pNewStatList, pSkillsTxtRecord->wAuraTargetState);
         STATLIST_SetStatRemoveCallback(pNewStatList, ESE_sub_6FD10E50);
-        D2COMMON_10475_PostStatToStatList(pUnit, pNewStatList, 1);
+        D2Common_10475_PostStatToStatList(pUnit, pNewStatList, 1);
         STATES_ToggleState(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
 
         // TODO: pStatList = pNewStatList; ????
@@ -3044,7 +3044,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit19_FingerMageSpider(D2GameStrc* pGame, D2U
 
     ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nLevel);
     STATES_ToggleGfxStateFlag(pUnit, pSkillsTxtRecord->wAuraTargetState, 1);
-    D2COMMON_10476(pStatList, nTimeout);
+    D2Common_10476(pStatList, nTimeout);
     EVENT_SetEvent(pGame, pUnit, 12, nTimeout, 0, 0);
     return 3;
 }
@@ -3706,7 +3706,7 @@ void __fastcall ESE_MISSMODE_CatapultChargedBall_LightningTrailingJavelin_Submis
 
     const int32_t nRange = std::min(MISSILE_GetTotalFrames(pMissile), 255);
 
-    SEED_InitLowSeed(&pMissile->pSeed, D2COMMON_10175_PathGetFirstPointX(pMissile->pDynamicPath));
+    SEED_InitLowSeed(&pMissile->pSeed, D2Common_10175_PathGetFirstPointX(pMissile->pDynamicPath));
     PATH_SetType(pMissile->pDynamicPath, PATHTYPE_CHARGEDBOLT);
     PATH_SetNewDistance(pMissile->pDynamicPath, nRange);
     D2Common_10142(pMissile->pDynamicPath, pMissile, 0);
@@ -3968,8 +3968,8 @@ int32_t __fastcall ESE_MISSMODE_SrvHit48_MoltenBoulderEmerge(D2GameStrc* pGame, 
     missileParams.nSkill = MISSILE_GetSkill(pMissile);
     missileParams.nSkillLevel = MISSILE_GetLevel(pMissile);
     missileParams.nMissile = pMissilesTxtRecord->wHitSubMissile[0];
-    missileParams.nTargetX = D2COMMON_10175_PathGetFirstPointX(pMissile->pDynamicPath);
-    missileParams.nTargetY = D2COMMON_10176_PathGetFirstPointY(pMissile->pDynamicPath);
+    missileParams.nTargetX = D2Common_10175_PathGetFirstPointX(pMissile->pDynamicPath);
+    missileParams.nTargetY = D2Common_10176_PathGetFirstPointY(pMissile->pDynamicPath);
     MISSILES_CreateMissileFromParams(pGame, &missileParams);
     return 1;
 }
@@ -5075,7 +5075,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDmgHitHandler(D2GameStrc* pGame, D2UnitStrc* 
                         EVENT_SetEvent(pMissile->pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nDelay, 0, 0);
                         STATLIST_SetState(pStatList, STATE_JUSTHIT);
                         STATLIST_SetStatRemoveCallback(pStatList, ESE_MISSMODE_ToggleStateOff);
-                        D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+                        D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
                         STATES_ToggleState(pUnit, STATE_JUSTHIT, 1);
                     }
                 }
@@ -5128,7 +5128,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDmgHitHandler(D2GameStrc* pGame, D2UnitStrc* 
                 EVENT_SetEvent(pMissile->pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nDelay, 0, 0);
                 STATLIST_SetState(pStatList, STATE_JUSTHIT);
                 STATLIST_SetStatRemoveCallback(pStatList, ESE_MISSMODE_ToggleStateOff);
-                D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+                D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
                 STATES_ToggleState(pUnit, STATE_JUSTHIT, 1);
             }
         }

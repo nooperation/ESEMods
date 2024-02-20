@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../D2MooHeaders.h"
 #include <UNIT/SUnit.h>
 
 //D2Game.0x6FCBDE90

@@ -355,8 +355,8 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_BasicAura(D2AuraCallbackStrc* pAuraCa
                         D2StatListStrc* pPoisonStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_POISON);
                         if (pPoisonStatList)
                         {
-                            const int32_t nExpireFrame = pAuraCallback->pGame->dwGameFrame + ESE_MONSTERUNIQUE_CalculatePercentage(D2COMMON_10473(pPoisonStatList) - pAuraCallback->pGame->dwGameFrame, pArgs->nAuraStatCalcValue[j], 100);
-                            D2COMMON_10476(pPoisonStatList, nExpireFrame);
+                            const int32_t nExpireFrame = pAuraCallback->pGame->dwGameFrame + ESE_MONSTERUNIQUE_CalculatePercentage(D2Common_10473(pPoisonStatList) - pAuraCallback->pGame->dwGameFrame, pArgs->nAuraStatCalcValue[j], 100);
+                            D2Common_10476(pPoisonStatList, nExpireFrame);
                             EVENT_SetEvent(pAuraCallback->pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
                             bPoisonedOrCursed = 1;
                         }
@@ -372,8 +372,8 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_BasicAura(D2AuraCallbackStrc* pAuraCa
                             {
                                 if (STATES_CheckStateMaskCurableByStateId(nCurseStateId))
                                 {
-                                    const int32_t nExpireFrame = pAuraCallback->pGame->dwGameFrame + ESE_MONSTERUNIQUE_CalculatePercentage(D2COMMON_10473(pCurseStatList) - pAuraCallback->pGame->dwGameFrame, pArgs->nAuraStatCalcValue[j], 100);
-                                    D2COMMON_10476(pCurseStatList, nExpireFrame);
+                                    const int32_t nExpireFrame = pAuraCallback->pGame->dwGameFrame + ESE_MONSTERUNIQUE_CalculatePercentage(D2Common_10473(pCurseStatList) - pAuraCallback->pGame->dwGameFrame, pArgs->nAuraStatCalcValue[j], 100);
+                                    D2Common_10476(pCurseStatList, nExpireFrame);
                                     EVENT_SetEvent(pAuraCallback->pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
                                 }
                                 bPoisonedOrCursed = 1;
@@ -417,7 +417,7 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_BasicAura(D2AuraCallbackStrc* pAuraCa
                                 }
                                 else
                                 {
-                                    if (STATLIST_GetStatValue(pStatList, nStatId, 0) != nBonus)
+                                    if (D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0) != nBonus)
                                     {
                                         STATES_ToggleGfxStateFlag(pUnit, curse.nState, 1);
                                     }
@@ -448,7 +448,7 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_BasicAura(D2AuraCallbackStrc* pAuraCa
         }
     }
 
-    UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+    D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
     STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_SKILL, pArgs->nSkillId, 0);
     STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_LEVEL, pArgs->nSkillLevel, 0);
 
@@ -680,7 +680,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt31_Charge(D2GameStrc* pGame, D2UnitStrc* pUni
                 SKILLS_SetParam4(pSkill, 15);
             }
 
-            D2COMMON_10204_PATH_ClearPoint2(pUnit->pDynamicPath);
+            D2Common_10204_PATH_ClearPoint2(pUnit->pDynamicPath);
             PATH_SetNewDistance(pUnit->pDynamicPath, 20);
         }
     }
@@ -1162,11 +1162,11 @@ int32_t __fastcall ESE_SKILLS_SrvDo079_Conversion(D2GameStrc* pGame, D2UnitStrc*
 
         STATLIST_SetState(pStatList, pSkillsTxtRecord->wAuraTargetState);
         STATLIST_SetStatRemoveCallback(pStatList, ESE_SKILLS_StatRemoveCallback_Conversion);
-        D2COMMON_10475_PostStatToStatList(pTarget, pStatList, 1);
+        D2Common_10475_PostStatToStatList(pTarget, pStatList, 1);
         STATES_ToggleState(pTarget, pSkillsTxtRecord->wAuraTargetState, 1);
     }
 
-    D2COMMON_10476(pStatList, nExpireFrame);
+    D2Common_10476(pStatList, nExpireFrame);
     EVENT_SetEvent(pGame, pTarget, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
     ESE_sub_6FD154D0(pTarget);
     sub_6FCBDD30(pTarget, 2u, 1);
@@ -1187,7 +1187,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo079_Conversion(D2GameStrc* pGame, D2UnitStrc*
         if (pConversionStatList)
         {
             STATLIST_SetState(pConversionStatList, STATE_CONVERSION_SAVE);
-            D2COMMON_10475_PostStatToStatList(pTarget, pConversionStatList, 1);
+            D2Common_10475_PostStatToStatList(pTarget, pConversionStatList, 1);
 
             const int32_t nTargetHp = STATLIST_UnitGetStatValue(pTarget, STAT_HITPOINTS, 0) >> 8;
             const int32_t nTargetMaxHp = STATLIST_GetMaxLifeFromUnit(pTarget) >> 8;
@@ -1234,8 +1234,8 @@ void __fastcall ESE_SKILLS_StatRemoveCallback_Conversion(D2UnitStrc* pUnit, int3
         return;
     }
 
-    const int32_t nConversionLevel = STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_LEVEL, 0);
-    const int32_t nConversionMaxHp = STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_MAXHP, 0);
+    const int32_t nConversionLevel = D2Common_10466_STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_LEVEL, 0);
+    const int32_t nConversionMaxHp = D2Common_10466_STATLIST_GetStatValue(pConversionStatList, STAT_CONVERSION_MAXHP, 0);
     const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit) >> 8;
     const int32_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
 
@@ -1404,7 +1404,7 @@ void __fastcall ESE_SKILLS_CurseStateCallback_HolyFreeze(D2UnitStrc* pUnit, int3
             STATES_ToggleState(pUnit, STATE_SHATTER, 0);
         }
 
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
     }
 }
 

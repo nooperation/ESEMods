@@ -439,8 +439,8 @@ int32_t __fastcall ESE_SKILLS_SrvSt47_Jump(D2GameStrc* pGame, D2UnitStrc* pUnit,
     }
     else
     {
-        nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-        nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+        nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+        nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
         SKILLS_SetParam4(pSkill, -1);
     }
 
@@ -517,7 +517,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo089_Jump(D2GameStrc* pGame, D2UnitStrc* pUnit
             SKILLS_SetFlags(pSkill, 0x101u);
             PATH_SetMoveTestCollisionMask(pUnit->pDynamicPath, COLLIDE_NONE);
             PATH_SetFootprintCollisionMask(pUnit->pDynamicPath, COLLIDE_NONE);
-            D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
+            D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
             PATH_SetType(pUnit->pDynamicPath, PATHTYPE_LEAP);
             PATH_SetVelocity(pUnit->pDynamicPath, ESE_sub_6FD15500(pUnit), __FILE__, __LINE__);
             D2Common_10142(pUnit->pDynamicPath, pUnit, 0);
@@ -576,13 +576,13 @@ int32_t __fastcall ESE_SKILLS_SrvDo089_Jump(D2GameStrc* pGame, D2UnitStrc* pUnit
                     SKILLS_SetFlags(pSkill, 1);
                     UNITS_SetAnimationFrame(pUnit, 12);
                     pUnit->dwFrameCountPrecise = (pUnit->dwFrameCountPrecise & 0xFFFFFF00) + 256;
-                    PATH_RecacheRoomIfNeeded(pUnit->pDynamicPath);
+                    D2Common_10233_PATH_RecacheRoomIfNeeded(pUnit->pDynamicPath);
                     PATH_SetNewDistance(pUnit->pDynamicPath, 5u);
                     PATH_SetStepNum(pUnit->pDynamicPath, 1u);
                     PATH_SetTargetUnit(pUnit->pDynamicPath, nullptr);
-                    D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, 3 * nX - 2 * CLIENTS_GetUnitX(pTarget), 3 * nY - 2 * CLIENTS_GetUnitY(pTarget));
+                    D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, 3 * nX - 2 * CLIENTS_GetUnitX(pTarget), 3 * nY - 2 * CLIENTS_GetUnitY(pTarget));
                     PATH_SetType(pUnit->pDynamicPath, PATHTYPE_KNOCKBACK_SERVER);
-                    D2COMMON_10190_PATH_SetDistance(pUnit->pDynamicPath, 5u);
+                    D2Common_10190_PATH_SetDistance(pUnit->pDynamicPath, 5u);
                     D2Common_10142(pUnit->pDynamicPath, pUnit, 0);
                 }
             }
@@ -1343,8 +1343,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo097_Resurrect(D2GameStrc* pGame, D2UnitStrc* 
 //D2Game.0x6FD08BB0
 int32_t __fastcall ESE_SKILLS_SrvDo098_MonTeleport(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)
 {
-    const int32_t nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-    const int32_t nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+    const int32_t nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+    const int32_t nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
 
     D2ActiveRoomStrc* pRoom = D2GAME_GetRoom_6FC52070(UNITS_GetRoom(pUnit), nX, nY);
     if (!pRoom)
@@ -1521,8 +1521,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo101_FingerMageSpider(D2GameStrc* pGame, D2Uni
     }
     else
     {
-        missileParams.nTargetX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath) - missileParams.nX;
-        missileParams.nTargetY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath) - missileParams.nY;
+        missileParams.nTargetX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath) - missileParams.nX;
+        missileParams.nTargetY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath) - missileParams.nY;
     }
 
     MISSILES_CreateMissileFromParams(pGame, &missileParams);
@@ -1582,7 +1582,7 @@ void __fastcall ESE_SKILLS_MissileInit_DiabWall(D2UnitStrc* pMissile, int32_t nI
             MISSILE_SetCurrentFrame(pMissile, 77);
         }
 
-        SEED_InitLowSeed(&pMissile->pSeed, nInitSeed + D2COMMON_10175_PathGetFirstPointX(pMissile->pDynamicPath));
+        SEED_InitLowSeed(&pMissile->pSeed, nInitSeed + D2Common_10175_PathGetFirstPointX(pMissile->pDynamicPath));
 
         if ((ITEMS_RollRandomNumber(&pMissile->pSeed) % 100) >= 20)
         {
@@ -1606,7 +1606,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt54_DiabRun(D2GameStrc* pGame, D2UnitStrc* pUn
             SKILLS_SetParam1(pSkill, pTarget->dwUnitId);
             SKILLS_SetParam2(pSkill, pTarget->dwUnitType);
             PATH_SetTargetUnit(pUnit->pDynamicPath, 0);
-            D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, CLIENTS_GetUnitX(pTarget), CLIENTS_GetUnitY(pTarget));
+            D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, CLIENTS_GetUnitX(pTarget), CLIENTS_GetUnitY(pTarget));
             return 1;
         }
     }
@@ -1723,12 +1723,12 @@ int32_t __fastcall ESE_SKILLS_SrvDo104_DiabPrison(D2GameStrc* pGame, D2UnitStrc*
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
     if (!pTarget)
     {
-        if (!pUnit->pDynamicPath || D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath) != 2)
+        if (!pUnit->pDynamicPath || D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath) != 2)
         {
             return 0;
         }
                 
-        D2UnitStrc* pObject = SUNIT_GetServerUnit(pGame, UNIT_OBJECT, D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath));
+        D2UnitStrc* pObject = SUNIT_GetServerUnit(pGame, UNIT_OBJECT, D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath));
         if (!pObject)
         {
             return 0;
@@ -2213,7 +2213,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo110_Hireable_RogueMissile(D2GameStrc* pGame, 
         pUnit->dwFlags |= UNITFLAG_SKSRVDOFUNC;
     }
 
-    int32_t nMissileId = D2COMMON_11039_CheckWeaponIsMissileBased(pUnit, &nSkillLevel);
+    int32_t nMissileId = D2Common_11039_CheckWeaponIsMissileBased(pUnit, &nSkillLevel);
     if (nMissileId && nMissileId != MISSILE_BOLT)
     {
         if (nMissileId >= 0 && nMissileId < sgptDataTables->nMissilesTxtRecordCount && &sgptDataTables->pMissilesTxt[nMissileId])
@@ -2323,7 +2323,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo112_MonCurseCast(D2GameStrc* pGame, D2UnitStr
     }
     default:
     {
-        const int32_t nResSubstraction = D2COMMON_11036_GetMonCurseResistanceSubtraction(nSkillLevel, nCurseSkillId);
+        const int32_t nResSubstraction = D2Common_11036_GetMonCurseResistanceSubtraction(nSkillLevel, nCurseSkillId);
         args.nAuraStat[0] = STAT_MAGICRESIST;
         args.nAuraStatCalc[0] = -nResSubstraction;
         args.nAuraStat[1] = STAT_FIRERESIST;

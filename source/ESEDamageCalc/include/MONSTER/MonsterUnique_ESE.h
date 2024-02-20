@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../D2MooHeaders.h"
 #include <MONSTER/MonsterUnique.h>
 #include <Units/Units.h>
 

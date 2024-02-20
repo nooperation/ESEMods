@@ -143,7 +143,7 @@ int32_t __fastcall ESE_SKILLS_StartInferno(D2GameStrc* pGame, D2UnitStrc* pUnit,
     if (pStatList)
     {
         sub_6FCBD120(pGame, pUnit, 1);
-        D2COMMON_10476(pStatList, pGame->dwGameFrame + 6);
+        D2Common_10476(pStatList, pGame->dwGameFrame + 6);
         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + 6, 0, 0);
         ESE_SKILLS_DoInferno(pGame, pUnit, nSkillId, nSkillLevel, a5);
         return 1;
@@ -164,7 +164,7 @@ int32_t __fastcall ESE_SKILLS_StartInferno(D2GameStrc* pGame, D2UnitStrc* pUnit,
     }
 
     EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, pGame->dwGameFrame + 20, 0, 0);
-    D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+    D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
     STATLIST_SetStatRemoveCallback(pStatList, ESE_SKILLS_StatRemoveCallback_RemoveState);
     STATLIST_SetState(pStatList, STATE_INFERNO);
     STATES_ToggleState(pUnit, STATE_INFERNO, 1);
@@ -268,7 +268,7 @@ void __fastcall ESE_SKILLS_MissileInit_ChargedBolt(D2UnitStrc* pMissile, int32_t
         MISSILE_SetCurrentFrame(pMissile, 77);
     }
 
-    SEED_InitLowSeed(&pMissile->pSeed, a2 + D2COMMON_10175_PathGetFirstPointX(pMissile->pDynamicPath));
+    SEED_InitLowSeed(&pMissile->pSeed, a2 + D2Common_10175_PathGetFirstPointX(pMissile->pDynamicPath));
     PATH_SetType(pMissile->pDynamicPath, PATHTYPE_CHARGEDBOLT);
     PATH_SetNewDistance(pMissile->pDynamicPath, nFrames);
     D2Common_10142(pMissile->pDynamicPath, pMissile, 0);
@@ -329,7 +329,7 @@ void __fastcall ESE_SKILLS_CurseStateCallback_DefensiveBuff(D2UnitStrc* pUnit, i
     }
 
     STATES_ToggleState(pUnit, nState, 0);
-    UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+    D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
     ESE_sub_6FD14C30(pUnit);
 }
 
@@ -542,8 +542,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo021_Telekinesis(D2GameStrc* pGame, D2UnitStrc
     }
     case UNIT_ITEM:
     {
-        if (ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_SCROLL) || ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_GOLD) || ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_MISSILE_POTION)
-            || ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_MISSILE) || ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_POTION) || ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_KEY))
+        if (D2Common_10731_ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_SCROLL) || D2Common_10731_ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_GOLD) || D2Common_10731_ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_MISSILE_POTION)
+            || D2Common_10731_ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_MISSILE) || D2Common_10731_ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_POTION) || D2Common_10731_ITEMS_CheckItemTypeId(pTarget, ITEMTYPE_KEY))
         {
             int32_t a4 = 0;
             D2GAME_PickupItem_6FC43340(pGame, pUnit, pTarget->dwUnitId, &a4);
@@ -659,8 +659,8 @@ void __fastcall ESE_SKILLS_CreateBlazeMissile(D2GameStrc* pGame, D2UnitStrc* pUn
         return;
     }
 
-    const int32_t nSkillId = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
-    int32_t nSkillLevel = STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
+    const int32_t nSkillId = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_SKILL, 0);
+    int32_t nSkillLevel = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MODIFIERLIST_LEVEL, 0);
     if (nSkillLevel < 0)
     {
         nSkillLevel = 1;
@@ -713,8 +713,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo024_FireWall(D2GameStrc* pGame, D2UnitStrc* p
     }
     else
     {
-        nX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-        nY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+        nX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+        nY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
     }
 
     if (!nX || !nY)

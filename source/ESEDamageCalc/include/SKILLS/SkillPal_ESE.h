@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../D2MooHeaders.h"
 #include <SKILLS/SkillPal.h>
 #include <D2StatList.h>
 #include <Units/Units.h>

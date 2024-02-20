@@ -68,117 +68,88 @@ int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc03_ShiverArmor(D2GameStrc* pGam
 
 extern decltype(&SKILLS_DoInferno) SKILLS_DoInferno_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_DoInferno(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel, int32_t nMissileId);
-static_assert(std::is_same_v<decltype(&SKILLS_DoInferno), decltype(&ESE_INTERCEPT_SKILLS_DoInferno)>, "ESE_INTERCEPT_SKILLS_DoInferno has a different type than previously known.");
 
 extern decltype(&SKILLS_StartInferno) SKILLS_StartInferno_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_StartInferno(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel, int32_t a5);
-static_assert(std::is_same_v<decltype(&SKILLS_StartInferno), decltype(&ESE_INTERCEPT_SKILLS_StartInferno)>, "ESE_INTERCEPT_SKILLS_StartInferno has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvSt11_Inferno_ArcticBlast) SKILLS_SrvSt11_Inferno_ArcticBlast_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvSt11_Inferno_ArcticBlast(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvSt11_Inferno_ArcticBlast), decltype(&ESE_INTERCEPT_SKILLS_SrvSt11_Inferno_ArcticBlast)>, "ESE_INTERCEPT_SKILLS_SrvSt11_Inferno_ArcticBlast has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvSt12_Telekinesis_DragonFlight) SKILLS_SrvSt12_Telekinesis_DragonFlight_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvSt12_Telekinesis_DragonFlight(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvSt12_Telekinesis_DragonFlight), decltype(&ESE_INTERCEPT_SKILLS_SrvSt12_Telekinesis_DragonFlight)>, "ESE_INTERCEPT_SKILLS_SrvSt12_Telekinesis_DragonFlight has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvSt13_ThunderStorm) SKILLS_SrvSt13_ThunderStorm_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvSt13_ThunderStorm(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvSt13_ThunderStorm), decltype(&ESE_INTERCEPT_SKILLS_SrvSt13_ThunderStorm)>, "ESE_INTERCEPT_SKILLS_SrvSt13_ThunderStorm has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvSt14_Hydra) SKILLS_SrvSt14_Hydra_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvSt14_Hydra(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvSt14_Hydra), decltype(&ESE_INTERCEPT_SKILLS_SrvSt14_Hydra)>, "ESE_INTERCEPT_SKILLS_SrvSt14_Hydra has a different type than previously known.");
 
 extern decltype(&SKILLS_MissileInit_ChargedBolt) SKILLS_MissileInit_ChargedBolt_Original;
 void __fastcall ESE_INTERCEPT_SKILLS_MissileInit_ChargedBolt(D2UnitStrc* pMissile, int32_t a2);
-static_assert(std::is_same_v<decltype(&SKILLS_MissileInit_ChargedBolt), decltype(&ESE_INTERCEPT_SKILLS_MissileInit_ChargedBolt)>, "ESE_INTERCEPT_SKILLS_MissileInit_ChargedBolt has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo017_ChargedBolt_BoltSentry) SKILLS_SrvDo017_ChargedBolt_BoltSentry_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo017_ChargedBolt_BoltSentry(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo017_ChargedBolt_BoltSentry), decltype(&ESE_INTERCEPT_SKILLS_SrvDo017_ChargedBolt_BoltSentry)>, "ESE_INTERCEPT_SKILLS_SrvDo017_ChargedBolt_BoltSentry has a different type than previously known.");
 
 extern decltype(&SKILLS_CurseStateCallback_DefensiveBuff) SKILLS_CurseStateCallback_DefensiveBuff_Original;
 void __fastcall ESE_INTERCEPT_SKILLS_CurseStateCallback_DefensiveBuff(D2UnitStrc* pUnit, int32_t nState, D2StatListStrc* pStatList);
-static_assert(std::is_same_v<decltype(&SKILLS_CurseStateCallback_DefensiveBuff), decltype(&ESE_INTERCEPT_SKILLS_CurseStateCallback_DefensiveBuff)>, "ESE_INTERCEPT_SKILLS_CurseStateCallback_DefensiveBuff has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo018_DefensiveBuff) SKILLS_SrvDo018_DefensiveBuff_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo018_DefensiveBuff(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo018_DefensiveBuff), decltype(&ESE_INTERCEPT_SKILLS_SrvDo018_DefensiveBuff)>, "ESE_INTERCEPT_SKILLS_SrvDo018_DefensiveBuff has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo019_Inferno_ArcticBlast) SKILLS_SrvDo019_Inferno_ArcticBlast_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo019_Inferno_ArcticBlast(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo019_Inferno_ArcticBlast), decltype(&ESE_INTERCEPT_SKILLS_SrvDo019_Inferno_ArcticBlast)>, "ESE_INTERCEPT_SKILLS_SrvDo019_Inferno_ArcticBlast has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo020_StaticField) SKILLS_SrvDo020_StaticField_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo020_StaticField(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo020_StaticField), decltype(&ESE_INTERCEPT_SKILLS_SrvDo020_StaticField)>, "ESE_INTERCEPT_SKILLS_SrvDo020_StaticField has a different type than previously known.");
 
 extern decltype(&SKILLS_AuraCallback_StaticField) SKILLS_AuraCallback_StaticField_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAuraCallback, D2UnitStrc* pDefender);
-static_assert(std::is_same_v<decltype(&SKILLS_AuraCallback_StaticField), decltype(&ESE_INTERCEPT_SKILLS_AuraCallback_StaticField)>, "ESE_INTERCEPT_SKILLS_AuraCallback_StaticField has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo021_Telekinesis) SKILLS_SrvDo021_Telekinesis_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo021_Telekinesis(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo021_Telekinesis), decltype(&ESE_INTERCEPT_SKILLS_SrvDo021_Telekinesis)>, "ESE_INTERCEPT_SKILLS_SrvDo021_Telekinesis has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo022_NovaAttack) SKILLS_SrvDo022_NovaAttack_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo022_NovaAttack(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo022_NovaAttack), decltype(&ESE_INTERCEPT_SKILLS_SrvDo022_NovaAttack)>, "ESE_INTERCEPT_SKILLS_SrvDo022_NovaAttack has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo023_Blaze_EnergyShield_SpiderLay) SKILLS_SrvDo023_Blaze_EnergyShield_SpiderLay_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo023_Blaze_EnergyShield_SpiderLay(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo023_Blaze_EnergyShield_SpiderLay), decltype(&ESE_INTERCEPT_SKILLS_SrvDo023_Blaze_EnergyShield_SpiderLay)>, "ESE_INTERCEPT_SKILLS_SrvDo023_Blaze_EnergyShield_SpiderLay has a different type than previously known.");
 
 extern decltype(&SKILLS_CreateBlazeMissile) SKILLS_CreateBlazeMissile_Original;
 void __fastcall ESE_INTERCEPT_SKILLS_CreateBlazeMissile(D2GameStrc* pGame, D2UnitStrc* pUnit);
-static_assert(std::is_same_v<decltype(&SKILLS_CreateBlazeMissile), decltype(&ESE_INTERCEPT_SKILLS_CreateBlazeMissile)>, "ESE_INTERCEPT_SKILLS_CreateBlazeMissile has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo024_FireWall) SKILLS_SrvDo024_FireWall_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo024_FireWall(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo024_FireWall), decltype(&ESE_INTERCEPT_SKILLS_SrvDo024_FireWall)>, "ESE_INTERCEPT_SKILLS_SrvDo024_FireWall has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo025_Enchant) SKILLS_SrvDo025_Enchant_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo025_Enchant(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo025_Enchant), decltype(&ESE_INTERCEPT_SKILLS_SrvDo025_Enchant)>, "ESE_INTERCEPT_SKILLS_SrvDo025_Enchant has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo026_ChainLightning) SKILLS_SrvDo026_ChainLightning_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo026_ChainLightning(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo026_ChainLightning), decltype(&ESE_INTERCEPT_SKILLS_SrvDo026_ChainLightning)>, "ESE_INTERCEPT_SKILLS_SrvDo026_ChainLightning has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo151_Unused) SKILLS_SrvDo151_Unused_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo151_Unused(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo151_Unused), decltype(&ESE_INTERCEPT_SKILLS_SrvDo151_Unused)>, "ESE_INTERCEPT_SKILLS_SrvDo151_Unused has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo027_Teleport) SKILLS_SrvDo027_Teleport_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo027_Teleport(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo027_Teleport), decltype(&ESE_INTERCEPT_SKILLS_SrvDo027_Teleport)>, "ESE_INTERCEPT_SKILLS_SrvDo027_Teleport has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo028_Meteor_Blizzard_Eruption_BaalTaunt_Catapult) SKILLS_SrvDo028_Meteor_Blizzard_Eruption_BaalTaunt_Catapult_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo028_Meteor_Blizzard_Eruption_BaalTaunt_Catapult(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo028_Meteor_Blizzard_Eruption_BaalTaunt_Catapult), decltype(&ESE_INTERCEPT_SKILLS_SrvDo028_Meteor_Blizzard_Eruption_BaalTaunt_Catapult)>, "ESE_INTERCEPT_SKILLS_SrvDo028_Meteor_Blizzard_Eruption_BaalTaunt_Catapult has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo029_ThunderStorm) SKILLS_SrvDo029_ThunderStorm_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo029_ThunderStorm(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo029_ThunderStorm), decltype(&ESE_INTERCEPT_SKILLS_SrvDo029_ThunderStorm)>, "ESE_INTERCEPT_SKILLS_SrvDo029_ThunderStorm has a different type than previously known.");
 
 extern decltype(&SKILLS_EventFunc24_EnergyShield) SKILLS_EventFunc24_EnergyShield_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_EventFunc24_EnergyShield), decltype(&ESE_INTERCEPT_SKILLS_EventFunc24_EnergyShield)>, "ESE_INTERCEPT_SKILLS_EventFunc24_EnergyShield has a different type than previously known.");
 
 extern decltype(&SKILLS_SrvDo144_Hydra) SKILLS_SrvDo144_Hydra_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo144_Hydra(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_SrvDo144_Hydra), decltype(&ESE_INTERCEPT_SKILLS_SrvDo144_Hydra)>, "ESE_INTERCEPT_SKILLS_SrvDo144_Hydra has a different type than previously known.");
 
 extern decltype(&SKILLS_EventFunc01_ChillingArmor) SKILLS_EventFunc01_ChillingArmor_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc01_ChillingArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_EventFunc01_ChillingArmor), decltype(&ESE_INTERCEPT_SKILLS_EventFunc01_ChillingArmor)>, "ESE_INTERCEPT_SKILLS_EventFunc01_ChillingArmor has a different type than previously known.");
 
 extern decltype(&SKILLS_EventFunc02_FrozenArmor) SKILLS_EventFunc02_FrozenArmor_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc02_FrozenArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_EventFunc02_FrozenArmor), decltype(&ESE_INTERCEPT_SKILLS_EventFunc02_FrozenArmor)>, "ESE_INTERCEPT_SKILLS_EventFunc02_FrozenArmor has a different type than previously known.");
 
 extern decltype(&SKILLS_EventFunc03_ShiverArmor) SKILLS_EventFunc03_ShiverArmor_Original;
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc03_ShiverArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
-static_assert(std::is_same_v<decltype(&SKILLS_EventFunc03_ShiverArmor), decltype(&ESE_INTERCEPT_SKILLS_EventFunc03_ShiverArmor)>, "ESE_INTERCEPT_SKILLS_EventFunc03_ShiverArmor has a different type than previously known.");
 

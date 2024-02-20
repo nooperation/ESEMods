@@ -134,7 +134,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt32_Conversion_Bash_Stun_Concentrate_BearSmite
         }
 
         STATLIST_SetState(pStatList, pSkillsTxtRecord->nAuraState);
-        D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+        D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
         STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
     }
 
@@ -153,7 +153,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt33_FindPotion_GrimWard(D2GameStrc* pGame, D2U
         return 0;
     }
 
-    int32_t nResult = D2COMMON_11018(pTarget);
+    int32_t nResult = D2Common_11018(pTarget);
     if (!nResult || !STATES_CheckState(pTarget, STATE_CORPSE_NOSELECT))
     {
         return nResult;
@@ -190,7 +190,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo069_FindPotion(D2GameStrc* pGame, D2UnitStrc*
     }
 
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
-    if (!pTarget || !D2COMMON_11018(pTarget) || STATES_CheckState(pTarget, STATE_CORPSE_NOSELECT))
+    if (!pTarget || !D2Common_11018(pTarget) || STATES_CheckState(pTarget, STATE_CORPSE_NOSELECT))
     {
         return 0;
     }
@@ -271,13 +271,13 @@ int32_t __fastcall ESE_SKILLS_ApplyWarcryStats(D2GameStrc* pGame, D2UnitStrc* a2
         {
             STATLIST_SetState(pStatList, pSkillsTxtRecord->nAuraState);
             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-            D2COMMON_10475_PostStatToStatList(a2, pStatList, 1);
+            D2Common_10475_PostStatToStatList(a2, pStatList, 1);
             STATES_ToggleState(a2, pSkillsTxtRecord->nAuraState, 1);
         }
     }
 
     STATES_ToggleGfxStateFlag(a2, pSkillsTxtRecord->nAuraState, 1);
-    D2COMMON_10476(pStatList, nExpireFrame);
+    D2Common_10476(pStatList, nExpireFrame);
     EVENT_SetEvent(pGame, a2, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
     ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nSkillLevel);
     ESE_sub_6FD14C30(a2);
@@ -432,7 +432,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt34_FindItem(D2GameStrc* pGame, D2UnitStrc* pU
         return 0;
     }
 
-    return D2COMMON_11019(pTarget) != 0;
+    return D2Common_11019(pTarget) != 0;
 }
 
 //D2Game.0x6FCFB630
@@ -445,7 +445,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo072_FindItem(D2GameStrc* pGame, D2UnitStrc* p
     }
 
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
-    if (!pTarget || !D2COMMON_11019(pTarget))
+    if (!pTarget || !D2Common_11019(pTarget))
     {
         return 0;
     }
@@ -509,7 +509,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo074_DoubleThrow(D2GameStrc* pGame, D2UnitStrc
     }
 
     D2UnitStrc* pMissile = nullptr;
-    if (ITEMS_CheckItemTypeId(pItem, ITEMTYPE_MISSILE_POTION))
+    if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_MISSILE_POTION))
     {
         pMissile = ESE_sub_6FD11710(pGame, nMissileId, pUnit, nSkillId, nSkillLevel, 0, 0, 0, 0, 1);
     }
@@ -537,7 +537,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo075_GrimWard(D2GameStrc* pGame, D2UnitStrc* p
     }
 
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
-    if (!pTarget || !D2COMMON_11018(pTarget))
+    if (!pTarget || !D2Common_11018(pTarget))
     {
         return 0;
     }
@@ -683,18 +683,18 @@ void __fastcall ESE_SKILLS_ApplyFrenzyStats(D2GameStrc* pGame, D2UnitStrc* pUnit
             STATLIST_SetState(pStatList, pSkillsTxtRecord->nAuraState);
             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
             STATLIST_SetStatIfListIsValid(pStatList, STAT_SKILL_FRENZY, 0, 0);
-            D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+            D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
             STATES_ToggleState(pUnit, pSkillsTxtRecord->nAuraState, 1);
         }
     }
 
     if (pStatList)
     {
-        D2COMMON_10476(pStatList, nFrame);
+        D2Common_10476(pStatList, nFrame);
         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nFrame, 0, 0);
         STATES_ToggleGfxStateFlag(pUnit, pSkillsTxtRecord->nAuraState, 1);
 
-        int32_t nValue = STATLIST_GetStatValue(pStatList, STAT_SKILL_FRENZY, 0) + 1;
+        int32_t nValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_SKILL_FRENZY, 0) + 1;
         if (nValue > nSkillLevel)
         {
             nValue = nSkillLevel;
@@ -743,7 +743,7 @@ void __fastcall ESE_SKILLS_CurseStateCallback_Whirlwind(D2UnitStrc* pUnit, int32
     if (!SUNIT_IsDead(pUnit) || !STATES_CheckStateMaskStayDeathOnUnitByStateId(pUnit, nState))
     {
         STATES_ToggleState(pUnit, nState, 0);
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
         ESE_sub_6FD14C30(pUnit);
     }
 }
@@ -1015,7 +1015,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo076_Whirlwind(D2GameStrc* pGame, D2UnitStrc* 
                     {
                         D2UnitStrc* pLeftHandWeapon = INVENTORY_GetCompositItem(pUnit->pInventory, COMPOSIT_LEFTHAND);
                         D2UnitStrc* pRightHandWeapon = INVENTORY_GetCompositItem(pUnit->pInventory, COMPOSIT_RIGHTHAND);
-                        if (pLeftHandWeapon && ITEMS_CheckItemTypeId(pLeftHandWeapon, ITEMTYPE_MELEE_WEAPON) && pRightHandWeapon && ITEMS_CheckItemTypeId(pRightHandWeapon, ITEMTYPE_MELEE_WEAPON))
+                        if (pLeftHandWeapon && D2Common_10731_ITEMS_CheckItemTypeId(pLeftHandWeapon, ITEMTYPE_MELEE_WEAPON) && pRightHandWeapon && D2Common_10731_ITEMS_CheckItemTypeId(pRightHandWeapon, ITEMTYPE_MELEE_WEAPON))
                         {
                             nCount = 2;
                         }
@@ -1176,11 +1176,11 @@ int32_t __fastcall ESE_SKILLS_SrvSt39_Berserk(D2GameStrc* pGame, D2UnitStrc* pUn
 
         STATLIST_SetState(pStatList, pSkillsTxtRecord->nAuraState);
         STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-        D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+        D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
         STATES_ToggleState(pUnit, pSkillsTxtRecord->nAuraState, 1);
     }
 
-    D2COMMON_10476(pStatList, nFrame);
+    D2Common_10476(pStatList, nFrame);
     EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nFrame, 0, 0);
     ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nSkillLevel);
     return 1;
@@ -1311,7 +1311,7 @@ int32_t __fastcall ESE_SKILLS_FindLeapTargetPosition(D2UnitStrc* pUnit, int32_t 
     const int32_t nUnitY = CLIENTS_GetUnitY(pUnit);
     const int32_t nAuraRange = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwAuraRangeCalc, nSkillId, nSkillLevel);
 
-    int32_t nDistance = UNITS_GetDistanceToCoordinates(pUnit, *pX, *pY);
+    int32_t nDistance = D2Common_10398_UNITS_GetDistanceToCoordinates(pUnit, *pX, *pY);
     if (nDistance <= 1)
     {
         nDistance = 1;
@@ -1338,7 +1338,7 @@ int32_t __fastcall ESE_SKILLS_FindLeapTargetPosition(D2UnitStrc* pUnit, int32_t 
         D2ActiveRoomStrc* pRoom = COLLISION_GetFreeCoordinates(D2GAME_GetRoom_6FC52070(UNITS_GetRoom(pUnit), coords.nX, coords.nY), &coords, UNITS_GetUnitSizeX(pUnit), 0x1C09u, 1);
         nX = coords.nX;
         nY = coords.nY;
-        if (pRoom && !COLLISION_CheckAnyCollisionWithPattern(pRoom, nX, nY, PATH_GetUnitCollisionPattern(pUnit), 0x1C09) && D2Common_11025(nUnitX, nUnitY, nX, nY, pRoom, 0x804) && UNITS_GetDistanceToCoordinates(pUnit, nX, nY) <= nAuraRange)
+        if (pRoom && !COLLISION_CheckAnyCollisionWithPattern(pRoom, nX, nY, PATH_GetUnitCollisionPattern(pUnit), 0x1C09) && D2Common_11025(nUnitX, nUnitY, nX, nY, pRoom, 0x804) && D2Common_10398_UNITS_GetDistanceToCoordinates(pUnit, nX, nY) <= nAuraRange)
         {
             *pX = nX;
             *pY = nY;
@@ -1427,7 +1427,7 @@ int32_t __fastcall ESE_SKILLS_SetVelocityForLeap(D2GameStrc* pGame, D2UnitStrc* 
         return 0;
     }
 
-    D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
+    D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
     PATH_SetType(pUnit->pDynamicPath, PATHTYPE_LEAP);
 
     if (pUnit->dwUnitType != UNIT_MONSTER)
@@ -1499,7 +1499,7 @@ int32_t __fastcall ESE_SKILLS_Leap(D2GameStrc* pGame, D2UnitStrc* pUnit, D2Skill
                         SKILLS_SetFlags(pSkill, 1);
                         UNITS_SetAnimationFrame(pUnit, 12);
                         pUnit->dwFrameCountPrecise = (pUnit->dwFrameCountPrecise & 0xFFFFFF00) + 256;
-                        PATH_RecacheRoomIfNeeded(pUnit->pDynamicPath);
+                        D2Common_10233_PATH_RecacheRoomIfNeeded(pUnit->pDynamicPath);
                         PATH_SetNewDistance(pUnit->pDynamicPath, 5);
                         PATH_SetStepNum(pUnit->pDynamicPath, 1);
                         PATH_SetTargetUnit(pUnit->pDynamicPath, 0);
@@ -1509,9 +1509,9 @@ int32_t __fastcall ESE_SKILLS_Leap(D2GameStrc* pGame, D2UnitStrc* pUnit, D2Skill
                         D2ActiveRoomStrc* pTargetRoom = D2GAME_GetRoom_6FC52070(UNITS_GetRoom(pUnit), nTargetX, nTargetY);
                         if (!pTargetRoom || !DUNGEON_IsRoomInTown(pTargetRoom))
                         {
-                            D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nTargetX, nTargetY);
+                            D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, nTargetX, nTargetY);
                             PATH_SetType(pUnit->pDynamicPath, PATHTYPE_KNOCKBACK_SERVER);
-                            D2COMMON_10190_PATH_SetDistance(pUnit->pDynamicPath, 5u);
+                            D2Common_10190_PATH_SetDistance(pUnit->pDynamicPath, 5u);
                             D2Common_10142(pUnit->pDynamicPath, pUnit, 0);
                         }
                     }
@@ -1552,7 +1552,7 @@ int32_t __fastcall ESE_SKILLS_Leap(D2GameStrc* pGame, D2UnitStrc* pUnit, D2Skill
     }
     else if (nBaseId == MONSTER_ANCIENTBARB1)
     {
-        nAnimFrame = UNITS_GetDistanceToCoordinates(pUnit, nX, nY) < 2 ? 12 : 10;
+        nAnimFrame = D2Common_10398_UNITS_GetDistanceToCoordinates(pUnit, nX, nY) < 2 ? 12 : 10;
     }
 
     UNITS_SetAnimationFrame(pUnit, nAnimFrame);

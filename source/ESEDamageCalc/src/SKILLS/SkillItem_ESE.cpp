@@ -159,7 +159,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell03_Potion(D2GameStrc* pGame, D2UnitStrc* 
         pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, nState);
         if (pStatList)
         {
-            nRemainingDuration = D2COMMON_10473(pStatList) - pGame->dwGameFrame;
+            nRemainingDuration = D2Common_10473(pStatList) - pGame->dwGameFrame;
         }
     }
 
@@ -266,15 +266,15 @@ int32_t __fastcall ESE_SKILLITEM_pSpell03_Potion(D2GameStrc* pGame, D2UnitStrc* 
                         }
 
                         STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-                        D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+                        D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
                     }
                 }
 
                 if (pStatList)
                 {
-                    D2COMMON_10476(pStatList, nExpireFrame);
+                    D2Common_10476(pStatList, nExpireFrame);
 
-                    const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * STATLIST_GetStatValue(pStatList, nStatId, 0);
+                    const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
                     if (!i)
                     {
                         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
@@ -336,7 +336,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell04_Unused(D2GameStrc* pGame, D2UnitStrc* 
         pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, nState);
         if (pStatList)
         {
-            nRemainingDuration = D2COMMON_10473(pStatList) - pGame->dwGameFrame;
+            nRemainingDuration = D2Common_10473(pStatList) - pGame->dwGameFrame;
         }
     }
 
@@ -411,15 +411,15 @@ int32_t __fastcall ESE_SKILLITEM_pSpell04_Unused(D2GameStrc* pGame, D2UnitStrc* 
                         }
 
                         STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-                        D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+                        D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
                     }
                 }
 
                 if (pStatList)
                 {
-                    D2COMMON_10476(pStatList, nExpireFrame);
+                    D2Common_10476(pStatList, nExpireFrame);
 
-                    const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * STATLIST_GetStatValue(pStatList, nStatId, 0);
+                    const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
                     if (!i)
                     {
                         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
@@ -481,7 +481,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell05_RejuvPotion(D2GameStrc* pGame, D2UnitS
         pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, nState);
         if (pStatList)
         {
-            nRemainingDuration = D2COMMON_10473(pStatList) - pGame->dwGameFrame;
+            nRemainingDuration = D2Common_10473(pStatList) - pGame->dwGameFrame;
         }
     }
 
@@ -539,15 +539,15 @@ int32_t __fastcall ESE_SKILLITEM_pSpell05_RejuvPotion(D2GameStrc* pGame, D2UnitS
                             }
 
                             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-                            D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+                            D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
                         }
                     }
 
                     if (pStatList)
                     {
-                        D2COMMON_10476(pStatList, nExpireFrame);
+                        D2Common_10476(pStatList, nExpireFrame);
 
-                        const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * STATLIST_GetStatValue(pStatList, nStatId, 0);
+                        const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
                         if (!i)
                         {
                             EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
@@ -608,7 +608,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell09_StaminaPotion(D2GameStrc* pGame, D2Uni
     int32_t nEndFrame = nLength;
     if (pStatList)
     {
-        nEndFrame += D2COMMON_10473(pStatList);
+        nEndFrame += D2Common_10473(pStatList);
     }
     else
     {
@@ -634,12 +634,12 @@ int32_t __fastcall ESE_SKILLITEM_pSpell09_StaminaPotion(D2GameStrc* pGame, D2Uni
         STATLIST_SetState(pStatList, pItemsTxtRecord->wState);
         STATES_ToggleState(pUnit, pItemsTxtRecord->wState, 1);
         STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
-        D2COMMON_10475_PostStatToStatList(pUnit, pStatList, 1);
+        D2Common_10475_PostStatToStatList(pUnit, pStatList, 1);
     }
 
     if (nEndFrame)
     {
-        D2COMMON_10476(pStatList, nEndFrame);
+        D2Common_10476(pStatList, nEndFrame);
         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nEndFrame, 0, 0);
     }
 
@@ -764,7 +764,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell10_CastFireBallOnTarget(D2GameStrc* pGame
         }
         else
         {
-            return ESE_SKILLITEM_CastSkillOnPosition(pUnit, SKILL_FIREBALL, 1, D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath), D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath), 0);
+            return ESE_SKILLITEM_CastSkillOnPosition(pUnit, SKILL_FIREBALL, 1, D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath), D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath), 0);
         }
     }
 
@@ -808,7 +808,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell_Handler(D2GameStrc* pGame, D2UnitStrc* p
     int32_t nPSpell = -1;
     int32_t nSkillId = -1;
 
-    if (ITEMS_CheckItemTypeId(pItem, ITEMTYPE_BOOK) || ITEMS_CheckItemTypeId(pItem, ITEMTYPE_SCROLL))
+    if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_BOOK) || D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_SCROLL))
     {
         D2BooksTxt* pBooksTxtRecord = DATATBLS_GetBooksTxtRecord(ITEMS_GetSuffixId(pItem, 0));
         if (pBooksTxtRecord)
@@ -902,7 +902,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo113_Scroll_Book(D2GameStrc* pGame, D2UnitStrc
     {
         if (INVENTORY_UnitIsItem(pInvItem))
         {
-            if (ITEMS_CheckItemTypeId(pInvItem, ITEMTYPE_BOOK))
+            if (D2Common_10731_ITEMS_CheckItemTypeId(pInvItem, ITEMTYPE_BOOK))
             {
                 const int32_t nSuffixId = ITEMS_GetSuffixId(pInvItem, 0);
                 D2BooksTxt* pBooksTxtRecord = DATATBLS_GetBooksTxtRecord(nSuffixId);
@@ -911,7 +911,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo113_Scroll_Book(D2GameStrc* pGame, D2UnitStrc
                     bIsValidBookOrScroll = 1;
                 }
             }
-            else if (ITEMS_CheckItemTypeId(pInvItem, ITEMTYPE_SCROLL))
+            else if (D2Common_10731_ITEMS_CheckItemTypeId(pInvItem, ITEMTYPE_SCROLL))
             {
                 const int32_t nSuffixId = ITEMS_GetSuffixId(pInvItem, 0);
                 D2BooksTxt* pBooksTxtRecord = DATATBLS_GetBooksTxtRecord(nSuffixId);
@@ -1611,7 +1611,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc19_Slow(D2GameStrc* pGame, int32_t nEv
     {
         STATLIST_SetStat(pStatList, STAT_ATTACKRATE, -nSlowValue, 0);
         STATLIST_SetStat(pStatList, STAT_OTHER_ANIMRATE, -nSlowValue, 0);
-        UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
+        D2Common_10376_UNITS_UpdateAnimRateAndVelocity(pUnit, __FILE__, __LINE__);
         return 1;
     }
 
@@ -1663,7 +1663,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc20_SkillOnAttackHitKill(D2GameStrc* pG
             return 1;
         }
 
-        ESE_SKILLITEM_CastSkillOnPosition(pAttacker, v10, v9, D2COMMON_10175_PathGetFirstPointX(pAttacker->pDynamicPath), D2COMMON_10176_PathGetFirstPointY(pAttacker->pDynamicPath), 1);
+        ESE_SKILLITEM_CastSkillOnPosition(pAttacker, v10, v9, D2Common_10175_PathGetFirstPointX(pAttacker->pDynamicPath), D2Common_10176_PathGetFirstPointY(pAttacker->pDynamicPath), 1);
     }
 
     return 1;
@@ -1690,7 +1690,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc21_SkillOnGetHit(D2GameStrc* pGame, in
                     }
                     else
                     {
-                        ESE_SKILLITEM_CastSkillOnPosition(pAttacker, v10, v9, D2COMMON_10175_PathGetFirstPointX(pAttacker->pDynamicPath), D2COMMON_10176_PathGetFirstPointY(pAttacker->pDynamicPath), 0);
+                        ESE_SKILLITEM_CastSkillOnPosition(pAttacker, v10, v9, D2Common_10175_PathGetFirstPointX(pAttacker->pDynamicPath), D2Common_10176_PathGetFirstPointY(pAttacker->pDynamicPath), 0);
                     }
 
                     return 1;
@@ -1724,7 +1724,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc30_SkillOnDeathLevelup(D2GameStrc* pGa
                     }
                     else
                     {
-                        ESE_SKILLITEM_CastSkillOnPosition(pAttacker, v10, v9, D2COMMON_10175_PathGetFirstPointX(pAttacker->pDynamicPath), D2COMMON_10176_PathGetFirstPointY(pAttacker->pDynamicPath), 0);
+                        ESE_SKILLITEM_CastSkillOnPosition(pAttacker, v10, v9, D2Common_10175_PathGetFirstPointX(pAttacker->pDynamicPath), D2Common_10176_PathGetFirstPointY(pAttacker->pDynamicPath), 0);
                     }
 
                     return 1;
@@ -1757,7 +1757,7 @@ int32_t __fastcall ESE_SKILLITEM_TimerCallback_ReanimateMonster(D2GameStrc* pGam
     }
     
     D2UnitStrc* pOwner = SUNIT_GetServerUnit(pGame, UNIT_PLAYER, nOwnerId);
-    if (!pOwner || !D2COMMON_11017_CheckUnitIfConsumeable(pSource, 0) || nMonId < 0 || nMonId >= sgptDataTables->nMonStatsTxtRecordCount)
+    if (!pOwner || !D2Common_11017_CheckUnitIfConsumeable(pSource, 0) || nMonId < 0 || nMonId >= sgptDataTables->nMonStatsTxtRecordCount)
     {
         return 0;
     }
@@ -1876,7 +1876,7 @@ int32_t __fastcall ESE_SKILLITEM_FindTargetPosition(D2GameStrc* pGame, D2UnitStr
         const int32_t nY = nUnitY + ITEMS_RollRandomNumber(&pUnit->pSeed) % 40 - 20;
         if (!COLLISION_CheckMaskWithPattern(pRoom, nX, nY, nCollisionPattern, nMask))
         {
-            D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
+            D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
             return 1;
         }
     }
@@ -1895,8 +1895,8 @@ int32_t __fastcall ESE_SKILLITEM_HandleItemEffectSkill(D2GameStrc* pGame, D2Unit
 
     D2UnitStrc* pCurrentTarget = SUNIT_GetTargetUnit(pGame, pUnit);
 
-    const int32_t nTargetX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
-    const int32_t nTargetY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+    const int32_t nTargetX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+    const int32_t nTargetY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
     const int32_t bFlagSet = pUnit->dwFlags & UNITFLAG_SKSRVDOFUNC;
 
     if (pTargetUnit)
@@ -1905,7 +1905,7 @@ int32_t __fastcall ESE_SKILLITEM_HandleItemEffectSkill(D2GameStrc* pGame, D2Unit
     }
     else
     {
-        D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
+        D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, nX, nY);
     }
 
     if (pUnitType)
@@ -1945,12 +1945,12 @@ int32_t __fastcall ESE_SKILLITEM_HandleItemEffectSkill(D2GameStrc* pGame, D2Unit
         {
             if (pX)
             {
-                *pX = D2COMMON_10175_PathGetFirstPointX(pUnit->pDynamicPath);
+                *pX = D2Common_10175_PathGetFirstPointX(pUnit->pDynamicPath);
             }
 
             if (pY)
             {
-                *pY = D2COMMON_10176_PathGetFirstPointY(pUnit->pDynamicPath);
+                *pY = D2Common_10176_PathGetFirstPointY(pUnit->pDynamicPath);
             }
 
             if (!(pSkillsTxtRecord->dwFlags[1] & gdwBitMasks[SKILLSFLAGINDEX2_ITEMCHECKSTART]) || ESE_sub_6FD12950(pGame, pUnit, nSkillId, nSkillLevel, 1))
@@ -2021,7 +2021,7 @@ int32_t __fastcall ESE_SKILLITEM_HandleItemEffectSkill(D2GameStrc* pGame, D2Unit
     }
     else
     {
-        D2COMMON_10170_PathSetTargetPos(pUnit->pDynamicPath, nTargetX, nTargetY);
+        D2Common_10170_PathSetTargetPos(pUnit->pDynamicPath, nTargetX, nTargetY);
     }
 
     if (bFlagSet)

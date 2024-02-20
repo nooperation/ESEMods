@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../D2MooHeaders.h"
 #include <UNIT/SUnitDmg.h>
 #include <Units/Units.h>
 
