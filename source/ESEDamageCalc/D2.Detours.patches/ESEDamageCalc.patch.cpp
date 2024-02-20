@@ -46,38 +46,38 @@ extern "C"
     // TODO: AITHINK_GetTargetScore uses some sort of damage in score calcualtion
     static ExtraPatchAction extraPatchActions[] =
     {
-       // // SUnitEvent
-       // {0x6FCC3610 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_FreeTimerList, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_FreeTimerList_Original},
-       // {0x6FCC3650 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_AllocTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_AllocTimer_Original},
-       // {0x6FCC36D0 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_FreeTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_FreeTimer_Original},
-       // {0x6FCC3750 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_GetTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_GetTimer_Original},
-       // {0x6FCC3790 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_EventFunc_Handler, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_EventFunc_Handler_Original},
-       //
-       // // SUnit
-       // {0x6FCBDE90 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBDE90, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBDE90_Original},
-       //
-       // // SkillAma
-       // {0x6FCF30D0 - D2GameImageBase, &ESE_INTERCEPT_D2Game_10049_Return1, PatchAction::FunctionReplaceOriginalByPatch, &D2Game_10049_Return1_Original},
-       // {0x6FCF30E0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt04_Arrow_Bolt, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt04_Arrow_Bolt_Original},
-       // {0x6FCF3120 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt05_Jab, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt05_Jab_Original},
-       // {0x6FCF3170 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt06_PowerStrike_ChargedStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt06_PowerStrike_ChargedStrike_Original},
-       // {0x6FCF3280 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt07_Impale, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt07_Impale_Original},
-       // {0x6FCF3510 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt08_Strafe, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt08_Strafe_Original},
-       // {0x6FCF3690 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt09_Fend, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt09_Fend_Original},
-       // {0x6FCF37B0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy_Original},
-       // {0x6FCF38C0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt10_LightningStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt10_LightningStrike_Original},
-       // {0x6FCF3A70 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo006_InnerSight_SlowMissiles, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo006_InnerSight_SlowMissiles_Original},
-       // {0x6FCF3B90 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_AuraCallback_InnerSight_SlowMissiles, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_AuraCallback_InnerSight_SlowMissiles_Original},
-       // {0x6FCF3C00 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo007_Jab, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo007_Jab_Original},
-       // {0x6FCF3D70 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave_Original},
-       // {0x6FCF4080 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo010_GuidedArrow_BoneSpirit, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo010_GuidedArrow_BoneSpirit_Original},
-       // {0x6FCF4280 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_AddDamagePercentBonus, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_AddDamagePercentBonus_Original},
-       // {0x6FCF42B0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo011_ChargedStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo011_ChargedStrike_Original},
-       // {0x6FCF44D0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo012_Strafe, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo012_Strafe_Original},
-       // {0x6FCF47D0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo013_Fend_Zeal_Fury, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo013_Fend_Zeal_Fury_Original},
-       // {0x6FCF4A20 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo014_LightningStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo014_LightningStrike_Original},
-       // {0x6FCF4C50 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo015_Dopplezon, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo015_Dopplezon_Original},
-       // {0x6FCF4EE0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo016_Valkyrie, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo016_Valkyrie_Original},
+       // SUnitEvent
+       {0x6FCC3610 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_FreeTimerList, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_FreeTimerList_Original},
+       {0x6FCC3650 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_AllocTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_AllocTimer_Original},
+       {0x6FCC36D0 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_FreeTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_FreeTimer_Original},
+       {0x6FCC3750 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_GetTimer, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_GetTimer_Original},
+       {0x6FCC3790 - D2GameImageBase, &ESE_INTERCEPT_SUNITEVENT_EventFunc_Handler, PatchAction::FunctionReplaceOriginalByPatch, &SUNITEVENT_EventFunc_Handler_Original},
+       
+       // SUnit
+       {0x6FCBDE90 - D2GameImageBase, &ESE_INTERCEPT_sub_6FCBDE90, PatchAction::FunctionReplaceOriginalByPatch, &sub_6FCBDE90_Original},
+       
+       // SkillAma
+       {0x6FCF30D0 - D2GameImageBase, &ESE_INTERCEPT_D2Game_10049_Return1, PatchAction::FunctionReplaceOriginalByPatch, &D2Game_10049_Return1_Original},
+       {0x6FCF30E0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt04_Arrow_Bolt, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt04_Arrow_Bolt_Original},
+       {0x6FCF3120 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt05_Jab, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt05_Jab_Original},
+       {0x6FCF3170 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt06_PowerStrike_ChargedStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt06_PowerStrike_ChargedStrike_Original},
+       {0x6FCF3280 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt07_Impale, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt07_Impale_Original},
+       {0x6FCF3510 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt08_Strafe, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt08_Strafe_Original},
+       {0x6FCF3690 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt09_Fend, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt09_Fend_Original},
+       {0x6FCF37B0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy_Original},
+       {0x6FCF38C0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt10_LightningStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt10_LightningStrike_Original},
+       {0x6FCF3A70 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo006_InnerSight_SlowMissiles, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo006_InnerSight_SlowMissiles_Original},
+       {0x6FCF3B90 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_AuraCallback_InnerSight_SlowMissiles, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_AuraCallback_InnerSight_SlowMissiles_Original},
+       {0x6FCF3C00 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo007_Jab, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo007_Jab_Original},
+       {0x6FCF3D70 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave_Original},
+       {0x6FCF4080 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo010_GuidedArrow_BoneSpirit, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo010_GuidedArrow_BoneSpirit_Original},
+       {0x6FCF4280 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_AddDamagePercentBonus, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_AddDamagePercentBonus_Original},
+       {0x6FCF42B0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo011_ChargedStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo011_ChargedStrike_Original},
+       {0x6FCF44D0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo012_Strafe, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo012_Strafe_Original},
+       {0x6FCF47D0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo013_Fend_Zeal_Fury, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo013_Fend_Zeal_Fury_Original},
+       {0x6FCF4A20 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo014_LightningStrike, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo014_LightningStrike_Original},
+       {0x6FCF4C50 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo015_Dopplezon, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo015_Dopplezon_Original},
+       {0x6FCF4EE0 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvDo016_Valkyrie, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvDo016_Valkyrie_Original},
        // 
        // // SkillAss
        // {0x6FCF5090 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_SrvSt22_PsychicHammer, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_SrvSt22_PsychicHammer_Original},

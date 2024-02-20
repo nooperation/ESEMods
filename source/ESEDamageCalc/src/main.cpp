@@ -9,6 +9,7 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	case DLL_PROCESS_ATTACH:
 		InitD2MooHeaders();
 		InitD2CommonExports();
+		InitD2FogExports();
 		break;
 	case DLL_PROCESS_DETACH:
 		break;

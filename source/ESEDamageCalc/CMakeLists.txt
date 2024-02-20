@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(ESEDamageCalc)
 
-file(GLOB_RECURSE ESEDamageCalc_SOURCES "src/*.cpp")
+file(GLOB_RECURSE ESEDamageCalc_SOURCES "src/*.cpp" "D2.Detours.patches/*.cpp" "D2.Detours.patches/*.rc")
 file(GLOB_RECURSE ESEDamageCalc_HEADERS "include/*.h" "include/*.hpp")
 set(ESEDamageCalc_FILES ${ESEDamageCalc_SOURCES} ${ESEDamageCalc_HEADERS})
 
@@ -14,7 +14,8 @@ add_library(ESEDamageCalc SHARED ${ESEDamageCalc_SOURCES} ${ESEDamageCalc_HEADER
 target_include_directories(ESEDamageCalc PUBLIC include)
 
 # Link D2MOO
-target_link_libraries(ESEDamageCalc D2MOOHeaders)
+target_link_libraries(ESEDamageCalc D2MOOHeaders D2.Detours)
+add_dependencies(ESEDamageCalc D2.DetoursLauncher)
 
 target_compile_features(ESEDamageCalc PUBLIC cxx_std_17)
 
@@ -36,6 +37,20 @@ target_include_directories(ESEDamageCalc
 		${D2MOOHeaders_SOURCE_DIR}/include/Game
 		${D2MOOHeaders_SOURCE_DIR}/include/Storm
 )
+
+set_target_properties(ESEDamageCalc
+	PROPERTIES
+	VS_DEBUGGER_COMMAND $<TARGET_FILE:D2.DetoursLauncher>
+	VS_DEBUGGER_ENVIRONMENT "DIABLO2_PATCH=$<TARGET_FILE_DIR:ESEDamageCalc>"
+)
+
+if(D2_EXE)
+	set_target_properties(ESEDamageCalc 
+		PROPERTIES 
+		VS_DEBUGGER_COMMAND_ARGUMENTS "\"${D2_EXE}\""
+		VS_DEBUGGER_WORKING_DIRECTORY "${D2_PATH}"
+	)
+endif()
 
 function(assign_source_group)
     foreach(FILE ${ESEDamageCalc_FILES})
