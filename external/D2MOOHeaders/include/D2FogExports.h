@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <cstdint>
 #include <StormHandles.h>
+#include <Calc.h>
 
 struct AsyncData;
 struct QServer;
@@ -14,6 +15,12 @@ struct AsyncDataLoadFileCallback;
 void InitD2FogExports();
 
 typedef int (*D2ExceptionCallback)();
+
+typedef  int(__stdcall* DATATBLS_CalcEvaluateExpression_t)(const FOGASTNodeStrc* pExpressionBuffer, int32_t nExpressionBufferSize, CalcFogCallBack2_t fpParamCallBack, D2CalcCallbackInfoStrc* pTableData, int nTableSize, void* pUserData);
+typedef  int(__stdcall* DATATBLS_CompileExpression_t)(const char* szFormulaString, FOGASTNodeStrc* pOutASTBuffer, int nOutASTBufferSize, CalcGetKeyWordToNumber_t pfnFunctionNameToId, CalcGetFunctionParameterCount_t pfnGetFunctionParameterCount, CalcGetLinkerIndex_t pfnLinkParse);
+
+extern DATATBLS_CalcEvaluateExpression_t DATATBLS_CalcEvaluateExpression;
+extern DATATBLS_CompileExpression_t DATATBLS_CompileExpression;
 
 typedef const char* (__cdecl *FOG_csprintf_t)(char* szDest, const char* szFormat, ...);
 typedef void (__fastcall *FOG_InitErrorMgr_t)(const char* szProgramName, D2ExceptionCallback pExceptionCallback, const char* szVersion, BOOL bLogToFile);

@@ -32,4 +32,6 @@ endif()
 
 
 set(CMAKE_FOLDER )
-add_subdirectory(source/ESEDamageCalc)
+add_subdirectory(source/ESECommon)
+add_subdirectory(source/D2GameESE)
+add_subdirectory(source/D2CommonESE)

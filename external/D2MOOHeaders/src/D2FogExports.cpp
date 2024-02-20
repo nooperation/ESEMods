@@ -1,5 +1,8 @@
 #include "../D2FogExports.h"
 
+DATATBLS_CalcEvaluateExpression_t DATATBLS_CalcEvaluateExpression = nullptr;
+DATATBLS_CompileExpression_t DATATBLS_CompileExpression = nullptr;
+
 FOG_csprintf_t FOG_csprintf = nullptr;
 FOG_InitErrorMgr_t FOG_InitErrorMgr = nullptr;
 FOG_SetLogPrefix_t FOG_SetLogPrefix = nullptr;
@@ -104,6 +107,9 @@ FOG_10255_t FOG_10255 = nullptr;
 void InitD2FogExports()
 {
     auto fogModule = GetModuleHandle("Fog");
+
+    DATATBLS_CalcEvaluateExpression = (DATATBLS_CalcEvaluateExpression_t)GetProcAddress(fogModule, (LPCSTR)10253);
+    DATATBLS_CompileExpression = (DATATBLS_CompileExpression_t)GetProcAddress(fogModule, (LPCSTR)10254);
 
     FOG_csprintf = (FOG_csprintf_t)GetProcAddress(fogModule, (LPCSTR)10018);
     FOG_InitErrorMgr = (FOG_InitErrorMgr_t)GetProcAddress(fogModule, (LPCSTR)10019);
