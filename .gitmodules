@@ -1,3 +1,3 @@
-[submodule "external/D2MOO"]
-	path = external/D2MOO
-	url = https://github.com/ThePhrozenKeep/D2MOO.git
+[submodule "external/D2.Detours"]
+	path = external/D2.Detours
+	url = https://github.com/Lectem/D2.Detours.git
