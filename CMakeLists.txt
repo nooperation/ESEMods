@@ -32,6 +32,7 @@ endif()
 
 
 set(CMAKE_FOLDER )
-add_subdirectory(source/ESECommon)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+add_subdirectory(source/LibESE)
 add_subdirectory(source/D2GameESE)
 add_subdirectory(source/D2CommonESE)

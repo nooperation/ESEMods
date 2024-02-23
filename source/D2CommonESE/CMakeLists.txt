@@ -14,8 +14,8 @@ add_library(D2CommonESE SHARED ${D2CommonESE_SOURCES} ${D2CommonESE_HEADERS})
 target_include_directories(D2CommonESE PUBLIC include)
 
 # Link D2MOO
-target_link_libraries(D2CommonESE D2MOOHeaders D2.Detours ESECommon)
-add_dependencies(D2CommonESE D2.DetoursLauncher ESECommon)
+target_link_libraries(D2CommonESE D2MOOHeaders D2.Detours LibESE)
+add_dependencies(D2CommonESE D2.DetoursLauncher LibESE)
 
 target_compile_features(D2CommonESE PUBLIC cxx_std_17)
 
@@ -36,7 +36,7 @@ target_include_directories(D2CommonESE
 		${D2MOOHeaders_SOURCE_DIR}/include/Fog
 		${D2MOOHeaders_SOURCE_DIR}/include/Game
 		${D2MOOHeaders_SOURCE_DIR}/include/Storm
-		${ESECommon_SOURCE_DIR}/include
+		${LibESE_SOURCE_DIR}/include
 )
 
 set_target_properties(D2CommonESE

@@ -1289,7 +1289,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 
 	if (pDamage->dwDmgTotal > 0)
 	{
-		D2ClientStrc* ownerClient = nullptr;
+		//D2ClientStrc* ownerClient = nullptr;
 
 		//if (pDefender != nullptr)
 		//{

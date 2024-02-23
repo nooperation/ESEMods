@@ -1,26 +1,26 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(ESECommon)
+project(LibESE)
 
-file(GLOB_RECURSE ESECommon_SOURCES "src/*.cpp")
-file(GLOB_RECURSE ESECommon_HEADERS "include/*.h" "include/*.hpp")
-set(ESECommon_FILES ${ESECommon_SOURCES} ${ESECommon_HEADERS})
+file(GLOB_RECURSE LibESE_SOURCES "src/*.cpp")
+file(GLOB_RECURSE LibESE_HEADERS "include/*.h" "include/*.hpp")
+set(LibESE_FILES ${LibESE_SOURCES} ${LibESE_HEADERS})
 
 
 # Unit
 
-add_library(ESECommon STATIC ${ESECommon_SOURCES} ${ESECommon_HEADERS})
+add_library(LibESE STATIC ${LibESE_SOURCES} ${LibESE_HEADERS})
 
-target_include_directories(ESECommon PUBLIC include)
+target_include_directories(LibESE PUBLIC include)
 
 # Link D2MOO
-target_link_libraries(ESECommon D2MOOHeaders D2.Detours)
-add_dependencies(ESECommon D2.DetoursLauncher)
+target_link_libraries(LibESE D2MOOHeaders D2.Detours)
+add_dependencies(LibESE D2.DetoursLauncher)
 
-target_compile_features(ESECommon PUBLIC cxx_std_17)
+target_compile_features(LibESE PUBLIC cxx_std_17)
 
 # Include D2MOO's headers
-target_include_directories(ESECommon 
+target_include_directories(LibESE 
 	PRIVATE
 		${D2MOOHeaders_SOURCE_DIR}/include/D2CMP
 		${D2MOOHeaders_SOURCE_DIR}/include/D2Common
@@ -39,7 +39,7 @@ target_include_directories(ESECommon
 )
 
 function(assign_source_group)
-    foreach(FILE ${ESECommon_FILES})
+    foreach(FILE ${LibESE_FILES})
         # Get the directory of the source file
         get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
 
