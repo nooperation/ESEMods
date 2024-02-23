@@ -1,6 +1,7 @@
 #include "D2Common/D2Skills_ESE.h"
 #include "D2Common/Units/Missile_ESE.h"
 #include "D2Game/SKILLS/Skills_ESE.h"
+#include <D2Game/MISSILES/MissMode_ESE.h>
 
 #include <D2BitManip.h>
 #include <D2PacketDef.h>
@@ -157,7 +158,7 @@ D2UnitStrc* __fastcall ESE_MISSILES_CreateMissileFromParams(D2GameStrc* pGame, D
     }
 
     int32_t nRange = 0;
-    if (missileParams->dwFlags & 0x8000)
+    if (!(missileParams->dwFlags & 0x8000))
     {
         nRange = pMissilesTxtRecord->wRange + missileParams->nSkillLevel * pMissilesTxtRecord->wLevRange;
         if (missileParams->dwFlags & 8 && pMissilesTxtRecord->nSubLoop)
