@@ -13,7 +13,7 @@
 #include <D2Combat.h>
 #include <Calc.h>
 
-D2CalcCallbackInfoStrc off_6FDE5A50[] =
+D2CalcCallbackInfoStrc ESE_off_6FDE5A50[] =
 {
 	{ ESE_MISSILE_GetMinimum, 2 },
 	{ ESE_MISSILE_GetMaximum, 2 },
@@ -21,7 +21,7 @@ D2CalcCallbackInfoStrc off_6FDE5A50[] =
 	{ ESE_MISSILE_GetSpecialParamValueForSkillMissile, 2 },
 };
 
-int dword_6FDE5A70 = ARRAY_SIZE(off_6FDE5A50);
+int ESE_dword_6FDE5A70 = ARRAY_SIZE(ESE_off_6FDE5A50);
 
 // Inlined, not intercepted
 D2MissilesTxt* __fastcall ESE_DATATBLS_GetMissilesTxtRecord(int nMissileId)
@@ -1093,7 +1093,7 @@ int __stdcall ESE_MISSILE_EvaluateMissileFormula(D2UnitStrc* pMissile, D2UnitStr
 		pMissileCalc.nMissileId = nMissile;
 		pMissileCalc.nMissileLevel = nMissileLevel;
 
-		return DATATBLS_CalcEvaluateExpression(&sgptDataTables->pMissCode[nCalc], sgptDataTables->nMissCodeSize - nCalc, ESE_MISSILE_GetCalcParamValue, off_6FDE5A50, dword_6FDE5A70, &pMissileCalc);
+		return DATATBLS_CalcEvaluateExpression(&sgptDataTables->pMissCode[nCalc], sgptDataTables->nMissCodeSize - nCalc, ESE_MISSILE_GetCalcParamValue, ESE_off_6FDE5A50, ESE_dword_6FDE5A70, &pMissileCalc);
 	}
 
 	return 0;

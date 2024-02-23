@@ -65,19 +65,18 @@ struct D2HitFunc22ParamStrc
 #pragma pack(pop)
 
 
-// TODO: should this be patched as well? this is used in Missiles.cpp
-// D2MissileUnitFindTableStrc stru_6FD2E5F8[9] =
-// {
-//     /*[0]*/{ nullptr                                                  , COLLIDE_NONE                                       },
-//     /*[1]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit, COLLIDE_PLAYER | COLLIDE_BARRIER                   },
-//     /*[2]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithMonster          , COLLIDE_MONSTER | COLLIDE_BARRIER                  },
-//     /*[3]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster  , COLLIDE_MONSTER | COLLIDE_PLAYER | COLLIDE_BARRIER },
-//     /*[4]*/{ nullptr                                                  , COLLIDE_NONE                                       },
-//     /*[5]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithMonster          , COLLIDE_MONSTER | COLLIDE_BARRIER                  },
-//     /*[6]*/{ nullptr                                                  , COLLIDE_BARRIER                                    },
-//     /*[7]*/{ ESE_MISSMODE_UnitFindCallback_CanMissileDestroy              , COLLIDE_MISSILE                                    },
-//     /*[8]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster  , COLLIDE_MONSTER | COLLIDE_PLAYER | COLLIDE_BARRIER | COLLIDE_BLOCK_PLAYER },
-// };
+D2MissileUnitFindTableStrc ESE_stru_6FD2E5F8[9] =
+{
+    /*[0]*/{ nullptr                                                  , COLLIDE_NONE                                       },
+    /*[1]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit, COLLIDE_PLAYER | COLLIDE_BARRIER                   },
+    /*[2]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithMonster          , COLLIDE_MONSTER | COLLIDE_BARRIER                  },
+    /*[3]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster  , COLLIDE_MONSTER | COLLIDE_PLAYER | COLLIDE_BARRIER },
+    /*[4]*/{ nullptr                                                  , COLLIDE_NONE                                       },
+    /*[5]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithMonster          , COLLIDE_MONSTER | COLLIDE_BARRIER                  },
+    /*[6]*/{ nullptr                                                  , COLLIDE_BARRIER                                    },
+    /*[7]*/{ ESE_MISSMODE_UnitFindCallback_CanMissileDestroy              , COLLIDE_MISSILE                                    },
+    /*[8]*/{ ESE_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster  , COLLIDE_MONSTER | COLLIDE_PLAYER | COLLIDE_BARRIER | COLLIDE_BLOCK_PLAYER },
+};
 
 
 //D2Game.0x6FC55CE0
@@ -690,7 +689,7 @@ int32_t __fastcall ESE_MISSMODE_HandleMissileCollision(D2GameStrc* pGame, D2Unit
         return 1;
     }
 
-    if (!stru_6FD2E5F8[nAnimMode].pfUnitFindCallback)
+    if (!ESE_stru_6FD2E5F8[nAnimMode].pfUnitFindCallback)
     {
         return 2;
     }
@@ -710,10 +709,10 @@ int32_t __fastcall ESE_MISSMODE_HandleMissileCollision(D2GameStrc* pGame, D2Unit
     {
         const uint16_t nX = pathPoints[i].X;
         const uint16_t nY = pathPoints[i].Y;
-        const uint16_t nCollisionMask = COLLISION_CheckMaskWithSize(pRoom, nX, nY, nSize, stru_6FD2E5F8[nAnimMode].nCollisionMask);
+        const uint16_t nCollisionMask = COLLISION_CheckMaskWithSize(pRoom, nX, nY, nSize, ESE_stru_6FD2E5F8[nAnimMode].nCollisionMask);
         if (nCollisionMask)
         {
-            D2UnitStrc* pTarget = D2Common_10407(pRoom, nX, nY, stru_6FD2E5F8[nAnimMode].pfUnitFindCallback, &unitFindArg, nSize);
+            D2UnitStrc* pTarget = D2Common_10407(pRoom, nX, nY, ESE_stru_6FD2E5F8[nAnimMode].pfUnitFindCallback, &unitFindArg, nSize);
             if (pTarget)
             {
                 return ESE_MISSMODE_SrvDmgHitHandler(pGame, pMissile, pTarget, 0);

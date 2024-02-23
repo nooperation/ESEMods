@@ -5264,19 +5264,6 @@ extern "C" const uint32_t gdwInvBitMasks[] =
     0xFEFFFFFF, 0xFDFFFFFF, 0xFBFFFFFF, 0xF7FFFFFF, 0xEFFFFFFF, 0xDFFFFFFF, 0xBFFFFFFF, 0x7FFFFFFF,
 };
 
-D2MissileUnitFindTableStrc stru_6FD2E5F8[9] =
-{
-    /*[0]*/{ nullptr                                                  , COLLIDE_NONE                                       },
-    /*[1]*/{ MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit, COLLIDE_PLAYER | COLLIDE_BARRIER                   },
-    /*[2]*/{ MISSMODE_UnitFindCallback_CanCollideWithMonster          , COLLIDE_MONSTER | COLLIDE_BARRIER                  },
-    /*[3]*/{ MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster  , COLLIDE_MONSTER | COLLIDE_PLAYER | COLLIDE_BARRIER },
-    /*[4]*/{ nullptr                                                  , COLLIDE_NONE                                       },
-    /*[5]*/{ MISSMODE_UnitFindCallback_CanCollideWithMonster          , COLLIDE_MONSTER | COLLIDE_BARRIER                  },
-    /*[6]*/{ nullptr                                                  , COLLIDE_BARRIER                                    },
-    /*[7]*/{ MISSMODE_UnitFindCallback_CanMissileDestroy              , COLLIDE_MISSILE                                    },
-    /*[8]*/{ MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster  , COLLIDE_MONSTER | COLLIDE_PLAYER | COLLIDE_BARRIER | COLLIDE_BLOCK_PLAYER },
-};
-
 void InitD2MooHeaders()
 {
     auto D2GameImageBase = (uint32_t)GetModuleHandle("D2Game");
@@ -10526,5 +10513,4 @@ void InitD2MooHeaders()
     OBJECTS_InitFunction79_Zoo = (OBJECTS_InitFunction79_Zoo_t)(D2GameImageBase + 0x89370);
     ACT5Q6_UnitIterate_SendZooMonsterIdToClient = (ACT5Q6_UnitIterate_SendZooMonsterIdToClient_t)(D2GameImageBase + 0x894C0);
     ACT5Q6_SpawnTyrael = (ACT5Q6_SpawnTyrael_t)(D2GameImageBase + 0x89520);
-
 }

@@ -5,6 +5,8 @@
 #include <Units/Units.h>
 #include <D2Game/UNIT/SUnitDmg_ESE.h>
 
+extern D2MissileUnitFindTableStrc ESE_stru_6FD2E5F8[9];
+
 //D2Game.0x6FC55CE0
 int32_t __fastcall ESE_MISSMODE_UnitFindCallback_CanCollideWithMonster(D2UnitStrc* pUnit, void* pArgument);
 //D2Game.0x6FC55D90

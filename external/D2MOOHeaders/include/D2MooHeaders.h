@@ -22,7 +22,6 @@ void InitD2MooHeaders();
 
 extern "C" const uint32_t gdwBitMasks[32];
 extern "C" const uint32_t gdwInvBitMasks[32];
-extern D2MissileUnitFindTableStrc stru_6FD2E5F8[9];
 
 // CommonDefinitions
 
