@@ -1162,20 +1162,20 @@ int32_t __fastcall ESE_SKILLS_SrvDo031_RaiseSkeleton_Mage(D2GameStrc* pGame, D2U
         return 0;
     }
 
-    if (pUnit && pUnit->dwUnitType == UNIT_PLAYER && pUnit->dwClassId == PCLASS_PALADIN)
-    {
-        const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
-
-        D2DamageStrc damage = {};
-
-        damage.wResultFlags |= 4u;
-        damage.dwHitFlags |= 0x1000u;
-        damage.dwPhysDamage = nMaxHp / 8;
-        damage.dwDmgTotal = nMaxHp / 8;
-
-        ESE_SUNITDMG_ExecuteEvents(pGame, pUnit, pUnit, 0, &damage);
-        ESE_SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pUnit, &damage);
-    }
+    //if (pUnit && pUnit->dwUnitType == UNIT_PLAYER && pUnit->dwClassId == PCLASS_PALADIN)
+    //{
+    //    const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
+    //
+    //    D2DamageStrc damage = {};
+    //
+    //    damage.wResultFlags |= 4u;
+    //    damage.dwHitFlags |= 0x1000u;
+    //    damage.dwPhysDamage = nMaxHp / 8;
+    //    damage.dwDmgTotal = nMaxHp / 8;
+    //
+    //    ESE_SUNITDMG_ExecuteEvents(pGame, pUnit, pUnit, 0, &damage);
+    //    ESE_SUNITDMG_ExecuteMissileDamage(pGame, pUnit, pUnit, &damage);
+    //}
 
     D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
     if (!pSkillsTxtRecord)

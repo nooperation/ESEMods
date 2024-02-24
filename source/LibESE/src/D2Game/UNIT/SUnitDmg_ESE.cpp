@@ -750,21 +750,26 @@ int32_t __fastcall ESE_SUNITDMG_RollDamageValueInRange(D2UnitStrc* pUnit, int32_
 	return std::max(nDamage, 0);
 }
 
+#define STAT_PASSIVE_PHYS_PIERCE 436
+#define STAT_ITEM_ABSORBPHYS_PERCENT 434 
+#define STAT_ITEM_ABSORBPOIS_PERCENT 435 
+#define STAT_PASSIVE_MAG_PIERCE 437
+
 //D2Game.0x6FCBF620
 void __fastcall ESE_SUNITDMG_CalculateTotalDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
 {
 	//D2Game.0x6FD3F090
 	constexpr D2DamageStatTableStrc sgDamageStatTable[12] =
 	{
-		{ offsetof(D2DamageStrc, dwPhysDamage),	STAT_DAMAGERESIST,				-1,						-1,							-1,								-1,						DAMAGE_REDUCTION_PHYSICAL,	0, 1, "Dam", 8, 0, 0, 0 },
+		{ offsetof(D2DamageStrc, dwPhysDamage),	STAT_DAMAGERESIST,				-1,						STAT_PASSIVE_PHYS_PIERCE,	STAT_ITEM_ABSORBPHYS_PERCENT,	-1,						DAMAGE_REDUCTION_PHYSICAL,	0, 1, "Dam", 8, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwFireDamage),	STAT_FIRERESIST,				STAT_MAXFIRERESIST,		STAT_PASSIVE_FIRE_PIERCE,	STAT_ITEM_ABSORBFIRE_PERCENT,	STAT_ITEM_ABSORBFIRE,	DAMAGE_REDUCTION_MAGICAL,	0, 1, "Fire", 8, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwLtngDamage),	STAT_LIGHTRESIST,				STAT_MAXLIGHTRESIST,	STAT_PASSIVE_LTNG_PIERCE,	STAT_ITEM_ABSORBLIGHT_PERCENT,	STAT_ITEM_ABSORBLIGHT,	DAMAGE_REDUCTION_MAGICAL,	0, 1, "Ligt", 8, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwColdDamage),	STAT_COLDRESIST,				STAT_MAXCOLDRESIST,		STAT_PASSIVE_COLD_PIERCE,	STAT_ITEM_ABSORBCOLD_PERCENT,	STAT_ITEM_ABSORBCOLD,	DAMAGE_REDUCTION_MAGICAL,	0, 1, "Cold", 8, 0, 0, 0 },
-		{ offsetof(D2DamageStrc, dwMagDamage),	STAT_MAGICRESIST,				STAT_MAXMAGICRESIST,	-1,							STAT_ITEM_ABSORBMAGIC_PERCENT,	STAT_ITEM_ABSORBMAGIC,	DAMAGE_REDUCTION_MAGICAL,	0, 1, "Magc", 8, 0, 0, 0 },
+		{ offsetof(D2DamageStrc, dwMagDamage),	STAT_MAGICRESIST,				STAT_MAXMAGICRESIST,	STAT_PASSIVE_MAG_PIERCE,	STAT_ITEM_ABSORBMAGIC_PERCENT,	STAT_ITEM_ABSORBMAGIC,	DAMAGE_REDUCTION_MAGICAL,	0, 1, "Magc", 8, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwColdLen),	STAT_COLDRESIST,				STAT_MAXCOLDRESIST,		STAT_PASSIVE_COLD_PIERCE,	-1,								-1,						DAMAGE_REDUCTION_NONE,		0, 0, "Clen", 0, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwFrzLen),		STAT_COLDRESIST,				STAT_MAXCOLDRESIST,		STAT_PASSIVE_COLD_PIERCE,	-1,								-1,						DAMAGE_REDUCTION_NONE,		0, 0, "Flen", 0, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwPoisLen),	STAT_ITEM_POISONLENGTHRESIST,	-1,						STAT_PASSIVE_POIS_PIERCE,	-1,								-1,						DAMAGE_REDUCTION_NONE,		0, 0, "Plen", 0, 0, 0, 0 },
-		{ offsetof(D2DamageStrc, dwPoisDamage),	STAT_POISONRESIST,				STAT_MAXPOISONRESIST,	STAT_PASSIVE_POIS_PIERCE,	-1,								-1,						DAMAGE_REDUCTION_NONE,		0, 1, "Pois", 0, 0, 0, 0 },
+		{ offsetof(D2DamageStrc, dwPoisDamage),	STAT_POISONRESIST,				STAT_MAXPOISONRESIST,	STAT_PASSIVE_POIS_PIERCE,	STAT_ITEM_ABSORBPOIS_PERCENT,	-1,						DAMAGE_REDUCTION_NONE,		0, 1, "Pois", 0, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwLifeLeech),	-1,								-1,						-1,							-1,								-1,						DAMAGE_REDUCTION_NONE,		1, 1, "Life", 8, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwManaLeech),	-1,								-1,						-1,							-1,								-1,						DAMAGE_REDUCTION_NONE,		1, 1, "Mana", 8, 0, 0, 0 },
 		{ offsetof(D2DamageStrc, dwStamLeech),	-1,								-1,						-1,							-1,								-1,						DAMAGE_REDUCTION_NONE,		1, 1, "Stam", 8, 0, 0, 0 },
@@ -974,30 +979,33 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamage
 	{
 		if (!pDamageInfo->bDefenderIsMonster)
 		{
-			int32_t nMaxResValue = 75;
+			int32_t nMaxResValue = 95;
 			if (pDamageStatTableRecord->nMaxResStatId == -1)
 			{
 				if (pDamageStatTableRecord->nResStatId == STAT_DAMAGERESIST)
 				{
-					nMaxResValue = 50;
+					nMaxResValue = 90;
 				}
 			}
 			else
 			{
-				nMaxResValue = std::min(STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nMaxResStatId, pDamageInfo->bDefenderIsMonster) + 75, 95);
+				nMaxResValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nMaxResStatId, pDamageInfo->bDefenderIsMonster) + 75;
+				if (nMaxResValue >= 95)
+				{
+					nMaxResValue = 95;
+				}
 			}
 
-			nResValue = D2Clamp(nResValue, -100, nMaxResValue);
+			if (nResValue >= nMaxResValue)
+			{
+				nResValue = nMaxResValue;
+			}
 		}
 
 		if (pDamageStatTableRecord->nResStatId == STAT_DAMAGERESIST && STATES_CheckState(pDamageInfo->pAttacker, STATE_SANCTUARY) && MONSTERS_IsUndead(pDamageInfo->pDefender))
 		{
 			nResValue = 0;
 		}
-	}
-	else
-	{
-		nResValue = std::max(nResValue, -100);
 	}
 
 	if (bDontAbsorb)
@@ -1030,11 +1038,15 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamage
 
 		if (nAbsorbPctValue > 0)
 		{
-			nAbsorbPctValue = std::min(nAbsorbPctValue, 40);
+			if (nAbsorbPctValue > 98)
+			{
+				nAbsorbPctValue = 98;
+			}
+
 			const int32_t nDamageAbsorbed = ESE_MONSTERUNIQUE_CalculatePercentage(nValue, nAbsorbPctValue, 100);
 
 			nValue -= nDamageAbsorbed;
-			pDamageInfo->pDamage->dwAbsLife += nDamageAbsorbed;
+			//pDamageInfo->pDamage->dwAbsLife += nDamageAbsorbed;
 		}
 
 		int32_t nAbsorbValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbStatId, 0) << 8;
@@ -1043,7 +1055,7 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamage
 			nAbsorbValue = std::min(nAbsorbValue, nValue);
 			nValue -= nAbsorbValue;
 
-			pDamageInfo->pDamage->dwAbsLife += nAbsorbValue;
+			// pDamageInfo->pDamage->dwAbsLife += nAbsorbValue;
 		}
 	}
 
