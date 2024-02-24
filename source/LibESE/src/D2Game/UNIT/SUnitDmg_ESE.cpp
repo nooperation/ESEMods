@@ -1064,6 +1064,165 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamage
 	*pValue = nValue;
 }
 
+void INTERNAL_SUNITDMG_ExecuteEvents_ApplyLifeManaLeech(D2UnitStrc* pAttacker, D2DamageStrc* pDamage, int32_t nDrain)
+{
+	if (pDamage->dwPhysDamage <= 0)
+	{
+		return;
+	}
+	if (!pDamage->dwLifeLeech && !pDamage->dwManaLeech)
+	{
+		return;
+	}
+
+	if (pDamage->dwManaLeech)
+	{
+		auto nLeechedMana = MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, pDamage->dwManaLeech, 100);
+		if (nDrain != 100)
+		{
+			nLeechedMana = MONSTERUNIQUE_CalculatePercentage(nLeechedMana, nDrain, 100);
+		}
+
+		SUNITDMG_AddLeechedMana(pAttacker, nLeechedMana / 64);
+	}
+
+	if (pDamage->dwLifeLeech)
+	{
+		auto nLeechedHp = MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, pDamage->dwLifeLeech, 100);
+		if (nDrain != 100)
+		{
+			nLeechedHp = MONSTERUNIQUE_CalculatePercentage(nLeechedHp, nDrain, 100);
+		}
+
+		SUNITDMG_AddLeechedLife(pAttacker, nLeechedHp / 64);
+	}
+
+	if (pDamage->dwLifeLeech && pDamage->dwManaLeech)
+	{
+		if (ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 2))
+		{
+			UNITS_SetOverlay(pAttacker, 151, 0);
+		}
+		else
+		{
+			UNITS_SetOverlay(pAttacker, 152, 0);
+		}
+	}
+	
+	if (pDamage->dwManaLeech) 
+	{
+		UNITS_SetOverlay(pAttacker, 152, 0);
+		return;
+	}
+
+	UNITS_SetOverlay(pAttacker, 151, 0);
+	return;
+}
+
+void INTERNAL_SUNITDMG_ExecuteEvents_HandleLeech(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
+{
+	if (!pDamage->dwLifeLeech && !pDamage->dwManaLeech)
+	{
+		return;
+	}
+
+	int32_t nDrain = 0;
+	if (pDefender && pDefender->dwUnitType == UNIT_MONSTER)
+	{
+		D2MonStatsTxt* pMonStatsTxtRecord = ESE_SUNITDMG_GetMonStatsTxtRecordFromUnit(pDefender);
+		if (!pMonStatsTxtRecord)
+		{
+			return;
+		}
+
+		if (pMonStatsTxtRecord)
+		{
+			nDrain = pMonStatsTxtRecord->nDrain[pGame->nDifficulty];
+		}
+
+		if (!nDrain)
+		{
+			return;
+		}
+	}
+	else
+	{
+		nDrain = 100;
+	}
+
+	pDamage->dwLifeLeech <<= 6;
+	pDamage->dwManaLeech <<= 6;
+
+	int32_t nUnitType = 0;
+	if (pAttacker)
+	{
+		if (pAttacker->dwUnitType == UNIT_PLAYER || (pAttacker->dwUnitType == UNIT_MONSTER && MONSTERS_GetHirelingTypeId(pAttacker)))
+		{
+			if (pAttacker->dwUnitType == UNIT_PLAYER)
+			{
+				D2DifficultyLevelsTxt* pDifficultyLevelsTxtRecord = DATATBLS_GetDifficultyLevelsTxtRecord(pAttacker->pGame->nDifficulty);
+				if (pDifficultyLevelsTxtRecord->dwLifeStealDiv)
+				{
+					pDamage->dwLifeLeech /= pDifficultyLevelsTxtRecord->dwLifeStealDiv;
+				}
+
+				if (pDifficultyLevelsTxtRecord->dwManaStealDiv)
+				{
+					pDamage->dwManaLeech /= pDifficultyLevelsTxtRecord->dwManaStealDiv;
+				}
+			}
+
+			INTERNAL_SUNITDMG_ExecuteEvents_ApplyLifeManaLeech(pAttacker, pDamage, nDrain);
+			return;
+		}
+		else
+		{
+			nUnitType = pAttacker->dwUnitType;
+		}
+	}
+	else
+	{
+		nUnitType = 6;
+	}
+
+	int32_t nClassId = pAttacker ? pAttacker->dwClassId : -1;
+	int32_t nAnimMode = pAttacker ? pAttacker->dwAnimMode : 0;
+	
+	D2Common_11013_ConvertMode(pAttacker, &nUnitType, &nClassId, &nAnimMode, __FILE__, __LINE__);
+	if (!nUnitType)
+	{
+		INTERNAL_SUNITDMG_ExecuteEvents_ApplyLifeManaLeech(pAttacker, pDamage, nDrain);
+		return;
+	}
+
+	const int32_t nMana = STATLIST_UnitGetStatValue(pDefender, STAT_MANA, 0);
+	const int32_t nStamina = STATLIST_UnitGetStatValue(pDefender, STAT_STAMINA, 0);
+
+	pDamage->dwLifeLeech >>= 6;
+	pDamage->dwManaLeech >>= 6;
+
+	const int32_t nLifeLeech = std::min(pDamage->dwLifeLeech, pDamage->dwPhysDamage);
+	const int32_t nManaLeech = std::min(pDamage->dwManaLeech, nMana);
+	const int32_t nStaminaLeech = std::min(pDamage->dwStamLeech, nStamina);
+	int32_t nTotalLeech = nStaminaLeech + nManaLeech + nLifeLeech;
+	if (nTotalLeech)
+	{
+		if (nDrain != 100)
+		{
+			nTotalLeech = ESE_MONSTERUNIQUE_CalculatePercentage(nTotalLeech, nDrain, 100);
+		}
+
+		const int32_t nMissingHp = STATLIST_GetMaxLifeFromUnit(pAttacker) - STATLIST_UnitGetStatValue(pAttacker, STAT_HITPOINTS, 0);
+		nTotalLeech = std::min(nTotalLeech, nMissingHp);
+
+		if (nTotalLeech > 0)
+		{
+			STATLIST_AddUnitStat(pAttacker, STAT_HITPOINTS, nTotalLeech, 0);
+			UNITS_SetOverlay(pAttacker, 151, 0);
+		}
+	}
+}
+
 //D2Game.0x6FCBFE90
 void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, D2DamageStrc* pDamage)
 {
@@ -1152,140 +1311,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 	const int32_t nHp = STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0);
 	pDamage->dwPhysDamage = std::min(pDamage->dwPhysDamage, nHp);
 
-	if (pDamage->dwLifeLeech || pDamage->dwManaLeech)
-	{
-		int32_t nDrain = 0;
-		if (pDefender && pDefender->dwUnitType == UNIT_MONSTER)
-		{
-			D2MonStatsTxt* pMonStatsTxtRecord = ESE_SUNITDMG_GetMonStatsTxtRecordFromUnit(pDefender);
-			if (pMonStatsTxtRecord)
-			{
-				nDrain = pMonStatsTxtRecord->nDrain[pGame->nDifficulty];
-			}
-		}
-		else
-		{
-			nDrain = 100;
-		}
-
-		if (nDrain > 0)
-		{
-			pDamage->dwLifeLeech <<= 6;
-			pDamage->dwManaLeech <<= 6;
-
-			int32_t nUnitType = 0;
-			if (pAttacker)
-			{
-				if (pAttacker->dwUnitType == UNIT_PLAYER)
-				{
-					D2DifficultyLevelsTxt* pDifficultyLevelsTxtRecord = DATATBLS_GetDifficultyLevelsTxtRecord(pAttacker->pGame->nDifficulty);
-					if (pDifficultyLevelsTxtRecord->dwLifeStealDiv)
-					{
-						pDamage->dwLifeLeech /= pDifficultyLevelsTxtRecord->dwLifeStealDiv;
-					}
-
-					if (pDifficultyLevelsTxtRecord->dwManaStealDiv)
-					{
-						pDamage->dwManaLeech /= pDifficultyLevelsTxtRecord->dwManaStealDiv;
-					}
-				}
-				else
-				{
-					if (pAttacker->dwUnitType != UNIT_MONSTER || !MONSTERS_GetHirelingTypeId(pAttacker))
-					{
-						nUnitType = pAttacker->dwUnitType;
-						int32_t nClassId = pAttacker->dwClassId;
-						int32_t nAnimMode = pAttacker->dwAnimMode;
-						D2Common_11013_ConvertMode(pAttacker, &nUnitType, &nClassId, &nAnimMode, __FILE__, __LINE__);
-					}
-				}
-			}
-			else
-			{
-				nUnitType = 6;
-				int32_t nClassId = -1;
-				int32_t nAnimMode = 0;
-				D2Common_11013_ConvertMode(pAttacker, &nUnitType, &nClassId, &nAnimMode, __FILE__, __LINE__);
-			}
-
-			if (!nUnitType)
-			{
-				if (pDamage->dwPhysDamage > 0)
-				{
-					if (pDamage->dwManaLeech)
-					{
-						int32_t nLeechedMana = ESE_MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, pDamage->dwManaLeech, 100);
-						if (nDrain != 100)
-						{
-							nLeechedMana = ESE_MONSTERUNIQUE_CalculatePercentage(nLeechedMana, nDrain, 100);
-						}
-
-						ESE_SUNITDMG_AddLeechedMana(pAttacker, nLeechedMana / 64);
-					}
-
-					if (pDamage->dwLifeLeech)
-					{
-						int32_t nLeechedHp = ESE_MONSTERUNIQUE_CalculatePercentage(pDamage->dwPhysDamage, pDamage->dwLifeLeech, 100);
-						if (nDrain != 100)
-						{
-							nLeechedHp = ESE_MONSTERUNIQUE_CalculatePercentage(nLeechedHp, nDrain, 100);
-						}
-
-						ESE_SUNITDMG_AddLeechedLife(pAttacker, nLeechedHp / 64);
-
-						if (pDamage->dwManaLeech)
-						{
-							if (!ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 2))
-							{
-								UNITS_SetOverlay(pAttacker, 151, 0);
-							}
-							else
-							{
-								UNITS_SetOverlay(pAttacker, 152, 0);
-							}
-						}
-						else
-						{
-							UNITS_SetOverlay(pAttacker, 151, 0);
-						}
-					}
-					else if (pDamage->dwManaLeech)
-					{
-						UNITS_SetOverlay(pAttacker, 152, 0);
-					}
-				}
-			}
-			else
-			{
-				const int32_t nMana = STATLIST_UnitGetStatValue(pDefender, STAT_MANA, 0);
-				const int32_t nStamina = STATLIST_UnitGetStatValue(pDefender, STAT_STAMINA, 0);
-
-				pDamage->dwLifeLeech <<= 6;
-				pDamage->dwManaLeech <<= 6;
-
-				const int32_t nLifeLeech = std::min(pDamage->dwLifeLeech, pDamage->dwPhysDamage);
-				const int32_t nManaLeech = std::min(pDamage->dwManaLeech, nMana);
-				const int32_t nStaminaLeech = std::min(pDamage->dwStamLeech, nStamina);
-				int32_t nTotalLeech = nStaminaLeech + nManaLeech + nLifeLeech;
-				if (nTotalLeech)
-				{
-					if (nDrain != 100)
-					{
-						nTotalLeech = ESE_MONSTERUNIQUE_CalculatePercentage(nTotalLeech, nDrain, 100);
-					}
-
-					const int32_t nMissingHp = STATLIST_GetMaxLifeFromUnit(pAttacker) - STATLIST_UnitGetStatValue(pAttacker, STAT_HITPOINTS, 0);
-					nTotalLeech = std::min(nTotalLeech, nMissingHp);
-
-					if (nTotalLeech > 0)
-					{
-						STATLIST_AddUnitStat(pAttacker, STAT_HITPOINTS, nTotalLeech, 0);
-						UNITS_SetOverlay(pAttacker, 151, 0);
-					}
-				}
-			}
-		}
-	}
+	INTERNAL_SUNITDMG_ExecuteEvents_HandleLeech(pGame, pAttacker, pDefender, pDamage);
 
 	if (nAttackerUnitType == UNIT_MONSTER && pDamage->wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
 	{
@@ -1396,8 +1422,10 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 			nStunLength = std::min(nStunLength, 250u);
 			bApplyStun = 1;
 		}
-
-		if ((!MONSTERUNIQUE_CheckMonTypeFlag(pDefender, 8u) || ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 100) >= 90) && !MONSTERS_IsBoss(0, pDefender) && MONSTERMODE_GetMonStatsTxtRecord(pDefender->dwClassId)->nVelocity)
+		else if (
+			(!MONSTERUNIQUE_CheckMonTypeFlag(pDefender, 8u) || ITEMS_RollLimitedRandomNumber(&pAttacker->pSeed, 100) >= 90) 
+			&& !MONSTERS_IsBoss(0, pDefender) 
+			&& MONSTERMODE_GetMonStatsTxtRecord(pDefender->dwClassId)->nVelocity)
 		{
 			if (MONSTERS_GetHirelingTypeId(pDefender) && nStunLength >= 13)
 			{
