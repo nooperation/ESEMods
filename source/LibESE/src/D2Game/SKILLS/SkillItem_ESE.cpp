@@ -778,24 +778,11 @@ int32_t __fastcall ESE_SKILLITEM_pSpell11_CastFireBallToCoordinates(D2GameStrc* 
     return 0;
 }
 
+#include "../D2MooHeaders.h"
+
 //D2Game.0x6FD03E40
 int32_t __fastcall ESE_SKILLITEM_pSpell_Handler(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pItem, D2UnitStrc* pTarget, int32_t nX, int32_t nY)
 {
-    constexpr D2pSpellTblStrc gPSpellTable[31] = {
-        { nullptr, nullptr },
-        { ESE_SKILLITEM_pSpell01_Initializer, ESE_SKILLITEM_pSpell01_IdentifyItem },
-        { nullptr, ESE_SKILLITEM_pSpell02_CastPortal },
-        { nullptr, ESE_SKILLITEM_pSpell03_Potion },
-        { nullptr, ESE_SKILLITEM_pSpell04_Unused },
-        { nullptr, ESE_SKILLITEM_pSpell05_RejuvPotion },
-        { nullptr, ESE_SKILLITEM_pSpell09_AntidoteThawingPotion },
-        { nullptr, ESE_SKILLITEM_pSpell07_OpenCube },
-        { nullptr, ESE_SKILLITEM_pSpell08_ExperienceElixir },
-        { nullptr, ESE_SKILLITEM_pSpell09_StaminaPotion },
-        { nullptr, ESE_SKILLITEM_pSpell10_CastFireBallOnTarget },
-        { nullptr, ESE_SKILLITEM_pSpell11_CastFireBallToCoordinates },
-    };
-
     if (!pUnit || pUnit->dwUnitType != UNIT_PLAYER && pUnit->dwUnitType != UNIT_MONSTER || !pItem || pItem->dwUnitType != UNIT_ITEM)
     {
         return 0;
@@ -828,7 +815,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell_Handler(D2GameStrc* pGame, D2UnitStrc* p
         }
     }
 
-    if (nPSpell >= std::size(gPSpellTable))
+    if (nPSpell >= *gPSpellTableSize)
     {
         return 0;
     }

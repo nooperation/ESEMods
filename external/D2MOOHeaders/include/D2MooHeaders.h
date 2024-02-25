@@ -14,6 +14,7 @@
 #include <D2Text.h>
 #include <Drlg/D2DrlgDrlgLogic.h>
 #include <MISSILES/MissMode.h>
+#include <SKILLS/SkillItem.h>
 
 #include <../D2CommonExports.h>
 #include <../D2FogExports.h>
@@ -22,6 +23,8 @@ void InitD2MooHeaders();
 
 extern "C" const uint32_t gdwBitMasks[32];
 extern "C" const uint32_t gdwInvBitMasks[32];
+extern D2pSpellTblStrc* gPSpellTable;
+extern int32_t* gPSpellTableSize;
 
 // CommonDefinitions
 

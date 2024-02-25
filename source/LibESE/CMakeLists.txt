@@ -36,6 +36,8 @@ target_include_directories(LibESE
 		${D2MOOHeaders_SOURCE_DIR}/include/Fog
 		${D2MOOHeaders_SOURCE_DIR}/include/Game
 		${D2MOOHeaders_SOURCE_DIR}/include/Storm
+		${D2GameESE_SOURCE_DIR}/include
+		${D2CommonESE_SOURCE_DIR}/include
 )
 
 function(assign_source_group)

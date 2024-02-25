@@ -5264,10 +5264,16 @@ extern "C" const uint32_t gdwInvBitMasks[] =
     0xFEFFFFFF, 0xFDFFFFFF, 0xFBFFFFFF, 0xF7FFFFFF, 0xEFFFFFFF, 0xDFFFFFFF, 0xBFFFFFFF, 0x7FFFFFFF,
 };
 
+D2pSpellTblStrc *gPSpellTable = nullptr;
+int32_t *gPSpellTableSize = nullptr;
+
 void InitD2MooHeaders()
 {
     auto D2GameImageBase = (uint32_t)GetModuleHandle("D2Game");
     auto D2CommonImageBase = (uint32_t)GetModuleHandle("D2Common");
+
+    gPSpellTable = (D2pSpellTblStrc *)((uint8_t*)D2GameImageBase + 0x110688);
+    gPSpellTableSize = (int32_t *)((uint8_t*)D2GameImageBase + 0x110780);
 
     // CommonDefinitions
 
