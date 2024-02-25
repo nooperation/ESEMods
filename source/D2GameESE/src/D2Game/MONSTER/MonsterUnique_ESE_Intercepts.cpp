@@ -1,23 +1,23 @@
 #include "D2Game/MONSTER/MonsterUnique_ESE_Intercepts.h"
 
-decltype(&MONSTERUNIQUE_CalculatePercentage) MONSTERUNIQUE_CalculatePercentage_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod16_Champion) MONSTERUNIQUE_UMod16_Champion_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod36_Ghostly) MONSTERUNIQUE_UMod36_Ghostly_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod39_Berserk) MONSTERUNIQUE_UMod39_Berserk_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod8_Resistant) MONSTERUNIQUE_UMod8_Resistant_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod5_Strong) MONSTERUNIQUE_UMod5_Strong_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod9_FireEnchanted) MONSTERUNIQUE_UMod9_FireEnchanted_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod17_LightningEnchanted) MONSTERUNIQUE_UMod17_LightningEnchanted_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod18_ColdEnchanted) MONSTERUNIQUE_UMod18_ColdEnchanted_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod23_PoisonEnchanted) MONSTERUNIQUE_UMod23_PoisonEnchanted_Original = nullptr;
-decltype(&MONSTERUNIQUE_UMod25_ManaSteal) MONSTERUNIQUE_UMod25_ManaSteal_Original = nullptr;
-decltype(&MONSTERUNIQUE_CastCorpseExplode) MONSTERUNIQUE_CastCorpseExplode_Original = nullptr;
-decltype(&MONSTERUNIQUE_CastCorpseExplode2) MONSTERUNIQUE_CastCorpseExplode2_Original = nullptr;
-decltype(&sub_6FC6CF10) sub_6FC6CF10_Original = nullptr;
-decltype(&sub_6FC6CF90) sub_6FC6CF90_Original = nullptr;
-decltype(&MONSTERUNIQUE_ApplyElementalDamage) MONSTERUNIQUE_ApplyElementalDamage_Original = nullptr;
-decltype(&sub_6FC6E240) sub_6FC6E240_Original = nullptr;
-decltype(&MONSTERUNIQUE_CastSuicideExplodeMissile) MONSTERUNIQUE_CastSuicideExplodeMissile_Original = nullptr;
+MONSTERUNIQUE_CalculatePercentage_t MONSTERUNIQUE_CalculatePercentage_Original = nullptr;
+MONSTERUNIQUE_UMod16_Champion_t MONSTERUNIQUE_UMod16_Champion_Original = nullptr;
+MONSTERUNIQUE_UMod36_Ghostly_t MONSTERUNIQUE_UMod36_Ghostly_Original = nullptr;
+MONSTERUNIQUE_UMod39_Berserk_t MONSTERUNIQUE_UMod39_Berserk_Original = nullptr;
+MONSTERUNIQUE_UMod8_Resistant_t MONSTERUNIQUE_UMod8_Resistant_Original = nullptr;
+MONSTERUNIQUE_UMod5_Strong_t MONSTERUNIQUE_UMod5_Strong_Original = nullptr;
+MONSTERUNIQUE_UMod9_FireEnchanted_t MONSTERUNIQUE_UMod9_FireEnchanted_Original = nullptr;
+MONSTERUNIQUE_UMod17_LightningEnchanted_t MONSTERUNIQUE_UMod17_LightningEnchanted_Original = nullptr;
+MONSTERUNIQUE_UMod18_ColdEnchanted_t MONSTERUNIQUE_UMod18_ColdEnchanted_Original = nullptr;
+MONSTERUNIQUE_UMod23_PoisonEnchanted_t MONSTERUNIQUE_UMod23_PoisonEnchanted_Original = nullptr;
+MONSTERUNIQUE_UMod25_ManaSteal_t MONSTERUNIQUE_UMod25_ManaSteal_Original = nullptr;
+MONSTERUNIQUE_CastCorpseExplode_t MONSTERUNIQUE_CastCorpseExplode_Original = nullptr;
+MONSTERUNIQUE_CastCorpseExplode2_t MONSTERUNIQUE_CastCorpseExplode2_Original = nullptr;
+sub_6FC6CF10_t sub_6FC6CF10_Original = nullptr;
+sub_6FC6CF90_t sub_6FC6CF90_Original = nullptr;
+MONSTERUNIQUE_ApplyElementalDamage_t MONSTERUNIQUE_ApplyElementalDamage_Original = nullptr;
+sub_6FC6E240_t sub_6FC6E240_Original = nullptr;
+MONSTERUNIQUE_CastSuicideExplodeMissile_t MONSTERUNIQUE_CastSuicideExplodeMissile_Original = nullptr;
 
 int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CalculatePercentage(int32_t a1, int32_t a2, int32_t a3)
 {

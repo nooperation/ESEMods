@@ -1,26 +1,26 @@
 #include "D2Game/SKILLS/SkillAma_ESE_Intercepts.h"
 
-decltype(&D2Game_10049_Return1) D2Game_10049_Return1_Original = nullptr;
-decltype(&SKILLS_SrvSt04_Arrow_Bolt) SKILLS_SrvSt04_Arrow_Bolt_Original = nullptr;
-decltype(&SKILLS_SrvSt05_Jab) SKILLS_SrvSt05_Jab_Original = nullptr;
-decltype(&SKILLS_SrvSt06_PowerStrike_ChargedStrike) SKILLS_SrvSt06_PowerStrike_ChargedStrike_Original = nullptr;
-decltype(&SKILLS_SrvSt07_Impale) SKILLS_SrvSt07_Impale_Original = nullptr;
-decltype(&SKILLS_SrvSt08_Strafe) SKILLS_SrvSt08_Strafe_Original = nullptr;
-decltype(&SKILLS_SrvSt09_Fend) SKILLS_SrvSt09_Fend_Original = nullptr;
-decltype(&SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy) SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy_Original = nullptr;
-decltype(&SKILLS_SrvSt10_LightningStrike) SKILLS_SrvSt10_LightningStrike_Original = nullptr;
-decltype(&SKILLS_SrvDo006_InnerSight_SlowMissiles) SKILLS_SrvDo006_InnerSight_SlowMissiles_Original = nullptr;
-decltype(&SKILLS_AuraCallback_InnerSight_SlowMissiles) SKILLS_AuraCallback_InnerSight_SlowMissiles_Original = nullptr;
-decltype(&SKILLS_SrvDo007_Jab) SKILLS_SrvDo007_Jab_Original = nullptr;
-decltype(&SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave) SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave_Original = nullptr;
-decltype(&SKILLS_SrvDo010_GuidedArrow_BoneSpirit) SKILLS_SrvDo010_GuidedArrow_BoneSpirit_Original = nullptr;
-decltype(&SKILLS_AddDamagePercentBonus) SKILLS_AddDamagePercentBonus_Original = nullptr;
-decltype(&SKILLS_SrvDo011_ChargedStrike) SKILLS_SrvDo011_ChargedStrike_Original = nullptr;
-decltype(&SKILLS_SrvDo012_Strafe) SKILLS_SrvDo012_Strafe_Original = nullptr;
-decltype(&SKILLS_SrvDo013_Fend_Zeal_Fury) SKILLS_SrvDo013_Fend_Zeal_Fury_Original = nullptr;
-decltype(&SKILLS_SrvDo014_LightningStrike) SKILLS_SrvDo014_LightningStrike_Original = nullptr;
-decltype(&SKILLS_SrvDo015_Dopplezon) SKILLS_SrvDo015_Dopplezon_Original = nullptr;
-decltype(&SKILLS_SrvDo016_Valkyrie) SKILLS_SrvDo016_Valkyrie_Original = nullptr;
+D2Game_10049_Return1_t D2Game_10049_Return1_Original = nullptr;
+SKILLS_SrvSt04_Arrow_Bolt_t SKILLS_SrvSt04_Arrow_Bolt_Original = nullptr;
+SKILLS_SrvSt05_Jab_t SKILLS_SrvSt05_Jab_Original = nullptr;
+SKILLS_SrvSt06_PowerStrike_ChargedStrike_t SKILLS_SrvSt06_PowerStrike_ChargedStrike_Original = nullptr;
+SKILLS_SrvSt07_Impale_t SKILLS_SrvSt07_Impale_Original = nullptr;
+SKILLS_SrvSt08_Strafe_t SKILLS_SrvSt08_Strafe_Original = nullptr;
+SKILLS_SrvSt09_Fend_t SKILLS_SrvSt09_Fend_Original = nullptr;
+SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy_t SKILLS_SrvSt37_Zeal_Fury_BloodLordFrenzy_Original = nullptr;
+SKILLS_SrvSt10_LightningStrike_t SKILLS_SrvSt10_LightningStrike_Original = nullptr;
+SKILLS_SrvDo006_InnerSight_SlowMissiles_t SKILLS_SrvDo006_InnerSight_SlowMissiles_Original = nullptr;
+SKILLS_AuraCallback_InnerSight_SlowMissiles_t SKILLS_AuraCallback_InnerSight_SlowMissiles_Original = nullptr;
+SKILLS_SrvDo007_Jab_t SKILLS_SrvDo007_Jab_Original = nullptr;
+SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave_t SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave_Original = nullptr;
+SKILLS_SrvDo010_GuidedArrow_BoneSpirit_t SKILLS_SrvDo010_GuidedArrow_BoneSpirit_Original = nullptr;
+SKILLS_AddDamagePercentBonus_t SKILLS_AddDamagePercentBonus_Original = nullptr;
+SKILLS_SrvDo011_ChargedStrike_t SKILLS_SrvDo011_ChargedStrike_Original = nullptr;
+SKILLS_SrvDo012_Strafe_t SKILLS_SrvDo012_Strafe_Original = nullptr;
+SKILLS_SrvDo013_Fend_Zeal_Fury_t SKILLS_SrvDo013_Fend_Zeal_Fury_Original = nullptr;
+SKILLS_SrvDo014_LightningStrike_t SKILLS_SrvDo014_LightningStrike_Original = nullptr;
+SKILLS_SrvDo015_Dopplezon_t SKILLS_SrvDo015_Dopplezon_Original = nullptr;
+SKILLS_SrvDo016_Valkyrie_t SKILLS_SrvDo016_Valkyrie_Original = nullptr;
 
 int32_t __stdcall ESE_INTERCEPT_D2Game_10049_Return1(int32_t a1, int32_t a2, int32_t a3, int32_t a4, int32_t a5, int32_t a6)
 {

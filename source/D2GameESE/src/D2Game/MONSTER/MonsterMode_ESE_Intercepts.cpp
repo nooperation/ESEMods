@@ -1,15 +1,15 @@
 #include "D2Game/MONSTER/MonsterMode_ESE_Intercepts.h"
 
-decltype(&sub_6FC627B0) sub_6FC627B0_Original = nullptr;
-decltype(&sub_6FC62D90) sub_6FC62D90_Original = nullptr;
-decltype(&sub_6FC62DF0) sub_6FC62DF0_Original = nullptr;
-decltype(&D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70) D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70_Original = nullptr;
-decltype(&D2GAME_ApplyPeriodicStatDamage_6FC63440) D2GAME_ApplyPeriodicStatDamage_6FC63440_Original = nullptr;
-decltype(&sub_6FC63B30) sub_6FC63B30_Original = nullptr;
-decltype(&sub_6FC63FD0) sub_6FC63FD0_Original = nullptr;
-decltype(&sub_6FC64090) sub_6FC64090_Original = nullptr;
-decltype(&sub_6FC641D0) sub_6FC641D0_Original = nullptr;
-decltype(&sub_6FC64790) sub_6FC64790_Original = nullptr;
+sub_6FC627B0_t sub_6FC627B0_Original = nullptr;
+sub_6FC62D90_t sub_6FC62D90_Original = nullptr;
+sub_6FC62DF0_t sub_6FC62DF0_Original = nullptr;
+D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70_t D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70_Original = nullptr;
+D2GAME_ApplyPeriodicStatDamage_6FC63440_t D2GAME_ApplyPeriodicStatDamage_6FC63440_Original = nullptr;
+sub_6FC63B30_t sub_6FC63B30_Original = nullptr;
+sub_6FC63FD0_t sub_6FC63FD0_Original = nullptr;
+sub_6FC64090_t sub_6FC64090_Original = nullptr;
+sub_6FC641D0_t sub_6FC641D0_Original = nullptr;
+sub_6FC64790_t sub_6FC64790_Original = nullptr;
 
 
 void __fastcall ESE_INTERCEPT_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode)

@@ -47,56 +47,56 @@ void __fastcall ESE_INTERCEPT_sub_6FC6E240(D2GameStrc* pGame, D2UnitStrc* pUnit,
 //D2Game.0x6FC6E410
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastSuicideExplodeMissile(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_CalculatePercentage) MONSTERUNIQUE_CalculatePercentage_Original;
+extern MONSTERUNIQUE_CalculatePercentage_t MONSTERUNIQUE_CalculatePercentage_Original;
 int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CalculatePercentage(int32_t a1, int32_t a2, int32_t a3);
 
-extern decltype(&MONSTERUNIQUE_UMod16_Champion) MONSTERUNIQUE_UMod16_Champion_Original;
+extern MONSTERUNIQUE_UMod16_Champion_t MONSTERUNIQUE_UMod16_Champion_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod36_Ghostly) MONSTERUNIQUE_UMod36_Ghostly_Original;
+extern MONSTERUNIQUE_UMod36_Ghostly_t MONSTERUNIQUE_UMod36_Ghostly_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod36_Ghostly(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod39_Berserk) MONSTERUNIQUE_UMod39_Berserk_Original;
+extern MONSTERUNIQUE_UMod39_Berserk_t MONSTERUNIQUE_UMod39_Berserk_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod39_Berserk(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod8_Resistant) MONSTERUNIQUE_UMod8_Resistant_Original;
+extern MONSTERUNIQUE_UMod8_Resistant_t MONSTERUNIQUE_UMod8_Resistant_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod8_Resistant(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod5_Strong) MONSTERUNIQUE_UMod5_Strong_Original;
+extern MONSTERUNIQUE_UMod5_Strong_t MONSTERUNIQUE_UMod5_Strong_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod5_Strong(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod9_FireEnchanted) MONSTERUNIQUE_UMod9_FireEnchanted_Original;
+extern MONSTERUNIQUE_UMod9_FireEnchanted_t MONSTERUNIQUE_UMod9_FireEnchanted_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod9_FireEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod17_LightningEnchanted) MONSTERUNIQUE_UMod17_LightningEnchanted_Original;
+extern MONSTERUNIQUE_UMod17_LightningEnchanted_t MONSTERUNIQUE_UMod17_LightningEnchanted_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod17_LightningEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod18_ColdEnchanted) MONSTERUNIQUE_UMod18_ColdEnchanted_Original;
+extern MONSTERUNIQUE_UMod18_ColdEnchanted_t MONSTERUNIQUE_UMod18_ColdEnchanted_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod18_ColdEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod23_PoisonEnchanted) MONSTERUNIQUE_UMod23_PoisonEnchanted_Original;
+extern MONSTERUNIQUE_UMod23_PoisonEnchanted_t MONSTERUNIQUE_UMod23_PoisonEnchanted_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod23_PoisonEnchanted(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_UMod25_ManaSteal) MONSTERUNIQUE_UMod25_ManaSteal_Original;
+extern MONSTERUNIQUE_UMod25_ManaSteal_t MONSTERUNIQUE_UMod25_ManaSteal_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod25_ManaSteal(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_CastCorpseExplode) MONSTERUNIQUE_CastCorpseExplode_Original;
+extern MONSTERUNIQUE_CastCorpseExplode_t MONSTERUNIQUE_CastCorpseExplode_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastCorpseExplode(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_CastCorpseExplode2) MONSTERUNIQUE_CastCorpseExplode2_Original;
+extern MONSTERUNIQUE_CastCorpseExplode2_t MONSTERUNIQUE_CastCorpseExplode2_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastCorpseExplode2(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&sub_6FC6CF10) sub_6FC6CF10_Original;
+extern sub_6FC6CF10_t sub_6FC6CF10_Original;
 void __fastcall ESE_INTERCEPT_sub_6FC6CF10(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&sub_6FC6CF90) sub_6FC6CF90_Original;
+extern sub_6FC6CF90_t sub_6FC6CF90_Original;
 void __fastcall ESE_INTERCEPT_sub_6FC6CF90(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_ApplyElementalDamage) MONSTERUNIQUE_ApplyElementalDamage_Original;
+extern MONSTERUNIQUE_ApplyElementalDamage_t MONSTERUNIQUE_ApplyElementalDamage_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_ApplyElementalDamage(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&sub_6FC6E240) sub_6FC6E240_Original;
+extern sub_6FC6E240_t sub_6FC6E240_Original;
 void __fastcall ESE_INTERCEPT_sub_6FC6E240(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 
-extern decltype(&MONSTERUNIQUE_CastSuicideExplodeMissile) MONSTERUNIQUE_CastSuicideExplodeMissile_Original;
+extern MONSTERUNIQUE_CastSuicideExplodeMissile_t MONSTERUNIQUE_CastSuicideExplodeMissile_Original;
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CastSuicideExplodeMissile(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);

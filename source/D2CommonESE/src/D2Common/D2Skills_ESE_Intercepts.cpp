@@ -1,18 +1,18 @@
 #include "D2Common/D2Skills_ESE_Intercepts.h"
 
-decltype(&SKILLS_GetSpecialParamValue) SKILLS_GetSpecialParamValue_Original = nullptr;
-decltype(&SKILLS_GetManaCosts) SKILLS_GetManaCosts_Original = nullptr;
-decltype(&SKILLS_CalculateDamageBonusByLevel) SKILLS_CalculateDamageBonusByLevel_Original = nullptr;
-decltype(&SKILLS_GetMinPhysDamage) SKILLS_GetMinPhysDamage_Original = nullptr;
-decltype(&SKILLS_GetMaxPhysDamage) SKILLS_GetMaxPhysDamage_Original = nullptr;
-decltype(&SKILLS_GetMinElemDamage) SKILLS_GetMinElemDamage_Original = nullptr;
-decltype(&SKILLS_CalculateMasteryBonus) SKILLS_CalculateMasteryBonus_Original = nullptr;
-decltype(&SKILLS_GetMaxElemDamage) SKILLS_GetMaxElemDamage_Original = nullptr;
-decltype(&SKILLS_GetElementalLength) SKILLS_GetElementalLength_Original = nullptr;
-decltype(&D2Common_11028) D2Common_11028_Original = nullptr;
-decltype(&D2Common_11033) D2Common_11033_Original = nullptr;
-decltype(&SKILLS_GetConcentrationDamageBonus) SKILLS_GetConcentrationDamageBonus_Original = nullptr;
-decltype(&SKILLS_CalculateKickDamage) SKILLS_CalculateKickDamage_Original = nullptr;
+SKILLS_GetSpecialParamValue_t SKILLS_GetSpecialParamValue_Original = nullptr;
+SKILLS_GetManaCosts_t SKILLS_GetManaCosts_Original = nullptr;
+SKILLS_CalculateDamageBonusByLevel_t SKILLS_CalculateDamageBonusByLevel_Original = nullptr;
+SKILLS_GetMinPhysDamage_t SKILLS_GetMinPhysDamage_Original = nullptr;
+SKILLS_GetMaxPhysDamage_t SKILLS_GetMaxPhysDamage_Original = nullptr;
+SKILLS_GetMinElemDamage_t SKILLS_GetMinElemDamage_Original = nullptr;
+SKILLS_CalculateMasteryBonus_t SKILLS_CalculateMasteryBonus_Original = nullptr;
+SKILLS_GetMaxElemDamage_t SKILLS_GetMaxElemDamage_Original = nullptr;
+SKILLS_GetElementalLength_t SKILLS_GetElementalLength_Original = nullptr;
+D2Common_11028_t D2Common_11028_Original = nullptr;
+D2Common_11033_t D2Common_11033_Original = nullptr;
+SKILLS_GetConcentrationDamageBonus_t SKILLS_GetConcentrationDamageBonus_Original = nullptr;
+SKILLS_CalculateKickDamage_t SKILLS_CalculateKickDamage_Original = nullptr;
 
 int __stdcall ESE_INTERCEPT_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamId, int nSkillId, int nSkillLevel)
 {

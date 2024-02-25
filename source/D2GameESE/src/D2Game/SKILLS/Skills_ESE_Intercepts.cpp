@@ -1,20 +1,20 @@
 #include "D2Game/SKILLS/Skills_ESE_Intercepts.h"
 
-decltype(&sub_6FD0F8B0) sub_6FD0F8B0_Original = nullptr;
-decltype(&sub_6FD0FA00) sub_6FD0FA00_Original = nullptr;
-decltype(&sub_6FD0FDD0) sub_6FD0FDD0_Original = nullptr;
-decltype(&sub_6FD0FE50) sub_6FD0FE50_Original = nullptr;
-decltype(&sub_6FD0FE80) sub_6FD0FE80_Original = nullptr;
-decltype(&sub_6FD10140) sub_6FD10140_Original = nullptr;
-decltype(&sub_6FD10200) sub_6FD10200_Original = nullptr;
-decltype(&sub_6FD10250) sub_6FD10250_Original = nullptr;
-decltype(&sub_6FD10360) sub_6FD10360_Original = nullptr;
-decltype(&SKILLS_FindAuraTarget) SKILLS_FindAuraTarget_Original = nullptr;
-decltype(&sub_6FD106F0) sub_6FD106F0_Original = nullptr;
-decltype(&sub_6FD10790) sub_6FD10790_Original = nullptr;
-decltype(&sub_6FD107E0) sub_6FD107E0_Original = nullptr;
-decltype(&sub_6FD107F0) sub_6FD107F0_Original = nullptr;
-decltype(&sub_6FD10880) sub_6FD10880_Original = nullptr;
+sub_6FD0F8B0_t sub_6FD0F8B0_Original = nullptr;
+sub_6FD0FA00_t sub_6FD0FA00_Original = nullptr;
+sub_6FD0FDD0_t sub_6FD0FDD0_Original = nullptr;
+sub_6FD0FE50_t sub_6FD0FE50_Original = nullptr;
+sub_6FD0FE80_t sub_6FD0FE80_Original = nullptr;
+sub_6FD10140_t sub_6FD10140_Original = nullptr;
+sub_6FD10200_t sub_6FD10200_Original = nullptr;
+sub_6FD10250_t sub_6FD10250_Original = nullptr;
+sub_6FD10360_t sub_6FD10360_Original = nullptr;
+SKILLS_FindAuraTarget_t SKILLS_FindAuraTarget_Original = nullptr;
+sub_6FD106F0_t sub_6FD106F0_Original = nullptr;
+sub_6FD10790_t sub_6FD10790_Original = nullptr;
+sub_6FD107E0_t sub_6FD107E0_Original = nullptr;
+sub_6FD107F0_t sub_6FD107F0_Original = nullptr;
+sub_6FD10880_t sub_6FD10880_Original = nullptr;
 
 int32_t __fastcall ESE_INTERCEPT_sub_6FD0F8B0(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nValue)
 {

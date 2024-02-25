@@ -33,42 +33,42 @@ int __stdcall ESE_INTERCEPT_SKILLS_GetConcentrationDamageBonus(D2UnitStrc* pUnit
 //D2Common.0x6FDB4260
 void __stdcall ESE_INTERCEPT_SKILLS_CalculateKickDamage(D2UnitStrc* pUnit, int* pMinDamage, int* pMaxDamage, int* pDamagePercent);
 
-extern decltype(&SKILLS_GetSpecialParamValue) SKILLS_GetSpecialParamValue_Original;
+extern SKILLS_GetSpecialParamValue_t SKILLS_GetSpecialParamValue_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamId, int nSkillId, int nSkillLevel);
 
-extern decltype(&SKILLS_GetManaCosts) SKILLS_GetManaCosts_Original;
+extern SKILLS_GetManaCosts_t SKILLS_GetManaCosts_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetManaCosts(int nSkillId, int nSkillLevel);
 
-extern decltype(&SKILLS_CalculateDamageBonusByLevel) SKILLS_CalculateDamageBonusByLevel_Original;
+extern SKILLS_CalculateDamageBonusByLevel_t SKILLS_CalculateDamageBonusByLevel_Original;
 int __fastcall ESE_INTERCEPT_SKILLS_CalculateDamageBonusByLevel(int nLevel, int* pLevelDamage);
 
-extern decltype(&SKILLS_GetMinPhysDamage) SKILLS_GetMinPhysDamage_Original;
+extern SKILLS_GetMinPhysDamage_t SKILLS_GetMinPhysDamage_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetMinPhysDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4);
 
-extern decltype(&SKILLS_GetMaxPhysDamage) SKILLS_GetMaxPhysDamage_Original;
+extern SKILLS_GetMaxPhysDamage_t SKILLS_GetMaxPhysDamage_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetMaxPhysDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4);
 
-extern decltype(&SKILLS_GetMinElemDamage) SKILLS_GetMinElemDamage_Original;
+extern SKILLS_GetMinElemDamage_t SKILLS_GetMinElemDamage_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetMinElemDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4);
 
-extern decltype(&SKILLS_CalculateMasteryBonus) SKILLS_CalculateMasteryBonus_Original;
+extern SKILLS_CalculateMasteryBonus_t SKILLS_CalculateMasteryBonus_Original;
 int __fastcall ESE_INTERCEPT_SKILLS_CalculateMasteryBonus(D2UnitStrc* pUnit, int nElemType, int nSrcDamage);
 
-extern decltype(&SKILLS_GetMaxElemDamage) SKILLS_GetMaxElemDamage_Original;
+extern SKILLS_GetMaxElemDamage_t SKILLS_GetMaxElemDamage_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetMaxElemDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4);
 
-extern decltype(&SKILLS_GetElementalLength) SKILLS_GetElementalLength_Original;
+extern SKILLS_GetElementalLength_t SKILLS_GetElementalLength_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetElementalLength(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL bUnused);
 
-extern decltype(&D2Common_11028) D2Common_11028_Original;
+extern D2Common_11028_t D2Common_11028_Original;
 int __stdcall ESE_INTERCEPT_D2Common_11028(int a1);
 
-extern decltype(&D2Common_11033) D2Common_11033_Original;
+extern D2Common_11033_t D2Common_11033_Original;
 int __stdcall ESE_INTERCEPT_D2Common_11033(int nLevel, int nParam, int nMax);
 
-extern decltype(&SKILLS_GetConcentrationDamageBonus) SKILLS_GetConcentrationDamageBonus_Original;
+extern SKILLS_GetConcentrationDamageBonus_t SKILLS_GetConcentrationDamageBonus_Original;
 int __stdcall ESE_INTERCEPT_SKILLS_GetConcentrationDamageBonus(D2UnitStrc* pUnit, int nSkillId);
 
-extern decltype(&SKILLS_CalculateKickDamage) SKILLS_CalculateKickDamage_Original;
+extern SKILLS_CalculateKickDamage_t SKILLS_CalculateKickDamage_Original;
 void __stdcall ESE_INTERCEPT_SKILLS_CalculateKickDamage(D2UnitStrc* pUnit, int* pMinDamage, int* pMaxDamage, int* pDamagePercent);
 

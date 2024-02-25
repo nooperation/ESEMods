@@ -1,10 +1,10 @@
 #include "D2Game/UNIT/SUnitEvent_ESE_Intercepts.h"
 
-decltype(&SUNITEVENT_FreeTimerList) SUNITEVENT_FreeTimerList_Original = nullptr;
-decltype(&SUNITEVENT_AllocTimer) SUNITEVENT_AllocTimer_Original = nullptr;
-decltype(&SUNITEVENT_FreeTimer) SUNITEVENT_FreeTimer_Original = nullptr;
-decltype(&SUNITEVENT_GetTimer) SUNITEVENT_GetTimer_Original = nullptr;
-decltype(&SUNITEVENT_EventFunc_Handler) SUNITEVENT_EventFunc_Handler_Original = nullptr;
+SUNITEVENT_FreeTimerList_t SUNITEVENT_FreeTimerList_Original = nullptr;
+SUNITEVENT_AllocTimer_t SUNITEVENT_AllocTimer_Original = nullptr;
+SUNITEVENT_FreeTimer_t SUNITEVENT_FreeTimer_Original = nullptr;
+SUNITEVENT_GetTimer_t SUNITEVENT_GetTimer_Original = nullptr;
+SUNITEVENT_EventFunc_Handler_t SUNITEVENT_EventFunc_Handler_Original = nullptr;
 
 void __fastcall ESE_INTERCEPT_SUNITEVENT_FreeTimerList(D2GameStrc* pGame, D2UnitStrc* pUnit)
 {

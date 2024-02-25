@@ -1,22 +1,22 @@
 #include "D2Common/Units/Missile_ESE_Intercepts.h"
 
-decltype(&MISSILE_CalculateDamageData) MISSILE_CalculateDamageData_Original = nullptr;
-decltype(&MISSILE_AddStatsToDamage) MISSILE_AddStatsToDamage_Original = nullptr;
-decltype(&MISSILE_CalculateFinalDamage) MISSILE_CalculateFinalDamage_Original = nullptr;
-decltype(&MISSILE_CalculateMasteryBonus) MISSILE_CalculateMasteryBonus_Original = nullptr;
-decltype(&MISSILE_SetDamageStats) MISSILE_SetDamageStats_Original = nullptr;
-decltype(&MISSILE_GetMinDamage) MISSILE_GetMinDamage_Original = nullptr;
-decltype(&MISSILE_GetMaxDamage) MISSILE_GetMaxDamage_Original = nullptr;
-decltype(&MISSILE_GetMinElemDamage) MISSILE_GetMinElemDamage_Original = nullptr;
-decltype(&MISSILE_GetMaxElemDamage) MISSILE_GetMaxElemDamage_Original = nullptr;
-decltype(&MISSILE_GetElementalLength) MISSILE_GetElementalLength_Original = nullptr;
-decltype(&MISSILE_GetSpecialParamValue) MISSILE_GetSpecialParamValue_Original = nullptr;
-decltype(&MISSILE_GetCalcParamValue) MISSILE_GetCalcParamValue_Original = nullptr;
-decltype(&MISSILE_GetMinimum) MISSILE_GetMinimum_Original = nullptr;
-decltype(&MISSILE_GetMaximum) MISSILE_GetMaximum_Original = nullptr;
-decltype(&MISSILE_GetRandomNumberInRange) MISSILE_GetRandomNumberInRange_Original = nullptr;
-decltype(&MISSILE_GetSpecialParamValueForSkillMissile) MISSILE_GetSpecialParamValueForSkillMissile_Original = nullptr;
-decltype(&MISSILE_EvaluateMissileFormula) MISSILE_EvaluateMissileFormula_Original = nullptr;
+MISSILE_CalculateDamageData_t MISSILE_CalculateDamageData_Original = nullptr;
+MISSILE_AddStatsToDamage_t MISSILE_AddStatsToDamage_Original = nullptr;
+MISSILE_CalculateFinalDamage_t MISSILE_CalculateFinalDamage_Original = nullptr;
+MISSILE_CalculateMasteryBonus_t MISSILE_CalculateMasteryBonus_Original = nullptr;
+MISSILE_SetDamageStats_t MISSILE_SetDamageStats_Original = nullptr;
+MISSILE_GetMinDamage_t MISSILE_GetMinDamage_Original = nullptr;
+MISSILE_GetMaxDamage_t MISSILE_GetMaxDamage_Original = nullptr;
+MISSILE_GetMinElemDamage_t MISSILE_GetMinElemDamage_Original = nullptr;
+MISSILE_GetMaxElemDamage_t MISSILE_GetMaxElemDamage_Original = nullptr;
+MISSILE_GetElementalLength_t MISSILE_GetElementalLength_Original = nullptr;
+MISSILE_GetSpecialParamValue_t MISSILE_GetSpecialParamValue_Original = nullptr;
+MISSILE_GetCalcParamValue_t MISSILE_GetCalcParamValue_Original = nullptr;
+MISSILE_GetMinimum_t MISSILE_GetMinimum_Original = nullptr;
+MISSILE_GetMaximum_t MISSILE_GetMaximum_Original = nullptr;
+MISSILE_GetRandomNumberInRange_t MISSILE_GetRandomNumberInRange_Original = nullptr;
+MISSILE_GetSpecialParamValueForSkillMissile_t MISSILE_GetSpecialParamValueForSkillMissile_Original = nullptr;
+MISSILE_EvaluateMissileFormula_t MISSILE_EvaluateMissileFormula_Original = nullptr;
 
 void __stdcall ESE_INTERCEPT_MISSILE_CalculateDamageData(D2MissileDamageDataStrc* pMissileDamageData, D2UnitStrc* pOwner, D2UnitStrc* pOrigin, D2UnitStrc* pMissile, int nLevel)
 {
