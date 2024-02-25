@@ -24,7 +24,8 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 
 		auto d2NetHandle = GetModuleHandle("D2Net.dll");
 		volatile int32_t* pServerPacketSizeTable = (volatile int32_t*)((unsigned char*)d2NetHandle + 0x8148);
-		pServerPacketSizeTable[0x44] = sizeof(D2DamageReportPacket);
+		pServerPacketSizeTable[0x64] = sizeof(D2DamageReportPacket);
+
 		break;
 	}
 	case DLL_PROCESS_DETACH:

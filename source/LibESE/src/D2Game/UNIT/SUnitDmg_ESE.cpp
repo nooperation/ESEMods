@@ -1327,63 +1327,47 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 
 	if (pDamage->dwDmgTotal > 0)
 	{
-		//D2ClientStrc* ownerClient = nullptr;
+		if ( pAttacker != nullptr && pDefender != nullptr)
+		{
+			D2UnitStrc* realAttacker = pAttacker;
 
-		//if (pDefender != nullptr)
-		//{
-		//	if (nDefenderUnitType == UNIT_PLAYER) 
-		//	{
-		//		if (pDefender != nullptr && pDefender->pPlayerData != nullptr)
-		//		{
-		//			ownerClient = pDefender->pPlayerData->pClient;
-		//		}
-		//	}
-		//	else if(nDefenderUnitType == UNIT_MONSTER)
-		//	{
-		//		auto owner = AIGENERAL_GetMinionOwner(pDefender);
-		//		if (owner != nullptr && owner->pPlayerData != nullptr)
-		//		{
-		//			ownerClient = owner->pPlayerData->pClient;
-		//		}
-		//	}
-		//	if (ownerClient != nullptr)
-		//	{
-		//		//D2DamageReportPacket packet;
-		//		//packet.packetId = 0x44;
-		//		//packet.unitId = pDefender->dwUnitId;
-		//		//packet.damage = pDamage->dwDmgTotal;
-		//		//packet.isPlayerBeingAttacked = true;
-		//		//
-		//		//D2GAME_PACKETS_SendPacket_6FC3C710(ownerClient, &packet, sizeof(packet));
-		//	}
-		//
-		//	ownerClient = nullptr;
-		//	if (nAttackerUnitType == UNIT_PLAYER)
-		//	{
-		//		if (pAttacker != nullptr && pAttacker->pPlayerData != nullptr)
-		//		{
-		//			ownerClient = pAttacker->pPlayerData->pClient;
-		//		}
-		//	}
-		//	else if (nAttackerUnitType == UNIT_MONSTER)
-		//	{
-		//		auto owner = AIGENERAL_GetMinionOwner(pAttacker);
-		//		if (owner != nullptr && owner->pPlayerData != nullptr)
-		//		{
-		//			ownerClient = owner->pPlayerData->pClient;
-		//		}
-		//	}
-		//	if (ownerClient != nullptr && pDefender != nullptr)
-		//	{
-		//		D2DamageReportPacket packet;
-		//		packet.packetId = 0x44;
-		//		packet.unitId = pDefender->dwUnitId;
-		//		packet.damage = pDamage->dwDmgTotal;
-		//		packet.isPlayerBeingAttacked = false;
-		//
-		//		D2GAME_PACKETS_SendPacket_6FC3C710(ownerClient, &packet, sizeof(packet));
-		//	}
-		//}
+			if (nAttackerUnitType == UNIT_MONSTER)
+			{
+				auto minionOwner = AIGENERAL_GetMinionOwner(pAttacker);
+				if (minionOwner != nullptr)
+				{
+					realAttacker = minionOwner;
+				}
+			}
+
+			if (realAttacker->dwUnitType == UNIT_PLAYER)
+			{
+				if (pAttacker->pPlayerData != nullptr && realAttacker->pPlayerData->pClient != nullptr)
+				{
+					D2DamageReportPacket packet;
+					packet.packetId = 0x64;
+					packet.unitId = pDefender->dwUnitId;
+					packet.damage = pDamage->dwDmgTotal;
+					packet.isPlayerBeingAttacked = false;
+
+					D2GAME_PACKETS_SendPacket_6FC3C710(realAttacker->pPlayerData->pClient, &packet, sizeof(packet));
+				}
+			}
+
+			if (pDefender->dwUnitType == UNIT_PLAYER)
+			{
+				if (pDefender->pPlayerData != nullptr && pDefender->pPlayerData->pClient != nullptr)
+				{
+					D2DamageReportPacket packet;
+					packet.packetId = 0x64;
+					packet.unitId = pAttacker->dwUnitId;
+					packet.damage = pDamage->dwDmgTotal;
+					packet.isPlayerBeingAttacked = true;
+
+					D2GAME_PACKETS_SendPacket_6FC3C710(pDefender->pPlayerData->pClient, &packet, sizeof(packet));
+				}
+			}
+		}
 
 		int32_t nNewHp = STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0) - pDamage->dwDmgTotal;
 		if (nNewHp < 256)
