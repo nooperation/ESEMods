@@ -1329,7 +1329,7 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 		STATLIST_SetUnitStat(pDefender, STAT_HITPOINTS, nNewHp, 0);
 	}
 
-	if (pDamage->dwDmgTotal > 0)
+	if ((int32_t)pDamage->dwDmgTotal > 0)
 	{
 		if ( pAttacker != nullptr && pDefender != nullptr)
 		{
