@@ -942,7 +942,11 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamage
 	int32_t nValue = *pValue;
 	int32_t nPreviousValue = *pValue;
 
-	*pValue = std::max(*pValue, 0);
+	if (*pValue <= 0)
+	{
+		*pValue = 0;
+		return;
+	}
 
 	int32_t nResValue = 0;
 	if (pDamageStatTableRecord->nResStatId != -1)
@@ -1046,8 +1050,8 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamage
 			const int32_t nDamageAbsorbed = ESE_MONSTERUNIQUE_CalculatePercentage(nValue, nAbsorbPctValue, 100);
 
 			nValue -= nDamageAbsorbed;
-			//pDamageInfo->pDamage->dwAbsLife += nDamageAbsorbed;
-		}
+			pDamageInfo->pDamage->dwAbsLife = 0;
+		} 
 
 		int32_t nAbsorbValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbStatId, 0) << 8;
 		if (nAbsorbValue > 0)
@@ -1055,7 +1059,7 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamage
 			nAbsorbValue = std::min(nAbsorbValue, nValue);
 			nValue -= nAbsorbValue;
 
-			// pDamageInfo->pDamage->dwAbsLife += nAbsorbValue;
+			pDamageInfo->pDamage->dwAbsLife += nAbsorbValue;
 		}
 	}
 
