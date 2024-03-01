@@ -43,7 +43,7 @@ D2SkillDescTxt* __fastcall ESE_DATATBLS_GetSkillDescTxtRecord(int nSkillDesc)
 
 //D2Common.0x6FDAEB60 (#11271)
 //TODO: v8
-int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamId, int nSkillId, int nSkillLevel)
+int64_t __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamId, int nSkillId, int nSkillLevel)
 {
 	D2SkillDescTxt* pSkillDescTxtRecord = NULL;
 	D2SkillsTxt* pSkillsTxtRecord = NULL;
@@ -59,7 +59,7 @@ int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamI
 		case 0:
 			if (nSkillLevel > 0)
 			{
-				return pSkillsTxtRecord->dwParam[0] + (nSkillLevel - 1) * pSkillsTxtRecord->dwParam[1];
+				return (int64_t)pSkillsTxtRecord->dwParam[0] + ((int64_t)nSkillLevel - 1) * (int64_t)pSkillsTxtRecord->dwParam[1];
 			}
 			break;
 
@@ -73,7 +73,7 @@ int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamI
 		case 2:
 			if (nSkillLevel > 0)
 			{
-				return pSkillsTxtRecord->dwParam[2] + (nSkillLevel - 1) * pSkillsTxtRecord->dwParam[3];
+				return (int64_t)pSkillsTxtRecord->dwParam[2] + ((int64_t)nSkillLevel - 1) * (int64_t)pSkillsTxtRecord->dwParam[3];
 			}
 			break;
 
@@ -87,7 +87,7 @@ int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamI
 		case 4:
 			if (nSkillLevel > 0)
 			{
-				return pSkillsTxtRecord->dwParam[4] + (nSkillLevel - 1) * pSkillsTxtRecord->dwParam[5];
+				return (int64_t)pSkillsTxtRecord->dwParam[4] + ((int64_t)nSkillLevel - 1) * (int64_t)pSkillsTxtRecord->dwParam[5];
 			}
 			break;
 
@@ -101,7 +101,7 @@ int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamI
 		case 6:
 			if (nSkillLevel > 0)
 			{
-				return pSkillsTxtRecord->dwParam[6] + (nSkillLevel - 1) * pSkillsTxtRecord->dwParam[7];
+				return (int64_t)pSkillsTxtRecord->dwParam[6] + ((int64_t)nSkillLevel - 1) * (int64_t)pSkillsTxtRecord->dwParam[7];
 			}
 			break;
 
@@ -149,7 +149,7 @@ int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamI
 			{
 				if (pSkillsTxtRecord->dwToHitCalc == -1)
 				{
-					return pSkillsTxtRecord->dwToHit + (nSkillLevel - 1) * pSkillsTxtRecord->dwLevToHit;
+					return (int64_t)pSkillsTxtRecord->dwToHit + ((int64_t)nSkillLevel - 1) * (int64_t)pSkillsTxtRecord->dwLevToHit;
 				}
 				else
 				{
@@ -168,7 +168,7 @@ int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamI
 		case 22:
 			if (nSkillLevel > 0)
 			{
-				int32_t nTemp = ((25 * pSkillsTxtRecord->wMana) + (nSkillLevel - 1) * pSkillsTxtRecord->wLevelMana);
+				int64_t nTemp = ((25 * (int64_t)pSkillsTxtRecord->wMana) + ((int64_t)nSkillLevel - 1) * (int64_t)pSkillsTxtRecord->wLevelMana);
 				nTemp /= 2;
 				nTemp <<= pSkillsTxtRecord->nManaShift;
 				return nTemp >> 8;
@@ -398,56 +398,55 @@ int __stdcall ESE_SKILLS_GetSpecialParamValue(D2UnitStrc* pUnit, uint8_t nParamI
 }
 
 //D2Common.0x6FDB2280 (#11001)
-int __stdcall ESE_SKILLS_GetManaCosts(int nSkillId, int nSkillLevel)
+int64_t __stdcall ESE_SKILLS_GetManaCosts(int nSkillId, int nSkillLevel)
 {
 	D2SkillsTxt* pSkillsTxtRecord = ESE_DATATBLS_GetSkillsTxtRecord(nSkillId);
 
 	if (pSkillsTxtRecord)
 	{
-		return (pSkillsTxtRecord->wMana + (nSkillLevel - 1) * pSkillsTxtRecord->wLevelMana) << pSkillsTxtRecord->nManaShift;
+		return ((int64_t)pSkillsTxtRecord->wMana + ((int64_t)nSkillLevel - 1) * (int64_t)pSkillsTxtRecord->wLevelMana) << pSkillsTxtRecord->nManaShift;
 	}
 
 	return 0;
 }
 
 //D2Common.0x6FDB22E0
-int __fastcall ESE_SKILLS_CalculateDamageBonusByLevel(int nLevel, int* pLevelDamage)
+int64_t __fastcall ESE_SKILLS_CalculateDamageBonusByLevel(int64_t nLevel, int32_t* pLevelDamage)
 {
 	if (nLevel > 1 && pLevelDamage)
 	{
 		if (nLevel > 28)
 		{
-			return 7 * *pLevelDamage + pLevelDamage[4] * (nLevel - 28) + 6 * (pLevelDamage[2] + pLevelDamage[3]) + 8 * pLevelDamage[1];
+			return 7 * (int64_t)pLevelDamage[0] + (int64_t)pLevelDamage[4] * (nLevel - 28) + 6 * ((int64_t)pLevelDamage[2] + (int64_t)pLevelDamage[3]) + 8 * (int64_t)pLevelDamage[1];
 		}
 		else if (nLevel > 22)
 		{
-			return 7 * *pLevelDamage + pLevelDamage[3] * (nLevel - 22) + 6 * pLevelDamage[2] + 8 * pLevelDamage[1];
+			return 7 * (int64_t)pLevelDamage[0] + (int64_t)pLevelDamage[3] * (nLevel - 22) + 6 * (int64_t)pLevelDamage[2] + 8 * (int64_t)pLevelDamage[1];
 		}
 		else if (nLevel > 16)
 		{
-			return 7 * *pLevelDamage + pLevelDamage[2] * (nLevel - 16) + 8 * pLevelDamage[1];
+			return 7 * (int64_t)pLevelDamage[0] + (int64_t)pLevelDamage[2] * (nLevel - 16) + 8 * (int64_t)pLevelDamage[1];
 		}
 		else if (nLevel > 8)
 		{
-			return 7 * *pLevelDamage + pLevelDamage[1] * (nLevel - 8);
+			return 7 * (int64_t)pLevelDamage[0] + (int64_t)pLevelDamage[1] * (nLevel - 8);
 		}
 		else
 		{
-			return *pLevelDamage * (nLevel - 1);
+			return (int64_t)pLevelDamage[0] * (nLevel - 1);
 		}
-
 	}
 	
 	return 0;
 }
 
 //D2Common.0x6FDB2390 (#11002)
-int __stdcall ESE_SKILLS_GetMinPhysDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
+int64_t __stdcall ESE_SKILLS_GetMinPhysDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
 {
 	D2SkillsTxt* pSkillsTxtRecord = NULL;
 	D2UnitStrc* pItem = NULL;
-	int nDamage = 0;
-	int nBonus = 0;
+	int64_t nDamage = 0;
+	int64_t nBonus = 0;
 
 	pSkillsTxtRecord = ESE_DATATBLS_GetSkillsTxtRecord(nSkillId);
 
@@ -457,11 +456,11 @@ int __stdcall ESE_SKILLS_GetMinPhysDamage(D2UnitStrc* pUnit, int nSkillId, int n
 		{
 			if (!pUnit || pUnit->dwUnitType != UNIT_PLAYER)
 			{
-				nDamage = 3 * STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
+				nDamage = 3 * (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
 			}
 			else
 			{
-				nDamage = STATLIST_UnitGetStatValue(pUnit, STAT_DEXTERITY, 0) + STATLIST_UnitGetStatValue(pUnit, STAT_STRENGTH, 0) - 20;
+				nDamage = (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_DEXTERITY, 0) + (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_STRENGTH, 0) - 20;
 			}
 
 			if (nDamage < 1)
@@ -476,7 +475,7 @@ int __stdcall ESE_SKILLS_GetMinPhysDamage(D2UnitStrc* pUnit, int nSkillId, int n
 			if (pSkillsTxtRecord->nSrcDam && a4)
 			{
 				pItem = D2Common_10434(pUnit, 0);
-				int32_t nMinDamage = 0;
+				int64_t nMinDamage = 0;
 				if (pItem && INVENTORY_GetWieldType(pUnit, pUnit->pInventory) == 2)
 				{
 					nMinDamage = STATLIST_GetMinDamageFromUnit(pItem, 1);
@@ -488,7 +487,7 @@ int __stdcall ESE_SKILLS_GetMinPhysDamage(D2UnitStrc* pUnit, int nSkillId, int n
 				nDamage = (nMinDamage * pSkillsTxtRecord->nSrcDam) / 128;
 			}
 
-			nDamage += pSkillsTxtRecord->dwMinDam + ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwMinLvlDam);
+			nDamage += (int64_t)pSkillsTxtRecord->dwMinDam + (int64_t)ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwMinLvlDam);
 
 			if (pSkillsTxtRecord->dwDmgSymPerCalc != -1)
 			{
@@ -508,12 +507,12 @@ int __stdcall ESE_SKILLS_GetMinPhysDamage(D2UnitStrc* pUnit, int nSkillId, int n
 }
 
 //D2Common.0x6FDB25D0 (#11003)
-int __stdcall ESE_SKILLS_GetMaxPhysDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
+int64_t __stdcall ESE_SKILLS_GetMaxPhysDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
 {
 	D2SkillsTxt* pSkillsTxtRecord = NULL;
 	D2UnitStrc* pItem = NULL;
-	int nDamage = 0;
-	int nBonus = 0;
+	int64_t nDamage = 0;
+	int64_t nBonus = 0;
 
 	pSkillsTxtRecord = ESE_DATATBLS_GetSkillsTxtRecord(nSkillId);
 
@@ -523,11 +522,11 @@ int __stdcall ESE_SKILLS_GetMaxPhysDamage(D2UnitStrc* pUnit, int nSkillId, int n
 		{
 			if (!pUnit || pUnit->dwUnitType != UNIT_PLAYER)
 			{
-				nDamage = 3 * STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
+				nDamage = 3 * (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0);
 			}
 			else
 			{
-				nDamage = STATLIST_UnitGetStatValue(pUnit, STAT_DEXTERITY, 0) + STATLIST_UnitGetStatValue(pUnit, STAT_STRENGTH, 0) - 20;
+				nDamage = (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_DEXTERITY, 0) + (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_STRENGTH, 0) - 20;
 			}
 
 			if (nDamage < 1)
@@ -542,20 +541,20 @@ int __stdcall ESE_SKILLS_GetMaxPhysDamage(D2UnitStrc* pUnit, int nSkillId, int n
 			if (pSkillsTxtRecord->nSrcDam && a4)
 			{
 				pItem = D2Common_10434(pUnit, 0);
-				int32_t nMaxDamage = 0;
+				int64_t nMaxDamage = 0;
 				if (pItem && INVENTORY_GetWieldType(pUnit, pUnit->pInventory) == 2)
 				{
-					nMaxDamage = STATLIST_GetMaxDamageFromUnit(pItem, 24) * pSkillsTxtRecord->nSrcDam;
+					nMaxDamage = (int64_t)STATLIST_GetMaxDamageFromUnit(pItem, 24) * (int64_t)pSkillsTxtRecord->nSrcDam;
 				}
 				else
 				{
-					nMaxDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MAXDAMAGE, 0) * pSkillsTxtRecord->nSrcDam;
+					nMaxDamage = (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_MAXDAMAGE, 0) * (int64_t)pSkillsTxtRecord->nSrcDam;
 				}
 
 				nDamage = nMaxDamage / 128;
 			}
 
-			nDamage += pSkillsTxtRecord->dwMaxDam + ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwMaxLvlDam);
+			nDamage += (int64_t)pSkillsTxtRecord->dwMaxDam + ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwMaxLvlDam);
 
 			if (pSkillsTxtRecord->dwDmgSymPerCalc != -1)
 			{
@@ -575,17 +574,17 @@ int __stdcall ESE_SKILLS_GetMaxPhysDamage(D2UnitStrc* pUnit, int nSkillId, int n
 }
 
 //D2Common.0x6FDB2810 (#11004)
-int __stdcall ESE_SKILLS_GetMinElemDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
+int64_t __stdcall ESE_SKILLS_GetMinElemDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
 {
 	D2SkillsTxt* pSkillsTxtRecord = NULL;
-	int nDamage = 0;
-	int nBonus = 0;
+	int64_t nDamage = 0;
+	int64_t nBonus = 0;
 
 	pSkillsTxtRecord = ESE_DATATBLS_GetSkillsTxtRecord(nSkillId);
 
 	if (pSkillsTxtRecord && nSkillLevel > 0)
 	{
-		nDamage = (pSkillsTxtRecord->dwEMin + ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwEMinLev)) << pSkillsTxtRecord->nToHitShift;
+		nDamage = ((int64_t)pSkillsTxtRecord->dwEMin + ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwEMinLev)) << pSkillsTxtRecord->nToHitShift;
 
 		if (pSkillsTxtRecord->dwEDmgSymPerCalc != -1 && (nDamage > 256 || pSkillsTxtRecord->dwEMinLev[0]))
 		{
@@ -609,7 +608,7 @@ int __stdcall ESE_SKILLS_GetMinElemDamage(D2UnitStrc* pUnit, int nSkillId, int n
 }
 
 //D2Common.0x6FDB29D0
-int __fastcall ESE_SKILLS_CalculateMasteryBonus(D2UnitStrc* pUnit, int nElemType, int nSrcDamage)
+int64_t __fastcall ESE_SKILLS_CalculateMasteryBonus(D2UnitStrc* pUnit, int nElemType, int64_t nSrcDamage)
 {
 	int statId = 0;
 
@@ -632,22 +631,23 @@ int __fastcall ESE_SKILLS_CalculateMasteryBonus(D2UnitStrc* pUnit, int nElemType
 		return 0;
 	}
 
+	// TODO: Rewrite ApplyRatio to 64bit
 	auto nPercentage = STATLIST_UnitGetStatValue(pUnit, statId, 0);
 	return DATATBLS_ApplyRatio(nSrcDamage, nPercentage, 100);
 }
 
 //D2Common.0x6FDB2B00 (#11005)
-int __stdcall ESE_SKILLS_GetMaxElemDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
+int64_t __stdcall ESE_SKILLS_GetMaxElemDamage(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL a4)
 {
 	D2SkillsTxt* pSkillsTxtRecord = NULL;
-	int nDamage = 0;
-	int nBonus = 0;
+	int64_t nDamage = 0;
+	int64_t nBonus = 0;
 
 	pSkillsTxtRecord = ESE_DATATBLS_GetSkillsTxtRecord(nSkillId);
 
 	if (pSkillsTxtRecord && nSkillLevel > 0)
 	{
-		nDamage = (pSkillsTxtRecord->dwEMax + ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwEMaxLev)) << pSkillsTxtRecord->nToHitShift;
+		nDamage = ((int64_t)pSkillsTxtRecord->dwEMax + (int64_t)ESE_SKILLS_CalculateDamageBonusByLevel(nSkillLevel, (int*)pSkillsTxtRecord->dwEMaxLev)) << pSkillsTxtRecord->nToHitShift;
 
 		if (pSkillsTxtRecord->dwEDmgSymPerCalc != -1)
 		{
@@ -671,12 +671,12 @@ int __stdcall ESE_SKILLS_GetMaxElemDamage(D2UnitStrc* pUnit, int nSkillId, int n
 }
 
 //D2Common.0x6FDB2CA0 (#11006)
-int __stdcall ESE_SKILLS_GetElementalLength(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL bUnused)
+int64_t __stdcall ESE_SKILLS_GetElementalLength(D2UnitStrc* pUnit, int nSkillId, int nSkillLevel, BOOL bUnused)
 {
 	D2_MAYBE_UNUSED(bUnused);
 	D2SkillsTxt* pSkillsTxtRecord = NULL;
-	int nLength = 0;
-	int nBonus = 0;
+	int64_t nLength = 0;
+	int64_t nBonus = 0;
 
 	pSkillsTxtRecord = ESE_DATATBLS_GetSkillsTxtRecord(nSkillId);
 
@@ -689,16 +689,16 @@ int __stdcall ESE_SKILLS_GetElementalLength(D2UnitStrc* pUnit, int nSkillId, int
 	{
 		if (nSkillLevel <= 8)
 		{
-			nLength = pSkillsTxtRecord->dwELevLen[0] * (nSkillLevel - 1);
+			nLength = (int64_t)pSkillsTxtRecord->dwELevLen[0] * (nSkillLevel - 1);
 		}
 		else
 		{
-			nLength = 7 * pSkillsTxtRecord->dwELevLen[0] + (nSkillLevel - 8) * pSkillsTxtRecord->dwELevLen[1];
+			nLength = 7 * (int64_t)pSkillsTxtRecord->dwELevLen[0] + ((int64_t)nSkillLevel - 8) * (int64_t)pSkillsTxtRecord->dwELevLen[1];
 		}
 	}
 	else
 	{
-		nLength = 7 * pSkillsTxtRecord->dwELevLen[0] + (nSkillLevel - 16) * pSkillsTxtRecord->dwELevLen[2] + 8 * pSkillsTxtRecord->dwELevLen[1];
+		nLength = 7 * (int64_t)pSkillsTxtRecord->dwELevLen[0] + ((int64_t)nSkillLevel - 16) * (int64_t)pSkillsTxtRecord->dwELevLen[2] + 8 * (int64_t)pSkillsTxtRecord->dwELevLen[1];
 	}
 
 	nLength += pSkillsTxtRecord->dwELen;
@@ -717,15 +717,15 @@ int __stdcall ESE_SKILLS_GetElementalLength(D2UnitStrc* pUnit, int nSkillId, int
 }
 
 //D2Common.0x6FDB3A90 (#11028)
-int __stdcall ESE_D2Common_11028(int a1)
+int64_t __stdcall ESE_D2Common_11028(int64_t a1)
 {
 	return 20 * (5 * a1 + 5) / (a1 + 8);
 }
 
 //D2Common.0x6FDB3AB0 (#11033)
-int __stdcall ESE_D2Common_11033(int nLevel, int nParam, int nMax)
+int64_t __stdcall ESE_D2Common_11033(int64_t nLevel, int64_t nParam, int64_t nMax)
 {
-	int nValue = nParam + (nMax - nParam) * 110 * nLevel / (nLevel + 6) / 100;
+	int64_t nValue = nParam + (nMax - nParam) * 110 * nLevel / (nLevel + 6) / 100;
 
 	if (nValue > nMax)
 	{
@@ -736,7 +736,7 @@ int __stdcall ESE_D2Common_11033(int nLevel, int nParam, int nMax)
 }
 
 //D2Common.0x6FDB41D0 (#11047)
-int __stdcall ESE_SKILLS_GetConcentrationDamageBonus(D2UnitStrc* pUnit, int nSkillId)
+int64_t __stdcall ESE_SKILLS_GetConcentrationDamageBonus(D2UnitStrc* pUnit, int nSkillId)
 {
 	D2SkillsTxt* pSkillsTxtRecord = NULL;
 	D2StatListStrc* pStatList = NULL;
@@ -749,7 +749,7 @@ int __stdcall ESE_SKILLS_GetConcentrationDamageBonus(D2UnitStrc* pUnit, int nSki
 			pSkillsTxtRecord = ESE_DATATBLS_GetSkillsTxtRecord(nSkillId);
 			if (pSkillsTxtRecord)
 			{
-				return D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_DAMAGEPERCENT, 0) * pSkillsTxtRecord->dwParam[0] / 8;
+				return (int64_t)D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_DAMAGEPERCENT, 0) * (int64_t)pSkillsTxtRecord->dwParam[0] / 8LL;
 			}
 		}
 	}
@@ -758,18 +758,18 @@ int __stdcall ESE_SKILLS_GetConcentrationDamageBonus(D2UnitStrc* pUnit, int nSki
 }
 
 //D2Common.0x6FDB4260 (#11283)
-void __stdcall ESE_SKILLS_CalculateKickDamage(D2UnitStrc* pUnit, int* pMinDamage, int* pMaxDamage, int* pDamagePercent)
+void __stdcall ESE_SKILLS_CalculateKickDamage(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int64_t* pDamagePercent)
 {
 	D2ItemsTxt* pItemsTxtRecord = NULL;
 	D2UnitStrc* pRightHandItem = NULL;
 	D2UnitStrc* pLeftHandItem = NULL;
 	D2UnitStrc* pBoots = NULL;
-	int nDamagePercent = 0;
-	int nKickDamage = 0;
-	int nMinDamage = 0;
-	int nMaxDamage = 0;
-	short nStrBonus = 0;
-	short nDexBonus = 0;
+	int64_t nDamagePercent = 0;
+	int64_t nKickDamage = 0;
+	int64_t nMinDamage = 0;
+	int64_t nMaxDamage = 0;
+	int64_t nStrBonus = 0;
+	int64_t nDexBonus = 0;
 
 	if (pUnit)
 	{

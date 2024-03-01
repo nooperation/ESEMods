@@ -77,28 +77,3 @@ int __fastcall ESE_INTERCEPT_MISSILE_GetCalcParamValue(int32_t nParamId, void* p
 {
     return ESE_MISSILE_GetCalcParamValue(nParamId, pUserData);
 }
-
-int __fastcall ESE_INTERCEPT_MISSILE_GetMinimum(int a1, int a2, int a3, void* pUserData)
-{
-    return ESE_MISSILE_GetMinimum(a1, a2, a3, pUserData);
-}
-
-int __fastcall ESE_INTERCEPT_MISSILE_GetMaximum(int a1, int a2, int a3, void* pUserData)
-{
-    return ESE_MISSILE_GetMaximum(a1, a2, a3, pUserData);
-}
-
-int __fastcall ESE_INTERCEPT_MISSILE_GetRandomNumberInRange(int nMin, int nMax, int nUnused, void* pUserData)
-{
-    return ESE_MISSILE_GetRandomNumberInRange(nMin, nMax, nUnused, pUserData);
-}
-
-int __fastcall ESE_INTERCEPT_MISSILE_GetSpecialParamValueForSkillMissile(int nSkillId, int nParamId, int nUnused, void* pUserData)
-{
-    return ESE_MISSILE_GetSpecialParamValueForSkillMissile(nSkillId, nParamId, nUnused, pUserData);
-}
-
-int __stdcall ESE_INTERCEPT_MISSILE_EvaluateMissileFormula(D2UnitStrc* pMissile, D2UnitStrc* pOwner, unsigned int nCalc, int nMissileId, int nLevel)
-{
-    return ESE_MISSILE_EvaluateMissileFormula(pMissile, pOwner, nCalc, nMissileId, nLevel);
-}

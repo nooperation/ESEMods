@@ -41,11 +41,6 @@ extern "C"
         {0x6FDBBBA0 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_GetElementalLength, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_GetElementalLength_Original},
         {0x6FDBBC50 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_GetSpecialParamValue, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_GetSpecialParamValue_Original},
         {0x6FDBC060 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_GetCalcParamValue, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_GetCalcParamValue_Original},
-        {0x6FDBC080 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_GetMinimum, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_GetMinimum_Original},
-        {0x6FDBC090 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_GetMaximum, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_GetMaximum_Original},
-        {0x6FDBC0A0 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_GetRandomNumberInRange, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_GetRandomNumberInRange_Original},
-        {0x6FDBC120 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_GetSpecialParamValueForSkillMissile, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_GetSpecialParamValueForSkillMissile_Original},
-        {0x6FDBC170 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_EvaluateMissileFormula, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_EvaluateMissileFormula_Original},
 
         // D2Skills
         {0x6FDAEB60 - D2CommonImageBase, &ESE_INTERCEPT_SKILLS_GetSpecialParamValue, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_GetSpecialParamValue_Original},
