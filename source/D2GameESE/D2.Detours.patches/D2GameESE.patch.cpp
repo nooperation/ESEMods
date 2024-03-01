@@ -4,7 +4,6 @@
 
 #include <GAME/Game.h>
 
-#include "ESEDamageCalc.h"
 #include "D2Common/D2Skills_ESE.h"
 #include "D2Game/UNIT/SUnitDmg_ESE_INTERCEPTS.h"
 #include "D2Game/UNIT/SUnitEvent_ESE_Intercepts.h"

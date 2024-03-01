@@ -1192,9 +1192,9 @@ void __fastcall ESE_sub_6FCF7CE0(D2GameStrc* pGame, D2DamageStrc* pDamage, D2Uni
     const int32_t nMinBaseDamage = nMinBasePhysDamage + ESE_MONSTERUNIQUE_CalculatePercentage(nMinBasePhysDamage, pDamage->dwEnDmgPct, 100);
     const int32_t nMaxBaseDamage = nMaxBasePhysDamage + ESE_MONSTERUNIQUE_CalculatePercentage(nMaxBasePhysDamage, pDamage->dwEnDmgPct, 100);
 
-    int32_t nMinKickDamage = 0;
-    int32_t nMaxKickDamage = 0;
-    int32_t nDamagePercent = pDamage->dwEnDmgPct;
+    int64_t nMinKickDamage = 0;
+    int64_t nMaxKickDamage = 0;
+    int64_t nDamagePercent = pDamage->dwEnDmgPct;
     ESE_SKILLS_CalculateKickDamage(pUnit, &nMinKickDamage, &nMaxKickDamage, &nDamagePercent);
 
     const int32_t nMinDamage = nMinBaseDamage + ESE_MONSTERUNIQUE_CalculatePercentage(nMinKickDamage << 8, nDamagePercent, 100) + (nMinKickDamage << 8);

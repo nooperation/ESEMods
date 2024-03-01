@@ -6,7 +6,7 @@
 #include "D2Game/SKILLS/SkillPal_ESE.h"
 #include "D2Game/MONSTER/MonsterUnique_ESE.h"
 #include "D2Common/D2Skills_ESE.h"
-#include "ESEDamageCalc.h"
+#include "LibESE.h"
 
 #include <D2BitManip.h>
 #include <D2Math.h>

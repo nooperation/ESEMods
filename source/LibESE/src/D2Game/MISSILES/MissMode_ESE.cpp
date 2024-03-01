@@ -780,7 +780,7 @@ int32_t __fastcall ESE_MISSMODE_SrvDo02_PlagueJavelin_PoisonJavelin_PoisonTrap(D
         {
             const int32_t nLevel = MISSILE_GetLevel(pMissile);
             D2UnitStrc* pOwner = SUNIT_GetOwner(pGame, pMissile);
-            const int32_t nValue = ESE_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwSrvCalc, pMissile->dwClassId, nLevel);
+            const int32_t nValue = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwSrvCalc, pMissile->dwClassId, nLevel);
             ESE_MISSMODE_CreatePlagueJavelin_PoisonJavelin_PoisonTrapHitSubmissiles(pGame, pMissile, pMissilesTxtRecord->wSubMissile[0], 0, nValue);
         }
     }
@@ -2399,7 +2399,7 @@ int32_t __fastcall ESE_MISSMODE_SrvHit09_ImmolationArrow(D2GameStrc* pGame, D2Un
             nCalc0 = std::max(SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[0], nSkillId, nLevel), 1);
         }
 
-        const int32_t nHitCalc = ESE_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwHitCalc, pMissile->dwClassId, nLevel);
+        const int32_t nHitCalc = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwHitCalc, pMissile->dwClassId, nLevel);
         ESE_MISSMODE_CreateImmolationArrowHitSubmissiles(pGame, pMissile, nCalc0, pMissilesTxtRecord->wHitSubMissile[0], nHitCalc);
     }
 
@@ -4316,7 +4316,7 @@ void __fastcall ESE_MISSMODE_SrvDmg01_FireArrow_MagicArrow_ColdArrow(D2GameStrc*
         return;
     }
 
-    int32_t nPercentage = ESE_MISSILE_EvaluateMissileFormula(pMissile, SUNIT_GetOwner(pGame, pMissile), pMissilesTxtRecord->dwDmgCalc, -1, -1);
+    int32_t nPercentage = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, SUNIT_GetOwner(pGame, pMissile), pMissilesTxtRecord->dwDmgCalc, -1, -1);
     if (nPercentage <= 0)
     {
         return;
@@ -4344,7 +4344,7 @@ void __fastcall ESE_MISSMODE_SrvDmg12_LightningJavelin(D2GameStrc* pGame, D2Unit
         return;
     }
 
-    int32_t nPercentage = ESE_MISSILE_EvaluateMissileFormula(pMissile, SUNIT_GetOwner(pGame, pMissile), pMissilesTxtRecord->dwDmgCalc, -1, -1);
+    int32_t nPercentage = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, SUNIT_GetOwner(pGame, pMissile), pMissilesTxtRecord->dwDmgCalc, -1, -1);
     if (nPercentage <= 0)
     {
         return;

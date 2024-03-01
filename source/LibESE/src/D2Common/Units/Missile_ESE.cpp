@@ -1,5 +1,6 @@
 #include "D2Common/Units/Missile_ESE.h"
 #include "D2Common/D2Skills_ESE.h"
+#include "LibESE.h"
 
 #include <D2DataTbls.h>
 #include <Drlg/D2DrlgMaze.h>
@@ -477,11 +478,6 @@ int64_t __fastcall ESE_MISSILE_CalculateMasteryBonus(D2UnitStrc* pUnit, int nEle
 	return ESE_DATATBLS_ApplyRatio(nSrcDamage, nPercentage, 100);
 }
 
-int32_t Clamp64To32(int32_t value)
-{
-	return (int32_t)std::clamp<int64_t>(INT_MIN, INT_MAX, value);
-}
-
 //D2Common.0x6FDBB2E0 (#11218)
 void __stdcall ESE_MISSILE_SetDamageStats(D2UnitStrc* pOwner, D2UnitStrc* pMissile, ESE_D2MissileDamageDataStrc64* pMissileDamageData, int nLevel)
 {
@@ -603,7 +599,7 @@ int64_t __stdcall ESE_MISSILE_GetMinDamage(D2UnitStrc* pMissile, D2UnitStrc* pOw
 
 			if ((int64_t)pMissilesTxtRecord->dwDmgSymPerCalc != -1)
 			{
-				nPercentage = ESE_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwDmgSymPerCalc, nMissile, nMissileIdLevel);
+				nPercentage = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwDmgSymPerCalc, nMissile, nMissileIdLevel);
 
 				if (nPercentage)
 				{
@@ -657,7 +653,7 @@ int64_t __stdcall ESE_MISSILE_GetMaxDamage(D2UnitStrc* pMissile, D2UnitStrc* pOw
 
 			if (pMissilesTxtRecord->dwDmgSymPerCalc != -1)
 			{
-				nPercentage = ESE_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwDmgSymPerCalc, nMissile, nMissileIdLevel);
+				nPercentage = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwDmgSymPerCalc, nMissile, nMissileIdLevel);
 
 				if (nPercentage)
 				{
@@ -711,7 +707,7 @@ int64_t __stdcall ESE_MISSILE_GetMinElemDamage(D2UnitStrc* pMissile, D2UnitStrc*
 
 			if (pMissilesTxtRecord->dwElemDmgSymPerCalc != -1)
 			{
-				nPercentage = ESE_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwElemDmgSymPerCalc, nMissile, nMissileIdLevel);
+				nPercentage = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwElemDmgSymPerCalc, nMissile, nMissileIdLevel);
 
 				if (nPercentage)
 				{
@@ -765,7 +761,7 @@ int64_t __stdcall ESE_MISSILE_GetMaxElemDamage(D2UnitStrc* pMissile, D2UnitStrc*
 
 			if (pMissilesTxtRecord->dwElemDmgSymPerCalc != -1)
 			{
-				nPercentage = ESE_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwElemDmgSymPerCalc, nMissile, nMissileIdLevel);
+				nPercentage = D2Common_11284_MISSILE_EvaluateMissileFormula(pMissile, pOwner, pMissilesTxtRecord->dwElemDmgSymPerCalc, nMissile, nMissileIdLevel);
 
 				if (nPercentage)
 				{
