@@ -444,14 +444,14 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
 
     if (pStaticFieldCallbackArg->nStaticFieldMin)
     {
-        const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(STATLIST_GetMaxLifeFromUnit(pDefender) >> 8, pStaticFieldCallbackArg->nStaticFieldMin, 100);
+        const int32_t nMinDamage = ESE_DATATBLS_ApplyRatio(STATLIST_GetMaxLifeFromUnit(pDefender) >> 8, pStaticFieldCallbackArg->nStaticFieldMin, 100);
         if (nHitpoints <= nMinDamage)
         {
             return 0;
         }
     }
 
-    int32_t nShiftedDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nHitpoints, pStaticFieldCallbackArg->nDamagePct, 100);
+    int32_t nShiftedDamage = ESE_DATATBLS_ApplyRatio(nHitpoints, pStaticFieldCallbackArg->nDamagePct, 100);
     if (nShiftedDamage > nHitpoints - 1)
     {
         nShiftedDamage = nHitpoints - 1;
@@ -463,7 +463,7 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
         nDamage = pStaticFieldCallbackArg->nMinDamage;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     int32_t nStatId = -1;
     int32_t nElementalType = pStaticFieldCallbackArg->nElementalType;
     ESE_sub_6FD11E40(pAuraCallback->pOwner, &damage, nElementalType, nDamage, pStaticFieldCallbackArg->nElementalLength, &nStatId, &nElementalType);
@@ -473,7 +473,7 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
         const int32_t nValue = STATLIST_UnitGetStatValue(pDefender, nStatId, 0);
         if (nValue < 0)
         {
-            nDamage = ESE_MONSTERUNIQUE_CalculatePercentage(100, nDamage, 100 - nValue);
+            nDamage = ESE_DATATBLS_ApplyRatio(100, nDamage, 100 - nValue);
         }
     }
 
@@ -517,7 +517,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo021_Telekinesis(D2GameStrc* pGame, D2UnitStrc
             return 0;
         }
 
-        D2DamageStrc damage = {};
+        ESE_D2DamageStrc damage = {};
         ESE_D2GAME_RollPhysicalDamage_6FD14EC0(pUnit, &damage, nSkillId, nSkillLevel);
         ESE_D2GAME_RollElementalDamage_6FD14DD0(pUnit, &damage, nSkillId, nSkillLevel);
 
@@ -974,7 +974,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo029_ThunderStorm(D2GameStrc* pGame, D2UnitStr
 }
 
 //D2Game.0x6FD17820
-int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
+int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
     if (!pAttacker || !pDamage)
     {
@@ -1013,14 +1013,14 @@ int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_
 
     constexpr D2EnergyShieldDataStrc gEnergyShieldData_6FD29AD8[8] =
     {
-        { offsetof(D2DamageStrc, dwPhysDamage), 0 },
-        { offsetof(D2DamageStrc, dwFireDamage), 0 },
-        { offsetof(D2DamageStrc, dwLtngDamage), 0 },
-        { offsetof(D2DamageStrc, dwColdDamage), 0 },
-        { offsetof(D2DamageStrc, dwMagDamage), 0 },
-        { offsetof(D2DamageStrc, dwLifeLeech), 1 },
-        { offsetof(D2DamageStrc, dwManaLeech), 1 },
-        { offsetof(D2DamageStrc, dwStamLeech), 1 },
+        { offsetof(ESE_D2DamageStrc, dwPhysDamage), 0 },
+        { offsetof(ESE_D2DamageStrc, dwFireDamage), 0 },
+        { offsetof(ESE_D2DamageStrc, dwLtngDamage), 0 },
+        { offsetof(ESE_D2DamageStrc, dwColdDamage), 0 },
+        { offsetof(ESE_D2DamageStrc, dwMagDamage), 0 },
+        { offsetof(ESE_D2DamageStrc, dwLifeLeech), 1 },
+        { offsetof(ESE_D2DamageStrc, dwManaLeech), 1 },
+        { offsetof(ESE_D2DamageStrc, dwStamLeech), 1 },
     };
 
     int32_t nAbsorbedDamage = 0;
@@ -1032,15 +1032,15 @@ int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_
             int32_t* pDamageValue = (int32_t*)((char*)pDamage + pEnergyShieldData->nDamageOffset);
             if (*pDamageValue > 0)
             {
-                int32_t nAbsorb = ESE_MONSTERUNIQUE_CalculatePercentage(*pDamageValue, nMultiplier, 100);
-                const int32_t nMax = ESE_MONSTERUNIQUE_CalculatePercentage(nMana, 16, nDivisor);
+                int32_t nAbsorb = ESE_DATATBLS_ApplyRatio(*pDamageValue, nMultiplier, 100);
+                const int32_t nMax = ESE_DATATBLS_ApplyRatio(nMana, 16, nDivisor);
 
                 if (nAbsorb >= nMax)
                 {
                     nAbsorb = nMax;
                 }
 
-                nMana -= ESE_MONSTERUNIQUE_CalculatePercentage(nAbsorb, nDivisor, 16);
+                nMana -= ESE_DATATBLS_ApplyRatio(nAbsorb, nDivisor, 16);
                 *pDamageValue -= nAbsorb;
                 nAbsorbedDamage += nAbsorb;
 
@@ -1170,7 +1170,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo144_Hydra(D2GameStrc* pGame, D2UnitStrc* pUni
 }
 
 //D2Game.0x6FD17F40
-int32_t __fastcall ESE_SKILLS_EventFunc01_ChillingArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
+int32_t __fastcall ESE_SKILLS_EventFunc01_ChillingArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
     if (!pAttacker || !pUnit)
     {
@@ -1220,7 +1220,7 @@ int32_t __fastcall ESE_SKILLS_EventFunc01_ChillingArmor(D2GameStrc* pGame, int32
 }
 
 //D2Game.0x6FD180E0
-int32_t __fastcall ESE_SKILLS_EventFunc02_FrozenArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
+int32_t __fastcall ESE_SKILLS_EventFunc02_FrozenArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
     if (!pAttacker || !pUnit || (pUnit->dwUnitType != UNIT_PLAYER && pUnit->dwUnitType != UNIT_MONSTER) || (pDamage && pDamage->dwPhysDamage <= 0))
     {
@@ -1238,7 +1238,7 @@ int32_t __fastcall ESE_SKILLS_EventFunc02_FrozenArmor(D2GameStrc* pGame, int32_t
         nSkillLevel = 1;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.wResultFlags |= 0x20u;
     damage.dwFrzLen = SKILLS_EvaluateSkillFormula(pAttacker, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
     ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
@@ -1252,7 +1252,7 @@ int32_t __fastcall ESE_SKILLS_EventFunc02_FrozenArmor(D2GameStrc* pGame, int32_t
 }
 
 //D2Game.0x6FD18200
-int32_t __fastcall ESE_SKILLS_EventFunc03_ShiverArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
+int32_t __fastcall ESE_SKILLS_EventFunc03_ShiverArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
     if (!pAttacker || !pUnit || (pUnit->dwUnitType != UNIT_PLAYER && pUnit->dwUnitType != UNIT_MONSTER))
     {
@@ -1270,7 +1270,7 @@ int32_t __fastcall ESE_SKILLS_EventFunc03_ShiverArmor(D2GameStrc* pGame, int32_t
         nSkillLevel = 1;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     ESE_D2GAME_RollElementalDamage_6FD14DD0(pAttacker, &damage, nSkillId, nSkillLevel);
     damage.nHitClassActiveSet = 1;
     damage.dwHitClass |= 0xDu;

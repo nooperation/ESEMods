@@ -485,7 +485,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt56_FeralRage_Maul(D2GameStrc* pGame, D2UnitSt
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
@@ -766,7 +766,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo121_Rabies(D2GameStrc* pGame, D2UnitStrc* pUn
         nLength = 10;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     ESE_sub_6FD155E0(pGame, pUnit, pTarget, pSkillsTxtRecord, nSkillId, nSkillLevel, &damage, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -842,7 +842,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt58_FireClaws(D2GameStrc* pGame, D2UnitStrc* p
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     ESE_sub_6FD155E0(pGame, pUnit, pTarget, pSkillsTxtRecord, nSkillId, nSkillLevel, &damage, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -882,7 +882,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo122_Hunger(D2GameStrc* pGame, D2UnitStrc* pUn
         pUnit->dwFlags |= UNITFLAG_SKSRVDOFUNC;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     ESE_sub_6FD155E0(pGame, pUnit, pTarget, pSkillsTxtRecord, nSkillId, nSkillLevel, &damage, 0);
 
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
@@ -897,7 +897,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo122_Hunger(D2GameStrc* pGame, D2UnitStrc* pUn
 
         ESE_SUNITDMG_FillDamageValues(pGame, pUnit, pTarget, &damage, 0, pSkillsTxtRecord->nSrcDam);
         ESE_D2GAME_RollElementalDamage_6FD14DD0(pUnit, &damage, nSkillId, nSkillLevel);
-        damage.dwPhysDamage += ESE_MONSTERUNIQUE_CalculatePercentage(damage.dwPhysDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
+        damage.dwPhysDamage += ESE_DATATBLS_ApplyRatio(damage.dwPhysDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
         damage.dwLifeLeech += SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
         damage.dwManaLeech += SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel);
         ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
@@ -1058,7 +1058,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo145_Unused(D2GameStrc* pGame, D2UnitStrc* pUn
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     ESE_D2GAME_RollPhysicalDamage_6FD14EC0(pUnit, &damage, nSkillId, nSkillLevel);
     ESE_D2GAME_RollElementalDamage_6FD14DD0(pUnit, &damage, nSkillId, nSkillLevel);
     damage.wResultFlags |= pSkillsTxtRecord->wResultFlags;
@@ -1130,8 +1130,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo146_Unused(D2GameStrc* pGame, D2UnitStrc* pUn
 
     for (int32_t i = 0; i < 5; ++i)
     {
-        const int32_t nX = CLIENTS_GetUnitX(pUnit) + ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2 * nRange + 1) - nRange;
-        const int32_t nY = CLIENTS_GetUnitY(pUnit) + ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2 * nRange + 1) - nRange;
+        const int32_t nX = CLIENTS_GetUnitX(pUnit) + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2 * nRange + 1) - nRange;
+        const int32_t nY = CLIENTS_GetUnitY(pUnit) + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2 * nRange + 1) - nRange;
         if (D2Common_11026(nX, nY, pUnit, 0x805u))
         {
             D2ActiveRoomStrc* pTargetRoom = D2GAME_GetRoom_6FC52070(pRoom, nX, nY);
@@ -1148,7 +1148,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo146_Unused(D2GameStrc* pGame, D2UnitStrc* pUn
 }
 
 //D2Game.0x6FD00140
-int32_t __fastcall ESE_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
+int32_t __fastcall ESE_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
     if (!pAttacker || !pDamage)
     {
@@ -1230,7 +1230,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nE
     }
 
     const int32_t nOldParamValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_UNSENTPARAM1, 0);
-    const int32_t nNewParamValue = ESE_MONSTERUNIQUE_CalculatePercentage(100, nValue0, nValue1);
+    const int32_t nNewParamValue = ESE_DATATBLS_ApplyRatio(100, nValue0, nValue1);
     if (nNewParamValue - nOldParamValue >= 5)
     {
         STATES_ToggleGfxStateFlag(pAttacker, pSkillsTxtRecord->nAuraState, 1);
@@ -1273,7 +1273,7 @@ int32_t __fastcall ESE_sub_6FD00370(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_
         }
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.dwHitClass = 1;
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, nToHit, 0);
     ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
@@ -1434,7 +1434,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt60_SuckBlood(D2GameStrc* pGame, D2UnitStrc* p
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     ESE_sub_6FD155E0(pGame, pUnit, pTarget, pSkillsTxtRecord, nSkillId, nSkillLevel, &damage, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -1446,7 +1446,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt60_SuckBlood(D2GameStrc* pGame, D2UnitStrc* p
         }
 
         ESE_SUNITDMG_RollSuckBloodDamage(pGame, pUnit, pTarget, nSkillId, nSkillLevel, &damage);
-        damage.dwPhysDamage += ESE_MONSTERUNIQUE_CalculatePercentage(damage.dwPhysDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
+        damage.dwPhysDamage += ESE_DATATBLS_ApplyRatio(damage.dwPhysDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
         damage.dwLifeLeech += SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
         damage.dwManaLeech += SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel);
         ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
@@ -1475,7 +1475,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo127_SuckBlood(D2GameStrc* pGame, D2UnitStrc* 
         pUnit->dwFlags |= UNITFLAG_SKSRVDOFUNC;
     }
 
-    D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
+    ESE_D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
     if (!pDamage)
     {
         return 0;
@@ -1506,7 +1506,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo127_SuckBlood(D2GameStrc* pGame, D2UnitStrc* 
             nDamage = nTargetHitpoints;
         }
 
-        int32_t nNewHp = nOwnerHitpoints + ESE_MONSTERUNIQUE_CalculatePercentage(nDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
+        int32_t nNewHp = nOwnerHitpoints + ESE_DATATBLS_ApplyRatio(nDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
         if (nNewHp < 1)
         {
             nNewHp = 1;
@@ -1989,7 +1989,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo134_SiegeBeastStomp(D2GameStrc* pGame, D2Unit
         pUnit->dwFlags |= UNITFLAG_SKSRVDOFUNC;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.dwHitFlags |= 1;
     damage.wResultFlags |= pSkillsTxtRecord->wResultFlags;
     damage.dwHitFlags |= pSkillsTxtRecord->dwHitFlags;

@@ -7,14 +7,6 @@
 #include <D2Game/UNIT/SUnitDmg_ESE.h>
 #include <D2Game/MISSILES/MissMode_ESE.h>
 
-//D2Game.0x6FC55CE0
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithMonster(D2UnitStrc* pUnit, void* pArgument);
-//D2Game.0x6FC55D90
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit(D2UnitStrc* pUnit, void* pArgument);
-//D2Game.0x6FC55E60
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster(D2UnitStrc* pUnit, void* pArgument);
-//D2Game.0x6FC55F20
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanMissileDestroy(D2UnitStrc* pUnit, void* pArgument);
 //D2Game.0x6FC55F80
 void __stdcall ESE_INTERCEPT_MISSMODE_FillDamageParams(D2UnitStrc* pMissile, D2UnitStrc* pTarget, D2DamageStrc* pDamage);
 //D2Game.0x6FC56290
@@ -95,18 +87,6 @@ int32_t __fastcall ESE_INTERCEPT_MISSMODE_SrvDo31_WakeOfDestructionMaker_BaalCol
 int32_t __fastcall ESE_INTERCEPT_MISSMODE_SrvDo32_TigerFury(D2GameStrc* pGame, D2UnitStrc* pMissile);
 //D2Game.0x6FC59D80
 int32_t __fastcall ESE_INTERCEPT_MISSMODE_SrvDo34_BaalTauntControl(D2GameStrc* pGame, D2UnitStrc* pMissile);
-
-extern MISSMODE_UnitFindCallback_CanCollideWithMonster_t MISSMODE_UnitFindCallback_CanCollideWithMonster_Original;
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithMonster(D2UnitStrc* pUnit, void* pArgument);
-
-extern MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit_t MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit_Original;
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit(D2UnitStrc* pUnit, void* pArgument);
-
-extern MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster_t MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster_Original;
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster(D2UnitStrc* pUnit, void* pArgument);
-
-extern MISSMODE_UnitFindCallback_CanMissileDestroy_t MISSMODE_UnitFindCallback_CanMissileDestroy_Original;
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanMissileDestroy(D2UnitStrc* pUnit, void* pArgument);
 
 extern MISSMODE_FillDamageParams_t MISSMODE_FillDamageParams_Original;
 void __stdcall ESE_INTERCEPT_MISSMODE_FillDamageParams(D2UnitStrc* pMissile, D2UnitStrc* pTarget, D2DamageStrc* pDamage);

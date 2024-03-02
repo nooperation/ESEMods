@@ -27,7 +27,7 @@ void __fastcall ESE_OBJEVAL_ApplyTrapObjectDamage(D2GameStrc* pGame, D2UnitStrc*
 
     const int32_t nLevel = STATLIST_UnitGetStatValue(pTargetUnit, STAT_LEVEL, 0);
 
-    const int32_t nParam = 2 * ((uint8_t)(nLevel + (uint8_t)ITEMS_RollLimitedRandomNumber(&pSrcUnit->pSeed, nLevel >> 2)) - 5 * ((int32_t)STATLIST_UnitGetStatValue(pTargetUnit, STAT_DEXTERITY, 0) >> 1) - nLevel);
+    const int32_t nParam = 2 * ((uint8_t)(nLevel + (uint8_t)ESE_ITEMS_RollLimitedRandomNumber(&pSrcUnit->pSeed, nLevel >> 2)) - 5 * ((int32_t)STATLIST_UnitGetStatValue(pTargetUnit, STAT_DEXTERITY, 0) >> 1) - nLevel);
 
     const int32_t nChanceToHit = std::max(nParam - (int32_t)STATLIST_UnitGetStatValue(pTargetUnit, STAT_ARMORCLASS, 0) + 125, 65);
 
@@ -40,7 +40,7 @@ void __fastcall ESE_OBJEVAL_ApplyTrapObjectDamage(D2GameStrc* pGame, D2UnitStrc*
 
     const uint8_t nBaseDamage = DATATBLS_GetObjectsTxtRecord(pSrcUnit ? pSrcUnit->dwClassId : -1)->nDamage;
 
-    const int32_t nDamage = (ITEMS_RollLimitedRandomNumber(&pSrcUnit->pSeed, nMaxDamage - nMinDamage + 256) + nMinDamage) * (uint32_t)nBaseDamage / 100;
+    const int32_t nDamage = (ESE_ITEMS_RollLimitedRandomNumber(&pSrcUnit->pSeed, nMaxDamage - nMinDamage + 256) + nMinDamage) * (uint32_t)nBaseDamage / 100;
     if (!nBaseDamage)
     {
         FOG_DisplayWarning("ptObjectData->bDamage", __FILE__, __LINE__);
@@ -51,7 +51,7 @@ void __fastcall ESE_OBJEVAL_ApplyTrapObjectDamage(D2GameStrc* pGame, D2UnitStrc*
         return;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     switch (nDamageType)
     {
     case 1:

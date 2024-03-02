@@ -5,26 +5,21 @@
 #include <Units/Units.h>
 #include <D2Game/UNIT/SUnitDmg_ESE.h>
 
-extern D2MissileUnitFindTableStrc ESE_stru_6FD2E5F8[9];
 
-//D2Game.0x6FC55CE0
-int32_t __fastcall ESE_MISSMODE_UnitFindCallback_CanCollideWithMonster(D2UnitStrc* pUnit, void* pArgument);
-//D2Game.0x6FC55D90
-int32_t __fastcall ESE_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit(D2UnitStrc* pUnit, void* pArgument);
-//D2Game.0x6FC55E60
-int32_t __fastcall ESE_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster(D2UnitStrc* pUnit, void* pArgument);
-//D2Game.0x6FC55F20
-int32_t __fastcall ESE_MISSMODE_UnitFindCallback_CanMissileDestroy(D2UnitStrc* pUnit, void* pArgument);
 //D2Game.0x6FC55F80
-void __stdcall ESE_MISSMODE_FillDamageParams(D2UnitStrc* pMissile, D2UnitStrc* pTarget, D2DamageStrc* pDamage);
+void __stdcall ESE_MISSMODE_FillDamageParams(D2UnitStrc* pMissile, D2UnitStrc* pTarget, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC56290
-int32_t __fastcall ESE_MISSMODE_RollDamageValue(D2UnitStrc* pUnit, int32_t nMinDamStat, int32_t nMaxDamStat, int32_t nMasteryStat);
+int64_t __fastcall ESE_MISSMODE_RollDamageValue(D2UnitStrc* pUnit, int32_t nMinDamStat, int32_t nMaxDamStat, int32_t nMasteryStat);
 //D2Game.0x6FC56480
-int32_t __fastcall ESE_MISSMODE_GetDamageValue(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
+int64_t __fastcall ESE_MISSMODE_GetDamageValue(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC56730
-void __fastcall ESE_MISSMODE_ResetDamageParams(D2GameStrc* pGame, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_ResetDamageParams(D2GameStrc* pGame, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC567E0
-void __fastcall ESE_MISSMODE_AddDamageValue(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nDamage);
+void __fastcall ESE_MISSMODE_AddDamageValue(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int64_t nDamage);
+
+
+// These don't really need intercepts
+
 //D2Game.0x6FC568F0
 int32_t __fastcall ESE_MISSMODE_CreatePoisonCloudHitSubmissiles(D2GameStrc* pGame, D2UnitStrc* pOwner, D2UnitStrc* pOrigin, int32_t nMissileId, int32_t nSkillId, int32_t nSkillLevel, int32_t nSubStep, int32_t nMainStep, int32_t nLoops);
 //D2Game.0x6FC56AB0
@@ -79,8 +74,12 @@ int32_t __fastcall ESE_MISSMODE_SrvDo23_24_SuccFireBall_FirestormMaker(D2GameStr
 int32_t __fastcall ESE_MISSMODE_SrvDo25_EruptionCenter(D2GameStrc* pGame, D2UnitStrc* pMissile);
 //D2Game.0x6FC58F30
 int32_t __fastcall ESE_MISSMODE_SrvDo26_Vines_PlagueVines(D2GameStrc* pGame, D2UnitStrc* pMissile);
+
+
 //D2Game.0x6FC59040
 int32_t __fastcall ESE_MISSMODE_SrvDo27_Tornado(D2GameStrc* pGame, D2UnitStrc* pMissile);
+
+
 //D2Game.0x6FC591C0
 int32_t __fastcall ESE_MISSMODE_SrvDo28_Volcano(D2GameStrc* pGame, D2UnitStrc* pMissile);
 //D2Game.0x6FC594B0
@@ -97,10 +96,14 @@ int32_t __fastcall ESE_MISSMODE_SrvDo32_TigerFury(D2GameStrc* pGame, D2UnitStrc*
 int32_t __fastcall ESE_MISSMODE_SrvDo34_BaalTauntControl(D2GameStrc* pGame, D2UnitStrc* pMissile);
 //D2Game.0x6FC59F
 int32_t __fastcall ESE_MISSMODE_SrvDo35_RoyalStrikeChaosIce(D2GameStrc* pGame, D2UnitStrc* pMissile);
+
+
 //D2Game.0x6FC5A180
 int32_t __fastcall ESE_MISSMODE_SrvHit01_Fireball_ExplodingArrow_FreezingArrowExplosion(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit);
 //D2Game.0x6FC5A330
 int32_t __fastcall ESE_MISSMODE_SrvHit24_PantherPotOrange(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit);
+
+
 //D2Game.0x6FC5A4F0
 int32_t __fastcall ESE_MISSMODE_SrvHit02_PlagueJavelin_PoisonPotion(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit);
 //D2Game.0x6FC5A580
@@ -212,37 +215,37 @@ int32_t __fastcall ESE_MISSMODE_SrvHit59_BaalTauntPoisonControl(D2GameStrc* pGam
 //D2Game.0x6FC5E7F0
 int32_t __fastcall ESE_MISSMODE_SrvHit23_Unused(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit);
 //D2Game.0x6FC5E890
-void __fastcall ESE_MISSMODE_SrvDmg01_FireArrow_MagicArrow_ColdArrow(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg01_FireArrow_MagicArrow_ColdArrow(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5E9D0
-void __fastcall ESE_MISSMODE_SrvDmg12_LightningJavelin(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg12_LightningJavelin(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5EB20
-void __fastcall ESE_MISSMODE_SrvDmg02_IceArrow_RoyalStrikeChaos(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg02_IceArrow_RoyalStrikeChaos(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5EC70
-void __fastcall ESE_MISSMODE_SrvDmg03_Blaze_FireWall_ImmolationFire_MeteorFire(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg03_Blaze_FireWall_ImmolationFire_MeteorFire(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5ECE0
-void __fastcall ESE_MISSMODE_SrvDmg04_IceBlast(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg04_IceBlast(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5ED00
-void __fastcall ESE_MISSMODE_SrvDmg10_BladesOfIceCubes(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg10_BladesOfIceCubes(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5ED50
-void __fastcall ESE_MISSMODE_SrvDmg05_BlessedHammer(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg05_BlessedHammer(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5EF40
-void __fastcall ESE_MISSMODE_SrvDmg06_Unused(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg06_Unused(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5EF80
-void __fastcall ESE_MISSMODE_SrvDmg07_Warcry_ShockWave(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg07_Warcry_ShockWave(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5F060
-void __fastcall ESE_MISSMODE_SrvDmg08_EruptionCrack(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg08_EruptionCrack(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5F0C0
-void __fastcall ESE_MISSMODE_SrvDmg09_Twister(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg09_Twister(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5F170
-void __fastcall ESE_MISSMODE_SrvDmg11_RabiesContagion(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg11_RabiesContagion(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5F1F0
-void __fastcall ESE_MISSMODE_SrvDmg13_BlessedHammerEx(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg13_BlessedHammerEx(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5F250
-void __fastcall ESE_MISSMODE_SrvDmg14_MoltenBoulder(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SrvDmg14_MoltenBoulder(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5F4B0
 D2MonStats2Txt* __fastcall ESE_D2GAME_GetMonStats2TxtRecord_6FC5F4B0(int32_t nRecordId);
 //D2Game.0x6FC5F4E0
-void __fastcall ESE_MISSMODE_SetDamageFlags(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
+void __fastcall ESE_MISSMODE_SetDamageFlags(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC5F6C0
 int32_t __fastcall ESE_MISSMODE_SrvDo19_RadamentDeath(D2GameStrc* pGame, D2UnitStrc* pMissile);
 //D2Game.0x6FC5F7C0

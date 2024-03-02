@@ -24,12 +24,16 @@ void __fastcall ESE_INTERCEPT_sub_6FC62D90(D2UnitStrc* pUnit, D2GameStrc* pGame)
 
 void __stdcall ESE_INTERCEPT_sub_6FC62DF0(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 {
-    ESE_sub_6FC62DF0(pUnit, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_sub_6FC62DF0(pUnit, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
 {
-    ESE_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(pAttacker, pDefender, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(pAttacker, pDefender, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_D2GAME_ApplyPeriodicStatDamage_6FC63440(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a3, int32_t a4)

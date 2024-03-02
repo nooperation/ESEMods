@@ -37,37 +37,6 @@
 
 #include <algorithm>
 
-//D2Game.0x6FC6AF70
-int32_t __fastcall ESE_MONSTERUNIQUE_CalculatePercentage(int32_t a1, int32_t a2, int32_t a3)
-{
-    if (!a3)
-    {
-        return 0;
-    }
-
-    if (a1 <= 1048576)
-    {
-        if (a2 <= 65536)
-        {
-            return a2 * a1 / a3;
-        }
-
-        if (a3 <= a2 >> 4)
-        {
-            return a1 * (a2 / a3);
-        }
-    }
-    else
-    {
-        if (a3 <= a1 >> 4)
-        {
-            return a2 * (a1 / a3);
-        }
-    }
-
-    return a2 * (int64_t)a1 / a3;
-}
-
 //D2Game.0x6FC6B030
 void __fastcall ESE_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
 {
@@ -183,7 +152,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod39_Berserk(D2UnitStrc* pUnit, int32_t nUMo
     }
 
     const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
-    const int32_t nNewHp = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxHp, -75, 100) + nMaxHp;
+    const int32_t nNewHp = ESE_DATATBLS_ApplyRatio(nMaxHp, -75, 100) + nMaxHp;
     STATLIST_SetUnitStat(pUnit, STAT_MAXHP, nNewHp, 0);
     STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
 
@@ -671,11 +640,11 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode(D2GameStrc* pGame, D2UnitStr
         return;
     }
 
-    const int32_t nMaxDamage = ESE_MONSTERUNIQUE_CalculatePercentage(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
-    const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxDamage, 60, 100);
-    const int32_t nDamage = ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
+    const int32_t nMaxDamage = ESE_DATATBLS_ApplyRatio(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
+    const int32_t nMinDamage = ESE_DATATBLS_ApplyRatio(nMaxDamage, 60, 100);
+    const int32_t nDamage = ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.dwPhysDamage = (nMinDamage + nDamage) << 6;
     damage.dwFireDamage = damage.dwPhysDamage;
     ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, pGame->nDifficulty + 4, &damage, 0, 0, nullptr, 0x581u);
@@ -693,7 +662,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode2(D2GameStrc* pGame, D2UnitSt
         return;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.dwPhysDamage = 0x6400u;
     damage.dwFireDamage = 0x6400u;
     ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, 6, &damage, 0, 0, nullptr, 0x583);
@@ -835,8 +804,8 @@ void __fastcall ESE_sub_6FC6E240(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
         return;
     }
 
-    D2DamageStrc damage = {};
-    damage.dwFireDamage = (ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, pMonStatsTxtRecord->nElMaxD[0][0] - pMonStatsTxtRecord->nElMinD[0][0]) + pMonStatsTxtRecord->nElMinD[0][0]) << 8;
+    ESE_D2DamageStrc damage = {};
+    damage.dwFireDamage = (ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, pMonStatsTxtRecord->nElMaxD[0][0] - pMonStatsTxtRecord->nElMinD[0][0]) + pMonStatsTxtRecord->nElMinD[0][0]) << 8;
 
     ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pUnit, CLIENTS_GetUnitX(pUnit), CLIENTS_GetUnitY(pUnit), pMonStatsTxtRecord->wAiParam[2][pGame->nDifficulty] * STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), &damage, 0, 0, nullptr, 0);
 }
@@ -860,11 +829,11 @@ void __fastcall ESE_MONSTERUNIQUE_CastSuicideExplodeMissile(D2GameStrc* pGame, D
     D2MonStatsInitStrc monStatsInit = {};
     DATATBLS_CalculateMonsterStatsByLevel(pUnit->dwClassId, nGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 8, &monStatsInit);
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags |= 8u;
 
-    const int32_t nDamage = (ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, monStatsInit.nA1MaxD - monStatsInit.nA1MinD) + monStatsInit.nA1MinD) << 8;
+    const int32_t nDamage = (ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, monStatsInit.nA1MaxD - monStatsInit.nA1MinD) + monStatsInit.nA1MinD) << 8;
     damage.dwPhysDamage = nDamage;
 
     const int32_t nX = CLIENTS_GetUnitX(pUnit);

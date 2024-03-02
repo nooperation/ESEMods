@@ -91,7 +91,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt06_PowerStrike_ChargedStrike(D2GameStrc* pGam
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
@@ -133,7 +133,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt07_Impale(D2GameStrc* pGame, D2UnitStrc* pUni
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
@@ -350,14 +350,14 @@ int32_t __fastcall ESE_SKILLS_SrvSt10_LightningStrike(D2GameStrc* pGame, D2UnitS
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
         const int32_t nMinDamage = ESE_SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1);
         const int32_t nMaxDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1);
-        damage.dwLtngDamage = nMinDamage + ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
+        damage.dwLtngDamage = nMinDamage + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
         damage.dwEnDmgPct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
 
         if (pSkillsTxtRecord->nEType)
@@ -444,7 +444,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo007_Jab(D2GameStrc* pGame, D2UnitStrc* pUnit,
         sub_6FC627B0(pUnit, 8);
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, nToHit, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -820,7 +820,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo013_Fend_Zeal_Fury(D2GameStrc* pGame, D2UnitS
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
@@ -961,7 +961,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo015_Dopplezon(D2GameStrc* pGame, D2UnitStrc* 
     }
 
     UNITS_StoreOwner(pPet, pUnit);
-    const int32_t nHitpoints = ESE_MONSTERUNIQUE_CalculatePercentage(STATLIST_GetMaxLifeFromUnit(pUnit), SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel), 100);
+    const int32_t nHitpoints = ESE_DATATBLS_ApplyRatio(STATLIST_GetMaxLifeFromUnit(pUnit), SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel), 100);
 
     STATLIST_SetUnitStat(pPet, STAT_HITPOINTS, nHitpoints, 0);
     STATLIST_SetUnitStat(pPet, STAT_MAXHP, nHitpoints, 0);

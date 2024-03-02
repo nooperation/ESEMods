@@ -7,8 +7,6 @@
 #include <DataTbls/MonsterTbls.h>
 #include <Drlg/D2DrlgDrlg.h>
 
-//D2Game.0x6FC6AF70
-int32_t __fastcall ESE_MONSTERUNIQUE_CalculatePercentage(int32_t a1, int32_t a2, int32_t a3);
 //D2Game.0x6FC6B030
 void __fastcall ESE_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique);
 //D2Game.0x6FC6B210

@@ -25,6 +25,7 @@ extern "C" const uint32_t gdwBitMasks[32];
 extern "C" const uint32_t gdwInvBitMasks[32];
 extern D2pSpellTblStrc* gPSpellTable;
 extern int32_t* gPSpellTableSize;
+extern D2MissileUnitFindTableStrc* stru_6FD2E5F8;
 
 // CommonDefinitions
 

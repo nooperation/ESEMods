@@ -4,10 +4,11 @@
 #include <UNIT/SUnitDmg.h>
 #include <Units/Units.h>
 #include <D2DataTbls.h>
+#include "LibESE.h"
 
 #pragma pack(push, 1)
 
-struct D2DamageStrc_ESE
+struct ESE_D2DamageStrc_ESE
 {
 	uint32_t dwHitFlags;					//0x00
 	uint16_t wResultFlags;					//0x04
@@ -45,7 +46,7 @@ struct D2DamageStrc_ESE
 #pragma pack(pop)
 
 //D2Game.0x6FCBE2F0
-int32_t __fastcall ESE_SUNITDMG_SetHitClass(D2DamageStrc* pDamage, uint32_t nHitClass);
+int32_t __fastcall ESE_SUNITDMG_SetHitClass(ESE_D2DamageStrc* pDamage, uint32_t nHitClass);
 //D2Game.0x6FCBE310
 int32_t __fastcall ESE_SUNITDMG_GetColdEffect(D2GameStrc* pGame, D2UnitStrc* pUnit);
 //D2Game.0x6FCBE360
@@ -53,17 +54,17 @@ void __fastcall ESE_SUNITDMG_RemoveFreezeState(D2UnitStrc* pUnit, int32_t nState
 //D2Game.0x6FCBE420
 int32_t __fastcall ESE_SUNITDMG_ApplyDamageBonuses(D2UnitStrc* pUnit, int32_t bGetStats, D2UnitStrc* pItem, int32_t nMinDmg, int32_t nMaxDmg, int32_t nDamagePercent, int32_t nDamage, uint8_t nSrcDam);
 //D2Game.0x6FCBE7E0
-void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage, int32_t a5, uint8_t nSrcDam);
+void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage, int32_t a5, uint8_t nSrcDam);
 //D2Game.0x6FCBF400
 int32_t __fastcall ESE_SUNITDMG_CheckMonType(int32_t nMonType1, int32_t nMonType2);
 //D2Game.0x6FCBF450
 int32_t __fastcall ESE_SUNITDMG_RollDamageValueInRange(D2UnitStrc* pUnit, int32_t nMinDamage, int32_t nMaxDamage, int32_t nMinDamageBonusPct, int32_t nMaxDamageBonusPct, int32_t nDamage);
 //D2Game.0x6FCBF620
-void __fastcall ESE_SUNITDMG_CalculateTotalDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
+void __fastcall ESE_SUNITDMG_CalculateTotalDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCBFB40
-void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb);
+void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(ESE_D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb);
 //D2Game.0x6FCBFE90
-void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, D2DamageStrc* pDamage);
+void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCC05D0
 D2MonStatsTxt* __fastcall ESE_SUNITDMG_GetMonStatsTxtRecordFromUnit(D2UnitStrc* pUnit);
 //D2Game.0x6FCC05F0
@@ -87,15 +88,15 @@ void __fastcall ESE_SUNITDMG_FreeAttackerDefenderCombatList(D2GameStrc* pGame, D
 //D2Game.0x6FCC0F10
 void __fastcall ESE_SUNITDMG_KillMonster(D2GameStrc* pGame, D2UnitStrc* pDefender, D2UnitStrc* pAttacker, int32_t bPetKill);
 //D2Game.0x6FCC1260
-void __fastcall ESE_SUNITDMG_ExecuteMissileDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_SUNITDMG_ExecuteMissileDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCC1870
-int32_t __fastcall ESE_sub_6FCC1870(D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nHitClass);
+int32_t __fastcall ESE_sub_6FCC1870(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nHitClass);
 //D2Game.0x6FCC1A50
-int32_t __fastcall ESE_SUNITDMG_GetHitClass(D2DamageStrc* pDamage, uint32_t nBaseHitClass);
+int32_t __fastcall ESE_SUNITDMG_GetHitClass(ESE_D2DamageStrc* pDamage, uint32_t nBaseHitClass);
 //D2Game.0x6FCC1AC0
 void __fastcall ESE_SUNITDMG_DrainItemDurability(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nUnused);
 //D2Game.0x6FCC1D70
-D2DamageStrc* __fastcall ESE_SUNITDMG_GetDamageFromUnits(D2UnitStrc* pAttacker, D2UnitStrc* pDefender);
+ESE_D2DamageStrc* __fastcall ESE_SUNITDMG_GetDamageFromUnits(D2UnitStrc* pAttacker, D2UnitStrc* pDefender);
 //D2Game.0x6FCC1DC0
 bool __stdcall ESE_D2Game_10033(D2UnitStrc* pUnit, int32_t* a2, int32_t* a3);
 //D2Game.0x6FCC1E70
@@ -103,7 +104,7 @@ int32_t __fastcall ESE_SUNITDMG_IsHitSuccessful(D2UnitStrc* pAttacker, D2UnitStr
 //D2Game.0x6FCC2300
 uint16_t __fastcall ESE_SUNITDMG_GetResultFlags(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nStatValue, int32_t nRangeOffset);
 //D2Game.0x6FCC2420
-void __fastcall ESE_SUNITDMG_AllocCombat(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage, uint8_t nSrcDam);
+void __fastcall ESE_SUNITDMG_AllocCombat(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage, uint8_t nSrcDam);
 //D2Game.0x6FCC2530
 int32_t __fastcall ESE_SUNITDMG_ApplyBlockOrDodge(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bAvoid, int32_t bBlock);
 //D2Game.0x6FCC2610
@@ -111,11 +112,11 @@ int32_t __fastcall ESE_SUNITDMG_ApplyDodge(D2UnitStrc* pAttacker, D2UnitStrc* pD
 //D2Game.0x6FCC2850
 int32_t __fastcall ESE_SUNITDMG_GetWeaponBlock(D2UnitStrc* pUnit);
 //D2Game.0x6FCC2910
-int32_t __fastcall ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nX, int32_t nY, int32_t nSize, D2DamageStrc* pDamage, int32_t a7, int32_t a8, int32_t(__fastcall* pfCallback)(D2GameStrc*, D2UnitStrc*, D2UnitStrc*), int32_t a10);
+int32_t __fastcall ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nX, int32_t nY, int32_t nSize, ESE_D2DamageStrc* pDamage, int32_t a7, int32_t a8, int32_t(__fastcall* pfCallback)(D2GameStrc*, D2UnitStrc*, D2UnitStrc*), int32_t a10);
 //D2Game.0x6FCC2BC0
-void __fastcall ESE_SUNITDMG_RollDamage(D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel, D2DamageStrc* pDamage);
+void __fastcall ESE_SUNITDMG_RollDamage(D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCC2BF0
-void __fastcall ESE_SUNITDMG_RollSuckBloodDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nSkillId, int32_t nSkillLevel, D2DamageStrc* pDamage);
+void __fastcall ESE_SUNITDMG_RollSuckBloodDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nSkillId, int32_t nSkillLevel, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCC2C70
 void __fastcall ESE_SUNITDMG_DistributeExperience(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender);
 //D2Game.0x6FCC2EC0

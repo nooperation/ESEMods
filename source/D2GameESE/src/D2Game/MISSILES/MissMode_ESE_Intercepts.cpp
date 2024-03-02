@@ -1,9 +1,5 @@
 #include "D2Game/MISSILES/MissMode_ESE_Intercepts.h"
 
-MISSMODE_UnitFindCallback_CanCollideWithMonster_t MISSMODE_UnitFindCallback_CanCollideWithMonster_Original = nullptr;
-MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit_t MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit_Original = nullptr;
-MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster_t MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster_Original = nullptr;
-MISSMODE_UnitFindCallback_CanMissileDestroy_t MISSMODE_UnitFindCallback_CanMissileDestroy_Original = nullptr;
 MISSMODE_FillDamageParams_t MISSMODE_FillDamageParams_Original = nullptr;
 MISSMODE_RollDamageValue_t MISSMODE_RollDamageValue_Original = nullptr;
 MISSMODE_GetDamageValue_t MISSMODE_GetDamageValue_Original = nullptr;
@@ -45,29 +41,13 @@ MISSMODE_SrvDo31_WakeOfDestructionMaker_BaalColdMaker_t MISSMODE_SrvDo31_WakeOfD
 MISSMODE_SrvDo32_TigerFury_t MISSMODE_SrvDo32_TigerFury_Original = nullptr;
 MISSMODE_SrvDo34_BaalTauntControl_t MISSMODE_SrvDo34_BaalTauntControl_Original = nullptr;
 
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithMonster(D2UnitStrc* pUnit, void* pArgument)
-{
-    return ESE_MISSMODE_UnitFindCallback_CanCollideWithMonster(pUnit, pArgument);
-}
-
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit(D2UnitStrc* pUnit, void* pArgument)
-{
-    return ESE_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit(pUnit, pArgument);
-}
-
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster(D2UnitStrc* pUnit, void* pArgument)
-{
-    return ESE_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster(pUnit, pArgument);
-}
-
-int32_t __fastcall ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanMissileDestroy(D2UnitStrc* pUnit, void* pArgument)
-{
-    return ESE_MISSMODE_UnitFindCallback_CanMissileDestroy(pUnit, pArgument);
-}
-
 void __stdcall ESE_INTERCEPT_MISSMODE_FillDamageParams(D2UnitStrc* pMissile, D2UnitStrc* pTarget, D2DamageStrc* pDamage)
 {
-    ESE_MISSMODE_FillDamageParams(pMissile, pTarget, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+
+    ESE_MISSMODE_FillDamageParams(pMissile, pTarget, &tempDamageStrc);
+
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_MISSMODE_RollDamageValue(D2UnitStrc* pUnit, int32_t nMinDamStat, int32_t nMaxDamStat, int32_t nMasteryStat)
@@ -77,17 +57,23 @@ int32_t __fastcall ESE_INTERCEPT_MISSMODE_RollDamageValue(D2UnitStrc* pUnit, int
 
 int32_t __fastcall ESE_INTERCEPT_MISSMODE_GetDamageValue(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
 {
-    return ESE_MISSMODE_GetDamageValue(pGame, pAttacker, pDefender, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_MISSMODE_GetDamageValue(pGame, pAttacker, pDefender, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_MISSMODE_ResetDamageParams(D2GameStrc* pGame, D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 {
-    ESE_MISSMODE_ResetDamageParams(pGame, pUnit, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_MISSMODE_ResetDamageParams(pGame, pUnit, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_MISSMODE_AddDamageValue(D2GameStrc* pGame, D2UnitStrc* pMissile, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nDamage)
 {
-    ESE_MISSMODE_AddDamageValue(pGame, pMissile, pUnit, pDamage, nDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_MISSMODE_AddDamageValue(pGame, pMissile, pUnit, &tempDamageStrc, nDamage);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_MISSMODE_CreatePoisonCloudHitSubmissiles(D2GameStrc* pGame, D2UnitStrc* pOwner, D2UnitStrc* pOrigin, int32_t nMissileId, int32_t nSkillId, int32_t nSkillLevel, int32_t nSubStep, int32_t nMainStep, int32_t nLoops)

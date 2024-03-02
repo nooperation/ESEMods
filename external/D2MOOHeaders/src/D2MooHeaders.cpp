@@ -5266,6 +5266,7 @@ extern "C" const uint32_t gdwInvBitMasks[] =
 
 D2pSpellTblStrc *gPSpellTable = nullptr;
 int32_t *gPSpellTableSize = nullptr;
+D2MissileUnitFindTableStrc* stru_6FD2E5F8 = nullptr;
 
 void InitD2MooHeaders()
 {
@@ -5274,6 +5275,7 @@ void InitD2MooHeaders()
 
     gPSpellTable = (D2pSpellTblStrc *)((uint8_t*)D2GameImageBase + 0x110688);
     gPSpellTableSize = (int32_t *)((uint8_t*)D2GameImageBase + 0x110780);
+    stru_6FD2E5F8 = (D2MissileUnitFindTableStrc*)((uint8_t*)D2CommonImageBase + 0xFE5F8);
 
     // CommonDefinitions
 

@@ -5,6 +5,7 @@
 #include "D2Game/SKILLS/SkillSor_ESE.h"
 #include "D2Game/UNIT/SUnitDmg_ESE.h"
 #include "D2Common/D2Skills_ESE.h"
+#include "LibESE.h"
 
 #include <D2BitManip.h>
 #include <D2Chat.h>
@@ -268,14 +269,14 @@ void __fastcall ESE_sub_6FC62D90(D2UnitStrc* pUnit, D2GameStrc* pGame)
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
     if (pTarget)
     {
-        D2DamageStrc damage = {};
+        ESE_D2DamageStrc damage = {};
         damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
         ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
     }
 }
 
 //D2Game.0x6FC62DF0
-void __stdcall ESE_sub_6FC62DF0(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
+void __stdcall ESE_sub_6FC62DF0(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage)
 {
     if (pDamage->wResultFlags & 4 && D2GAME_GetMonsterBaseId_6FC64B10(pUnit) == MONSTER_SANDLEAPER1 && !STATES_CheckState(pUnit, STATE_FREEZE))
     {
@@ -284,7 +285,7 @@ void __stdcall ESE_sub_6FC62DF0(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 }
 
 //D2Game.0x6FC62E70
-void __fastcall ESE_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
+void __fastcall ESE_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage)
 {
     if (pAttacker && pAttacker->dwUnitType == UNIT_MONSTER)
     {
@@ -391,11 +392,11 @@ void __fastcall ESE_D2GAME_ApplyPeriodicStatDamage_6FC63440(D2GameStrc* pGame, D
                 else
                 {
                     ESE_SUNITDMG_KillMonster(pGame, pUnit, pStatListOwner, 1);
-                    SUNITEVENT_EventFunc_Handler(pGame, EVENT_KILLED, pUnit, pStatListOwner, 0);
+                    ESE_SUNITEVENT_EventFunc_Handler(pGame, EVENT_KILLED, pUnit, pStatListOwner, 0);
 
                     if (pStatListOwner)
                     {
-                        SUNITEVENT_EventFunc_Handler(pGame, EVENT_KILL, pStatListOwner, pUnit, 0);
+                        ESE_SUNITEVENT_EventFunc_Handler(pGame, EVENT_KILL, pStatListOwner, pUnit, 0);
                     }
                 }
             }
@@ -442,11 +443,11 @@ int32_t __fastcall ESE_sub_6FC63B30(D2GameStrc* pGame, D2ModeChangeStrc* pModeCh
                     D2MonStatsInitStrc monStatsInit = {};
                     DATATBLS_CalculateMonsterStatsByLevel(pModeChange->pUnit->dwClassId, pGame->dwGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pModeChange->pUnit, STAT_LEVEL, 0), 1, &monStatsInit);
 
-                    const int32_t nMaxDamage = ESE_MONSTERUNIQUE_CalculatePercentage(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
-                    const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxDamage, 60, 100);
+                    const int32_t nMaxDamage = ESE_DATATBLS_ApplyRatio(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
+                    const int32_t nMinDamage = ESE_DATATBLS_ApplyRatio(nMaxDamage, 60, 100);
                     
-                    D2DamageStrc damage = {};
-                    damage.dwPhysDamage = (nMinDamage + ITEMS_RollLimitedRandomNumber(&pModeChange->pUnit->pSeed, nMaxDamage - nMinDamage)) << 7;
+                    ESE_D2DamageStrc damage = {};
+                    damage.dwPhysDamage = (nMinDamage + ESE_ITEMS_RollLimitedRandomNumber(&pModeChange->pUnit->pSeed, nMaxDamage - nMinDamage)) << 7;
                     ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, 5, &damage, 0, 0, nullptr, 0x581);
                     return 1;
 
@@ -472,7 +473,7 @@ void __fastcall ESE_sub_6FC63FD0(D2GameStrc* pGame, D2UnitStrc* pAttacker)
     {
         if (i->dwUnitType == UNIT_PLAYER && i->dwAnimMode != PLRMODE_DEAD && UNITS_GetDistanceToOtherUnit(pAttacker, i) <= 2 && !UNITS_TestCollisionBetweenInteractingUnits(i, pAttacker, 15361))
         {
-            D2DamageStrc pDamage = {};
+            ESE_D2DamageStrc pDamage = {};
             pDamage.dwPhysDamage = (int32_t )STATLIST_UnitGetStatValue(i, STAT_HITPOINTS, 0) >> 5;
             pDamage.wResultFlags = DAMAGERESULTFLAG_SUCCESSFULHIT;
             if (!STATES_CheckState(i, STATE_UNINTERRUPTABLE))
@@ -518,7 +519,7 @@ void __fastcall ESE_sub_6FC641D0(D2GameStrc* pGame, D2UnitStrc* pAttacker)
     if (pAttacker)
     {
         SUNIT_SetCombatMode(pGame, pAttacker, 12);
-        SUNITEVENT_EventFunc_Handler(pGame, EVENT_DEATH, pAttacker, 0, 0);
+        ESE_SUNITEVENT_EventFunc_Handler(pGame, EVENT_DEATH, pAttacker, 0, 0);
 
         D2MonStatsTxt* pMonStatsTxtRecord = MONSTERMODE_GetMonStatsTxtRecord(pAttacker->dwClassId);
         if (pMonStatsTxtRecord)

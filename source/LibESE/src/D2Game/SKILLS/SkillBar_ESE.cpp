@@ -70,7 +70,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt32_Conversion_Bash_Stun_Concentrate_BearSmite
 
     ESE_sub_6FD15470(pUnit, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel));
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -102,7 +102,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt32_Conversion_Bash_Stun_Concentrate_BearSmite
 
     ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, nSrcDam);
 
-    D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
+    ESE_D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
     if (pDamage)
     {
         pDamage->dwPhysDamage += SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel) << 8;
@@ -598,7 +598,7 @@ int32_t __fastcall ESE_SKILLS_RollFrenzyDamage(D2GameStrc* pGame, D2UnitStrc* pU
 
     UNITS_SetTargetUnitForDynamicUnit(pUnit, pTarget);
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -1050,7 +1050,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo076_Whirlwind(D2GameStrc* pGame, D2UnitStrc* 
         {
             SKILLS_SetParam3(pSkill, pTarget->dwUnitId);
 
-            D2DamageStrc damage = {};
+            ESE_D2DamageStrc damage = {};
             damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
             if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
             {
@@ -1110,7 +1110,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt39_Berserk(D2GameStrc* pGame, D2UnitStrc* pUn
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -1383,7 +1383,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo077_Leap(D2GameStrc* pGame, D2UnitStrc* pUnit
     {
         if (ESE_SKILLS_Leap(pGame, pUnit, pSkill) && nUnitType != UNIT_MONSTER)
         {
-            D2DamageStrc damage = {};
+            ESE_D2DamageStrc damage = {};
             damage.wResultFlags = 9;
             ESE_sub_6FD10200(pGame, pUnit, 0, 0, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), &damage, 0);
             return 1;
@@ -1664,7 +1664,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo078_LeapAttack(D2GameStrc* pGame, D2UnitStrc*
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pDefender, SKILLS_GetToHitFactor(pUnit, nSkillId, nSkillLevel), 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)

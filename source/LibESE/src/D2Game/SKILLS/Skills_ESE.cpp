@@ -15,6 +15,7 @@
 #include "D2Common/Units/Missile_ESE.h"
 #include "D2Common/D2Skills_ESE.h"
 #include "D2Game/MISSILES/Missiles_ESE.h"
+#include "D2Game/UNIT/SUnitEvent_ESE.h"
 
 #include <D2BitManip.h>
 #include <D2Composit.h>
@@ -719,7 +720,7 @@ void __fastcall ESE_sub_6FD0FE80(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
 }
 
 //D2Game.0x6FD10140
-void __fastcall ESE_sub_6FD10140(D2GameStrc* pGame, D2UnitStrc* pAttackerArg, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nUnused)
+void __fastcall ESE_sub_6FD10140(D2GameStrc* pGame, D2UnitStrc* pAttackerArg, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nUnused)
 {
     D2UnitStrc* pAttacker = pAttackerArg;
 
@@ -780,7 +781,7 @@ void __fastcall ESE_sub_6FD10140(D2GameStrc* pGame, D2UnitStrc* pAttackerArg, D2
 }
 
 //D2Game.0x6FD10200
-int32_t __fastcall ESE_sub_6FD10200(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nX, int32_t nY, int32_t nAuraRange, D2DamageStrc* pDamage, uint32_t nAuraFilter)
+int32_t __fastcall ESE_sub_6FD10200(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nX, int32_t nY, int32_t nAuraRange, ESE_D2DamageStrc* pDamage, uint32_t nAuraFilter)
 {
     if (!nAuraFilter)
     {
@@ -1292,7 +1293,7 @@ D2StatListStrc* __fastcall ESE_sub_6FD10EC0(D2CurseStrc* pCurse)
 
         if (nCurseResistance)
         {
-            pCurse->nDuration -= ESE_MONSTERUNIQUE_CalculatePercentage(pCurse->nDuration, nCurseResistance, 100);
+            pCurse->nDuration -= ESE_DATATBLS_ApplyRatio(pCurse->nDuration, nCurseResistance, 100);
         }
 
         if (STATES_CheckState(pCurse->pTarget, STATE_ATTRACT))
@@ -1797,7 +1798,7 @@ int32_t __fastcall ESE_sub_6FD11C90(D2UnitStrc* pUnit, int32_t nStateId, int32_t
 }
 
 //D2Game.0x6FD11D90
-void __fastcall ESE_sub_6FD11D90(D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nLength, int32_t nSkillId)
+void __fastcall ESE_sub_6FD11D90(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nLength, int32_t nSkillId)
 {
     D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
 
@@ -1827,7 +1828,7 @@ void __fastcall ESE_sub_6FD11D90(D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32
 }
 
 //D2Game.0x6FD11E40
-void __fastcall ESE_sub_6FD11E40(D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nElementalType, int32_t nDamage, int32_t nLength, int32_t* pResistStatId, int32_t* pElementalType)
+void __fastcall ESE_sub_6FD11E40(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nElementalType, int32_t nDamage, int32_t nLength, int32_t* pResistStatId, int32_t* pElementalType)
 {
     if (nElementalType == ELEMTYPE_RAND)
     {
@@ -1979,7 +1980,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt02_Kick(D2GameStrc* pGame, D2UnitStrc* pUnit,
     {
         D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
 
-        D2DamageStrc damage = {};
+        ESE_D2DamageStrc damage = {};
         damage.wResultFlags = 9;
         damage.dwHitFlags = 2;
         damage.dwPhysDamage = pSkillsTxtRecord->dwMinDam << pSkillsTxtRecord->nToHitShift;
@@ -2052,7 +2053,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo001_Attack_LeftHandSwing(D2GameStrc* pGame, D
         return 0;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, STATLIST_UnitGetStatValue(pUnit, STAT_PROGRESSIVE_TOHIT, 0), 0);
     damage.dwHitFlags |= 2;
     ESE_sub_6FCF5680(pUnit, &damage);
@@ -2062,7 +2063,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo001_Attack_LeftHandSwing(D2GameStrc* pGame, D
 
     if (!STATES_CheckStateMaskOnUnit(pUnit, 38))
     {
-        D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
+        ESE_D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
         if (pDamage)
         {
             ESE_sub_6FCF77E0(pGame, pUnit, pDamage);
@@ -2104,7 +2105,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo002_Kick_PowerStrike_MonIceSpear_Impale_Bash_
             return 0;
         }
 
-        D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
+        ESE_D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
         if (!pDamage)
         {
             return 1;
@@ -2124,7 +2125,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo002_Kick_PowerStrike_MonIceSpear_Impale_Bash_
             return 0;
         }
 
-        D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
+        ESE_D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
         if (!pDamage)
         {
             return 1;
@@ -3810,14 +3811,14 @@ void __fastcall ESE_sub_6FD14D20(D2UnitStrc* pUnit, int32_t nUnused, D2MonSkillI
 }
 
 //D2Game.0x6FD14DD0
-int32_t __fastcall ESE_D2GAME_RollElementalDamage_6FD14DD0(D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
+int32_t __fastcall ESE_D2GAME_RollElementalDamage_6FD14DD0(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
     D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
     if (pSkillsTxtRecord)
     {
         const int32_t nMinDamage = ESE_SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1);
         const int32_t nMaxDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1);
-        const int32_t nDamage = ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage) + nMinDamage;
+        const int32_t nDamage = ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage) + nMinDamage;
         ESE_sub_6FD11E40(pUnit, pDamage, pSkillsTxtRecord->nEType, nDamage, ESE_SKILLS_GetElementalLength(pUnit, nSkillId, nSkillLevel, 1), 0, 0);
         return nDamage;
     }
@@ -3826,14 +3827,14 @@ int32_t __fastcall ESE_D2GAME_RollElementalDamage_6FD14DD0(D2UnitStrc* pUnit, D2
 }
 
 //D2Game.0x6FD14EC0
-void __fastcall ESE_D2GAME_RollPhysicalDamage_6FD14EC0(D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
+void __fastcall ESE_D2GAME_RollPhysicalDamage_6FD14EC0(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
     D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
     if (pSkillsTxtRecord)
     {
         const int32_t nMinDamage = ESE_SKILLS_GetMinPhysDamage(pUnit, nSkillId, nSkillLevel, 0);
         const int32_t nMaxDamage = ESE_SKILLS_GetMaxPhysDamage(pUnit, nSkillId, nSkillLevel, 0);
-        const int32_t nDamage = ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage) + nMinDamage;
+        const int32_t nDamage = ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage) + nMinDamage;
         pDamage->dwPhysDamage += nDamage;
     }
 }
@@ -4092,7 +4093,7 @@ int32_t __fastcall ESE_D2GAME_GetSummonIdFromSkill_6FD15580(D2UnitStrc* pUnit, i
 }
 
 //D2Game.0x6FD155E0
-void __fastcall ESE_sub_6FD155E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillId, int32_t nSkillLevel, D2DamageStrc* pDamage, int32_t a8)
+void __fastcall ESE_sub_6FD155E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillId, int32_t nSkillLevel, ESE_D2DamageStrc* pDamage, int32_t a8)
 {
     if (pSkillsTxtRecord->wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -4109,7 +4110,7 @@ void __fastcall ESE_sub_6FD155E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStr
 }
 
 //D2Game.0x6FD15650
-void __fastcall ESE_sub_6FD15650(D2GameStrc* pGame, D2UnitStrc* pOwner, D2UnitStrc* pUnit, uint16_t wResultFlags, int32_t a5, D2DamageStrc* pDamage, int32_t a7)
+void __fastcall ESE_sub_6FD15650(D2GameStrc* pGame, D2UnitStrc* pOwner, D2UnitStrc* pUnit, uint16_t wResultFlags, int32_t a5, ESE_D2DamageStrc* pDamage, int32_t a7)
 {
     if (wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
@@ -4126,9 +4127,9 @@ void __fastcall ESE_sub_6FD15650(D2GameStrc* pGame, D2UnitStrc* pOwner, D2UnitSt
 }
 
 //D2Game.0x6FD156A0
-D2UnitEventStrc* __fastcall ESE_sub_6FD156A0(D2GameStrc* pGame, D2UnitStrc* pUnit, uint8_t nTimerType, int32_t a4, int32_t a5, int32_t nEventFunc, int32_t a7, int32_t a8)
+ESE_D2UnitEventStrc* __fastcall ESE_sub_6FD156A0(D2GameStrc* pGame, D2UnitStrc* pUnit, uint8_t nTimerType, int32_t a4, int32_t a5, int32_t nEventFunc, int32_t a7, int32_t a8)
 {
-    constexpr D2UnitEventCallbackFunction ESE_gpEventCallbackTable_6FD40D20[] =
+    constexpr ESE_D2UnitEventCallbackFunction ESE_gpEventCallbackTable_6FD40D20[] =
     {
         nullptr,
         ESE_SKILLS_EventFunc01_ChillingArmor,
@@ -4184,7 +4185,7 @@ D2UnitEventStrc* __fastcall ESE_sub_6FD156A0(D2GameStrc* pGame, D2UnitStrc* pUni
 
     if (nEventFunc >= 0 && nEventFunc < std::size(ESE_gpEventCallbackTable_6FD40D20) && ESE_gpEventCallbackTable_6FD40D20[nEventFunc])
     {
-        return SUNITEVENT_AllocTimer(pGame, pUnit, nTimerType, a4, a5, ESE_gpEventCallbackTable_6FD40D20[nEventFunc], a7, a8);
+        return ESE_SUNITEVENT_AllocTimer(pGame, pUnit, nTimerType, a4, a5, ESE_gpEventCallbackTable_6FD40D20[nEventFunc], a7, a8);
     }
 
     return nullptr;
