@@ -2519,7 +2519,7 @@ int32_t __fastcall ESE_SUNITDMG_IsHitSuccessful(D2UnitStrc* pAttacker, D2UnitStr
 	int64_t nToHitPercent = 0;
 	if (pAttacker->dwUnitType != UNIT_PLAYER)
 	{
-		nAttackRate = ((int64_t)nStatValue + 5LL * STATLIST_UnitGetStatValue(pAttacker, STAT_DEXTERITY, 0) + (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_TOHIT, 0);
+		nAttackRate = (int64_t)nStatValue + 5LL * STATLIST_UnitGetStatValue(pAttacker, STAT_DEXTERITY, 0) + (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_TOHIT, 0);
 		nToHitPercent = STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, STAT_ITEM_TOHIT_PERCENT, 0);
 	}
 	else
@@ -2993,7 +2993,7 @@ void __fastcall ESE_SUNITDMG_DistributeExperience(D2GameStrc* pGame, D2UnitStrc*
 		return;
 	}
 
-	const int64_t nDefenderExperience = STATLIST_GetUnitBaseStat(pDefender, STAT_EXPERIENCE, 0);
+	const uint64_t nDefenderExperience = (uint32_t)STATLIST_GetUnitBaseStat(pDefender, STAT_EXPERIENCE, 0);
 	if (nDefenderExperience <= 0)
 	{
 		return;
@@ -3042,7 +3042,7 @@ void __fastcall ESE_SUNITDMG_DistributeExperience(D2GameStrc* pGame, D2UnitStrc*
 	if (pPet)
 	{
 		const uint32_t nPetLevel = STATLIST_GetUnitBaseStat(pPet, STAT_LEVEL, 0);
-		int64_t nExperienceBonus = ESE_SUNITDMG_ComputeExperienceGain(pGame, pPet, nPetLevel, nDefenderLevel, nDefenderExperience);
+		uint64_t nExperienceBonus = ESE_SUNITDMG_ComputeExperienceGain(pGame, pPet, nPetLevel, nDefenderLevel, nDefenderExperience);
 		if (pAttacker != pPet)
 		{
 			nExperienceBonus = 86 * nExperienceBonus / 256;
@@ -3073,24 +3073,24 @@ void __fastcall ESE_SUNITDMG_DistributeExperience(D2GameStrc* pGame, D2UnitStrc*
 		return;
 	}
 
-	const int64_t nExperience = nDefenderExperience + 89 * nDefenderExperience * ((int64_t)partyExp.nMembers - 1) / 256;
+	const uint64_t nExperience = nDefenderExperience + 89 * nDefenderExperience * ((uint64_t)partyExp.nMembers - 1) / 256;
 	const float multiplier = (float)nExperience / (float)partyExp.nLevelSum;
 	for (int32_t i = 0; i < partyExp.nMembers; ++i)
 	{
-		const int64_t nExperienceGained = ESE_SUNITDMG_ComputeExperienceGain(pGame, partyExp.pMembers[i], partyExp.nMemberLevels[i], nDefenderLevel, (uint64_t)((double)partyExp.nMemberLevels[i] * multiplier));
+		const uint64_t nExperienceGained = ESE_SUNITDMG_ComputeExperienceGain(pGame, partyExp.pMembers[i], partyExp.nMemberLevels[i], nDefenderLevel, (uint64_t)((double)partyExp.nMemberLevels[i] * multiplier));
 		ESE_SUNITDMG_AddExperienceForPlayer(pGame, partyExp.pMembers[i], partyExp.nMemberLevels[i], nExperienceGained);
 	}
 }
 
 //D2Game.0x6FCC2EC0
-int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitStrc* pAttacker, uint32_t nAttackerLevel, uint32_t nDefenderLevel, int64_t nDefenderExperience)
+uint64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitStrc* pAttacker, uint32_t nAttackerLevel, uint32_t nDefenderLevel, uint64_t nDefenderExperience)
 {
 	if (nDefenderExperience <= 0)
 	{
 		return 1;
 	}
 
-	nDefenderExperience = std::min(nDefenderExperience, (int64_t)(INT_MAX >> 8));
+	nDefenderExperience = std::min(nDefenderExperience, (uint64_t)(INT_MAX >> 8));
 
 	int32_t nClassId = 0;
 	if (pAttacker && pAttacker->dwUnitType == UNIT_PLAYER)
@@ -3103,7 +3103,7 @@ int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitS
 		return 0;
 	}
 
-	int64_t nResult = nDefenderExperience;
+	uint64_t nResult = nDefenderExperience;
 	if (nDefenderLevel <= nAttackerLevel)
 	{
 		constexpr int32_t experienceFactors[] =
@@ -3115,7 +3115,7 @@ int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitS
 		const int32_t nFactor = experienceFactors[nIndex];
 		if (nFactor != 256)
 		{
-			nResult = ESE_DATATBLS_ApplyRatio(nDefenderExperience, nFactor, 256);
+			nResult = (uint64_t)ESE_DATATBLS_ApplyRatio(nDefenderExperience, nFactor, 256);
 		}
 	}
 	else if (nAttackerLevel < 25 || nDefenderLevel <= 0)
@@ -3129,18 +3129,18 @@ int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitS
 		const int32_t nFactor = experienceFactors[nIndex];
 		if (nFactor != 256)
 		{
-			nResult = ESE_DATATBLS_ApplyRatio(nDefenderExperience, nFactor, 256);
+			nResult = (uint64_t)ESE_DATATBLS_ApplyRatio(nDefenderExperience, nFactor, 256);
 		}
 	}
 	else
 	{
-		nResult = ESE_DATATBLS_ApplyRatio(nDefenderExperience, nAttackerLevel, nDefenderLevel);
+		nResult = (uint64_t)ESE_DATATBLS_ApplyRatio(nDefenderExperience, nAttackerLevel, nDefenderLevel);
 	}
 
 	if (nResult > 0)
 	{
-		const int64_t nRatio1 = DATATBLS_GetExpRatio(nAttackerLevel);
-		const int64_t nRatio2 = DATATBLS_GetExpRatio(0);
+		const uint64_t nRatio1 = DATATBLS_GetExpRatio(nAttackerLevel);
+		const uint64_t nRatio2 = DATATBLS_GetExpRatio(0);
 		if (nRatio2 > 0 && nRatio2 < 32)
 		{
 			if (nResult <= INT_MAX >> (nRatio2 + (nRatio1 >> nRatio2)))
@@ -3154,7 +3154,7 @@ int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitS
 		}
 	}
 
-	const int64_t nAddExpPct = STATLIST_UnitGetStatValue(pAttacker, STAT_ITEM_ADDEXPERIENCE, 0);
+	const uint64_t nAddExpPct = STATLIST_UnitGetStatValue(pAttacker, STAT_ITEM_ADDEXPERIENCE, 0);
 	if (nAddExpPct)
 	{
 		nResult += ESE_DATATBLS_ApplyRatio(nResult, nAddExpPct, 100);
@@ -3183,22 +3183,22 @@ int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitS
 		return 0;
 	}
 
-	const int64_t nMaxExp = (int64_t)((int64_t)MONSTERS_GetHirelingExpForNextLevel(nAttackerLevel + 1, pHirelingTxtRecord->dwExpPerLvl) - (int64_t)MONSTERS_GetHirelingExpForNextLevel(nAttackerLevel, pHirelingTxtRecord->dwExpPerLvl)) >> 6;
+	const uint64_t nMaxExp = (uint64_t)((uint64_t)MONSTERS_GetHirelingExpForNextLevel(nAttackerLevel + 1, pHirelingTxtRecord->dwExpPerLvl) - (uint64_t)MONSTERS_GetHirelingExpForNextLevel(nAttackerLevel, pHirelingTxtRecord->dwExpPerLvl)) >> 6;
 	return std::min(nResult, nMaxExp);
 }
 
 //D2Game.0x6FCC3170
-void __fastcall ESE_SUNITDMG_AddExperienceForPlayer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nOldLevel, int64_t nExperienceGained)
+void __fastcall ESE_SUNITDMG_AddExperienceForPlayer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nOldLevel, uint64_t nExperienceGained)
 {
 	if (!pUnit || pUnit->dwUnitType != UNIT_PLAYER)
 	{
 		return;
 	}
 
-	const int64_t nExperience = STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
+	const uint64_t nExperience = (uint32_t)STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
 	const uint32_t nMaxLevel = DATATBLS_GetMaxLevel(pUnit->dwClassId);
-	const int64_t nMaxExperience = (int64_t)DATATBLS_GetLevelThreshold(pUnit->dwClassId, nMaxLevel - 1);
-	const int64_t nNewExperience = std::min(nExperienceGained + nExperience, nMaxExperience);
+	const uint64_t nMaxExperience = DATATBLS_GetLevelThreshold(pUnit->dwClassId, nMaxLevel - 1);
+	const uint64_t nNewExperience = std::min(nExperienceGained + nExperience, nMaxExperience);
 
 	STATLIST_SetUnitStat(pUnit, STAT_LASTEXP, Clamp64To32Unsigned(nNewExperience - nExperience), 0);
 	STATLIST_SetUnitStat(pUnit, STAT_EXPERIENCE, Clamp64To32Unsigned(nNewExperience), 0);
@@ -3253,7 +3253,7 @@ void __fastcall ESE_SUNITDMG_PartyCallback_ComputePartyExperience(D2GameStrc* pG
 }
 
 //D2Game.0x6FCC3360
-void __fastcall ESE_SUNITDMG_AddExperienceForHireling(D2GameStrc* pGame, D2UnitStrc* pPlayer, D2UnitStrc* pHireling, uint32_t nLevel, int64_t nExperienceBonus)
+void __fastcall ESE_SUNITDMG_AddExperienceForHireling(D2GameStrc* pGame, D2UnitStrc* pPlayer, D2UnitStrc* pHireling, uint32_t nLevel, uint64_t nExperienceBonus)
 {
 	if (nExperienceBonus <= 0)
 	{
@@ -3272,8 +3272,8 @@ void __fastcall ESE_SUNITDMG_AddExperienceForHireling(D2GameStrc* pGame, D2UnitS
 		return;
 	}
 
-	const int64_t nCurrentExp = STATLIST_GetUnitBaseStat(pHireling, STAT_EXPERIENCE, 0);
-	const int64_t nNewExp = nCurrentExp + nExperienceBonus;
+	const uint64_t nCurrentExp = (uint32_t)STATLIST_GetUnitBaseStat(pHireling, STAT_EXPERIENCE, 0);
+	const uint64_t nNewExp = nCurrentExp + nExperienceBonus;
 	const uint32_t nMaxLevel = DATATBLS_GetMaxLevel(0) - 1;
 	if (nLevel >= nMaxLevel)
 	{
@@ -3305,7 +3305,7 @@ void __fastcall ESE_SUNITDMG_AddExperienceForHireling(D2GameStrc* pGame, D2UnitS
 }
 
 //D2Game.0x6FCC34A0
-void __fastcall ESE_SUNITDMG_AddExperience(D2GameStrc* pGame, D2UnitStrc* pUnit, int64_t nExperienceBonus)
+void __fastcall ESE_SUNITDMG_AddExperience(D2GameStrc* pGame, D2UnitStrc* pUnit, uint64_t nExperienceBonus)
 {
 	if (!pUnit || (pUnit->dwUnitType != UNIT_PLAYER && pUnit->dwUnitType != UNIT_MONSTER))
 	{
@@ -3343,8 +3343,8 @@ void __fastcall ESE_SUNITDMG_SetExperienceForTargetLevel(D2GameStrc* pGame, D2Un
 
 	if (pUnit->dwUnitType == UNIT_PLAYER)
 	{
-		const int64_t nExperience = (int64_t)STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
-		const int64_t nThreshold = (int64_t)DATATBLS_GetLevelThreshold(pUnit->dwClassId, nTargetLevel);
+		const uint64_t nExperience = (uint32_t)STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
+		const uint64_t nThreshold = DATATBLS_GetLevelThreshold(pUnit->dwClassId, nTargetLevel);
 		if (nThreshold > nExperience)
 		{
 			ESE_SUNITDMG_AddExperienceForPlayer(pGame, pUnit, nLevel, nThreshold - nExperience);
@@ -3370,6 +3370,6 @@ void __fastcall ESE_SUNITDMG_SetExperienceForTargetLevel(D2GameStrc* pGame, D2Un
 		return;
 	}
 
-	int64_t experienceToAdd = (int64_t)MONSTERS_GetHirelingExpForNextLevel(nTargetLevel, pHirelingTxtRecord->dwExpPerLvl) - (int64_t)STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
+	uint64_t experienceToAdd = (uint32_t)MONSTERS_GetHirelingExpForNextLevel(nTargetLevel, pHirelingTxtRecord->dwExpPerLvl) - (uint32_t)STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
 	ESE_SUNITDMG_AddExperienceForHireling(pGame, pOwner, pUnit, nLevel, experienceToAdd);
 }

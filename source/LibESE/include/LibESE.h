@@ -14,11 +14,11 @@ int64_t __fastcall ESE_ITEMS_RollLimitedRandomNumber(D2SeedStrc* pSeed, int64_t 
 
 inline constexpr int32_t Clamp64To32(const int64_t value)
 {
-    return static_cast<int32_t>(std::clamp<int64_t>(INT_MIN, INT_MAX, value));
+    return static_cast<int32_t>(std::clamp<int64_t>(value, INT_MIN, INT_MAX));
 }
 inline constexpr uint32_t Clamp64To32Unsigned(const int64_t value)
 {
-	return static_cast<uint32_t>(std::clamp<int64_t>(0, UINT32_MAX, value));
+	return static_cast<uint32_t>(std::clamp<int64_t>(value, 0, UINT32_MAX));
 }
 
 #pragma pack(push, 1)

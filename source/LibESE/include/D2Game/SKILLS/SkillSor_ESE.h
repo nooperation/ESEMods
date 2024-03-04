@@ -8,6 +8,17 @@
 
 struct D2AuraCallbackStrc;
 
+#pragma pack(push, 1)
+struct ESE_D2StaticFieldCallbackArgStrc
+{
+    int64_t nMinDamage;       //+00
+    int64_t nDamagePct;       //+04
+    int64_t nStaticFieldMin;  //+08
+    int64_t nElementalLength; //+0C
+    int32_t nElementalType;   //+10
+};
+#pragma pack(pop)
+
 
 //D2Game.0x6FD156F0
 int32_t __fastcall ESE_SKILLS_DoInferno(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel, int32_t nMissileId);

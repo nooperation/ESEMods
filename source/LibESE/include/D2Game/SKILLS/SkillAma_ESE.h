@@ -38,7 +38,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo008_MultipleShot_Teeth_ShockWave(D2GameStrc* 
 //D2Game.0x6FCF4080
 int32_t __fastcall ESE_SKILLS_SrvDo010_GuidedArrow_BoneSpirit(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCF4280
-void __fastcall ESE_SKILLS_AddDamagePercentBonus(D2UnitStrc* pUnit, int64_t nBonus);
+void __fastcall ESE_SKILLS_AddDamagePercentBonus(D2UnitStrc* pUnit, int32_t nBonus);
 //D2Game.0x6FCF42B0
 int32_t __fastcall ESE_SKILLS_SrvDo011_ChargedStrike(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCF44D0

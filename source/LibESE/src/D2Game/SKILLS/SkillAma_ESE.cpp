@@ -645,11 +645,11 @@ int32_t __fastcall ESE_SKILLS_SrvDo010_GuidedArrow_BoneSpirit(D2GameStrc* pGame,
 }
 
 //D2Game.0x6FCF4280
-void __fastcall ESE_SKILLS_AddDamagePercentBonus(D2UnitStrc* pUnit, int64_t nBonus)
+void __fastcall ESE_SKILLS_AddDamagePercentBonus(D2UnitStrc* pUnit, int32_t nBonus)
 {
     if (nBonus)
     {
-        STATLIST_SetUnitStat(pUnit, STAT_DAMAGEPERCENT, Clamp64To32(nBonus + STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGEPERCENT, 0)), 0);
+        STATLIST_SetUnitStat(pUnit, STAT_DAMAGEPERCENT, Clamp64To32((int64_t)nBonus + STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGEPERCENT, 0)), 0);
     }
 }
 

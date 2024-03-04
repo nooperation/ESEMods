@@ -84,7 +84,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc22_6FD0F000(D2GameStrc* pGame, int32_t nE
 //D2Game.0x6FD0F1F0
 int32_t __fastcall ESE_D2GAME_EventFunc23_6FD0F1F0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0F590
-int32_t __fastcall ESE_sub_6FD0F590(D2UnitStrc* pUnit, int32_t nValue);
+int64_t __fastcall ESE_sub_6FD0F590(D2UnitStrc* pUnit, int64_t nValue);
 //D2Game.0x6FD0F5E0
 int32_t __fastcall ESE_D2GAME_EventFunc26_6FD0F5E0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0F7A0

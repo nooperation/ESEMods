@@ -120,14 +120,14 @@ void __fastcall ESE_SUNITDMG_RollSuckBloodDamage(D2GameStrc* pGame, D2UnitStrc* 
 //D2Game.0x6FCC2C70
 void __fastcall ESE_SUNITDMG_DistributeExperience(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender);
 //D2Game.0x6FCC2EC0
-int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitStrc* pAttacker, uint32_t nAttackerLevel, uint32_t nDefenderLevel, int64_t nDefenderExperience);
+uint64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitStrc* pAttacker, uint32_t nAttackerLevel, uint32_t nDefenderLevel, uint64_t nDefenderExperience);
 //D2Game.0x6FCC3170
-void __fastcall ESE_SUNITDMG_AddExperienceForPlayer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nOldLevel, int64_t nExperienceGained);
+void __fastcall ESE_SUNITDMG_AddExperienceForPlayer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nOldLevel, uint64_t nExperienceGained);
 //D2Game.0x6FCC3200
 void __fastcall ESE_SUNITDMG_PartyCallback_ComputePartyExperience(D2GameStrc* pGame, D2UnitStrc* pUnit, void* pArg);
 //D2Game.0x6FCC3360
-void __fastcall ESE_SUNITDMG_AddExperienceForHireling(D2GameStrc* pGame, D2UnitStrc* pPlayer, D2UnitStrc* pHireling, uint32_t nLevel, uint32_t nExperienceBonus);
+void __fastcall ESE_SUNITDMG_AddExperienceForHireling(D2GameStrc* pGame, D2UnitStrc* pPlayer, D2UnitStrc* pHireling, uint32_t nLevel, uint64_t nExperienceBonus);
 //D2Game.0x6FCC34A0
-void __fastcall ESE_SUNITDMG_AddExperience(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nExperienceBonus);
+void __fastcall ESE_SUNITDMG_AddExperience(D2GameStrc* pGame, D2UnitStrc* pUnit, uint64_t nExperienceBonus);
 //D2Game.0x6FCC3510
 void __fastcall ESE_SUNITDMG_SetExperienceForTargetLevel(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nTargetLevel);

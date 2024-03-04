@@ -399,15 +399,6 @@ int32_t __fastcall ESE_SKILLS_SrvDo019_Inferno_ArcticBlast(D2GameStrc* pGame, D2
     return 0;
 }
 
-struct ESE_D2StaticFieldCallbackArgStrc
-{
-    int64_t nMinDamage;       //+00
-    int64_t nDamagePct;       //+04
-    int64_t nStaticFieldMin;  //+08
-    int64_t nElementalLength; //+0C
-    int32_t nElementalType;   //+10
-};
-
 //D2Game.0x6FD162D0
 int32_t __fastcall ESE_SKILLS_SrvDo020_StaticField(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)
 {
