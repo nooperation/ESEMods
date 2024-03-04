@@ -103,7 +103,7 @@ void __fastcall ESE_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode)
         nGameType = 1;
     }
 
-    int32_t nMultiplier = 0;
+    int64_t nMultiplier = 0;
     if (STATLIST_GetUnitAlignment(pUnit) == UNIT_ALIGNMENT_EVIL)
     {
         const int32_t nPlayerCount = std::max(STATLIST_UnitGetStatValue(pUnit, STAT_MONSTER_PLAYERCOUNT, 0), 1);
@@ -112,7 +112,7 @@ void __fastcall ESE_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode)
         {
             if (nPlayerCount >= std::size(dword_6FD2870C))
             {
-                nMultiplier = 8 * nPlayerCount - 16;
+                nMultiplier = 8 * (int64_t)nPlayerCount - 16;
             }
             else
             {
@@ -122,29 +122,29 @@ void __fastcall ESE_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode)
     }
 
     D2MonStatsInitStrc pMonStatsInit = {};
-    int32_t nMinDamage = 0;
-    int32_t nMaxDamage = 0;
-    int32_t nToHit = 0;
+    int64_t nMinDamage = 0;
+    int64_t nMaxDamage = 0;
+    int64_t nToHit = 0;
     if (nMode == MONMODE_ATTACK2)
     {
         DATATBLS_CalculateMonsterStatsByLevel(pUnit->dwClassId, nGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 16, &pMonStatsInit);
-        nMinDamage = pMonStatsInit.nA2MinD + monSkillInfo.nMinDamage;
-        nMaxDamage = pMonStatsInit.nA2MaxD + monSkillInfo.nMaxDamage;
-        nToHit = pMonStatsInit.nTH + monSkillInfo.nToHit;
+        nMinDamage = (int64_t)pMonStatsInit.nA2MinD + (int64_t)monSkillInfo.nMinDamage;
+        nMaxDamage = (int64_t)pMonStatsInit.nA2MaxD + (int64_t)monSkillInfo.nMaxDamage;
+        nToHit = (int64_t)pMonStatsInit.nTH + (int64_t)monSkillInfo.nToHit;
     }
     else if (nMode == MONMODE_BLOCK || nMode == MONMODE_CAST || nMode == MONMODE_SKILL1)
     {
         DATATBLS_CalculateMonsterStatsByLevel(pUnit->dwClassId, nGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 32, &pMonStatsInit);
-        nMinDamage = pMonStatsInit.nS1MinD + monSkillInfo.nMinDamage;
-        nMaxDamage = pMonStatsInit.nS1MaxD + monSkillInfo.nMaxDamage;
-        nToHit = pMonStatsInit.nTH + monSkillInfo.nToHit;
+        nMinDamage = (int64_t)pMonStatsInit.nS1MinD + (int64_t)monSkillInfo.nMinDamage;
+        nMaxDamage = (int64_t)pMonStatsInit.nS1MaxD + (int64_t)monSkillInfo.nMaxDamage;
+        nToHit = (int64_t)pMonStatsInit.nTH + (int64_t)monSkillInfo.nToHit;
     }
     else
     {
         DATATBLS_CalculateMonsterStatsByLevel(pUnit->dwClassId, nGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 8, &pMonStatsInit);
-        nMinDamage = pMonStatsInit.nA1MinD + monSkillInfo.nMinDamage;
-        nMaxDamage = pMonStatsInit.nA1MaxD + monSkillInfo.nMaxDamage;
-        nToHit = pMonStatsInit.nTH + monSkillInfo.nToHit;
+        nMinDamage = (int64_t)pMonStatsInit.nA1MinD + (int64_t)monSkillInfo.nMinDamage;
+        nMaxDamage = (int64_t)pMonStatsInit.nA1MaxD + (int64_t)monSkillInfo.nMaxDamage;
+        nToHit = (int64_t)pMonStatsInit.nTH + (int64_t)monSkillInfo.nToHit;
     }
 
     if (pGame->bExpansion)
@@ -180,14 +180,14 @@ void __fastcall ESE_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode)
                 memset(&pMonStatsInit, 0, sizeof(pMonStatsInit));
                 DATATBLS_CalculateMonsterStatsByLevel(pUnit->dwClassId, nGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 0x40 + i, &pMonStatsInit);
 
-                int32_t nElemDuration = pMonStatsInit.nElDur;
-                int32_t nElemMinDamage = pMonStatsInit.nElMaxD;
-                int32_t nElemMaxDamage = pMonStatsInit.nElMinD;
+                int64_t nElemDuration = pMonStatsInit.nElDur;
+                int64_t nElemMinDamage = pMonStatsInit.nElMaxD;
+                int64_t nElemMaxDamage = pMonStatsInit.nElMinD;
                 if (pGame->bExpansion && nMultiplier)
                 {
-                    nElemMaxDamage = pMonStatsInit.nElMinD + nMultiplier * pMonStatsInit.nElMinD / 128;
-                    nElemMinDamage = pMonStatsInit.nElMaxD + nMultiplier * pMonStatsInit.nElMaxD / 128;
-                    nElemDuration = pMonStatsInit.nElDur + nMultiplier * pMonStatsInit.nElDur / 128;
+                    nElemMaxDamage = (int64_t)pMonStatsInit.nElMinD + nMultiplier * (int64_t)pMonStatsInit.nElMinD / 128;
+                    nElemMinDamage = (int64_t)pMonStatsInit.nElMaxD + nMultiplier * (int64_t)pMonStatsInit.nElMaxD / 128;
+                    nElemDuration = (int64_t)pMonStatsInit.nElDur + nMultiplier * (int64_t)pMonStatsInit.nElDur / 128;
                 }
 
                 uint8_t nElemType = pMonStatsTxtRecord->nElType[i];
@@ -204,55 +204,55 @@ void __fastcall ESE_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode)
                 switch (nElemType)
                 {
                 case ELEMTYPE_FIRE:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_FIREMINDAM, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_FIREMAXDAM, nElemMinDamage, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_FIREMINDAM, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_FIREMAXDAM, Clamp64To32(nElemMinDamage), 0);
                     break;
 
                 case ELEMTYPE_LTNG:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIGHTMINDAM, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIGHTMAXDAM, nElemMinDamage, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIGHTMINDAM, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIGHTMAXDAM, Clamp64To32(nElemMinDamage), 0);
                     break;
 
                 case ELEMTYPE_MAGIC:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MAGICMINDAM, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MAGICMAXDAM, nElemMinDamage, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MAGICMINDAM, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MAGICMAXDAM, Clamp64To32(nElemMinDamage), 0);
                     break;
 
                 case ELEMTYPE_COLD:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_COLDMINDAM, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_COLDMAXDAM, nElemMinDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_COLDLENGTH, nElemDuration, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_COLDMINDAM, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_COLDMAXDAM, Clamp64To32(nElemMinDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_COLDLENGTH, Clamp64To32(nElemDuration), 0);
                     break;
 
                 case ELEMTYPE_POIS:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_POISONMINDAM, 10 * nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_POISONMAXDAM, 10 * nElemMinDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_POISONLENGTH, 2 * nElemDuration, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_POISONMINDAM, Clamp64To32(10 * nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_POISONMAXDAM, Clamp64To32(10 * nElemMinDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_POISONLENGTH, Clamp64To32(2 * nElemDuration), 0);
                     break;
 
                 case ELEMTYPE_LIFE:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIFEDRAINMINDAM, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIFEDRAINMAXDAM, nElemMinDamage, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIFEDRAINMINDAM, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_LIFEDRAINMAXDAM, Clamp64To32(nElemMinDamage), 0);
                     break;
 
                 case ELEMTYPE_MANA:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MANADRAINMINDAM, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MANADRAINMAXDAM, nElemMinDamage, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MANADRAINMINDAM, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_MANADRAINMAXDAM, Clamp64To32(nElemMinDamage), 0);
                     break;
 
                 case ELEMTYPE_STAMINA:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_STAMDRAINMINDAM, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_STAMDRAINMAXDAM, nElemMinDamage, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_STAMDRAINMINDAM, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_STAMDRAINMAXDAM, Clamp64To32(nElemMinDamage), 0);
                     break;
 
                 case ELEMTYPE_STUN:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_STUNLENGTH, nElemDuration, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_STUNLENGTH, Clamp64To32(nElemDuration), 0);
                     break;
 
                 case ELEMTYPE_BURN:
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_BURNINGMIN, nElemMaxDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_BURNINGMAX, nElemMinDamage, 0);
-                    STATLIST_SetStatIfListIsValid(pStatList, STAT_FIRELENGTH, nElemDuration, 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_BURNINGMIN, Clamp64To32(nElemMaxDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_BURNINGMAX, Clamp64To32(nElemMinDamage), 0);
+                    STATLIST_SetStatIfListIsValid(pStatList, STAT_FIRELENGTH, Clamp64To32(nElemDuration), 0);
                     break;
 
                 default:
@@ -335,9 +335,9 @@ void __fastcall ESE_D2GAME_ApplyPeriodicStatDamage_6FC63440(D2GameStrc* pGame, D
                 }
             }
 
-            int32_t nNewHp = nHpRegen + nHitpoints;
+            int64_t nNewHp = (int64_t)nHpRegen + (int64_t)nHitpoints;
 
-            const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
+            const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
             if (nNewHp > nMaxHp)
             {
                 D2GAME_EVENTS_Delete_6FC34840(pGame, pUnit, UNITEVENTCALLBACK_STATREGEN, 0);
@@ -349,7 +349,7 @@ void __fastcall ESE_D2GAME_ApplyPeriodicStatDamage_6FC63440(D2GameStrc* pGame, D
                 nNewHp = 0;
             }
 
-            STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
+            STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
 
             const uint8_t nLastSentHpPct = STATLIST_UnitGetStatValue(pUnit, STAT_LAST_SENT_HP_PCT, 0);
             const uint8_t nNewSentHpPct = sub_6FC62F50(pUnit);
@@ -443,8 +443,8 @@ int32_t __fastcall ESE_sub_6FC63B30(D2GameStrc* pGame, D2ModeChangeStrc* pModeCh
                     D2MonStatsInitStrc monStatsInit = {};
                     DATATBLS_CalculateMonsterStatsByLevel(pModeChange->pUnit->dwClassId, pGame->dwGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pModeChange->pUnit, STAT_LEVEL, 0), 1, &monStatsInit);
 
-                    const int32_t nMaxDamage = ESE_DATATBLS_ApplyRatio(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
-                    const int32_t nMinDamage = ESE_DATATBLS_ApplyRatio(nMaxDamage, 60, 100);
+                    const int64_t nMaxDamage = ESE_DATATBLS_ApplyRatio(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
+                    const int64_t nMinDamage = ESE_DATATBLS_ApplyRatio(nMaxDamage, 60, 100);
                     
                     ESE_D2DamageStrc damage = {};
                     damage.dwPhysDamage = (nMinDamage + ESE_ITEMS_RollLimitedRandomNumber(&pModeChange->pUnit->pSeed, nMaxDamage - nMinDamage)) << 7;
@@ -474,7 +474,7 @@ void __fastcall ESE_sub_6FC63FD0(D2GameStrc* pGame, D2UnitStrc* pAttacker)
         if (i->dwUnitType == UNIT_PLAYER && i->dwAnimMode != PLRMODE_DEAD && UNITS_GetDistanceToOtherUnit(pAttacker, i) <= 2 && !UNITS_TestCollisionBetweenInteractingUnits(i, pAttacker, 15361))
         {
             ESE_D2DamageStrc pDamage = {};
-            pDamage.dwPhysDamage = (int32_t )STATLIST_UnitGetStatValue(i, STAT_HITPOINTS, 0) >> 5;
+            pDamage.dwPhysDamage = (int64_t )STATLIST_UnitGetStatValue(i, STAT_HITPOINTS, 0) >> 5;
             pDamage.wResultFlags = DAMAGERESULTFLAG_SUCCESSFULHIT;
             if (!STATES_CheckState(i, STATE_UNINTERRUPTABLE))
             {

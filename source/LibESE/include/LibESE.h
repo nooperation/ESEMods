@@ -16,6 +16,10 @@ inline constexpr int32_t Clamp64To32(const int64_t value)
 {
     return static_cast<int32_t>(std::clamp<int64_t>(INT_MIN, INT_MAX, value));
 }
+inline constexpr uint32_t Clamp64To32Unsigned(const int64_t value)
+{
+	return static_cast<uint32_t>(std::clamp<int64_t>(0, UINT32_MAX, value));
+}
 
 #pragma pack(push, 1)
 struct D2DamageReportPacket

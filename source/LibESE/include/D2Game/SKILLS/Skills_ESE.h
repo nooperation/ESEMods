@@ -13,7 +13,7 @@ extern const SkillDoFunc ESE_gpSkillSrvDoFnTable_6FD40A20[];
 extern const int32_t ESE_gnSkillSrvDoFns;
 
 //D2Game.0x6FD0F8B0
-int32_t __fastcall ESE_sub_6FD0F8B0(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nValue);
+int64_t __fastcall ESE_sub_6FD0F8B0(D2GameStrc* pGame, D2UnitStrc* pUnit, int64_t nValue);
 //D2Game.0x6FD0FA00
 int32_t __fastcall ESE_sub_6FD0FA00(D2UnitStrc* pUnit, D2UnitStrc* pTarget, uint32_t nAuraFilter);
 //D2Game.0x6FD0FDD0
@@ -49,7 +49,7 @@ void __fastcall ESE_sub_6FD108D0(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
 //D2Game.0x6FD10A50
 int32_t __fastcall ESE_D2GAME_SKILLMANA_Consume_6FD10A50(D2GameStrc* pGame, D2UnitStrc* pPlayer, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD10C90
-int32_t __fastcall ESE_D2GAME_SKILLMANA_AuraConsume_6FD10C90(D2UnitStrc* pUnit, int32_t nManaCost);
+int32_t __fastcall ESE_D2GAME_SKILLMANA_AuraConsume_6FD10C90(D2UnitStrc* pUnit, int64_t nManaCost);
 //D2Game.0x6FD10CE0
 int32_t __fastcall ESE_sub_6FD10CE0(D2UnitStrc* pUnit);
 //D2Game.0x6FD10D90
@@ -85,9 +85,9 @@ void __fastcall ESE_D2GAME_SKILLS_SetDelay_6FD11C00(D2GameStrc* pGame, D2UnitStr
 //D2Game.0x6FD11C90
 int32_t __fastcall ESE_sub_6FD11C90(D2UnitStrc* pUnit, int32_t nStateId, int32_t a3);
 //D2Game.0x6FD11D90
-void __fastcall ESE_sub_6FD11D90(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nLength, int32_t nSkillId);
+void __fastcall ESE_sub_6FD11D90(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int64_t nLength, int32_t nSkillId);
 //D2Game.0x6FD11E40
-void __fastcall ESE_sub_6FD11E40(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nElementalType, int32_t nDamage, int32_t nLength, int32_t* pResistStatId, int32_t* pElementalType);
+void __fastcall ESE_sub_6FD11E40(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nElementalType, int64_t nDamage, int64_t nLength, int32_t* pResistStatId, int32_t* pElementalType);
 //D2Game.0x6FD11FF0
 int32_t __fastcall ESE_SKILLS_SrvSt01_Attack_LeftHandSwing(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD12060
@@ -165,7 +165,7 @@ void __fastcall ESE_D2GAME_RefreshPassiveSkills_6FD14CC0(D2UnitStrc* pUnit);
 //D2Game.0x6FD14D20
 void __fastcall ESE_sub_6FD14D20(D2UnitStrc* pUnit, int32_t nUnused, D2MonSkillInfoStrc* pMonSkillInfo);
 //D2Game.0x6FD14DD0
-int32_t __fastcall ESE_D2GAME_RollElementalDamage_6FD14DD0(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int64_t __fastcall ESE_D2GAME_RollElementalDamage_6FD14DD0(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD14EC0
 void __fastcall ESE_D2GAME_RollPhysicalDamage_6FD14EC0(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD14F70

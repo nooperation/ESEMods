@@ -1658,8 +1658,8 @@ int32_t __fastcall ESE_MISSMODE_SrvDo29_RecyclerDelay(D2GameStrc* pGame, D2UnitS
                 int64_t percent = SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[0], nSkillId, MISSILE_GetLevel(pMissile));
                 int64_t additionalHp = ESE_DATATBLS_ApplyRatio(nMaxHp, percent, 100);
 
-                const int32_t nNewHp = std::min(additionalHp + nHitpoints, nMaxHp);
-                STATLIST_SetUnitStat(pOwner, STAT_HITPOINTS, nNewHp << 8, 0);
+                const int64_t nNewHp = std::min(additionalHp + nHitpoints, nMaxHp);
+                STATLIST_SetUnitStat(pOwner, STAT_HITPOINTS, Clamp64To32(nNewHp << 8), 0);
 
                 if (pMissilesTxtRecord->wProgOverlay > 0 && pMissilesTxtRecord->wProgOverlay < sgptDataTables->nOverlayTxtRecordCount)
                 {
@@ -3136,11 +3136,11 @@ int32_t __fastcall ESE_MISSMODE_SrvHit22_FistOfTheHeavensDelay(D2GameStrc* pGame
 
     if (pTarget->dwUnitType == UNIT_MONSTER && !MONSTERS_GetHirelingTypeId(pTarget))
     {
-        const int32_t nDamageTargetAc = STATLIST_UnitGetStatValue(pMissile, STAT_ITEM_DAMAGETARGETAC, 0);
+        const int64_t nDamageTargetAc = STATLIST_UnitGetStatValue(pMissile, STAT_ITEM_DAMAGETARGETAC, 0);
         if (nDamageTargetAc)
         {
-            const int32_t nArmorClass = std::max(nDamageTargetAc + STATLIST_UnitGetStatValue(pTarget, STAT_ARMORCLASS, 0), 0);
-            STATLIST_SetUnitStat(pTarget, STAT_ARMORCLASS, nArmorClass, 0);
+            const int64_t nArmorClass = std::max<int64_t>(nDamageTargetAc + (int64_t)STATLIST_UnitGetStatValue(pTarget, STAT_ARMORCLASS, 0), 0);
+            STATLIST_SetUnitStat(pTarget, STAT_ARMORCLASS, Clamp64To32(nArmorClass), 0);
         }
     }
 
@@ -5066,11 +5066,11 @@ int32_t __fastcall ESE_MISSMODE_SrvDmgHitHandler(D2GameStrc* pGame, D2UnitStrc* 
 
         if (pUnit->dwUnitType == UNIT_MONSTER && !MONSTERS_GetHirelingTypeId(pUnit))
         {
-            const int32_t nDamageTargetAc = STATLIST_UnitGetStatValue(pMissile, STAT_ITEM_DAMAGETARGETAC, 0);
+            const int64_t nDamageTargetAc = STATLIST_UnitGetStatValue(pMissile, STAT_ITEM_DAMAGETARGETAC, 0);
             if (nDamageTargetAc)
             {
-                const int32_t nArmor = std::max(nDamageTargetAc + STATLIST_UnitGetStatValue(pUnit, STAT_ARMORCLASS, 0), 0);
-                STATLIST_SetUnitStat(pUnit, STAT_ARMORCLASS, nArmor, 0);
+                const int64_t nArmor = std::max<int64_t>(nDamageTargetAc + (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_ARMORCLASS, 0), 0);
+                STATLIST_SetUnitStat(pUnit, STAT_ARMORCLASS, Clamp64To32(nArmor), 0);
             }
         }
     }

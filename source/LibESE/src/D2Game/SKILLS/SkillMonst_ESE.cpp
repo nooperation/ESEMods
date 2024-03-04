@@ -240,16 +240,16 @@ int32_t __fastcall ESE_SKILLS_SrvDo086_MaggotDown(D2GameStrc* pGame, D2UnitStrc*
     const int32_t nPercentage = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
     if (nPercentage > 0)
     {
-        const int32_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
-        const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
+        const int64_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
+        const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
 
-        int32_t nNewHp = ESE_DATATBLS_ApplyRatio(nPercentage, nHitpoints, 100) + nHitpoints;
+        int64_t nNewHp = ESE_DATATBLS_ApplyRatio(nPercentage, nHitpoints, 100) + nHitpoints;
         if (nNewHp >= nMaxHp)
         {
             nNewHp = nMaxHp;
         }
 
-        STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
+        STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
     }
 
     return 1;
@@ -1209,7 +1209,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo096_ZakarumHeal_Bestow(D2GameStrc* pGame, D2U
         pUnit->dwFlags |= UNITFLAG_SKSRVDOFUNC;
     }
 
-    int32_t nMax = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
+    int64_t nMax = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
     if (nMax < 0)
     {
         nMax = 0;
@@ -1219,7 +1219,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo096_ZakarumHeal_Bestow(D2GameStrc* pGame, D2U
         nMax = 100;
     }
 
-    int32_t nMin = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
+    int64_t nMin = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
     if (nMin < 0)
     {
         nMin = 0;
@@ -1229,9 +1229,9 @@ int32_t __fastcall ESE_SKILLS_SrvDo096_ZakarumHeal_Bestow(D2GameStrc* pGame, D2U
         nMin = nMax;
     }
 
-    const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pTarget);
-    const int32_t nPercentage = ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMax - nMin) + nMin;
-    int32_t nNewHp = ESE_DATATBLS_ApplyRatio(nMaxHp, nPercentage, 100) + STATLIST_UnitGetStatValue(pTarget, STAT_HITPOINTS, 0);
+    const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pTarget);
+    const int64_t nPercentage = ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMax - nMin) + nMin;
+    int64_t nNewHp = ESE_DATATBLS_ApplyRatio(nMaxHp, nPercentage, 100) + STATLIST_UnitGetStatValue(pTarget, STAT_HITPOINTS, 0);
     if (nNewHp < 1)
     {
         nNewHp = 1;
@@ -1241,7 +1241,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo096_ZakarumHeal_Bestow(D2GameStrc* pGame, D2U
         nNewHp = nMaxHp;
     }
 
-    STATLIST_SetUnitStat(pTarget, STAT_HITPOINTS, nNewHp, 0);
+    STATLIST_SetUnitStat(pTarget, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
 
     return 1;
 }
@@ -1911,8 +1911,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo107_Mosquito(D2GameStrc* pGame, D2UnitStrc* p
 
     ESE_D2DamageStrc damage = {};
 
-    const int32_t nMinDamage = ESE_SKILLS_GetMinPhysDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
-    const int32_t nMaxDamage = ESE_SKILLS_GetMaxPhysDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+    const int64_t nMinDamage = ESE_SKILLS_GetMinPhysDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+    const int64_t nMaxDamage = ESE_SKILLS_GetMaxPhysDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
     ESE_D2GAME_RollPhysicalDamage_6FD14EC0(pUnit, &damage, nSkillId, nSkillLevel);
     ESE_D2GAME_RollElementalDamage_6FD14DD0(pUnit, &damage, nSkillId, nSkillLevel);
     damage.dwPoisDamage = 2 * (nMinDamage + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage));
@@ -1921,14 +1921,14 @@ int32_t __fastcall ESE_SKILLS_SrvDo107_Mosquito(D2GameStrc* pGame, D2UnitStrc* p
     damage.dwStamLeech = (nMinDamage + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage)) << 8;
     damage.wResultFlags = 1;
 
-    const int32_t nPercentage = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel);
-    const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
-    int32_t nNewHp = ESE_DATATBLS_ApplyRatio(damage.dwPhysDamage, nPercentage, 100) + STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, STAT_STRENGTH);
+    const int64_t nPercentage = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel);
+    const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
+    int64_t nNewHp = ESE_DATATBLS_ApplyRatio(damage.dwPhysDamage, nPercentage, 100) + STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, STAT_STRENGTH);
     if (nNewHp > nMaxHp)
     {
         nNewHp = nMaxHp;
     }
-    STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
+    STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
 
     ESE_SUNITDMG_ExecuteEvents(pGame, pUnit, pTarget, 1, &damage);
     if (!STATLIST_UnitGetStatValue(pTarget, STAT_HITPOINTS, STAT_STRENGTH))
@@ -1959,15 +1959,15 @@ int32_t __fastcall ESE_SKILLS_SrvDo108_RegurgitatorEat(D2GameStrc* pGame, D2Unit
     D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
     if (pTarget && pTarget->dwUnitType == UNIT_MONSTER && !MONSTERS_GetHirelingTypeId(pTarget) && pTarget->dwAnimMode == MONMODE_DEAD)
     {
-        const int32_t nTargetMaxHp = STATLIST_GetMaxLifeFromUnit(pTarget);
+        const int64_t nTargetMaxHp = STATLIST_GetMaxLifeFromUnit(pTarget);
         DUNGEON_AllocDrlgDelete(UNITS_GetRoom(pTarget), UNIT_MONSTER, pTarget->dwUnitId);
         SUNIT_RemoveUnit(pGame, pTarget);
 
-        const int32_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
-        const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
+        const int64_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
+        const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
         if (nTargetMaxHp > 0)
         {
-            int32_t nNewHp = ESE_DATATBLS_ApplyRatio(nTargetMaxHp, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100) + nHitpoints;
+            int64_t nNewHp = ESE_DATATBLS_ApplyRatio(nTargetMaxHp, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100) + nHitpoints;
             if (nNewHp < 1)
             {
                 nNewHp = 1;
@@ -1977,7 +1977,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo108_RegurgitatorEat(D2GameStrc* pGame, D2Unit
                 nNewHp = nMaxHp;
             }
 
-            STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
+            STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
         }
         
         return 1;

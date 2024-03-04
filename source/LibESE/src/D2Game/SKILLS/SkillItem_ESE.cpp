@@ -171,7 +171,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell03_Potion(D2GameStrc* pGame, D2UnitStrc* 
             break;
         }
 
-        int32_t nValue = ITEMMODS_EvaluateItemFormula(pUnit, pItem, pItemsTxtRecord->dwCalc[i]);
+        int64_t nValue = ITEMMODS_EvaluateItemFormula(pUnit, pItem, pItemsTxtRecord->dwCalc[i]);
         switch (nStatId)
         {
         case STAT_HITPOINTS:
@@ -210,7 +210,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell03_Potion(D2GameStrc* pGame, D2UnitStrc* 
             break;
         }
 
-        int32_t nAddValue = nValue << pItemStatCostTxtRecord->nValShift;
+        int64_t nAddValue = nValue << pItemStatCostTxtRecord->nValShift;
         if (nAddValue > 0)
         {
             if (nStatId == STAT_HITPOINTS)
@@ -228,10 +228,10 @@ int32_t __fastcall ESE_SKILLITEM_pSpell03_Potion(D2GameStrc* pGame, D2UnitStrc* 
 
             if (nLength <= 0)
             {
-                const int32_t nOldValue = STATLIST_UnitGetStatValue(pUnit, nStatId, 0);
+                const int64_t nOldValue = STATLIST_UnitGetStatValue(pUnit, nStatId, 0);
                 if (pItemStatCostTxtRecord->wMaxStat < sgptDataTables->nItemStatCostTxtRecordCount)
                 {
-                    const int32_t nMaxValue = STATLIST_UnitGetStatValue(pUnit, pItemStatCostTxtRecord->wMaxStat, 0);
+                    const int64_t nMaxValue = STATLIST_UnitGetStatValue(pUnit, pItemStatCostTxtRecord->wMaxStat, 0);
                     nAddValue = std::min(nAddValue, nMaxValue - nOldValue);
                 }
 
@@ -271,7 +271,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell03_Potion(D2GameStrc* pGame, D2UnitStrc* 
                 {
                     D2Common_10476(pStatList, nExpireFrame);
 
-                    const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
+                    const int64_t nTimeDependentValue = nAddValue + (int64_t)nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
                     if (!i)
                     {
                         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
@@ -279,7 +279,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell03_Potion(D2GameStrc* pGame, D2UnitStrc* 
 
                     if (nRemainingDuration + nLength > 0)
                     {
-                        STATLIST_SetStatIfListIsValid(pStatList, nStatId, nTimeDependentValue / (nRemainingDuration + nLength), 0);
+                        STATLIST_SetStatIfListIsValid(pStatList, nStatId, Clamp64To32(nTimeDependentValue / (nRemainingDuration + nLength)), 0);
                     }
                 }
             }
@@ -349,13 +349,13 @@ int32_t __fastcall ESE_SKILLITEM_pSpell04_Unused(D2GameStrc* pGame, D2UnitStrc* 
             break;
         }
 
-        int32_t nValue = ITEMMODS_EvaluateItemFormula(pUnit, pItem, pItemsTxtRecord->dwCalc[i]);
+        int64_t nValue = ITEMMODS_EvaluateItemFormula(pUnit, pItem, pItemsTxtRecord->dwCalc[i]);
         if (nStatId == STAT_MANARECOVERY || nStatId == STAT_HPREGEN)
         {
             nValue <<= 8;
         }
 
-        int32_t nAddValue = nValue << pItemStatCostTxtRecord->nValShift;
+        int64_t nAddValue = nValue << pItemStatCostTxtRecord->nValShift;
         if (nAddValue > 0)
         {
             if (nStatId == STAT_HITPOINTS)
@@ -373,10 +373,10 @@ int32_t __fastcall ESE_SKILLITEM_pSpell04_Unused(D2GameStrc* pGame, D2UnitStrc* 
 
             if (nLength <= 0)
             {
-                const int32_t nOldValue = STATLIST_UnitGetStatValue(pUnit, nStatId, 0);
+                const int64_t nOldValue = STATLIST_UnitGetStatValue(pUnit, nStatId, 0);
                 if (pItemStatCostTxtRecord->wMaxStat < sgptDataTables->nItemStatCostTxtRecordCount)
                 {
-                    const int32_t nMaxValue = STATLIST_UnitGetStatValue(pUnit, pItemStatCostTxtRecord->wMaxStat, 0);
+                    const int64_t nMaxValue = STATLIST_UnitGetStatValue(pUnit, pItemStatCostTxtRecord->wMaxStat, 0);
                     nAddValue = std::min(nAddValue, nMaxValue - nOldValue);
                 }
 
@@ -384,7 +384,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell04_Unused(D2GameStrc* pGame, D2UnitStrc* 
             }
             else
             {
-                const int32_t nExpireFrame = nLength + nRemainingDuration + pGame->dwGameFrame;
+                const int64_t nExpireFrame = nLength + nRemainingDuration + pGame->dwGameFrame;
                 if (!pStatList)
                 {
                     int32_t nUnitGUID = -1;
@@ -416,7 +416,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell04_Unused(D2GameStrc* pGame, D2UnitStrc* 
                 {
                     D2Common_10476(pStatList, nExpireFrame);
 
-                    const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
+                    const int64_t nTimeDependentValue = nAddValue + (int64_t)nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
                     if (!i)
                     {
                         EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
@@ -424,7 +424,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell04_Unused(D2GameStrc* pGame, D2UnitStrc* 
 
                     if (nRemainingDuration + nLength > 0)
                     {
-                        STATLIST_SetStatIfListIsValid(pStatList, nStatId, nTimeDependentValue / (nRemainingDuration + nLength), 0);
+                        STATLIST_SetStatIfListIsValid(pStatList, nStatId, Clamp64To32(nTimeDependentValue / (nRemainingDuration + nLength)), 0);
                     }
                 }
             }
@@ -495,7 +495,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell05_RejuvPotion(D2GameStrc* pGame, D2UnitS
             if (nPercentage > 0)
             {
                 const int32_t nMaxValue = STATLIST_UnitGetStatValue(pUnit, pItemStatCostTxtRecord->wMaxStat, 0);
-                int32_t nAddValue = ESE_DATATBLS_ApplyRatio(nMaxValue, nPercentage, 100);
+                int64_t nAddValue = ESE_DATATBLS_ApplyRatio(nMaxValue, nPercentage, 100);
 
                 if (nStatId == STAT_HITPOINTS)
                 {
@@ -544,7 +544,7 @@ int32_t __fastcall ESE_SKILLITEM_pSpell05_RejuvPotion(D2GameStrc* pGame, D2UnitS
                     {
                         D2Common_10476(pStatList, nExpireFrame);
 
-                        const int32_t nTimeDependentValue = nAddValue + nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
+                        const int64_t nTimeDependentValue = nAddValue + (int64_t)nRemainingDuration * D2Common_10466_STATLIST_GetStatValue(pStatList, nStatId, 0);
                         if (!i)
                         {
                             EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_REMOVESTATE, nExpireFrame, 0, 0);
@@ -552,16 +552,16 @@ int32_t __fastcall ESE_SKILLITEM_pSpell05_RejuvPotion(D2GameStrc* pGame, D2UnitS
 
                         if (nRemainingDuration + nLength > 0)
                         {
-                            STATLIST_SetStatIfListIsValid(pStatList, nStatId, nTimeDependentValue / (nRemainingDuration + nLength), 0);
+                            STATLIST_SetStatIfListIsValid(pStatList, nStatId, Clamp64To32(nTimeDependentValue / ((int64_t)nRemainingDuration + nLength)), 0);
                         }
                     }
                 }
                 else
                 {
-                    const int32_t nOldValue = STATLIST_UnitGetStatValue(pUnit, nStatId, 0);
+                    const int64_t nOldValue = STATLIST_UnitGetStatValue(pUnit, nStatId, 0);
                     nAddValue = std::min(nAddValue, nMaxValue - nOldValue);
 
-                    STATLIST_AddUnitStat(pUnit, nStatId, nAddValue, 0);
+                    STATLIST_AddUnitStat(pUnit, nStatId, Clamp64To32(nAddValue), 0);
                 }
 
                 nResult = 1;
@@ -779,8 +779,6 @@ int32_t __fastcall ESE_SKILLITEM_pSpell11_CastFireBallToCoordinates(D2GameStrc* 
     return 0;
 }
 
-#include "../D2MooHeaders.h"
-
 //D2Game.0x6FD03E40
 int32_t __fastcall ESE_SKILLITEM_pSpell_Handler(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pItem, D2UnitStrc* pTarget, int32_t nX, int32_t nY)
 {
@@ -991,7 +989,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc06_AttackerTakesDamage(D2GameStrc* pGa
         {
             ESE_D2DamageStrc damage = {};
             damage.wResultFlags |= 0x4021u;
-            damage.dwPhysDamage = nDamage << 8;
+            damage.dwPhysDamage = (int64_t)nDamage << 8;
             damage.dwHitClass = 0x8D;
             ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
             ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
@@ -1012,7 +1010,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc10_AttackerTakesLightDamage(D2GameStrc
         {
             ESE_D2DamageStrc damage = {};
             damage.wResultFlags |= 0x4021u;
-            damage.dwLtngDamage = nDamage << 8;
+            damage.dwLtngDamage = (int64_t)nDamage << 8;
             damage.dwHitClass = 0x4D;
             ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
             ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
@@ -1039,7 +1037,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc11_ApplyFireDamage(D2GameStrc* pGame, 
 
     ESE_D2DamageStrc damage = {};
     damage.wResultFlags |= 0x4021u;
-    damage.dwFireDamage = nDamage << 8;
+    damage.dwFireDamage = (int64_t)nDamage << 8;
     damage.dwHitClass = 0x2D;
     ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
     ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
@@ -1071,7 +1069,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc12_ApplyColdDamage(D2GameStrc* pGame, 
     ESE_D2DamageStrc damage = {};
     damage.wResultFlags |= 0x4021u;
     damage.dwColdLen = nLength;
-    damage.dwColdDamage = nDamage << 8;
+    damage.dwColdDamage = (int64_t)nDamage << 8;
     damage.dwHitClass = 0x3D;
     ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pUnit, 1, &damage);
     ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
@@ -1185,11 +1183,11 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc13_DamageToMana(D2GameStrc* pGame, int
         const int32_t nPercentage = STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, (uint32_t)nSkillId >> 16, nSkillId);
         if (nPercentage > 0)
         {
-            const int32_t nMaxMana = STATLIST_GetMaxManaFromUnit(pAttacker);
-            const int32_t nMana = STATLIST_UnitGetStatValue(pAttacker, STAT_MANA, 0);
+            const int64_t nMaxMana = STATLIST_GetMaxManaFromUnit(pAttacker);
+            const int64_t nMana = STATLIST_UnitGetStatValue(pAttacker, STAT_MANA, 0);
             if (nMana < nMaxMana)
             {
-                int32_t nNewMana = nMana + ESE_DATATBLS_ApplyRatio(pDamage->dwDmgTotal, nPercentage, 100);
+                int64_t nNewMana = nMana + ESE_DATATBLS_ApplyRatio(pDamage->dwDmgTotal, nPercentage, 100);
                 if (nNewMana < 0)
                 {
                     nNewMana = 0;
@@ -1199,7 +1197,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc13_DamageToMana(D2GameStrc* pGame, int
                     nNewMana = nMaxMana;
                 }
 
-                STATLIST_SetUnitStat(pAttacker, STAT_MANA, nNewMana, 0);
+                STATLIST_SetUnitStat(pAttacker, STAT_MANA, Clamp64To32(nNewMana), 0);
                 UNITS_SetOverlay(pAttacker, 152, 0);
                 return 1;
             }
@@ -1278,25 +1276,25 @@ int32_t __fastcall ESE_SKILLITEM_CalculateOpenWoundsHpRegen(int32_t nLevel, cons
 
     if (nLevel > 60)
     {
-        return (pValues[4] * (nLevel - 60)) + 15 * (pValues[1] + pValues[2] + pValues[3]) + 14 * pValues[0];
+        return ((int64_t)pValues[4] * ((int64_t)nLevel - 60)) + 15 * ((int64_t)pValues[1] + (int64_t)pValues[2] + (int64_t)pValues[3]) + 14 * (int64_t)pValues[0];
     }
 
     if (nLevel > 45)
     {
-        return (pValues[3] * (nLevel - 45)) + 15 * (pValues[1] + pValues[2]) + 14 * pValues[0];
+        return ((int64_t)pValues[3] * ((int64_t)nLevel - 45)) + 15 * ((int64_t)pValues[1] + (int64_t)pValues[2]) + 14 * (int64_t)pValues[0];
     }
 
     if (nLevel > 30)
     {
-        return 15 * pValues[1] + pValues[2] * (nLevel - 30) + 14 * pValues[0];
+        return 15 * (int64_t)pValues[1] + (int64_t)pValues[2] * ((int64_t)nLevel - 30) + 14 * (int64_t)pValues[0];
     }
 
     if (nLevel > 15)
     {
-        return pValues[1] * (nLevel - 15) + 14 * pValues[0];
+        return (int64_t)pValues[1] * ((int64_t)nLevel - 15) + 14 * (int64_t)pValues[0];
     }
 
-    return pValues[0] * (nLevel - 1);
+    return (int64_t)pValues[0] * ((int64_t)nLevel - 1);
 }
 
 //D2Game.0x6FD04CF0
@@ -1358,7 +1356,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc16_CrushingBlow(D2GameStrc* pGame, int
         return 0;
     }
 
-    int32_t nDivisor = 4;
+    int64_t nDivisor = 4;
     if (pUnit->dwUnitType == UNIT_PLAYER)
     {
         nDivisor = 10;
@@ -1382,7 +1380,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc16_CrushingBlow(D2GameStrc* pGame, int
                 nPlayerCount = 1;
             }
 
-            const int32_t nHpBonus = MONSTER_GetHpBonus(nPlayerCount);
+            const int64_t nHpBonus = MONSTER_GetHpBonus(nPlayerCount);
             if (nHpBonus)
             {
                 nDivisor += ESE_DATATBLS_ApplyRatio(nDivisor, nHpBonus, 100);
@@ -1395,10 +1393,10 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc16_CrushingBlow(D2GameStrc* pGame, int
         nDivisor *= 2;
     }
 
-    const int32_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
-    int32_t nCrushingBlowHp = nHitpoints / nDivisor;
+    const int64_t nHitpoints = STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0);
+    int64_t nCrushingBlowHp = nHitpoints / nDivisor;
 
-    int32_t nDamageResist = STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGERESIST, 0);
+    int64_t nDamageResist = STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGERESIST, 0);
     if (nDamageResist >= 100)
     {
         nDamageResist = 100;
@@ -1409,13 +1407,13 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc16_CrushingBlow(D2GameStrc* pGame, int
         nCrushingBlowHp -= ESE_DATATBLS_ApplyRatio(nCrushingBlowHp, nDamageResist, 100);
     }
 
-    int32_t nNewHp = nHitpoints - nCrushingBlowHp;
+    int64_t nNewHp = nHitpoints - nCrushingBlowHp;
     if (nNewHp <= 0)
     {
         nNewHp = 0;
     }
 
-    STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
+    STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
 
     if (nNewHp <= 0 && pDamage)
     {
@@ -1438,12 +1436,12 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc17_ManaAfterKill(D2GameStrc* pGame, in
         const int32_t nValue = STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, (uint32_t)nSkillId >> 16, nSkillId);
         if (nValue)
         {
-            const int32_t nMaxMana = STATLIST_GetMaxManaFromUnit(pAttacker);
-            const int32_t nMana = STATLIST_UnitGetStatValue(pAttacker, STAT_MANA, 0);
+            const int64_t nMaxMana = STATLIST_GetMaxManaFromUnit(pAttacker);
+            const int64_t nMana = STATLIST_UnitGetStatValue(pAttacker, STAT_MANA, 0);
 
             if (nMana < nMaxMana)
             {
-                int32_t nNewMana = (nValue << 8) + nMana;
+                int64_t nNewMana = ((int64_t)nValue << 8) + nMana;
                 if (nNewMana < 0)
                 {
                     nNewMana = 0;
@@ -1453,7 +1451,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc17_ManaAfterKill(D2GameStrc* pGame, in
                     nNewMana = nMaxMana;
                 }
 
-                STATLIST_SetUnitStat(pAttacker, STAT_MANA, nNewMana, 0);
+                STATLIST_SetUnitStat(pAttacker, STAT_MANA, Clamp64To32(nNewMana), 0);
                 UNITS_SetOverlay(pAttacker, 152, 0);
                 return 1;
             }
@@ -1471,12 +1469,12 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc28_HealAfterKill(D2GameStrc* pGame, in
         const int32_t nValue = STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, (uint32_t)nSkillId >> 16, nSkillId);
         if (nValue)
         {
-            const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pAttacker);
-            const int32_t nHitpoints = STATLIST_UnitGetStatValue(pAttacker, STAT_HITPOINTS, 0);
+            const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pAttacker);
+            const int64_t nHitpoints = STATLIST_UnitGetStatValue(pAttacker, STAT_HITPOINTS, 0);
 
             if (nHitpoints < nMaxHp)
             {
-                int32_t nNewHp = (nValue << 8) + nHitpoints;
+                int64_t nNewHp = ((int64_t)nValue << 8) + nHitpoints;
                 if (nNewHp < 0)
                 {
                     nNewHp = 0;
@@ -1486,7 +1484,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc28_HealAfterKill(D2GameStrc* pGame, in
                     nNewHp = nMaxHp;
                 }
 
-                STATLIST_SetUnitStat(pAttacker, STAT_HITPOINTS, nNewHp, 0);
+                STATLIST_SetUnitStat(pAttacker, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
                 UNITS_SetOverlay(pAttacker, 151, 0);
                 return 1;
             }
@@ -1504,12 +1502,12 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc18_HealAfterDemonKill(D2GameStrc* pGam
         const int32_t nValue = STATLIST_UnitGetItemStatOrSkillStatValue(pAttacker, (uint32_t)nSkillId >> 16, nSkillId);
         if (nValue)
         {
-            const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pAttacker);
-            const int32_t nHitpoints = STATLIST_UnitGetStatValue(pAttacker, STAT_HITPOINTS, 0);
+            const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pAttacker);
+            const int64_t nHitpoints = STATLIST_UnitGetStatValue(pAttacker, STAT_HITPOINTS, 0);
 
             if (nHitpoints < nMaxHp)
             {
-                int32_t nNewHp = (nValue << 8) + nHitpoints;
+                int64_t nNewHp = ((int64_t)nValue << 8) + nHitpoints;
                 if (nNewHp < 0)
                 {
                     nNewHp = 0;
@@ -1519,7 +1517,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc18_HealAfterDemonKill(D2GameStrc* pGam
                     nNewHp = nMaxHp;
                 }
 
-                STATLIST_SetUnitStat(pAttacker, STAT_HITPOINTS, nNewHp, 0);
+                STATLIST_SetUnitStat(pAttacker, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
                 UNITS_SetOverlay(pAttacker, 151, 0);
                 return 1;
             }
@@ -1551,6 +1549,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc19_Slow(D2GameStrc* pGame, int32_t nEv
         {
             nSlowValue = 50;
         }
+        break;
     }
     case UNIT_MONSTER:
     {
@@ -1575,6 +1574,7 @@ int32_t __fastcall ESE_SKILLITEM_EventFunc19_Slow(D2GameStrc* pGame, int32_t nEv
                 nSlowValue = 90;
             }
         }
+        break;
     }
     default:
         return 0;

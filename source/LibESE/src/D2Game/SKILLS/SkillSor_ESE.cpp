@@ -399,6 +399,15 @@ int32_t __fastcall ESE_SKILLS_SrvDo019_Inferno_ArcticBlast(D2GameStrc* pGame, D2
     return 0;
 }
 
+struct ESE_D2StaticFieldCallbackArgStrc
+{
+    int64_t nMinDamage;       //+00
+    int64_t nDamagePct;       //+04
+    int64_t nStaticFieldMin;  //+08
+    int64_t nElementalLength; //+0C
+    int32_t nElementalType;   //+10
+};
+
 //D2Game.0x6FD162D0
 int32_t __fastcall ESE_SKILLS_SrvDo020_StaticField(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)
 {
@@ -414,7 +423,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo020_StaticField(D2GameStrc* pGame, D2UnitStrc
 		return 0;
 	}
 
-    D2StaticFieldCallbackArgStrc staticField = {};
+    ESE_D2StaticFieldCallbackArgStrc staticField = {};
     staticField.nMinDamage = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
 	staticField.nDamagePct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
 
@@ -434,9 +443,9 @@ int32_t __fastcall ESE_SKILLS_SrvDo020_StaticField(D2GameStrc* pGame, D2UnitStrc
 //D2Game.0x6FD163E0
 int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAuraCallback, D2UnitStrc* pDefender)
 {
-    D2StaticFieldCallbackArgStrc* pStaticFieldCallbackArg = (D2StaticFieldCallbackArgStrc*)pAuraCallback->pArgs;
+    ESE_D2StaticFieldCallbackArgStrc* pStaticFieldCallbackArg = (ESE_D2StaticFieldCallbackArgStrc*)pAuraCallback->pArgs;
 
-    const int32_t nHitpoints = STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0) >> 8;
+    const int64_t nHitpoints = STATLIST_UnitGetStatValue(pDefender, STAT_HITPOINTS, 0) >> 8;
     if (nHitpoints < 1)
     {
         return 0;
@@ -444,20 +453,20 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
 
     if (pStaticFieldCallbackArg->nStaticFieldMin)
     {
-        const int32_t nMinDamage = ESE_DATATBLS_ApplyRatio(STATLIST_GetMaxLifeFromUnit(pDefender) >> 8, pStaticFieldCallbackArg->nStaticFieldMin, 100);
+        const int64_t nMinDamage = ESE_DATATBLS_ApplyRatio(STATLIST_GetMaxLifeFromUnit(pDefender) >> 8, pStaticFieldCallbackArg->nStaticFieldMin, 100);
         if (nHitpoints <= nMinDamage)
         {
             return 0;
         }
     }
 
-    int32_t nShiftedDamage = ESE_DATATBLS_ApplyRatio(nHitpoints, pStaticFieldCallbackArg->nDamagePct, 100);
+    int64_t nShiftedDamage = ESE_DATATBLS_ApplyRatio(nHitpoints, pStaticFieldCallbackArg->nDamagePct, 100);
     if (nShiftedDamage > nHitpoints - 1)
     {
         nShiftedDamage = nHitpoints - 1;
     }
 
-    int32_t nDamage = nShiftedDamage << 8;
+    int64_t nDamage = nShiftedDamage << 8;
     if (nDamage < pStaticFieldCallbackArg->nMinDamage)
     {
         nDamage = pStaticFieldCallbackArg->nMinDamage;
@@ -473,7 +482,7 @@ int32_t __fastcall ESE_SKILLS_AuraCallback_StaticField(D2AuraCallbackStrc* pAura
         const int32_t nValue = STATLIST_UnitGetStatValue(pDefender, nStatId, 0);
         if (nValue < 0)
         {
-            nDamage = ESE_DATATBLS_ApplyRatio(100, nDamage, 100 - nValue);
+            nDamage = ESE_DATATBLS_ApplyRatio(100, nDamage, 100LL - nValue);
         }
     }
 
@@ -992,14 +1001,14 @@ int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_
         return 0;
     }
 
-    const int32_t nMultiplier = SKILLS_EvaluateSkillFormula(pAttacker, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
+    const int64_t nMultiplier = SKILLS_EvaluateSkillFormula(pAttacker, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
     if (nMultiplier <= 0)
     {
         return 0;
     }
 
-    int32_t nMana = STATLIST_UnitGetStatValue(pAttacker, STAT_MANA, 0);
-    int32_t nDivisor = SKILLS_EvaluateSkillFormula(pAttacker, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
+    int64_t nMana = STATLIST_UnitGetStatValue(pAttacker, STAT_MANA, 0);
+    int64_t nDivisor = SKILLS_EvaluateSkillFormula(pAttacker, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
     if (nDivisor <= 0)
     {
         nDivisor = 1;
@@ -1029,11 +1038,11 @@ int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_
         const D2EnergyShieldDataStrc* pEnergyShieldData = &gEnergyShieldData_6FD29AD8[i];
         if (!pEnergyShieldData->bPlayerOnly || bIsPlayer)
         {
-            int32_t* pDamageValue = (int32_t*)((char*)pDamage + pEnergyShieldData->nDamageOffset);
+            int64_t* pDamageValue = (int64_t*)((char*)pDamage + pEnergyShieldData->nDamageOffset);
             if (*pDamageValue > 0)
             {
-                int32_t nAbsorb = ESE_DATATBLS_ApplyRatio(*pDamageValue, nMultiplier, 100);
-                const int32_t nMax = ESE_DATATBLS_ApplyRatio(nMana, 16, nDivisor);
+                int64_t nAbsorb = ESE_DATATBLS_ApplyRatio(*pDamageValue, nMultiplier, 100);
+                const int64_t nMax = ESE_DATATBLS_ApplyRatio(nMana, 16, nDivisor);
 
                 if (nAbsorb >= nMax)
                 {
@@ -1057,7 +1066,7 @@ int32_t __fastcall ESE_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_
         nMana = 0;
     }
 
-    STATLIST_SetUnitStat(pAttacker, STAT_MANA, nMana, 0);
+    STATLIST_SetUnitStat(pAttacker, STAT_MANA, Clamp64To32(nMana), 0);
 
     if (pUnit && nAbsorbedDamage > 0 && pSkillsTxtRecord->wPrgOverlay >= 0 && pSkillsTxtRecord->wPrgOverlay <= sgptDataTables->nOverlayTxtRecordCount)
     {

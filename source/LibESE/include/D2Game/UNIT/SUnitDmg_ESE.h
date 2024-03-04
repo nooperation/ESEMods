@@ -52,13 +52,13 @@ int32_t __fastcall ESE_SUNITDMG_GetColdEffect(D2GameStrc* pGame, D2UnitStrc* pUn
 //D2Game.0x6FCBE360
 void __fastcall ESE_SUNITDMG_RemoveFreezeState(D2UnitStrc* pUnit, int32_t nState, struct D2StatListStrc* pStatList);
 //D2Game.0x6FCBE420
-int32_t __fastcall ESE_SUNITDMG_ApplyDamageBonuses(D2UnitStrc* pUnit, int32_t bGetStats, D2UnitStrc* pItem, int32_t nMinDmg, int32_t nMaxDmg, int32_t nDamagePercent, int32_t nDamage, uint8_t nSrcDam);
+int64_t __fastcall ESE_SUNITDMG_ApplyDamageBonuses(D2UnitStrc* pUnit, int32_t bGetStats, D2UnitStrc* pItem, int64_t nMinDmg, int64_t nMaxDmg, int64_t nDamagePercent, int64_t nDamage, uint8_t nSrcDam);
 //D2Game.0x6FCBE7E0
 void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage, int32_t a5, uint8_t nSrcDam);
 //D2Game.0x6FCBF400
 int32_t __fastcall ESE_SUNITDMG_CheckMonType(int32_t nMonType1, int32_t nMonType2);
 //D2Game.0x6FCBF450
-int32_t __fastcall ESE_SUNITDMG_RollDamageValueInRange(D2UnitStrc* pUnit, int32_t nMinDamage, int32_t nMaxDamage, int32_t nMinDamageBonusPct, int32_t nMaxDamageBonusPct, int32_t nDamage);
+int64_t __fastcall ESE_SUNITDMG_RollDamageValueInRange(D2UnitStrc* pUnit, int64_t nMinDamage, int64_t nMaxDamage, int64_t nMinDamageBonusPct, int64_t nMaxDamageBonusPct, int64_t nDamage);
 //D2Game.0x6FCBF620
 void __fastcall ESE_SUNITDMG_CalculateTotalDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCBFB40
@@ -68,19 +68,19 @@ void __fastcall ESE_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttac
 //D2Game.0x6FCC05D0
 D2MonStatsTxt* __fastcall ESE_SUNITDMG_GetMonStatsTxtRecordFromUnit(D2UnitStrc* pUnit);
 //D2Game.0x6FCC05F0
-int32_t __fastcall ESE_SUNITDMG_AddLeechedLife(D2UnitStrc* pUnit, int32_t nLifeLeeched);
+int64_t __fastcall ESE_SUNITDMG_AddLeechedLife(D2UnitStrc* pUnit, int64_t nLifeLeeched);
 //D2Game.0x6FCC0660
-int32_t __fastcall ESE_SUNITDMG_AddLeechedMana(D2UnitStrc* pUnit, int32_t nManaLeeched);
+int64_t __fastcall ESE_SUNITDMG_AddLeechedMana(D2UnitStrc* pUnit, int64_t nManaLeeched);
 //D2Game.0x6FCC06C0
-void __fastcall ESE_SUNITDMG_ApplyPoisonDamage(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nPoisonDamage, int32_t nPoisonLength);
+void __fastcall ESE_SUNITDMG_ApplyPoisonDamage(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int64_t nPoisonDamage, int64_t nPoisonLength);
 //D2Game.0x6FCC0800
-void __fastcall ESE_SUNITDMG_ApplyBurnDamage(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nBurnDamage, int32_t nBurnLength);
+void __fastcall ESE_SUNITDMG_ApplyBurnDamage(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int64_t nBurnDamage, int64_t nBurnLength);
 //D2Game.0x6FCC0940
-void __fastcall ESE_SUNITDMG_ApplyColdState(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nColdLength);
+void __fastcall ESE_SUNITDMG_ApplyColdState(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int64_t nColdLength);
 //D2Game.0x6FCC0B90
 void __fastcall ESE_SUNITDMG_RemoveShatterState(D2UnitStrc* pUnit, int32_t nState, struct D2StatListStrc* pStatList);
 //D2Game.0x6FCC0BE0
-void __fastcall ESE_SUNITDMG_ApplyFreezeState(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nFreezeLength);
+void __fastcall ESE_SUNITDMG_ApplyFreezeState(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int64_t nFreezeLength);
 //D2Game.0x6FCC0E20
 void __fastcall ESE_SUNITDMG_FreeAttackerCombatList(D2GameStrc* pGame, D2UnitStrc* pAttacker);
 //D2Game.0x6FCC0E90
@@ -120,9 +120,9 @@ void __fastcall ESE_SUNITDMG_RollSuckBloodDamage(D2GameStrc* pGame, D2UnitStrc* 
 //D2Game.0x6FCC2C70
 void __fastcall ESE_SUNITDMG_DistributeExperience(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender);
 //D2Game.0x6FCC2EC0
-uint32_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitStrc* pAttacker, uint32_t nAttackerLevel, uint32_t nDefenderLevel, uint32_t nDefenderExperience);
+int64_t __fastcall ESE_SUNITDMG_ComputeExperienceGain(D2GameStrc* pGame, D2UnitStrc* pAttacker, uint32_t nAttackerLevel, uint32_t nDefenderLevel, int64_t nDefenderExperience);
 //D2Game.0x6FCC3170
-void __fastcall ESE_SUNITDMG_AddExperienceForPlayer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nOldLevel, uint32_t nExperienceGained);
+void __fastcall ESE_SUNITDMG_AddExperienceForPlayer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint32_t nOldLevel, int64_t nExperienceGained);
 //D2Game.0x6FCC3200
 void __fastcall ESE_SUNITDMG_PartyCallback_ComputePartyExperience(D2GameStrc* pGame, D2UnitStrc* pUnit, void* pArg);
 //D2Game.0x6FCC3360

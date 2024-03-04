@@ -355,8 +355,8 @@ int32_t __fastcall ESE_SKILLS_SrvSt10_LightningStrike(D2GameStrc* pGame, D2UnitS
     damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
     if (damage.wResultFlags & DAMAGERESULTFLAG_SUCCESSFULHIT)
     {
-        const int32_t nMinDamage = ESE_SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1);
-        const int32_t nMaxDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1);
+        const int64_t nMinDamage = ESE_SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1);
+        const int64_t nMaxDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1);
         damage.dwLtngDamage = nMinDamage + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
         damage.dwEnDmgPct = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel);
 
@@ -645,11 +645,11 @@ int32_t __fastcall ESE_SKILLS_SrvDo010_GuidedArrow_BoneSpirit(D2GameStrc* pGame,
 }
 
 //D2Game.0x6FCF4280
-void __fastcall ESE_SKILLS_AddDamagePercentBonus(D2UnitStrc* pUnit, int32_t nBonus)
+void __fastcall ESE_SKILLS_AddDamagePercentBonus(D2UnitStrc* pUnit, int64_t nBonus)
 {
     if (nBonus)
     {
-        STATLIST_SetUnitStat(pUnit, STAT_DAMAGEPERCENT, nBonus + STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGEPERCENT, 0), 0);
+        STATLIST_SetUnitStat(pUnit, STAT_DAMAGEPERCENT, Clamp64To32(nBonus + STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGEPERCENT, 0)), 0);
     }
 }
 
@@ -961,10 +961,10 @@ int32_t __fastcall ESE_SKILLS_SrvDo015_Dopplezon(D2GameStrc* pGame, D2UnitStrc* 
     }
 
     UNITS_StoreOwner(pPet, pUnit);
-    const int32_t nHitpoints = ESE_DATATBLS_ApplyRatio(STATLIST_GetMaxLifeFromUnit(pUnit), SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel), 100);
+    const int64_t nHitpoints = ESE_DATATBLS_ApplyRatio(STATLIST_GetMaxLifeFromUnit(pUnit), SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], nSkillId, nSkillLevel), 100);
 
-    STATLIST_SetUnitStat(pPet, STAT_HITPOINTS, nHitpoints, 0);
-    STATLIST_SetUnitStat(pPet, STAT_MAXHP, nHitpoints, 0);
+    STATLIST_SetUnitStat(pPet, STAT_HITPOINTS, Clamp64To32(nHitpoints), 0);
+    STATLIST_SetUnitStat(pPet, STAT_MAXHP, Clamp64To32(nHitpoints), 0);
     STATLIST_SetUnitStat(pPet, STAT_LEVEL, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 0);
     ESE_D2GAME_SKILLS_SetSummonBaseStats_6FD0CB10(pGame, pUnit, pPet, 0, nSkillLevel);
     ESE_D2GAME_SetSummonPassiveStats_6FD0C530(pGame, pUnit, pPet, nSkillId, nSkillLevel, 0);

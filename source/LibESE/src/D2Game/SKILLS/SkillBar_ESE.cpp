@@ -105,7 +105,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt32_Conversion_Bash_Stun_Concentrate_BearSmite
     ESE_D2DamageStrc* pDamage = ESE_SUNITDMG_GetDamageFromUnits(pUnit, pTarget);
     if (pDamage)
     {
-        pDamage->dwPhysDamage += SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel) << 8;
+        pDamage->dwPhysDamage += (int64_t)SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel) << 8;
     }
 
     if (pSkillsTxtRecord->nAuraState < 0 || pSkillsTxtRecord->nAuraState >= sgptDataTables->nStatesTxtRecordCount)

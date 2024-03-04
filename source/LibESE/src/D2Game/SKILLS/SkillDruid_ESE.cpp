@@ -744,7 +744,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo121_Rabies(D2GameStrc* pGame, D2UnitStrc* pUn
     ESE_sub_6FD00370(pGame, pUnit, nSkillLevel);
     ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
 
-    int32_t nLength = ESE_SKILLS_GetElementalLength(pUnit, nSkillId, nSkillLevel, 1);
+    int64_t nLength = ESE_SKILLS_GetElementalLength(pUnit, nSkillId, nSkillLevel, 1);
     if (nSkillLevel > 0 && pSkillsTxtRecord->wAuraTargetState >= 0 && pSkillsTxtRecord->wAuraTargetState <= sgptDataTables->nStatesTxtRecordCount && !STATLIST_GetStatListFromUnitAndState(pTarget, pSkillsTxtRecord->wAuraTargetState))
     {
         D2StatListStrc* pStatList = STATLIST_AllocStatList(pGame->pMemoryPool, 2u, nLength + pGame->dwGameFrame, pTarget->dwUnitType, pTarget->dwUnitId);
@@ -754,8 +754,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo121_Rabies(D2GameStrc* pGame, D2UnitStrc* pUn
             STATLIST_SetStatRemoveCallback(pStatList, ESE_sub_6FD10E50);
             D2Common_10475_PostStatToStatList(pTarget, pStatList, 1);
             STATES_ToggleState(pTarget, pSkillsTxtRecord->wAuraTargetState, 1);
-            D2Common_10476(pStatList, nLength + pGame->dwGameFrame);
-            EVENT_SetEvent(pGame, pTarget, UNITEVENTCALLBACK_REMOVESTATE, nLength + pGame->dwGameFrame, 0, 0);
+            D2Common_10476(pStatList, Clamp64To32(nLength + pGame->dwGameFrame));
+            EVENT_SetEvent(pGame, pTarget, UNITEVENTCALLBACK_REMOVESTATE, Clamp64To32(nLength + pGame->dwGameFrame), 0, 0);
             ESE_sub_6FCFE0E0(pUnit, pStatList, pSkillsTxtRecord, nSkillId, nSkillLevel);
             ESE_sub_6FCFF2E0(pGame, pUnit, pTarget, nLength, nSkillId, nSkillLevel);
         }
@@ -787,7 +787,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo121_Rabies(D2GameStrc* pGame, D2UnitStrc* pUn
 }
 
 //D2Game.0x6FCFF2E0
-void __fastcall ESE_sub_6FCFF2E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int32_t nRange, int32_t nSkillId, int32_t nSkillLevel)
+void __fastcall ESE_sub_6FCFF2E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int64_t nRange, int32_t nSkillId, int32_t nSkillLevel)
 {
     if (!ESE_SKILLS_GetSkillsTxtRecord(nSkillId))
     {
@@ -804,7 +804,7 @@ void __fastcall ESE_sub_6FCFF2E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStr
     missileParams.pOwner = pTarget;
     missileParams.pOrigin = pTarget;
     missileParams.nMissile = nMissileId;
-    missileParams.nRange = nRange;
+    missileParams.nRange = Clamp64To32(nRange);
     missileParams.dwFlags = 32768;
     missileParams.nSkill = nSkillId;
     missileParams.nSkillLevel = nSkillLevel;
@@ -1130,8 +1130,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo146_Unused(D2GameStrc* pGame, D2UnitStrc* pUn
 
     for (int32_t i = 0; i < 5; ++i)
     {
-        const int32_t nX = CLIENTS_GetUnitX(pUnit) + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2 * nRange + 1) - nRange;
-        const int32_t nY = CLIENTS_GetUnitY(pUnit) + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2 * nRange + 1) - nRange;
+        const int32_t nX = CLIENTS_GetUnitX(pUnit) + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2LL * nRange + 1) - nRange;
+        const int32_t nY = CLIENTS_GetUnitY(pUnit) + ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, 2LL * nRange + 1) - nRange;
         if (D2Common_11026(nX, nY, pUnit, 0x805u))
         {
             D2ActiveRoomStrc* pTargetRoom = D2GAME_GetRoom_6FC52070(pRoom, nX, nY);
@@ -1173,7 +1173,7 @@ int32_t __fastcall ESE_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nE
         return 0;
     }
 
-    int32_t nValue0 = D2Common_10466_STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
+    int64_t nValue0 = D2Common_10466_STATLIST_GetStatValue(pStatList, pSkillsTxtRecord->wAuraStat[0], 0);
     if (nValue0)
     {
         if (pDamage->dwFireDamage > 0)
@@ -1229,12 +1229,12 @@ int32_t __fastcall ESE_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nE
         return 1;
     }
 
-    const int32_t nOldParamValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_UNSENTPARAM1, 0);
-    const int32_t nNewParamValue = ESE_DATATBLS_ApplyRatio(100, nValue0, nValue1);
+    const int64_t nOldParamValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_UNSENTPARAM1, 0);
+    const int64_t nNewParamValue = ESE_DATATBLS_ApplyRatio(100, nValue0, nValue1);
     if (nNewParamValue - nOldParamValue >= 5)
     {
         STATES_ToggleGfxStateFlag(pAttacker, pSkillsTxtRecord->nAuraState, 1);
-        STATLIST_SetStatIfListIsValid(pStatList, STAT_UNSENTPARAM1, nNewParamValue, 0);
+        STATLIST_SetStatIfListIsValid(pStatList, STAT_UNSENTPARAM1, Clamp64To32(nNewParamValue), 0);
     }
 
     return 1;
@@ -1496,17 +1496,17 @@ int32_t __fastcall ESE_SKILLS_SrvDo127_SuckBlood(D2GameStrc* pGame, D2UnitStrc* 
             }
         }
 
-        const int32_t nOwnerHitpoints = STATLIST_UnitGetStatValue(pOwner, STAT_HITPOINTS, 0);
-        const int32_t nOwnerMaxHp = STATLIST_GetMaxLifeFromUnit(pOwner);
-        const int32_t nTargetHitpoints = STATLIST_UnitGetStatValue(pTarget, STAT_HITPOINTS, 0);
+        const int64_t nOwnerHitpoints = STATLIST_UnitGetStatValue(pOwner, STAT_HITPOINTS, 0);
+        const int64_t nOwnerMaxHp = STATLIST_GetMaxLifeFromUnit(pOwner);
+        const int64_t nTargetHitpoints = STATLIST_UnitGetStatValue(pTarget, STAT_HITPOINTS, 0);
 
-        int32_t nDamage = pDamage->dwPhysDamage;
+        int64_t nDamage = pDamage->dwPhysDamage;
         if (nDamage >= nTargetHitpoints)
         {
             nDamage = nTargetHitpoints;
         }
 
-        int32_t nNewHp = nOwnerHitpoints + ESE_DATATBLS_ApplyRatio(nDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
+        int64_t nNewHp = nOwnerHitpoints + ESE_DATATBLS_ApplyRatio(nDamage, SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], nSkillId, nSkillLevel), 100);
         if (nNewHp < 1)
         {
             nNewHp = 1;
@@ -1516,7 +1516,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo127_SuckBlood(D2GameStrc* pGame, D2UnitStrc* 
             nNewHp = nOwnerMaxHp;
         }
 
-        STATLIST_SetUnitStat(pOwner, STAT_HITPOINTS, nNewHp, 0);
+        STATLIST_SetUnitStat(pOwner, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
     }
 
     ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
@@ -2287,7 +2287,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo147_Unused(D2GameStrc* pGame, D2UnitStrc* pUn
 }
 
 //D2Game.0x6FD025E0
-int32_t __fastcall ESE_D2GAME_SKILLS_BloodMana_6FD025E0(D2UnitStrc* pUnit, int32_t nManaCost)
+int32_t __fastcall ESE_D2GAME_SKILLS_BloodMana_6FD025E0(D2UnitStrc* pUnit, int64_t nManaCost)
 {
     D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_BLOOD_MANA);
     if (STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0) < nManaCost)
@@ -2302,7 +2302,7 @@ int32_t __fastcall ESE_D2GAME_SKILLS_BloodMana_6FD025E0(D2UnitStrc* pUnit, int32
         return 0;
     }
 
-    STATLIST_AddUnitStat(pUnit, STAT_HITPOINTS, -nManaCost, 0);
+    STATLIST_AddUnitStat(pUnit, STAT_HITPOINTS, Clamp64To32(-nManaCost), 0);
 
     D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(STATLIST_GetSkillId(pStatList));
     if (STATLIST_UnitGetStatValue(pUnit, STAT_HITPOINTS, 0) < (pSkillsTxtRecord->dwParam[4] << 8) && pStatList)
