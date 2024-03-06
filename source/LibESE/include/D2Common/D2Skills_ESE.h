@@ -1,7 +1,5 @@
 #pragma once
 
-#include "D2Common/D2Skills_ESE.h"
-
 #include <../D2MooHeaders.h>
 #include <CommonDefinitions.h>
 #include <D2Inventory.h>

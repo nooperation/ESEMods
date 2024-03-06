@@ -18,6 +18,8 @@
 
 #include <../D2CommonExports.h>
 #include <../D2FogExports.h>
+#include <../D2WinExports.h>
+#include <../D2ClientExports.h>
 
 void InitD2MooHeaders();
 
