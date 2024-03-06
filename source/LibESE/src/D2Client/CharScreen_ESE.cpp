@@ -1,4 +1,5 @@
 #include <D2Client/CharScreen_ESE.h>
+#include <D2Combat.h>
 #include "Font.h"
 
 void ESE_PrintRangeString(wchar_t* pText, int minDamage, int maxDamage, int isAdditonRange, int allowThousandsSuffix)
@@ -157,8 +158,8 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageRight(D2UnitStrc* pUnit, D2SkillSt
         break;
     }
 
-    int32_t v10 = 0;
-    int32_t v11 = 0;
+    int32_t srcDamMin = 0;
+    int32_t srcDamMax = 0;
     if (pSkillsTxtRecord->nSrcDam)
     {
         int32_t vUnknown1 = 0;
@@ -167,29 +168,31 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageRight(D2UnitStrc* pUnit, D2SkillSt
         D2Client_sub_6FB0B2C0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, 0, pSkill, 128, 0, 0);
         D2Client_sub_6FB0B6F0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, pSkill);
 
-        v10 = pSkillsTxtRecord->nSrcDam * vUnknown1 / 128;
-        v11 = pSkillsTxtRecord->nSrcDam * vUnknown2 / 128;
+        srcDamMin = pSkillsTxtRecord->nSrcDam * vUnknown1 / 128;
+        srcDamMax = pSkillsTxtRecord->nSrcDam * vUnknown2 / 128;
     }
-    int32_t v15 = (SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + v10;
-    int32_t v16 = (SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + v11;
 
-    int32_t nMinRange;
+    int32_t minPhysDamage = (SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + srcDamMin;
+    int32_t maxPhysDamage = (SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + srcDamMax;
+
+    int32_t minDamage;
     int32_t maxDamage;
-    if (pSkillsTxtRecord->nEType == 5)
+    if (pSkillsTxtRecord->nEType == ELEMTYPE_POIS)
     {
         int32_t elementalLength = SKILLS_GetElementalLength(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
-        int32_t minElemDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
-        nMinRange = ((elementalLength * minElemDamage) >> 8) + v15;
-        int32_t maxElemDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
-        maxDamage = elementalLength * maxElemDamage;
+
+        minDamage = elementalLength * SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        maxDamage = elementalLength * SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     }
     else
     {
-        nMinRange = (SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) >> 8) + v15;
+        minDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
         maxDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     }
 
-    int32_t nMaxRange = (maxDamage >> 8) + v16;
+    int32_t nMinRange = (minDamage >> 8) + minPhysDamage;
+    int32_t nMaxRange = (maxDamage >> 8) + maxPhysDamage;
+
     if (nMinRange >= nMaxRange)
     {
         nMaxRange = nMinRange + 1;
