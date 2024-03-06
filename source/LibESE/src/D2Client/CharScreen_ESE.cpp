@@ -130,7 +130,102 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageLeft(D2UnitStrc* pUnit, D2SkillStr
     );
 }
 
-void __fastcall ESE_CHARSCREEN_DrawSkillDamageRight(D2UnitStrc* pUnit, int a2, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_CHARSCREEN_DrawSkillDamageRight(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
+    wchar_t buff[32];
 
+    if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
+    {
+        return;
+    }
+
+    int32_t nColor = 0;
+    switch (pSkillsTxtRecord->nEType - 1)
+    {
+    case 0:
+        nColor = 1;
+        break;
+    case 1:
+        nColor = 9;
+        break;
+    case 2:
+    case 3:
+        nColor = 3;
+        break;
+    case 4:
+        nColor = 2;
+        break;
+    }
+
+    int32_t v10 = 0;
+    int32_t v11 = 0;
+    if (pSkillsTxtRecord->nSrcDam)
+    {
+        int32_t vUnknown1 = 0;
+        int32_t vUnknown2 = 0;
+
+        D2Client_sub_6FB0B2C0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, 0, pSkill, 128, 0, 0);
+        D2Client_sub_6FB0B6F0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, pSkill);
+
+        v10 = pSkillsTxtRecord->nSrcDam * vUnknown1 / 128;
+        v11 = pSkillsTxtRecord->nSrcDam * vUnknown2 / 128;
+    }
+    int32_t v15 = (SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + v10;
+    int32_t v16 = (SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + v11;
+
+    int32_t nMinRange;
+    int32_t maxDamage;
+    if (pSkillsTxtRecord->nEType == 5)
+    {
+        int32_t elementalLength = SKILLS_GetElementalLength(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        int32_t minElemDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        nMinRange = ((elementalLength * minElemDamage) >> 8) + v15;
+        int32_t maxElemDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        maxDamage = elementalLength * maxElemDamage;
+    }
+    else
+    {
+        nMinRange = (SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) >> 8) + v15;
+        maxDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+    }
+
+    int32_t nMaxRange = (maxDamage >> 8) + v16;
+    if (nMinRange >= nMaxRange)
+    {
+        nMaxRange = nMinRange + 1;
+    }
+   
+    if (nMinRange == nMaxRange)
+    {
+        swprintf_s(buff, L"%d", nMinRange);
+    }
+    else
+    {
+        ESE_PrintRangeString(buff, nMinRange, nMaxRange, 0, 1);
+    }
+
+    int32_t v20 = 0;
+    int32_t pWidth = 0;
+    int32_t pHeight = 0;
+    D2Win_10131_GetTextDimensions((Unicode*)&buff[0], &pWidth, &pHeight);
+
+    int32_t widthMod = (11 * pWidth) / 7;
+    if (widthMod <= offsetC - offsetA)
+    {
+        D2Win_10127_SetFont(D2FONT_FONT16);
+        v20 = offsetB;
+    }
+    else
+    {
+        D2Win_10127_SetFont(D2FONT_FONT6);
+        v20 = (offsetB - 1);
+    }
+
+    D2Client_DrawTextCentered(
+        *D2Client_pDWORD_6FBBA748 + offsetA,
+        *D2Client_pDWORD_6fbba74c + *D2Client_pDWORD_6fb740f0 + v20 - 0x1e0,
+        *D2Client_pDWORD_6FBBA748 + offsetC,
+        (Unicode*)&buff[0],
+        nColor
+    );
 }
