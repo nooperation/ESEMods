@@ -7,7 +7,7 @@
 #include <D2StatList.h>
 #include <Units/Units.h>
 #include <Units/UnitFinds.h>
-
+#include "D2Game/UNIT/SUnitDmg_ESE.h"
 
 struct D2AuraCallbackStrc;
 
@@ -25,13 +25,13 @@ int32_t __fastcall ESE_SKILLS_SrvDo034_TigerStrike_CobraStrike_RoyalStrike(D2Gam
 //D2Game.0x6FCF55B0
 int32_t __fastcall ESE_SKILLS_SrvDo035_FistsOfFire_ClawsOfThunder_BladesOfIce(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCF5680
-void __fastcall ESE_sub_6FCF5680(D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_sub_6FCF5680(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCF5870
-void __fastcall ESE_sub_6FCF5870(D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_sub_6FCF5870(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCF5B90
 D2SkillsTxt* __fastcall ESE_SKILLS_GetSkillsTxtRecord(int32_t nSkillId);
 //D2Game.0x6FCF5BC0
-void __fastcall ESE_sub_6FCF5BC0(D2UnitStrc* pUnit, D2StatListStrc* pStatList, D2DamageStrc* pDamage);
+void __fastcall ESE_sub_6FCF5BC0(D2UnitStrc* pUnit, D2StatListStrc* pStatList, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCF5DE0
 int32_t __fastcall ESE_sub_6FCF5DE0(D2AuraCallbackStrc* pAuraCallback, D2UnitStrc* pUnit);
 //D2Game.0x6FCF5E20
@@ -61,13 +61,13 @@ int32_t __fastcall ESE_SKILLS_SrvDo040_RoyalStrike_ProgressiveFn1(D2GameStrc* pG
 //D2Game.0x6FCF7610
 int32_t __fastcall ESE_SKILLS_SrvDo041_RoyalStrike_ProgressiveFn3(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCF77E0
-void __fastcall ESE_sub_6FCF77E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __fastcall ESE_sub_6FCF77E0(D2GameStrc* pGame, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FCF7AD0
 int32_t __fastcall ESE_SKILLS_SrvSt24_DragonTalon(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCF7BC0
 void __fastcall ESE_sub_6FCF7BC0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, D2SkillsTxt* pSkillsTxtRecordArg, int32_t nSkillId, int32_t nSkillLevel, int32_t bKnockback);;
 //D2Game.0x6FCF7CE0
-void __fastcall ESE_sub_6FCF7CE0(D2GameStrc* pGame, D2DamageStrc* pDamage, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int32_t nSkillId, int32_t nSkillLevel);
+void __fastcall ESE_sub_6FCF7CE0(D2GameStrc* pGame, ESE_D2DamageStrc* pDamage, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCF8110
 int32_t __fastcall ESE_SKILLS_SrvDo042_DragonTalon(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCF8330

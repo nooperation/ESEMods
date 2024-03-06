@@ -14,36 +14,6 @@
 #include <D2Combat.h>
 #include <Calc.h>
 
-int64_t __fastcall ESE_DATATBLS_ApplyRatio(int64_t nValue, int64_t nMultiplier, int64_t nDivisor)
-{
-	if (nDivisor)
-	{
-		if (nValue <= 0xB504F333LL)
-		{
-			if (nMultiplier <= 0xB504F333LL)
-			{
-				return nMultiplier * nValue / nDivisor;
-			}
-
-			if (nDivisor <= (nMultiplier >> 4))
-			{
-				return nValue * (nMultiplier / nDivisor);
-			}
-		}
-		else
-		{
-			if (nDivisor <= (nValue >> 4))
-			{
-				return nMultiplier * (nValue / nDivisor);
-			}
-		}
-
-		return nMultiplier * nValue / nDivisor;
-	}
-
-	return 0;
-}
-
 // Inlined, not intercepted
 D2MissilesTxt* __fastcall ESE_DATATBLS_GetMissilesTxtRecord(int nMissileId)
 {

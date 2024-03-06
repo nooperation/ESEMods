@@ -633,7 +633,7 @@ int64_t __fastcall ESE_SKILLS_CalculateMasteryBonus(D2UnitStrc* pUnit, int nElem
 
 	// TODO: Rewrite ApplyRatio to 64bit
 	auto nPercentage = STATLIST_UnitGetStatValue(pUnit, statId, 0);
-	return DATATBLS_ApplyRatio(nSrcDamage, nPercentage, 100);
+	return ESE_DATATBLS_ApplyRatio(nSrcDamage, nPercentage, 100);
 }
 
 //D2Common.0x6FDB2B00 (#11005)

@@ -1,4 +1,5 @@
 #include "D2Game/UNIT/SUnitEvent_ESE.h"
+#include "LibESE.h"
 
 #include <Fog.h>
 #include <GAME/Game.h>
@@ -11,10 +12,10 @@ void __fastcall ESE_SUNITEVENT_FreeTimerList(D2GameStrc* pGame, D2UnitStrc* pUni
         return;
     }
 
-    D2UnitEventStrc* pTimer = pUnit->pSrvTimerList;
+    ESE_D2UnitEventStrc* pTimer = (ESE_D2UnitEventStrc *)pUnit->pSrvTimerList;
     while (pTimer)
     {
-        D2UnitEventStrc* pNext = pTimer->pNext;
+        ESE_D2UnitEventStrc* pNext = pTimer->pNext;
         D2_FREE_POOL(pGame->pMemoryPool, pTimer);
         pTimer = pNext;
     }
@@ -23,29 +24,29 @@ void __fastcall ESE_SUNITEVENT_FreeTimerList(D2GameStrc* pGame, D2UnitStrc* pUni
 }
 
 //D2Game.0x6FCC3650
-D2UnitEventStrc* __fastcall ESE_SUNITEVENT_AllocTimer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint8_t nTimerType, int32_t nGUID1, int32_t nGUID2, D2UnitEventCallbackFunction pCallback, uint32_t nQueueNo, int32_t a8)
+ESE_D2UnitEventStrc* __fastcall ESE_SUNITEVENT_AllocTimer(D2GameStrc* pGame, D2UnitStrc* pUnit, uint8_t nTimerType, int32_t nGUID1, int32_t nGUID2, ESE_D2UnitEventCallbackFunction pCallback, uint32_t nQueueNo, int32_t a8)
 {
     if (!pUnit)
     {
         return nullptr;
     }
 
-    D2UnitEventStrc* pTimer = D2_CALLOC_STRC_POOL(pGame->pMemoryPool, D2UnitEventStrc);
+    ESE_D2UnitEventStrc* pTimer = D2_CALLOC_STRC_POOL(pGame->pMemoryPool, ESE_D2UnitEventStrc);
 
     pTimer->nTimerType = nTimerType;
     pTimer->nGUID1 = nGUID1;
     pTimer->nGUID2 = nGUID2;
     pTimer->pCallback = pCallback;
-    pTimer->pNext = pUnit->pSrvTimerList;
+    pTimer->pNext = (ESE_D2UnitEventStrc *)pUnit->pSrvTimerList;
     pTimer->nQueueNo = nQueueNo;
     pTimer->unk0x08 = a8;
 
     if (pUnit->pSrvTimerList)
     {
-        pUnit->pSrvTimerList->pPrevious = pTimer;
+        ((ESE_D2UnitEventStrc*)(pUnit->pSrvTimerList))->pPrevious = pTimer;
     }
 
-    pUnit->pSrvTimerList = pTimer;
+    pUnit->pSrvTimerList = (D2UnitEventStrc *)pTimer;
     return pTimer;
 }
 
@@ -57,10 +58,10 @@ void __fastcall ESE_SUNITEVENT_FreeTimer(D2GameStrc* pGame, D2UnitStrc* pUnit, i
         return;
     }
 
-    D2UnitEventStrc* pTimer = pUnit->pSrvTimerList;
+    ESE_D2UnitEventStrc* pTimer = (ESE_D2UnitEventStrc *)pUnit->pSrvTimerList;
     while (pTimer)
     {
-        D2UnitEventStrc* pNext = pTimer->pNext;
+        ESE_D2UnitEventStrc* pNext = pTimer->pNext;
         if (pTimer->nQueueNo == nTimerQueueNo && pTimer->unk0x08 == a4)
         {
             if (pTimer->nTimerFlags & 1)
@@ -75,7 +76,7 @@ void __fastcall ESE_SUNITEVENT_FreeTimer(D2GameStrc* pGame, D2UnitStrc* pUnit, i
                 }
                 else
                 {
-                    pUnit->pSrvTimerList = pNext;
+                    pUnit->pSrvTimerList = (D2UnitEventStrc*)pNext;
                 }
 
                 if (pTimer->pNext)
@@ -92,14 +93,14 @@ void __fastcall ESE_SUNITEVENT_FreeTimer(D2GameStrc* pGame, D2UnitStrc* pUnit, i
 }
 
 //D2Game.0x6FCC3750
-D2UnitEventStrc* __fastcall ESE_SUNITEVENT_GetTimer(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nTimerQueueNo, int32_t a4, int32_t nGUID1)
+ESE_D2UnitEventStrc* __fastcall ESE_SUNITEVENT_GetTimer(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nTimerQueueNo, int32_t a4, int32_t nGUID1)
 {
     if (!pUnit)
     {
         return nullptr;
     }
 
-    for (D2UnitEventStrc* pTimer = pUnit->pSrvTimerList; pTimer; pTimer = pTimer->pNext)
+    for (ESE_D2UnitEventStrc* pTimer = (ESE_D2UnitEventStrc*)pUnit->pSrvTimerList; pTimer; pTimer = pTimer->pNext)
     {
         if (pTimer->nQueueNo == nTimerQueueNo && pTimer->unk0x08 == a4 && pTimer->nGUID1 == nGUID1)
         {
@@ -111,7 +112,7 @@ D2UnitEventStrc* __fastcall ESE_SUNITEVENT_GetTimer(D2GameStrc* pGame, D2UnitStr
 }
 
 //D2Game.0x6FCC3790
-int32_t __fastcall ESE_SUNITEVENT_EventFunc_Handler(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage)
+int32_t __fastcall ESE_SUNITEVENT_EventFunc_Handler(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage)
 {
     if (!pAttacker)
     {
@@ -119,10 +120,10 @@ int32_t __fastcall ESE_SUNITEVENT_EventFunc_Handler(D2GameStrc* pGame, int32_t n
     }
 
     int32_t nResult = 0;
-    D2UnitEventStrc* pTimer = pAttacker->pSrvTimerList;
+    ESE_D2UnitEventStrc* pTimer = (ESE_D2UnitEventStrc * )pAttacker->pSrvTimerList;
     while (pTimer)
     {
-        D2UnitEventStrc* pNext = pTimer->pNext;
+        ESE_D2UnitEventStrc* pNext = pTimer->pNext;
         if (pTimer->nTimerType == nEvent)
         {
             pTimer->nTimerFlags |= 1u;
@@ -137,7 +138,7 @@ int32_t __fastcall ESE_SUNITEVENT_EventFunc_Handler(D2GameStrc* pGame, int32_t n
                 }
                 else
                 {
-                    pAttacker->pSrvTimerList = pNext;
+                    pAttacker->pSrvTimerList = (D2UnitEventStrc *)pNext;
                 }
 
                 if (pTimer->pNext)

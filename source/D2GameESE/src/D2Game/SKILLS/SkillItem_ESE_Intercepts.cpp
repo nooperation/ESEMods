@@ -125,47 +125,64 @@ void __fastcall ESE_INTERCEPT_SKILLITEM_DeactivateAura(D2GameStrc* pGame, D2Unit
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc06_AttackerTakesDamage(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc06_AttackerTakesDamage(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc06_AttackerTakesDamage(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc10_AttackerTakesLightDamage(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc10_AttackerTakesLightDamage(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc10_AttackerTakesLightDamage(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc11_ApplyFireDamage(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc11_ApplyFireDamage(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc11_ApplyFireDamage(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc12_ApplyColdDamage(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc12_ApplyColdDamage(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc12_ApplyColdDamage(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc07_Knockback(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc07_Knockback(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc07_Knockback(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc08_Howl(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc08_Howl(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc08_Howl(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc09_Stupidity(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc09_Stupidity(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc09_Stupidity(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc13_DamageToMana(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc13_DamageToMana(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc13_DamageToMana(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc14_Freeze(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc14_Freeze(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc14_Freeze(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_CalculateOpenWoundsHpRegen(int32_t nLevel, const int32_t* pValues)
@@ -175,62 +192,86 @@ int32_t __fastcall ESE_INTERCEPT_SKILLITEM_CalculateOpenWoundsHpRegen(int32_t nL
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc15_OpenWounds(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc15_OpenWounds(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc15_OpenWounds(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc16_CrushingBlow(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc16_CrushingBlow(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc16_CrushingBlow(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc17_ManaAfterKill(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc17_ManaAfterKill(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc17_ManaAfterKill(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc28_HealAfterKill(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc28_HealAfterKill(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc28_HealAfterKill(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc18_HealAfterDemonKill(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc18_HealAfterDemonKill(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc18_HealAfterDemonKill(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc19_Slow(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc19_Slow(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc19_Slow(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc20_SkillOnAttackHitKill(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc20_SkillOnAttackHitKill(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc20_SkillOnAttackHitKill(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc21_SkillOnGetHit(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc21_SkillOnGetHit(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc21_SkillOnGetHit(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc30_SkillOnDeathLevelup(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc30_SkillOnDeathLevelup(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc30_SkillOnDeathLevelup(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc29_RestInPeace(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc29_RestInPeace(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc29_RestInPeace(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_TimerCallback_ReanimateMonster(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pSource, D2UnitStrc* pTarget, D2DamageStrc* pDamage, int32_t nMonId, int32_t nOwnerId)
 {
-    return ESE_SKILLITEM_TimerCallback_ReanimateMonster(pGame, nEvent, pSource, pTarget, pDamage, nMonId, nOwnerId);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_TimerCallback_ReanimateMonster(pGame, nEvent, pSource, pTarget, &tempDamageStrc, nMonId, nOwnerId);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_EventFunc31_Reanimate(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLITEM_EventFunc31_Reanimate(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLITEM_EventFunc31_Reanimate(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLITEM_FindTargetPosition(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)

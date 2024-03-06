@@ -60,7 +60,7 @@ void __fastcall ESE_sub_6FCBDE90(D2UnitStrc* pUnit, int32_t bSetUninterruptable)
         D2UnitStrc* pAttacker = SUNIT_GetLastAttacker(pGame, pUnit);
         if (pAttacker)
         {
-            D2DamageStrc damage = {};
+            ESE_D2DamageStrc damage = {};
             damage.wResultFlags |= DAMAGERESULTFLAG_WILLDIE;
             ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &damage);
         }

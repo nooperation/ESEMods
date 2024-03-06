@@ -18,6 +18,8 @@
 
 #include <../D2CommonExports.h>
 #include <../D2FogExports.h>
+#include <../D2WinExports.h>
+#include <../D2ClientExports.h>
 
 void InitD2MooHeaders();
 
@@ -25,6 +27,7 @@ extern "C" const uint32_t gdwBitMasks[32];
 extern "C" const uint32_t gdwInvBitMasks[32];
 extern D2pSpellTblStrc* gPSpellTable;
 extern int32_t* gPSpellTableSize;
+extern D2MissileUnitFindTableStrc* stru_6FD2E5F8;
 
 // CommonDefinitions
 

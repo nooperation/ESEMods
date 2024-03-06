@@ -55,4 +55,4 @@ int32_t __fastcall ESE_SKILLS_SrvDo082_Redemption(D2GameStrc* pGame, D2UnitStrc*
 //D2Game.0x6FD1B490
 int32_t __fastcall ESE_SKILLS_AuraCallback_Redemption(D2AuraCallbackStrc* pAuraCallback, D2UnitStrc* pUnit);
 //D2Game.0x6FD1B4C0
-void __fastcall ESE_SKILLS_ApplyThornsDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
+void __fastcall ESE_SKILLS_ApplyThornsDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage);

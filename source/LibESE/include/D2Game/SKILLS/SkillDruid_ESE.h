@@ -39,7 +39,7 @@ int32_t __fastcall ESE_sub_6FCFEDD0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2Unit
 //D2Game.0x6FCFEFD0
 int32_t __fastcall ESE_SKILLS_SrvDo121_Rabies(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCFF2E0
-void __fastcall ESE_sub_6FCFF2E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int32_t nRange, int32_t nSkillId, int32_t nSkillLevel);
+void __fastcall ESE_sub_6FCFF2E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int64_t nRange, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCFF3C0
 int32_t __fastcall ESE_SKILLS_SrvSt58_FireClaws(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FCFF4E0
@@ -53,7 +53,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo145_Unused(D2GameStrc* pGame, D2UnitStrc* pUn
 //D2Game.0x6FCFFCA0
 int32_t __fastcall ESE_SKILLS_SrvDo146_Unused(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD00140
-int32_t __fastcall ESE_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int32_t __fastcall ESE_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD00370
 int32_t __fastcall ESE_sub_6FD00370(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillLevel);
 //D2Game.0x6FD004E0
@@ -109,7 +109,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt63_Corpse_VineCycler(D2GameStrc* pGame, D2Uni
 //D2Game.0x6FD025C0
 int32_t __fastcall ESE_SKILLS_SrvDo147_Unused(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD025E0
-int32_t __fastcall ESE_D2GAME_SKILLS_BloodMana_6FD025E0(D2UnitStrc* pUnit, int32_t nManaCost);
+int32_t __fastcall ESE_D2GAME_SKILLS_BloodMana_6FD025E0(D2UnitStrc* pUnit, int64_t nManaCost);
 //D2Game.0x6FD026B0
 int32_t __fastcall ESE_SKILLS_SrvDo140_BaalTentacle(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD02950
