@@ -1,22 +1,24 @@
 #include <D2Client/CharScreen_ESE.h>
+#include <D2Common/D2Skills_ESE.h>
 #include <D2Combat.h>
 #include "Font.h"
+#include <cinttypes>
 
-void ESE_PrintRangeString(wchar_t* pText, int minDamage, int maxDamage, int isAdditonRange, int allowThousandsSuffix)
+void ESE_PrintRangeString(wchar_t* pText, int64_t minDamage, int64_t maxDamage, int isAdditonRange, int allowThousandsSuffix)
 {
     const wchar_t* prefix = isAdditonRange ? L"+" : L"";
 
     if (allowThousandsSuffix && minDamage >= 10000 && maxDamage >= 10000)
     {
-        swprintf(pText, L"%s%dK-%dK", prefix, (minDamage + 500) / 1000, (maxDamage + 500) / 1000);
+        swprintf(pText, L"%s%lldK-%lldK", prefix, (minDamage + 500) / 1000, (maxDamage + 500) / 1000);
     }
     else if (allowThousandsSuffix && maxDamage >= 10000)
     {
-        swprintf(pText, L"%s%d-%dK", prefix, minDamage, (maxDamage + 500) / 1000);
+        swprintf(pText, L"%s%lld-%lldK", prefix, minDamage, (maxDamage + 500) / 1000);
     }
     else 
     {
-        swprintf(pText, L"%s%d-%d", prefix, minDamage, maxDamage);
+        swprintf(pText, L"%s%lld-%lld", prefix, minDamage, maxDamage);
     }
 }
 
@@ -53,8 +55,8 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageLeft(D2UnitStrc* pUnit, D2SkillStr
         return;
     }
 
-    int32_t minElemDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtIndex, nSkillLevel, 1);
-    int32_t maxElemDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+    int64_t minElemDamage = ESE_SKILLS_GetMinElemDamage(pUnit, pSkillsTxtIndex, nSkillLevel, 1);
+    int64_t maxElemDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     int8_t nColor = 0;
 
     switch (pSkillsTxtRecord->nEType)
@@ -75,21 +77,21 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageLeft(D2UnitStrc* pUnit, D2SkillStr
     }
 
     int32_t skillId = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-    int32_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
+    int64_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
     if (!ddamCalc1)
     {
         ddamCalc1 = 1;
     }
 
     int32_t skillIdAgain = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-    int32_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
+    int64_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
     if (!ddamCalc2)
     {
         ddamCalc2 = 1;
     }
 
-    int32_t nMinRange = (25 * minElemDamage * ddamCalc1 / ddamCalc2) >> 8;
-    int32_t nMaxRange = (25 * maxElemDamage * ddamCalc1 / ddamCalc2) >> 8;
+    int64_t nMinRange = (25ll * minElemDamage * ddamCalc1 / ddamCalc2) >> 8;
+    int64_t nMaxRange = (25ll * maxElemDamage * ddamCalc1 / ddamCalc2) >> 8;
     if (nMinRange >= nMaxRange)
     {
         nMaxRange = nMinRange + 1;
@@ -97,7 +99,7 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageLeft(D2UnitStrc* pUnit, D2SkillStr
 
     if (nMinRange == nMaxRange)
     {
-        swprintf_s(buff, L"%d", nMinRange);
+        swprintf_s(buff, L"%lld", nMinRange);
     }
     else
     {
@@ -158,8 +160,8 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageRight(D2UnitStrc* pUnit, D2SkillSt
         break;
     }
 
-    int32_t srcDamMin = 0;
-    int32_t srcDamMax = 0;
+    int64_t srcDamMin = 0;
+    int64_t srcDamMax = 0;
     if (pSkillsTxtRecord->nSrcDam)
     {
         int32_t vUnknown1 = 0;
@@ -168,30 +170,30 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageRight(D2UnitStrc* pUnit, D2SkillSt
         D2Client_sub_6FB0B2C0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, 0, pSkill, 128, 0, 0);
         D2Client_sub_6FB0B6F0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, pSkill);
 
-        srcDamMin = pSkillsTxtRecord->nSrcDam * vUnknown1 / 128;
-        srcDamMax = pSkillsTxtRecord->nSrcDam * vUnknown2 / 128;
+        srcDamMin = (int64_t)pSkillsTxtRecord->nSrcDam * vUnknown1 / 128;
+        srcDamMax = (int64_t)pSkillsTxtRecord->nSrcDam * vUnknown2 / 128;
     }
 
-    int32_t minPhysDamage = (SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + srcDamMin;
-    int32_t maxPhysDamage = (SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + srcDamMax;
+    int64_t minPhysDamage = (ESE_SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + srcDamMin;
+    int64_t maxPhysDamage = (ESE_SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + srcDamMax;
 
-    int32_t minDamage;
-    int32_t maxDamage;
+    int64_t minDamage;
+    int64_t maxDamage;
     if (pSkillsTxtRecord->nEType == ELEMTYPE_POIS)
     {
-        int32_t elementalLength = SKILLS_GetElementalLength(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        int64_t elementalLength = ESE_SKILLS_GetElementalLength(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
 
-        minDamage = elementalLength * SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
-        maxDamage = elementalLength * SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        minDamage = elementalLength * ESE_SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        maxDamage = elementalLength * ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     }
     else
     {
-        minDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
-        maxDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        minDamage = ESE_SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        maxDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     }
 
-    int32_t nMinRange = (minDamage >> 8) + minPhysDamage;
-    int32_t nMaxRange = (maxDamage >> 8) + maxPhysDamage;
+    int64_t nMinRange = (minDamage >> 8) + minPhysDamage;
+    int64_t nMaxRange = (maxDamage >> 8) + maxPhysDamage;
 
     if (nMinRange >= nMaxRange)
     {
@@ -200,7 +202,7 @@ void __fastcall ESE_CHARSCREEN_DrawSkillDamageRight(D2UnitStrc* pUnit, D2SkillSt
    
     if (nMinRange == nMaxRange)
     {
-        swprintf_s(buff, L"%d", nMinRange);
+        swprintf_s(buff, L"%lld", nMinRange);
     }
     else
     {
