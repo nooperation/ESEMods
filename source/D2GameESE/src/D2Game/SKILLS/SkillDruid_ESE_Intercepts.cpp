@@ -169,7 +169,9 @@ int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo146_Unused(D2GameStrc* pGame, D2Uni
 
 int32_t __fastcall ESE_INTERCEPT_D2GAME_EventFunc25_6FD00140(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_D2GAME_EventFunc25_6FD00140(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_D2GAME_EventFunc25_6FD00140(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_sub_6FD00370(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillLevel)

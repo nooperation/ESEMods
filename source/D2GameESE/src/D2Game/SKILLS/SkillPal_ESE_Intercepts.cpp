@@ -136,7 +136,9 @@ int32_t __fastcall ESE_INTERCEPT_SKILLS_AuraCallback_Redemption(D2AuraCallbackSt
 
 void __fastcall ESE_INTERCEPT_SKILLS_ApplyThornsDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
 {
-    ESE_SKILLS_ApplyThornsDamage(pGame, pAttacker, pDefender, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_SKILLS_ApplyThornsDamage(pGame, pAttacker, pDefender, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 

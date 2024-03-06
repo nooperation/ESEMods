@@ -1,4 +1,5 @@
 #include "D2Game/MONSTER/MonsterUnique_ESE_Intercepts.h"
+#include "LibESE.h"
 
 MONSTERUNIQUE_CalculatePercentage_t MONSTERUNIQUE_CalculatePercentage_Original = nullptr;
 MONSTERUNIQUE_UMod16_Champion_t MONSTERUNIQUE_UMod16_Champion_Original = nullptr;
@@ -21,7 +22,8 @@ MONSTERUNIQUE_CastSuicideExplodeMissile_t MONSTERUNIQUE_CastSuicideExplodeMissil
 
 int32_t __fastcall ESE_INTERCEPT_MONSTERUNIQUE_CalculatePercentage(int32_t a1, int32_t a2, int32_t a3)
 {
-    return ESE_MONSTERUNIQUE_CalculatePercentage(a1, a2, a3);
+    auto result = ESE_DATATBLS_ApplyRatio(a1, a2, a3);
+    return Clamp64To32(result);
 }
 
 void __fastcall ESE_INTERCEPT_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)

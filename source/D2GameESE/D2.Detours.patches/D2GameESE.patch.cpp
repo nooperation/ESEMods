@@ -4,7 +4,6 @@
 
 #include <GAME/Game.h>
 
-#include "ESEDamageCalc.h"
 #include "D2Common/D2Skills_ESE.h"
 #include "D2Game/UNIT/SUnitDmg_ESE_INTERCEPTS.h"
 #include "D2Game/UNIT/SUnitEvent_ESE_Intercepts.h"
@@ -441,10 +440,6 @@ extern "C"
         {0x6FD18200 - D2GameImageBase, &ESE_INTERCEPT_SKILLS_EventFunc03_ShiverArmor, PatchAction::FunctionReplaceOriginalByPatch, &SKILLS_EventFunc03_ShiverArmor_Original},
         
         // MissMode
-        {0x6FC55CE0 - D2GameImageBase, &ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithMonster, PatchAction::FunctionReplaceOriginalByPatch, &MISSMODE_UnitFindCallback_CanCollideWithMonster_Original},
-        {0x6FC55D90 - D2GameImageBase, &ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit, PatchAction::FunctionReplaceOriginalByPatch, &MISSMODE_UnitFindCallback_CanCollideWithGoodAlignmentUnit_Original},
-        {0x6FC55E60 - D2GameImageBase, &ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster, PatchAction::FunctionReplaceOriginalByPatch, &MISSMODE_UnitFindCallback_CanCollideWithPlayerOrMonster_Original},
-        {0x6FC55F20 - D2GameImageBase, &ESE_INTERCEPT_MISSMODE_UnitFindCallback_CanMissileDestroy, PatchAction::FunctionReplaceOriginalByPatch, &MISSMODE_UnitFindCallback_CanMissileDestroy_Original},
         {0x6FC55F80 - D2GameImageBase, &ESE_INTERCEPT_MISSMODE_FillDamageParams, PatchAction::FunctionReplaceOriginalByPatch, &MISSMODE_FillDamageParams_Original},
         {0x6FC56290 - D2GameImageBase, &ESE_INTERCEPT_MISSMODE_RollDamageValue, PatchAction::FunctionReplaceOriginalByPatch, &MISSMODE_RollDamageValue_Original},
         {0x6FC56480 - D2GameImageBase, &ESE_INTERCEPT_MISSMODE_GetDamageValue, PatchAction::FunctionReplaceOriginalByPatch, &MISSMODE_GetDamageValue_Original},

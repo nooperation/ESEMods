@@ -4,15 +4,16 @@
 #include <UNIT/SUnitDmg.h>
 #include <MONSTER/MonsterMode.h>
 #include <Units/Units.h>
+#include "D2Game/UNIT/SUnitDmg_ESE.h"
 
 //D2Game.0x6FC627B0
 void __fastcall ESE_sub_6FC627B0(D2UnitStrc* pUnit, int32_t nMode);
 //D2Game.0x6FC62D90
 void __fastcall ESE_sub_6FC62D90(D2UnitStrc* pUnit, D2GameStrc* pGame);
 //D2Game.0x6FC62DF0
-void __stdcall ESE_sub_6FC62DF0(D2UnitStrc* pUnit, D2DamageStrc* pDamage);
+void __stdcall ESE_sub_6FC62DF0(D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC62E70
-void __fastcall ESE_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage);
+void __fastcall ESE_D2GAME_MONSTER_ApplyCriticalDamage_6FC62E70(D2UnitStrc* pAttacker, D2UnitStrc* pDefender, ESE_D2DamageStrc* pDamage);
 //D2Game.0x6FC63440
 void __fastcall ESE_D2GAME_ApplyPeriodicStatDamage_6FC63440(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t a3, int32_t a4);
 //D2Game.0x6FC63B30

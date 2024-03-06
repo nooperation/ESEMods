@@ -216,7 +216,7 @@ D2UnitStrc* __fastcall ESE_MISSILES_CreateMissileFromParams(D2GameStrc* pGame, D
         PATH_SetFootprintCollisionMask(pMissile->pDynamicPath, COLLIDE_NONE);
     }
 
-    PATH_SetMoveTestCollisionMask(pMissile->pDynamicPath, ESE_stru_6FD2E5F8[pMissilesTxtRecord->nCollideType].nCollisionMask);
+    PATH_SetMoveTestCollisionMask(pMissile->pDynamicPath, stru_6FD2E5F8[pMissilesTxtRecord->nCollideType].nCollisionMask);
 
     if (pMissilesTxtRecord->dwMissileFlags & gdwBitMasks[MISSILESFLAGINDEX_CANDESTROY])
     {
@@ -261,7 +261,7 @@ D2UnitStrc* __fastcall ESE_MISSILES_CreateMissileFromParams(D2GameStrc* pGame, D
     MISSILE_SetLevel(pMissile, missileParams->nSkillLevel);
 
     sub_6FC7C900(missileParams->pOwner, 0);
-    D2MissileDamageDataStrc missileDamageData = {};
+    ESE_D2MissileDamageDataStrc64 missileDamageData = {};
     ESE_MISSILE_CalculateDamageData(&missileDamageData, missileParams->pOwner, missileParams->pOrigin, pMissile, missileParams->nSkillLevel);
     ESE_MISSILE_SetDamageStats(missileParams->pOwner, pMissile, &missileDamageData, missileParams->nSkillLevel);
 

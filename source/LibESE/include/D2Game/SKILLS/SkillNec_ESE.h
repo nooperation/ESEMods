@@ -76,16 +76,16 @@ int32_t __fastcall ESE_SKILLS_SrvDo062_BonePrison(D2GameStrc* pGame, D2UnitStrc*
 //D2Game.0x6FD0E790
 int32_t __fastcall ESE_SKILLS_SrvDo063_PoisonExplosion(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0E840
-int32_t __fastcall ESE_D2GAME_EventFunc04_6FD0E840(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int32_t __fastcall ESE_D2GAME_EventFunc04_6FD0E840(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0EDE0
-int32_t __fastcall ESE_D2GAME_EventFunc05_6FD0EDE0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int32_t __fastcall ESE_D2GAME_EventFunc05_6FD0EDE0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0F000
-int32_t __fastcall ESE_D2GAME_EventFunc22_6FD0F000(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int32_t __fastcall ESE_D2GAME_EventFunc22_6FD0F000(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0F1F0
-int32_t __fastcall ESE_D2GAME_EventFunc23_6FD0F1F0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int32_t __fastcall ESE_D2GAME_EventFunc23_6FD0F1F0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0F590
-int32_t __fastcall ESE_sub_6FD0F590(D2UnitStrc* pUnit, int32_t nValue);
+int64_t __fastcall ESE_sub_6FD0F590(D2UnitStrc* pUnit, int64_t nValue);
 //D2Game.0x6FD0F5E0
-int32_t __fastcall ESE_D2GAME_EventFunc26_6FD0F5E0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int32_t __fastcall ESE_D2GAME_EventFunc26_6FD0F5E0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
 //D2Game.0x6FD0F7A0
-int32_t __fastcall ESE_D2GAME_EventFunc27_6FD0F7A0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);
+int32_t __fastcall ESE_D2GAME_EventFunc27_6FD0F7A0(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, ESE_D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel);

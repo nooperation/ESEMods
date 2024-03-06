@@ -88,12 +88,16 @@ int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo035_FistsOfFire_ClawsOfThunder_Blad
 
 void __fastcall ESE_INTERCEPT_sub_6FCF5680(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 {
-    ESE_sub_6FCF5680(pUnit, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_sub_6FCF5680(pUnit, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_sub_6FCF5870(D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 {
-    ESE_sub_6FCF5870(pUnit, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_sub_6FCF5870(pUnit, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 D2SkillsTxt* __fastcall ESE_INTERCEPT_SKILLS_GetSkillsTxtRecord(int32_t nSkillId)
@@ -103,7 +107,9 @@ D2SkillsTxt* __fastcall ESE_INTERCEPT_SKILLS_GetSkillsTxtRecord(int32_t nSkillId
 
 void __fastcall ESE_INTERCEPT_sub_6FCF5BC0(D2UnitStrc* pUnit, D2StatListStrc* pStatList, D2DamageStrc* pDamage)
 {
-    ESE_sub_6FCF5BC0(pUnit, pStatList, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_sub_6FCF5BC0(pUnit, pStatList, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_sub_6FCF5DE0(D2AuraCallbackStrc* pAuraCallback, D2UnitStrc* pUnit)
@@ -178,7 +184,9 @@ int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo041_RoyalStrike_ProgressiveFn3(D2Ga
 
 void __fastcall ESE_INTERCEPT_sub_6FCF77E0(D2GameStrc* pGame, D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 {
-    ESE_sub_6FCF77E0(pGame, pUnit, pDamage);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_sub_6FCF77E0(pGame, pUnit, &tempDamageStrc);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvSt24_DragonTalon(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)
@@ -193,7 +201,9 @@ void __fastcall ESE_INTERCEPT_sub_6FCF7BC0(D2GameStrc* pGame, D2UnitStrc* pUnit,
 
 void __fastcall ESE_INTERCEPT_sub_6FCF7CE0(D2GameStrc* pGame, D2DamageStrc* pDamage, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int32_t nSkillId, int32_t nSkillLevel)
 {
-    ESE_sub_6FCF7CE0(pGame, pDamage, pUnit, pTarget, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_sub_6FCF7CE0(pGame, &tempDamageStrc, pUnit, pTarget, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo042_DragonTalon(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)

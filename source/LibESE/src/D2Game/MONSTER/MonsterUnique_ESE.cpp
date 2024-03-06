@@ -37,37 +37,6 @@
 
 #include <algorithm>
 
-//D2Game.0x6FC6AF70
-int32_t __fastcall ESE_MONSTERUNIQUE_CalculatePercentage(int32_t a1, int32_t a2, int32_t a3)
-{
-    if (!a3)
-    {
-        return 0;
-    }
-
-    if (a1 <= 1048576)
-    {
-        if (a2 <= 65536)
-        {
-            return a2 * a1 / a3;
-        }
-
-        if (a3 <= a2 >> 4)
-        {
-            return a1 * (a2 / a3);
-        }
-    }
-    else
-    {
-        if (a3 <= a1 >> 4)
-        {
-            return a2 * (a1 / a3);
-        }
-    }
-
-    return a2 * (int64_t)a1 / a3;
-}
-
 //D2Game.0x6FC6B030
 void __fastcall ESE_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
 {
@@ -89,13 +58,13 @@ void __fastcall ESE_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUM
     }
 
     STATLIST_SetUnitStat(pUnit, STAT_LEVEL, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0) - 1, 0);
-    const int32_t nExperience = STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
-    STATLIST_SetUnitStat(pUnit, STAT_EXPERIENCE, nExperience - 2 * nExperience / 5u, 0);
+    const int64_t nExperience = STATLIST_GetUnitBaseStat(pUnit, STAT_EXPERIENCE, 0);
+    STATLIST_SetUnitStat(pUnit, STAT_EXPERIENCE, Clamp64To32Unsigned(nExperience - 2LL * nExperience / 5LL), 0);
 
     D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(11);
-    int32_t nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+    int64_t nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
     pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(10);
-    int32_t nToHitPercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+    int64_t nToHitPercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
     D2DifficultyLevelsTxt* pDifficultyLevelsTxtRecord = DATATBLS_GetDifficultyLevelsTxtRecord(pGame->nDifficulty);
     if (pDifficultyLevelsTxtRecord)
@@ -104,8 +73,8 @@ void __fastcall ESE_MONSTERUNIQUE_UMod16_Champion(D2UnitStrc* pUnit, int32_t nUM
         nToHitPercent = nToHitPercent * pDifficultyLevelsTxtRecord->dwChampionDmgBonus / 100;
     }
 
-    STATLIST_AddUnitStat(pUnit, STAT_DAMAGEPERCENT, nDamagePercent, 0);
-    STATLIST_AddUnitStat(pUnit, STAT_ITEM_TOHIT_PERCENT, nToHitPercent, 0);
+    STATLIST_AddUnitStat(pUnit, STAT_DAMAGEPERCENT, Clamp64To32(nDamagePercent), 0);
+    STATLIST_AddUnitStat(pUnit, STAT_ITEM_TOHIT_PERCENT, Clamp64To32(nToHitPercent), 0);
 
     if (pMonStatsTxtRecord->nVelocity <= 0 || nUMod == 36)
     {
@@ -160,17 +129,17 @@ void __fastcall ESE_MONSTERUNIQUE_UMod36_Ghostly(D2UnitStrc* pUnit, int32_t nUMo
         return;
     }
 
-    const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
+    const int64_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
 
     D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 22);
-    int32_t nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+    int64_t nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-    STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, nDamage * nDamagePercent / 100, 0);
+    STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, Clamp64To32(nDamage * nDamagePercent / 100), 0);
 
     pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 25);
     nDamagePercent = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-    STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, nDamage * nDamagePercent / 100, 0);
+    STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, Clamp64To32(nDamage * nDamagePercent / 100), 0);
     STATLIST_AddUnitStat(pUnit, STAT_COLDLENGTH, 150, 0);
 }
 
@@ -182,19 +151,19 @@ void __fastcall ESE_MONSTERUNIQUE_UMod39_Berserk(D2UnitStrc* pUnit, int32_t nUMo
         return;
     }
 
-    const int32_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
-    const int32_t nNewHp = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxHp, -75, 100) + nMaxHp;
-    STATLIST_SetUnitStat(pUnit, STAT_MAXHP, nNewHp, 0);
-    STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, nNewHp, 0);
+    const int64_t nMaxHp = STATLIST_GetMaxLifeFromUnit(pUnit);
+    const int64_t nNewHp = ESE_DATATBLS_ApplyRatio(nMaxHp, -75, 100) + nMaxHp;
+    STATLIST_SetUnitStat(pUnit, STAT_MAXHP, Clamp64To32(nNewHp), 0);
+    STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, Clamp64To32(nNewHp), 0);
 
-    int32_t nDamage = 300;
+    int64_t nDamage = 300;
     D2DifficultyLevelsTxt* pDifficultyLevelsTxtRecord = DATATBLS_GetDifficultyLevelsTxtRecord(pUnit->pGame->nDifficulty);
     if (pDifficultyLevelsTxtRecord)
     {
-        nDamage = 3 * pDifficultyLevelsTxtRecord->dwChampionDmgBonus;
+        nDamage = 3LL * pDifficultyLevelsTxtRecord->dwChampionDmgBonus;
     }
-    STATLIST_AddUnitStat(pUnit, STAT_DAMAGEPERCENT, nDamage, 0);
-    STATLIST_AddUnitStat(pUnit, STAT_ITEM_TOHIT_PERCENT, nDamage, 0);
+    STATLIST_AddUnitStat(pUnit, STAT_DAMAGEPERCENT, Clamp64To32(nDamage), 0);
+    STATLIST_AddUnitStat(pUnit, STAT_ITEM_TOHIT_PERCENT, Clamp64To32(nDamage), 0);
 }
 
 //D2Game.0x6FC6B610
@@ -207,7 +176,7 @@ void __fastcall ESE_MONSTERUNIQUE_UMod8_Resistant(D2UnitStrc* pUnit, int32_t nUM
 
     if (nUMod == 28)
     {
-        STATLIST_SetUnitStat(pUnit, STAT_ARMORCLASS, 2 * STATLIST_UnitGetStatValue(pUnit, STAT_ARMORCLASS, 0), 0);
+        STATLIST_SetUnitStat(pUnit, STAT_ARMORCLASS, Clamp64To32(2LL * (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_ARMORCLASS, 0)), 0);
     }
 
     int32_t nImmunities = 0;
@@ -356,8 +325,8 @@ void __fastcall ESE_MONSTERUNIQUE_UMod5_Strong(D2UnitStrc* pUnit, int32_t nUMod,
         return;
     }
 
-    int32_t nDamagePercent = 0;
-    int32_t nToHitPercent = 0;
+    int64_t nDamagePercent = 0;
+    int64_t nToHitPercent = 0;
     if (bUnique)
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(15);
@@ -382,8 +351,8 @@ void __fastcall ESE_MONSTERUNIQUE_UMod5_Strong(D2UnitStrc* pUnit, int32_t nUMod,
         nToHitPercent = nToHitPercent * pDifficultyLevelsTxtRecord->dwChampionDmgBonus / 100;
     }
 
-    STATLIST_AddUnitStat(pUnit, STAT_DAMAGEPERCENT, nDamagePercent, 0);
-    STATLIST_AddUnitStat(pUnit, STAT_ITEM_TOHIT_PERCENT, nToHitPercent, 0);
+    STATLIST_AddUnitStat(pUnit, STAT_DAMAGEPERCENT, Clamp64To32(nDamagePercent), 0);
+    STATLIST_AddUnitStat(pUnit, STAT_ITEM_TOHIT_PERCENT, Clamp64To32(nToHitPercent), 0);
 }
 
 //D2Game.0x6FC6BC10
@@ -409,30 +378,30 @@ void __fastcall ESE_MONSTERUNIQUE_UMod9_FireEnchanted(D2UnitStrc* pUnit, int32_t
         return;
     }
 
-    const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
+    const int64_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_FIREMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_FIREMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_FIREMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_FIREMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
     else
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_FIREMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_FIREMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_FIREMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_FIREMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
 
     ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
@@ -461,30 +430,30 @@ void __fastcall ESE_MONSTERUNIQUE_UMod17_LightningEnchanted(D2UnitStrc* pUnit, i
         return;
     }
 
-    const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
+    const int64_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
     else
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_LIGHTMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
 
     ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
@@ -519,24 +488,24 @@ void __fastcall ESE_MONSTERUNIQUE_UMod18_ColdEnchanted(D2UnitStrc* pUnit, int32_
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
     else
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
         int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_COLDMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_COLDMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
 
     STATLIST_AddUnitStat(pUnit, STAT_COLDLENGTH, 5 * nLevel + 100, 0);
@@ -567,30 +536,30 @@ void __fastcall ESE_MONSTERUNIQUE_UMod23_PoisonEnchanted(D2UnitStrc* pUnit, int3
         return;
     }
 
-    const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
+    const int64_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_POISONMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_POISONMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_POISONMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_POISONMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
     else
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_POISONMINDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_POISONMINDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_POISONMAXDAM, nDamage * nPercentage / 100, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_POISONMAXDAM, Clamp64To32(nDamage * nPercentage / 100), 0);
     }
 
     STATLIST_AddUnitStat(pUnit, STAT_POISONLENGTH, 2 * (5 * nLevel + 150), 0);
@@ -621,30 +590,30 @@ void __fastcall ESE_MONSTERUNIQUE_UMod25_ManaSteal(D2UnitStrc* pUnit, int32_t nU
         return;
     }
 
-    const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
+    const int64_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
     if (bUnique)
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 28);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMINDAM, (nDamage * nPercentage / 100) << 8, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMINDAM, Clamp64To32((nDamage * nPercentage / 100) << 8), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 31);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMAXDAM, (nDamage * nPercentage / 100) << 8, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMAXDAM, Clamp64To32((nDamage * nPercentage / 100) << 8), 0);
     }
     else
     {
         D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 16);
-        int32_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+        int64_t nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMINDAM, (nDamage * nPercentage / 100) << 8, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMINDAM, Clamp64To32((nDamage * nPercentage / 100) << 8), 0);
 
         pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(nDifficulty + 19);
         nPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
-        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMAXDAM, (nDamage * nPercentage / 100) << 8, 0);
+        STATLIST_AddUnitStat(pUnit, STAT_MANADRAINMAXDAM, Clamp64To32((nDamage * nPercentage / 100) << 8), 0);
     }
 
     ESE_MONSTERUNIQUE_UMod8_Resistant(pUnit, nUMod, bUnique);
@@ -671,12 +640,12 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode(D2GameStrc* pGame, D2UnitStr
         return;
     }
 
-    const int32_t nMaxDamage = ESE_MONSTERUNIQUE_CalculatePercentage(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
-    const int32_t nMinDamage = ESE_MONSTERUNIQUE_CalculatePercentage(nMaxDamage, 60, 100);
-    const int32_t nDamage = ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
+    const int64_t nMaxDamage = ESE_DATATBLS_ApplyRatio(monStatsInit.nMaxHP, pDifficultyLevelsTxtRecord->dwMonsterCEDmgPercent, 100);
+    const int64_t nMinDamage = ESE_DATATBLS_ApplyRatio(nMaxDamage, 60, 100);
+    const int64_t nDamage = ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, nMaxDamage - nMinDamage);
 
-    D2DamageStrc damage = {};
-    damage.dwPhysDamage = (nMinDamage + nDamage) << 6;
+    ESE_D2DamageStrc damage = {};
+    damage.dwPhysDamage = std::max<int64_t>(INT64_MAX>>6, (nMinDamage + nDamage)) << 6;
     damage.dwFireDamage = damage.dwPhysDamage;
     ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, pGame->nDifficulty + 4, &damage, 0, 0, nullptr, 0x581u);
 }
@@ -693,7 +662,7 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode2(D2GameStrc* pGame, D2UnitSt
         return;
     }
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
     damage.dwPhysDamage = 0x6400u;
     damage.dwFireDamage = 0x6400u;
     ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pMissile, nX, nY, 6, &damage, 0, 0, nullptr, 0x583);
@@ -702,16 +671,16 @@ void __fastcall ESE_MONSTERUNIQUE_CastCorpseExplode2(D2GameStrc* pGame, D2UnitSt
 //D2Game.0x6FC6CF10
 void __fastcall ESE_sub_6FC6CF10(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nUMod, int32_t bUnique)
 {
-    int32_t nMinDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MINDAMAGE, 0);
-    int32_t nMaxDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MAXDAMAGE, 0);
+    int64_t nMinDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MINDAMAGE, 0);
+    int64_t nMaxDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MAXDAMAGE, 0);
     if (nMaxDamage > 0 && (!pUnit || pUnit->dwClassId != MONSTER_ROGUEHIRE))
     {
-        nMinDamage += STATLIST_UnitGetStatValue(pUnit, STAT_SECONDARY_MINDAMAGE, 0) - 1;
-        nMaxDamage += STATLIST_UnitGetStatValue(pUnit, STAT_SECONDARY_MAXDAMAGE, 0) - 1;
+        nMinDamage += (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_SECONDARY_MINDAMAGE, 0) - 1;
+        nMaxDamage += (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_SECONDARY_MAXDAMAGE, 0) - 1;
 
         D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndFlag(pUnit, 1);
-        STATLIST_SetStatIfListIsValid(pStatList, STAT_MINDAMAGE, std::max(nMinDamage, 0), 0);
-        STATLIST_SetStatIfListIsValid(pStatList, STAT_MAXDAMAGE, std::max(nMaxDamage, 0), 0);
+        STATLIST_SetStatIfListIsValid(pStatList, STAT_MINDAMAGE, std::max<int64_t>(nMinDamage, 0), 0);
+        STATLIST_SetStatIfListIsValid(pStatList, STAT_MAXDAMAGE, std::max<int64_t>(nMaxDamage, 0), 0);
     }
 }
 
@@ -723,8 +692,8 @@ void __fastcall ESE_sub_6FC6CF90(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
         return;
     }
 
-    int32_t nMinDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MINDAMAGE, 0);
-    int32_t nMaxDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MAXDAMAGE, 0);
+    int64_t nMinDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MINDAMAGE, 0);
+    int64_t nMaxDamage = STATLIST_UnitGetStatValue(pUnit, STAT_MAXDAMAGE, 0);
     if (nMaxDamage <= 0)
     {
         return;
@@ -736,11 +705,11 @@ void __fastcall ESE_sub_6FC6CF90(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
         return;
     }
 
-    nMinDamage += (STATLIST_UnitGetStatValue(pOwner, STAT_SECONDARY_MINDAMAGE, 0) << 8) - 256;
-    nMaxDamage += (STATLIST_UnitGetStatValue(pOwner, STAT_SECONDARY_MAXDAMAGE, 0) << 8) - 256;
+    nMinDamage += ((int64_t)STATLIST_UnitGetStatValue(pOwner, STAT_SECONDARY_MINDAMAGE, 0) << 8) - 256;
+    nMaxDamage += ((int64_t)STATLIST_UnitGetStatValue(pOwner, STAT_SECONDARY_MAXDAMAGE, 0) << 8) - 256;
 
-    STATLIST_SetUnitStat(pUnit, STAT_MINDAMAGE, std::max(nMinDamage, 0), 0);
-    STATLIST_SetUnitStat(pUnit, STAT_MAXDAMAGE, std::max(nMaxDamage, 0), 0);
+    STATLIST_SetUnitStat(pUnit, STAT_MINDAMAGE, Clamp64To32(std::max<int64_t>(nMinDamage, 0)), 0);
+    STATLIST_SetUnitStat(pUnit, STAT_MAXDAMAGE, Clamp64To32(std::max<int64_t>(nMaxDamage, 0)), 0);
 }
 
 //D2Game.0x6FC6D1C0
@@ -783,26 +752,26 @@ void __fastcall ESE_MONSTERUNIQUE_ApplyElementalDamage(D2GameStrc* pGame, D2Unit
         return;
     }
 
-    const int32_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
+    const int64_t nDamage = nGameType ? pMonLvlTxtRecord->dwLDM[nDifficulty] : pMonLvlTxtRecord->dwDM[nDifficulty];
 
     D2MonUModTxt* pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(28);
-    const int32_t nMinPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+    const int64_t nMinPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
     pMonUModTxtRecord = MONSTERUNIQUE_GetMonUModTxtRecord(31);
-    const int32_t nMaxPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
+    const int64_t nMaxPercentage = pMonUModTxtRecord ? pMonUModTxtRecord->dwConstants : 0;
 
     D2StatListStrc* pStatList = nullptr;
 
     if (pUnit && pUnit->dwUnitType == UNIT_MONSTER)
     {
         pStatList = STATLIST_GetStatListFromUnitAndFlag(pUnit, 1);
-        STATLIST_SetStatIfListIsValid(pStatList, nMinDamageStatId, nDamage * nMinPercentage / 100, 0);
-        STATLIST_SetStatIfListIsValid(pStatList, nMaxDamageStatId, nDamage * nMaxPercentage / 100, 0);
+        STATLIST_SetStatIfListIsValid(pStatList, nMinDamageStatId, Clamp64To32(nDamage * nMinPercentage / 100), 0);
+        STATLIST_SetStatIfListIsValid(pStatList, nMaxDamageStatId, Clamp64To32(nDamage * nMaxPercentage / 100), 0);
     }
     else
     {
-        STATLIST_SetUnitStat(pUnit, nMinDamageStatId, nDamage * nMinPercentage / 100, 0);
-        STATLIST_SetUnitStat(pUnit, nMaxDamageStatId, nDamage * nMaxPercentage / 100, 0);
+        STATLIST_SetUnitStat(pUnit, nMinDamageStatId, Clamp64To32(nDamage * nMinPercentage / 100), 0);
+        STATLIST_SetUnitStat(pUnit, nMaxDamageStatId, Clamp64To32(nDamage * nMaxPercentage / 100), 0);
     }
 
     if (nLengthStatId == -1)
@@ -835,10 +804,12 @@ void __fastcall ESE_sub_6FC6E240(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t n
         return;
     }
 
-    D2DamageStrc damage = {};
-    damage.dwFireDamage = (ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, pMonStatsTxtRecord->nElMaxD[0][0] - pMonStatsTxtRecord->nElMinD[0][0]) + pMonStatsTxtRecord->nElMinD[0][0]) << 8;
+    int64_t randomFiredamage = ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, (int64_t)pMonStatsTxtRecord->nElMaxD[0][0] - (int64_t)pMonStatsTxtRecord->nElMinD[0][0]);
 
-    ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pUnit, CLIENTS_GetUnitX(pUnit), CLIENTS_GetUnitY(pUnit), pMonStatsTxtRecord->wAiParam[2][pGame->nDifficulty] * STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), &damage, 0, 0, nullptr, 0);
+    ESE_D2DamageStrc damage = {};
+    damage.dwFireDamage = (randomFiredamage + (int64_t)pMonStatsTxtRecord->nElMinD[0][0]) << 8;
+
+    ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pUnit, CLIENTS_GetUnitX(pUnit), CLIENTS_GetUnitY(pUnit), (int64_t)pMonStatsTxtRecord->wAiParam[2][pGame->nDifficulty] * (int64_t)STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), &damage, 0, 0, nullptr, 0);
 }
 
 //D2Game.0x6FC6E410
@@ -860,17 +831,17 @@ void __fastcall ESE_MONSTERUNIQUE_CastSuicideExplodeMissile(D2GameStrc* pGame, D
     D2MonStatsInitStrc monStatsInit = {};
     DATATBLS_CalculateMonsterStatsByLevel(pUnit->dwClassId, nGameType, pGame->nDifficulty, STATLIST_UnitGetStatValue(pUnit, STAT_LEVEL, 0), 8, &monStatsInit);
 
-    D2DamageStrc damage = {};
+    ESE_D2DamageStrc damage = {};
 
     damage.wResultFlags |= 8u;
 
-    const int32_t nDamage = (ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, monStatsInit.nA1MaxD - monStatsInit.nA1MinD) + monStatsInit.nA1MinD) << 8;
+    const int64_t nDamage = (ESE_ITEMS_RollLimitedRandomNumber(&pUnit->pSeed, (int64_t)monStatsInit.nA1MaxD - (int64_t)monStatsInit.nA1MinD) + (int64_t)monStatsInit.nA1MinD) << 8;
     damage.dwPhysDamage = nDamage;
 
     const int32_t nX = CLIENTS_GetUnitX(pUnit);
     const int32_t nY = CLIENTS_GetUnitY(pUnit);
 
-    const int32_t nColdLength = pMonStatsTxtRecord->wAiParam[0][pGame->nDifficulty];
+    const int64_t nColdLength = pMonStatsTxtRecord->wAiParam[0][pGame->nDifficulty];
     int32_t nMissileId = 0;
     if (nColdLength == 1)
     {

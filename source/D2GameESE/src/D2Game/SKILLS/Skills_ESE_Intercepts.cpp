@@ -43,12 +43,16 @@ void __fastcall ESE_INTERCEPT_sub_6FD0FE80(D2GameStrc* pGame, D2UnitStrc* pUnit,
 
 void __fastcall ESE_INTERCEPT_sub_6FD10140(D2GameStrc* pGame, D2UnitStrc* pAttackerArg, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nUnused)
 {
-    ESE_sub_6FD10140(pGame, pAttackerArg, pUnit, pDamage, nUnused);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    ESE_sub_6FD10140(pGame, pAttackerArg, pUnit, &tempDamageStrc, nUnused);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_sub_6FD10200(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nX, int32_t nY, int32_t nAuraRange, D2DamageStrc* pDamage, uint32_t nAuraFilter)
 {
-    return ESE_sub_6FD10200(pGame, pUnit, nX, nY, nAuraRange, pDamage, nAuraFilter);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_sub_6FD10200(pGame, pUnit, nX, nY, nAuraRange, &tempDamageStrc, nAuraFilter);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_sub_6FD10250(D2GameStrc* pGame, D2UnitStrc* pUnit, D2UnitStrc* pTarget, int32_t nState, int32_t nSkillId, int32_t nSkillLevel)

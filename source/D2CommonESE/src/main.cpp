@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include <../D2MooHeaders.h>
 #include <../D2CommonExports.h>
-#include "ESEDamageCalc.h"
+#include "LibESE.h"
 
 typedef uint32_t(__fastcall* PacketHandlerFunc_t)(const char* packet, uint32_t packetLength);
 

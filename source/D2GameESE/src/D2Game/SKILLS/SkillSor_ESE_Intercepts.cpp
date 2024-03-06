@@ -152,7 +152,9 @@ int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo029_ThunderStorm(D2GameStrc* pGame,
 
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc24_EnergyShield(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLS_EventFunc24_EnergyShield(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLS_EventFunc24_EnergyShield(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo144_Hydra(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)
@@ -162,17 +164,23 @@ int32_t __fastcall ESE_INTERCEPT_SKILLS_SrvDo144_Hydra(D2GameStrc* pGame, D2Unit
 
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc01_ChillingArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLS_EventFunc01_ChillingArmor(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLS_EventFunc01_ChillingArmor(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc02_FrozenArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLS_EventFunc02_FrozenArmor(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLS_EventFunc02_FrozenArmor(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SKILLS_EventFunc03_ShiverArmor(D2GameStrc* pGame, int32_t nEvent, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nSkillId, int32_t nSkillLevel)
 {
-    return ESE_SKILLS_EventFunc03_ShiverArmor(pGame, nEvent, pAttacker, pUnit, pDamage, nSkillId, nSkillLevel);
+    ESE_D2DamageStrc tempDamageStrc(pDamage);
+    return ESE_SKILLS_EventFunc03_ShiverArmor(pGame, nEvent, pAttacker, pUnit, &tempDamageStrc, nSkillId, nSkillLevel);
+    tempDamageStrc.WriteToOriginalStruct(pDamage);
 }
 
 

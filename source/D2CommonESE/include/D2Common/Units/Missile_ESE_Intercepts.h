@@ -33,16 +33,6 @@ int __stdcall ESE_INTERCEPT_MISSILE_GetElementalLength(int nUnused, D2UnitStrc* 
 int __stdcall ESE_INTERCEPT_MISSILE_GetSpecialParamValue(D2UnitStrc* pMissile, D2UnitStrc* pOwner, uint8_t nParamId, int nMissileId, int nLevel);
 //D2Common.0x6FDBC060
 int __fastcall ESE_INTERCEPT_MISSILE_GetCalcParamValue(int32_t nParamId, void* pUserData);
-//D2Common.0x6FDBC080
-int __fastcall ESE_INTERCEPT_MISSILE_GetMinimum(int a1, int a2, int a3, void* pUserData);
-//D2Common.0x6FDBC090
-int __fastcall ESE_INTERCEPT_MISSILE_GetMaximum(int a1, int a2, int a3, void* pUserData);
-//D2Common.0x6FDBC0A0
-int __fastcall ESE_INTERCEPT_MISSILE_GetRandomNumberInRange(int nMin, int nMax, int nUnused, void* pUserData);
-//D2Common.0x6FDBC120
-int __fastcall ESE_INTERCEPT_MISSILE_GetSpecialParamValueForSkillMissile(int nSkillId, int nParamId, int nUnused, void* pUserData);
-//D2Common.0x6FDBC170
-int __stdcall ESE_INTERCEPT_MISSILE_EvaluateMissileFormula(D2UnitStrc* pMissile, D2UnitStrc* pOwner, unsigned int nCalc, int nMissileId, int nLevel);
 
 extern MISSILE_CalculateDamageData_t MISSILE_CalculateDamageData_Original;
 void __stdcall ESE_INTERCEPT_MISSILE_CalculateDamageData(D2MissileDamageDataStrc* pMissileDamageData, D2UnitStrc* pOwner, D2UnitStrc* pOrigin, D2UnitStrc* pMissile, int nLevel);
@@ -79,19 +69,3 @@ int __stdcall ESE_INTERCEPT_MISSILE_GetSpecialParamValue(D2UnitStrc* pMissile, D
 
 extern MISSILE_GetCalcParamValue_t MISSILE_GetCalcParamValue_Original;
 int __fastcall ESE_INTERCEPT_MISSILE_GetCalcParamValue(int32_t nParamId, void* pUserData);
-
-extern MISSILE_GetMinimum_t MISSILE_GetMinimum_Original;
-int __fastcall ESE_INTERCEPT_MISSILE_GetMinimum(int a1, int a2, int a3, void* pUserData);
-
-extern MISSILE_GetMaximum_t MISSILE_GetMaximum_Original;
-int __fastcall ESE_INTERCEPT_MISSILE_GetMaximum(int a1, int a2, int a3, void* pUserData);
-
-extern MISSILE_GetRandomNumberInRange_t MISSILE_GetRandomNumberInRange_Original;
-int __fastcall ESE_INTERCEPT_MISSILE_GetRandomNumberInRange(int nMin, int nMax, int nUnused, void* pUserData);
-
-extern MISSILE_GetSpecialParamValueForSkillMissile_t MISSILE_GetSpecialParamValueForSkillMissile_Original;
-int __fastcall ESE_INTERCEPT_MISSILE_GetSpecialParamValueForSkillMissile(int nSkillId, int nParamId, int nUnused, void* pUserData);
-
-extern MISSILE_EvaluateMissileFormula_t MISSILE_EvaluateMissileFormula_Original;
-int __stdcall ESE_INTERCEPT_MISSILE_EvaluateMissileFormula(D2UnitStrc* pMissile, D2UnitStrc* pOwner, unsigned int nCalc, int nMissileId, int nLevel);
-

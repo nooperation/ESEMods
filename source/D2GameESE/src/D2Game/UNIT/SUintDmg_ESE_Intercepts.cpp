@@ -88,7 +88,9 @@ SUNITDMG_SetExperienceForTargetLevel_t SUNITDMG_SetExperienceForTargetLevel_Orig
 
 int32_t __fastcall ESE_INTERCEPT_SUNITDMG_SetHitClass(D2DamageStrc* pDamage, uint32_t nHitClass)
 {
-    return ESE_SUNITDMG_SetHitClass(pDamage, nHitClass);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    return ESE_SUNITDMG_SetHitClass(&tempDamage, nHitClass);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SUNITDMG_GetColdEffect(D2GameStrc* pGame, D2UnitStrc* pUnit)
@@ -108,7 +110,9 @@ int32_t __fastcall ESE_INTERCEPT_SUNITDMG_ApplyDamageBonuses(D2UnitStrc* pUnit, 
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage, int32_t a5, uint8_t nSrcDam)
 {
-    ESE_SUNITDMG_FillDamageValues(pGame, pAttacker, pDefender, pDamage, a5, nSrcDam);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    ESE_SUNITDMG_FillDamageValues(pGame, pAttacker, pDefender, &tempDamage, a5, nSrcDam);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SUNITDMG_CheckMonType(int32_t nMonType1, int32_t nMonType2)
@@ -123,17 +127,22 @@ int32_t __fastcall ESE_INTERCEPT_SUNITDMG_RollDamageValueInRange(D2UnitStrc* pUn
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_CalculateTotalDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage)
 {
-    ESE_SUNITDMG_CalculateTotalDamage(pGame, pAttacker, pDefender, pDamage);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    ESE_SUNITDMG_CalculateTotalDamage(pGame, pAttacker, pDefender, &tempDamage);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_ApplyResistancesAndAbsorb(D2DamageInfoStrc* pDamageInfo, const D2DamageStatTableStrc* pDamageStatTableRecord, int32_t bDontAbsorb)
 {
-    ESE_SUNITDMG_ApplyResistancesAndAbsorb(pDamageInfo, pDamageStatTableRecord, bDontAbsorb);
+    // TODO: Don't intercept this?
+    SUNITDMG_ApplyResistancesAndAbsorb_Original(pDamageInfo, pDamageStatTableRecord, bDontAbsorb);
 }
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_ExecuteEvents(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bMissile, D2DamageStrc* pDamage)
 {
-    ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pDefender, bMissile, pDamage);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    ESE_SUNITDMG_ExecuteEvents(pGame, pAttacker, pDefender, bMissile, &tempDamage);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 D2MonStatsTxt* __fastcall ESE_INTERCEPT_SUNITDMG_GetMonStatsTxtRecordFromUnit(D2UnitStrc* pUnit)
@@ -193,17 +202,23 @@ void __fastcall ESE_INTERCEPT_SUNITDMG_KillMonster(D2GameStrc* pGame, D2UnitStrc
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_ExecuteMissileDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pUnit, D2DamageStrc* pDamage)
 {
-    ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, pDamage);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    ESE_SUNITDMG_ExecuteMissileDamage(pGame, pAttacker, pUnit, &tempDamage);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_sub_6FCC1870(D2UnitStrc* pUnit, D2DamageStrc* pDamage, int32_t nHitClass)
 {
-    return ESE_sub_6FCC1870(pUnit, pDamage, nHitClass);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    return ESE_sub_6FCC1870(pUnit, &tempDamage, nHitClass);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SUNITDMG_GetHitClass(D2DamageStrc* pDamage, uint32_t nBaseHitClass)
 {
-    return ESE_SUNITDMG_GetHitClass(pDamage, nBaseHitClass);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    return ESE_SUNITDMG_GetHitClass(&tempDamage, nBaseHitClass);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_DrainItemDurability(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nUnused)
@@ -213,7 +228,8 @@ void __fastcall ESE_INTERCEPT_SUNITDMG_DrainItemDurability(D2GameStrc* pGame, D2
 
 D2DamageStrc* __fastcall ESE_INTERCEPT_SUNITDMG_GetDamageFromUnits(D2UnitStrc* pAttacker, D2UnitStrc* pDefender)
 {
-    return ESE_SUNITDMG_GetDamageFromUnits(pAttacker, pDefender);
+    // TODO: Don't intercept this?
+    return SUNITDMG_GetDamageFromUnits_Original(pAttacker, pDefender);
 }
 
 bool __stdcall ESE_INTERCEPT_D2Game_10033(D2UnitStrc* pUnit, int32_t* a2, int32_t* a3)
@@ -233,7 +249,9 @@ uint16_t __fastcall ESE_INTERCEPT_SUNITDMG_GetResultFlags(D2GameStrc* pGame, D2U
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_AllocCombat(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, D2DamageStrc* pDamage, uint8_t nSrcDam)
 {
-    ESE_SUNITDMG_AllocCombat(pGame, pAttacker, pDefender, pDamage, nSrcDam);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    ESE_SUNITDMG_AllocCombat(pGame, pAttacker, pDefender, &tempDamage, nSrcDam);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 int32_t __fastcall ESE_INTERCEPT_SUNITDMG_ApplyBlockOrDodge(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t bAvoid, int32_t bBlock)
@@ -253,17 +271,23 @@ int32_t __fastcall ESE_INTERCEPT_SUNITDMG_GetWeaponBlock(D2UnitStrc* pUnit)
 
 int32_t __fastcall ESE_INTERCEPT_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nX, int32_t nY, int32_t nSize, D2DamageStrc* pDamage, int32_t a7, int32_t a8, int32_t(__fastcall* pfCallback)(D2GameStrc*, D2UnitStrc*, D2UnitStrc*), int32_t a10)
 {
-    return ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pUnit, nX, nY, nSize, pDamage, a7, a8, pfCallback, a10);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    return ESE_SUNITDMG_SetMissileDamageFlagsForNearbyUnits(pGame, pUnit, nX, nY, nSize, &tempDamage, a7, a8, pfCallback, a10);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_RollDamage(D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel, D2DamageStrc* pDamage)
 {
-    ESE_SUNITDMG_RollDamage(pUnit, nSkillId, nSkillLevel, pDamage);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    ESE_SUNITDMG_RollDamage(pUnit, nSkillId, nSkillLevel, &tempDamage);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_RollSuckBloodDamage(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender, int32_t nSkillId, int32_t nSkillLevel, D2DamageStrc* pDamage)
 {
-    ESE_SUNITDMG_RollSuckBloodDamage(pGame, pAttacker, pDefender, nSkillId, nSkillLevel, pDamage);
+    ESE_D2DamageStrc tempDamage(pDamage);
+    ESE_SUNITDMG_RollSuckBloodDamage(pGame, pAttacker, pDefender, nSkillId, nSkillLevel, &tempDamage);
+    tempDamage.WriteToOriginalStruct(pDamage);
 }
 
 void __fastcall ESE_INTERCEPT_SUNITDMG_DistributeExperience(D2GameStrc* pGame, D2UnitStrc* pAttacker, D2UnitStrc* pDefender)
