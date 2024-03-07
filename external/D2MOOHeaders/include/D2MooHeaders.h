@@ -20,6 +20,7 @@
 #include <../D2FogExports.h>
 #include <../D2WinExports.h>
 #include <../D2ClientExports.h>
+#include <../D2LangExports.h>
 
 void InitD2MooHeaders();
 

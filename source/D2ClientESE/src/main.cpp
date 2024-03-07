@@ -14,6 +14,7 @@ BOOL __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		InitD2FogExports();
 		InitD2WinExports();
 		InitD2ClientExports();
+		InitD2LangExports();
 		break;
 	}
 	case DLL_PROCESS_DETACH:

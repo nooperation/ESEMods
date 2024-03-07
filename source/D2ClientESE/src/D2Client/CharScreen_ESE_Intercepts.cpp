@@ -59,7 +59,7 @@ void __fastcall ESE_INTERCEPT_CHARSCREEN_DrawDescDam5(D2UnitStrc* pUnit, D2Skill
 //D2Client.0x6FB0ACE0 (6ACE0)
 void __fastcall ESE_INTERCEPT_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
-    CHARSCREEN_DrawDescDam6_Original(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
+    ESE_CHARSCREEN_DrawDescDam6(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
 }
 
 //D2Client.0x6FB0BEC0 (6BEC0)
