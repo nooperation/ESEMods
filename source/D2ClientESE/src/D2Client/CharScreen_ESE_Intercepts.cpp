@@ -29,7 +29,7 @@ extern CHARSCREEN_DrawDescDam24_t CHARSCREEN_DrawDescDam24_Original = nullptr;
 //D2Client.0x6FB0C270 (6C270)
 void __fastcall ESE_INTERCEPT_CHARSCREEN_DrawDescDam1(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
-    CHARSCREEN_DrawDescDam1_Original(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
+    ESE_CHARSCREEN_DrawDescDam1(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
 }
 
 //D2Client.0x6FB0CD40 (6CD40)
