@@ -1,18 +1,52 @@
 #include <D2Client/CharScreen_ESE.h>
 #include <D2Common/D2Skills_ESE.h>
+#include <D2Common/Units/Missile_ESE.h>
 #include "LibESE.h"
 #include <D2Combat.h>
 #include "Font.h"
 #include <cinttypes>
+#include <D2States.h>
+
+void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t nColor);
 
 void __fastcall ESE_PrintRangeString_6FB0B140(wchar_t* pText, int64_t minDamage, int64_t maxDamage, int isAdditonRange, int allowThousandsSuffix);
 void __fastcall ESE_sub_6FB0AC10(Unicode* pTextA, Unicode* pTextB, int offsetA, int offsetB, int offsetC, int nColorA, int nColorB);
 void __fastcall ESE_sub_6FB0B0F0(struct Unicode* pText, int64_t damage, int isAdditonRange);
 void __fastcall ESE_sub_6FB0B250(struct Unicode* pText, int64_t minDamage, int64_t maxDamage, int isAdditonRange);
 
-typedef void(__fastcall* DamageCallback7D0_t)(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor, int32_t ddamCalc1, int32_t ddamCalc2, D2SkillStrc* pSkill, int32_t unknown5, D2UnitStrc* unknown6);
+typedef void(__fastcall* DamageCallback7D0_t)(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* pItem);
 
-void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int32_t* pMinDamage, int32_t* pMaxDamage, int32_t* pColor, int32_t additionalDamagePercent, int32_t additionalDamage, D2SkillStrc* pSkill, int32_t nSrcDamOverride, D2UnitStrc* item, int32_t unknown7)
+
+void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t nColor)
+{
+    int32_t pWidth = 0;
+    int32_t pHeight = 0;
+    int32_t textOffsetY = 0;
+
+    D2Win_10131_GetTextDimensions((Unicode*)&buff[0], &pWidth, &pHeight);
+
+    int32_t widthMod = (11 * pWidth) / 7;
+    if (widthMod <= offsetC - offsetA)
+    {
+        D2Win_10127_SetFont(D2FONT_FONT16);
+        textOffsetY = offsetB;
+    }
+    else
+    {
+        D2Win_10127_SetFont(D2FONT_FONT6);
+        textOffsetY = (offsetB - 1);
+    }
+
+    D2Client_DrawTextCentered_6FACFCD0(
+        *D2Client_pDWORD_6FBBA748 + offsetA,
+        *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + textOffsetY - 0x1e0,
+        *D2Client_pDWORD_6FBBA748 + offsetC,
+        (Unicode*)&buff[0],
+        nColor
+    );
+}
+
+void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* item, int32_t unknown7)
 {
     if (pSkill == nullptr)
     {
@@ -36,8 +70,8 @@ void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int32_t* pMinDamage, int32_t
         item = INVENTORY_GetLeftHandWeapon(pInventory);
     }
 
-    int32_t minDamage = 0;
-    int32_t maxDamage = 0;
+    int64_t minDamage = 0;
+    int64_t maxDamage = 0;
 
     if (item != 0)
     {
@@ -65,7 +99,7 @@ void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int32_t* pMinDamage, int32_t
     }
 
 
-    auto nSrcDam = nSrcDamOverride;
+    int64_t nSrcDam = nSrcDamOverride;
     if (!nSrcDamOverride)
     {
         nSrcDam = skillTxtRecord->nSrcDam;
@@ -91,10 +125,10 @@ void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int32_t* pMinDamage, int32_t
         *pMaxDamage += maxDamage;
     }
 
-    int32_t damagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGEPERCENT, 0) + additionalDamagePercent;
-    int32_t masteryBonus = SKILLS_GetWeaponMasteryBonus(pUnit, item, pSkill, 1) + damagePercent;
-    int32_t minDamagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MINDAMAGE_PERCENT, 0);
-    int32_t maxDamagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MAXDAMAGE_PERCENT, 0);
+    int64_t damagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGEPERCENT, 0) + additionalDamagePct;
+    int64_t masteryBonus = SKILLS_GetWeaponMasteryBonus(pUnit, item, pSkill, 1) + damagePercent;
+    int64_t minDamagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MINDAMAGE_PERCENT, 0);
+    int64_t maxDamagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MAXDAMAGE_PERCENT, 0);
 
     if ((skillTxtRecord->dwFlags[0] & gdwBitMasks[12]) != 0)
     {
@@ -106,16 +140,16 @@ void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int32_t* pMinDamage, int32_t
         }
     }
 
-    int32_t normalDamage = 0;
+    int64_t normalDamage = 0;
     if (item)
     {
-        int16_t strengthBonus = ITEMS_GetStrengthBonus(item);
+        int64_t strengthBonus = ITEMS_GetStrengthBonus(item);
         if (strengthBonus)
         {
             masteryBonus += strengthBonus * STATLIST_UnitGetStatValue(pUnit, 0, 0) / 100;
         }
 
-        int16_t dexBonus = ITEMS_GetDexBonus(item);
+        int64_t dexBonus = ITEMS_GetDexBonus(item);
         if (dexBonus)
         {
             masteryBonus += dexBonus * STATLIST_UnitGetStatValue(pUnit, 2, 0) / 100;
@@ -147,7 +181,7 @@ void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int32_t* pMinDamage, int32_t
     *pMaxDamage = additionalDamage + normalDamage + *pMaxDamage * (maxDamagePercent + masteryBonus + 100) / 100;
 }
 
-void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor)
+void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int64_t* pMinElemDamage, int64_t* pMaxElemDamage, int32_t* pColor)
 {
     if (sgptDataTables->nProgressiveStates <= 0)
     {
@@ -199,24 +233,24 @@ void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t*
 
         if (nSkillId >= sgptDataTables->nSkillsTxtRecordCount)
         {
-            *pUnknown1 += SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
-            *pUnknown2 += SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+            *pMinElemDamage += ESE_SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+            *pMaxElemDamage += ESE_SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
             continue;
         }
 
         D2SkillsTxt* pSkillTxt = &sgptDataTables->pSkillsTxt[nSkillId];
         if (pSkillTxt == nullptr || pSkillTxt->wSkillDesc < 0 || pSkillTxt->wSkillDesc >= sgptDataTables->nSkillDescTxtRecordCount)
         {
-            *pUnknown1 += SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
-            *pUnknown2 += SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+            *pMinElemDamage += ESE_SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+            *pMaxElemDamage += ESE_SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
             continue;
         }
 
         D2SkillDescTxt* pSkillDescTxt = &sgptDataTables->pSkillDescTxt[pSkillTxt->wSkillDesc];
         if (pSkillDescTxt == nullptr)
         {
-            *pUnknown1 += SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
-            *pUnknown2 += SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+            *pMinElemDamage += ESE_SKILLS_GetMinElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
+            *pMaxElemDamage += ESE_SKILLS_GetMaxElemDamage(pUnit, nSkillId, nSkillLevel, 1) >> 8;
             continue;
         }
 
@@ -229,10 +263,10 @@ void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t*
             auraStatValue = 3;
         }
 
-        *pUnknown1 += SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwProgDmgMin[auraStatValue - 1], nSkillId, nSkillLevel);
-        *pUnknown2 += SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwProgDmgMax[auraStatValue - 1], nSkillId, nSkillLevel);
+        *pMinElemDamage += (int64_t)SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwProgDmgMin[auraStatValue - 1], nSkillId, nSkillLevel);
+        *pMaxElemDamage += (int64_t)SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwProgDmgMax[auraStatValue - 1], nSkillId, nSkillLevel);
 
-        auto nElement = pSkillDescTxt->nPrgDamElem[auraStatValue - 1];
+        uint8_t nElement = pSkillDescTxt->nPrgDamElem[auraStatValue - 1];
         if (nElement > 0 && nElement < 13)
         {
             switch (nElement)
@@ -260,12 +294,12 @@ void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t*
 
 struct StatList6F0
 {
-    int32_t statId1;
-    int32_t statId2;
-    int32_t statId3;
+    int32_t minDamStatId;
+    int32_t maxDamStatId;
+    int32_t masteryStatId;
 };
 
-void __fastcall ESE_sub_6FB0B6F0(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor, D2UnitStrc* unknown3, D2SkillStrc* pSkill)
+void __fastcall ESE_sub_6FB0B6F0(D2UnitStrc* pUnit, int64_t* pMinElemDamage, int64_t* pMaxElemDamage, int32_t* pColor, D2UnitStrc* pItem, D2SkillStrc* pSkill)
 {
     static StatList6F0 stats_6FB6FB6C[] = {
         {STAT_FIREMINDAM, STAT_FIREMAXDAM, STAT_PASSIVE_FIRE_MASTERY},
@@ -279,75 +313,69 @@ void __fastcall ESE_sub_6FB0B6F0(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t*
 
     for (size_t i = 0; i < std::size(stats_6FB6FB6C); i++)
     {
-        int32_t v8 = STATLIST_UnitGetStatValue(pUnit, stats_6FB6FB6C[i].statId1, 0);
-        int32_t v9 = STATLIST_UnitGetStatValue(pUnit, stats_6FB6FB6C[i].statId2, 0);
-        if (stats_6FB6FB6C[i].statId3 != -1)
+        int64_t minElemDam = STATLIST_UnitGetStatValue(pUnit, stats_6FB6FB6C[i].minDamStatId, 0);
+        int64_t maxElemDam = STATLIST_UnitGetStatValue(pUnit, stats_6FB6FB6C[i].maxDamStatId, 0);
+        if (stats_6FB6FB6C[i].masteryStatId != -1)
         {
-            int32_t v10 = STATLIST_UnitGetStatValue(pUnit, stats_6FB6FB6C[i].statId3, 0);
-            if (v10)
+            int64_t elemMasteryPct = STATLIST_UnitGetStatValue(pUnit, stats_6FB6FB6C[i].masteryStatId, 0);
+            if (elemMasteryPct)
             {
-                auto v12 = DATATBLS_ApplyRatio(v8, v10, 100);
-                v8 += v12;
-
-                auto v14 = DATATBLS_ApplyRatio(v9, v10, 100);
-                v9 += v14;
+                minElemDam += ESE_DATATBLS_ApplyRatio(minElemDam, elemMasteryPct, 100);
+                maxElemDam += ESE_DATATBLS_ApplyRatio(maxElemDam, elemMasteryPct, 100);
             }
         }
 
-        if (v8 >= v9)
+        if (minElemDam >= maxElemDam)
         {
-            v8 = v9;
+            minElemDam = maxElemDam;
         }
 
-        *pUnknown1 += v8;
-        *pUnknown2 += v9;
-        if (v8 || v9)
+        *pMinElemDamage += minElemDam;
+        *pMaxElemDamage += maxElemDam;
+        if (minElemDam || maxElemDam)
         {
             *pColor = statColors_6FB6FB9C[i];
         }
     }
 
-    int32_t v15 = STATLIST_UnitGetStatValue(pUnit, STAT_POISONMINDAM, 0);
-    int32_t v16 = STATLIST_UnitGetStatValue(pUnit, STAT_POISONMAXDAM, 0);
-    if (v16)
+    int64_t minPoisonDam = STATLIST_UnitGetStatValue(pUnit, STAT_POISONMINDAM, 0);
+    int64_t maxPoisonDam = STATLIST_UnitGetStatValue(pUnit, STAT_POISONMAXDAM, 0);
+    if (maxPoisonDam)
     {
-        int32_t v17 = STATLIST_UnitGetStatValue(pUnit, STAT_PASSIVE_POIS_MASTERY, 0);
-        if (v17)
+        int64_t poisonMasteryPct = STATLIST_UnitGetStatValue(pUnit, STAT_PASSIVE_POIS_MASTERY, 0);
+        if (poisonMasteryPct)
         {
-            auto v20 = DATATBLS_ApplyRatio(v15, v17, 100);
-            v15 += v20;
-
-            auto v22 = DATATBLS_ApplyRatio(v16, v17, 100);
-            v16 += v22;
+            minPoisonDam += ESE_DATATBLS_ApplyRatio(minPoisonDam, poisonMasteryPct, 100);
+            maxPoisonDam += ESE_DATATBLS_ApplyRatio(maxPoisonDam, poisonMasteryPct, 100);
         }
 
-        int32_t v23 = STATLIST_UnitGetStatValue(pUnit, STAT_SKILL_POISON_OVERRIDE_LENGTH, 0);
-        if (v23 <= 0)
+        int64_t poisonOverrideLength = STATLIST_UnitGetStatValue(pUnit, STAT_SKILL_POISON_OVERRIDE_LENGTH, 0);
+        if (poisonOverrideLength <= 0)
         {
-            int32_t v24 = STATLIST_UnitGetStatValue(pUnit, STAT_POISON_COUNT, 0);
-            if (v24 <= 1)
+            int64_t poisonCount = STATLIST_UnitGetStatValue(pUnit, STAT_POISON_COUNT, 0);
+            if (poisonCount <= 1)
             {
-                v24 = 1;
+                poisonCount = 1;
             }
 
-            v23 = STATLIST_UnitGetStatValue(pUnit, STAT_POISONLENGTH, 0) / v24;
+            poisonOverrideLength = STATLIST_UnitGetStatValue(pUnit, STAT_POISONLENGTH, 0) / poisonCount;
         }
 
         *pColor = 2;
-        *pUnknown1 += (v15 * v23) >> 8;
-        *pUnknown2 += (v16 * v23) >> 8;
+        *pMinElemDamage += (minPoisonDam * poisonOverrideLength) >> 8;
+        *pMaxElemDamage += (maxPoisonDam * poisonOverrideLength) >> 8;
     }
 
-    if (*pUnknown2 > 0)
+    if (*pMaxElemDamage > 0)
     {
-        if (*pUnknown1 < 1)
+        if (*pMinElemDamage < 1)
         {
-            *pUnknown1 = 1;
+            *pMinElemDamage = 1;
         }
 
-        if ((*pUnknown1 + 1) > *pUnknown2)
+        if ((*pMinElemDamage + 1) > *pMaxElemDamage)
         {
-            *pUnknown2 = *pUnknown1 + 1;
+            *pMaxElemDamage = *pMinElemDamage + 1;
         }
     }
 
@@ -358,7 +386,7 @@ void __fastcall ESE_sub_6FB0B6F0(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t*
         {
             if ((skillsTxt->dwFlags[0] & gdwBitMasks[12]) != 0)
             {
-                ESE_sub_6FB0BB10(pUnit, pUnknown1, pUnknown2, pColor);
+                ESE_sub_6FB0BB10(pUnit, pMinElemDamage, pMaxElemDamage, pColor);
             }
         }
     }
@@ -373,13 +401,13 @@ void __fastcall ESE_sub_6FB0B6F0(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t*
     }
 }
 
-void __fastcall ESE_sub_6FB0C3A0(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor, int32_t ddamCalc1, int32_t ddamCalc2, D2SkillStrc* pSkill, int32_t unknown5, D2UnitStrc* unknown6)
+void __fastcall ESE_sub_6FB0C3A0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* pItem)
 {
-    ESE_sub_6FB0B2C0(pUnit, pUnknown1, pUnknown2, pColor, ddamCalc1, ddamCalc2, pSkill, unknown5, unknown6, 0);
-    ESE_sub_6FB0B6F0(pUnit, pUnknown1, pUnknown2, pColor, unknown6, pSkill);
+    ESE_sub_6FB0B2C0(pUnit, pMinDamage, pMaxDamage, pColor, additionalDamagePct, additionalDamage, pSkill, nSrcDamOverride, pItem, 0);
+    ESE_sub_6FB0B6F0(pUnit, pMinDamage, pMaxDamage, pColor, pItem, pSkill);
 }
 
-int __fastcall ESE_sub_6FB0A7D0(D2UnitStrc* pUnit, int32_t* pMinDamageA, int32_t* pMaxDamageA, int32_t* pColorA, int32_t* pMinDamageB, int32_t* pMaxDamageB, int32_t* pColorB, D2SkillStrc* pSkill, DamageCallback7D0_t callback, int ddamCalc1, int ddamCalc2)
+int __fastcall ESE_sub_6FB0A7D0(D2UnitStrc* pUnit, int64_t* pMinDamageA, int64_t* pMaxDamageA, int32_t* pColorA, int64_t* pMinDamageB, int64_t* pMaxDamageB, int32_t* pColorB, D2SkillStrc* pSkill, DamageCallback7D0_t callback, int ddamCalc1, int ddamCalc2)
 {
     D2InventoryStrc* pInventory = pUnit->pInventory;
     if (!pInventory)
@@ -455,7 +483,7 @@ void __fastcall ESE_sub_6FB0C840(D2UnitStrc* pUnit, D2SkillsTxt* pSkillsTxtRecor
         *pColor = 2;
 
         minElemDamage = (ESE_SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) * nSkillLevela) >> 8;
-        maxElemDamage = nSkillLevela * ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+        maxElemDamage = (ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) * nSkillLevela) >> 8;
     }
     else
     {
@@ -508,30 +536,25 @@ void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2Skill
         ESE_sub_6FB0C840(pUnit, pSkillsTxtRecord, nSkillLevel, &nMinElemDamage, &nMaxElemDamage, &nColor);
     }
 
-    int32_t minDamageA_temp = 0;
-    int32_t maxDamageA_temp = 0;
-    int32_t minDamageB_temp = 0;
-    int32_t maxDamageB_temp = 0;
+    int64_t minDamageA = 0;
+    int64_t maxDamageA = 0;
+    int64_t minDamageB = 0;
+    int64_t maxDamageB = 0;
     int32_t nColorA = 0;
     int32_t nColorB = 0;
 
     ESE_sub_6FB0A7D0(
         pUnit,
-        &minDamageA_temp,
-        &maxDamageA_temp,
+        &minDamageA,
+        &maxDamageA,
         &nColorA,
-        &minDamageB_temp,
-        &maxDamageB_temp,
+        &minDamageB,
+        &maxDamageB,
         &nColorB,
         pSkill,
         callback,
         ddamCalc1,
         ddamCalc2);
-
-    int64_t minDamageA = (int64_t)minDamageA_temp;
-    int64_t maxDamageA = (int64_t)maxDamageA_temp;
-    int64_t minDamageB = (int64_t)minDamageB_temp;
-    int64_t maxDamageB = (int64_t)maxDamageB_temp;
 
     if (minDamageA && maxDamageA)
     {
@@ -938,15 +961,15 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* pSki
     int32_t skillIdAgain = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
     int32_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
 
-    int32_t nUnknown1 = 0;
-    int32_t nUnknown2 = 0;
+    int64_t srcDamModMin = 0;
+    int64_t srcDamModMax = 0;
     int32_t nColor = 0;
 
-    ESE_sub_6FB0B2C0(pUnit, &nUnknown1, &nUnknown2, &nColor, ddamCalc1, ddamCalc2, pSkill, 128, 0, 0);
-    ESE_sub_6FB0B6F0(pUnit, &nUnknown1, &nUnknown2, &nColor, 0, pSkill);
+    ESE_sub_6FB0B2C0(pUnit, &srcDamModMin, &srcDamModMax, &nColor, ddamCalc1, ddamCalc2, pSkill, 128, 0, 0);
+    ESE_sub_6FB0B6F0(pUnit, &srcDamModMin, &srcDamModMax, &nColor, 0, pSkill);
 
-    int64_t nMinRange = ESE_DATATBLS_ApplyRatio(pSkillsTxtRecord->nSrcDam, nUnknown1, 128);
-    int64_t nMaxRange = ESE_DATATBLS_ApplyRatio(pSkillsTxtRecord->nSrcDam, nUnknown2, 128);
+    int64_t nMinRange = ESE_DATATBLS_ApplyRatio(pSkillsTxtRecord->nSrcDam, srcDamModMin, 128);
+    int64_t nMaxRange = ESE_DATATBLS_ApplyRatio(pSkillsTxtRecord->nSrcDam, srcDamModMax, 128);
 
     int64_t minPhysDamage = SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
     nMinRange += minPhysDamage >> 8;
@@ -974,32 +997,9 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* pSki
         ESE_PrintRangeString_6FB0B140(buff, nMinRange, nMaxRange, 0, 1);
     }
 
-    int32_t pWidth = 0;
-    int32_t pHeight = 0;
-    int32_t textOffsetY = 0;
-
-    D2Win_10131_GetTextDimensions((Unicode*)&buff[0], &pWidth, &pHeight);
-
-    int32_t widthMod = (11 * pWidth) / 7;
-    if (widthMod <= offsetC - offsetA)
-    {
-        D2Win_10127_SetFont(D2FONT_FONT16);
-        textOffsetY = offsetB;
-    }
-    else
-    {
-        D2Win_10127_SetFont(D2FONT_FONT6);
-        textOffsetY = (offsetB - 1);
-    }
-
-    D2Client_DrawTextCentered_6FACFCD0(
-        *D2Client_pDWORD_6FBBA748 + offsetA,
-        *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + textOffsetY - 0x1e0,
-        *D2Client_pDWORD_6FBBA748 + offsetC,
-        (Unicode*)&buff[0],
-        nColor
-    );
+    ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
+
 
 void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
@@ -1017,14 +1017,14 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSki
 
     if (pSkillsTxtRecord->nSrcDam)
     {
-        int32_t vUnknown1 = 0;
-        int32_t vUnknown2 = 0;
+        int64_t srcDamModMin = 0;
+        int64_t srcDamModMax = 0;
 
-        ESE_sub_6FB0B2C0(pUnit, &vUnknown1, &vUnknown2, &nColorA, 0, 0, pSkill, 128, 0, 0);
-        ESE_sub_6FB0B6F0(pUnit, &vUnknown1, &vUnknown2, &nColorA, 0, pSkill);
+        ESE_sub_6FB0B2C0(pUnit, &srcDamModMin, &srcDamModMax, &nColorA, 0, 0, pSkill, 128, 0, 0);
+        ESE_sub_6FB0B6F0(pUnit, &srcDamModMin, &srcDamModMax, &nColorA, 0, pSkill);
 
-        srcDamMin = (int64_t)pSkillsTxtRecord->nSrcDam * vUnknown1 / 128;
-        srcDamMax = (int64_t)pSkillsTxtRecord->nSrcDam * vUnknown2 / 128;
+        srcDamMin = pSkillsTxtRecord->nSrcDam * srcDamModMin / 128;
+        srcDamMax = pSkillsTxtRecord->nSrcDam * srcDamModMax / 128;
     }
 
     int32_t nColorB = 0;
@@ -1191,14 +1191,14 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam5(D2UnitStrc* pUnit, D2SkillStrc* pSki
     int64_t srcDamMax = 0;
     if (pSkillsTxtRecord->nSrcDam)
     {
-        int32_t vUnknown1 = 0;
-        int32_t vUnknown2 = 0;
+        int64_t srcDamModMin = 0;
+        int64_t srcDamModMax = 0;
 
-        ESE_sub_6FB0B2C0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, 0, pSkill, 128, 0, 0);
-        ESE_sub_6FB0B6F0(pUnit, &vUnknown1, &vUnknown2, &nColor, 0, pSkill);
+        ESE_sub_6FB0B2C0(pUnit, &srcDamModMin, &srcDamModMax, &nColor, 0, 0, pSkill, 128, 0, 0);
+        ESE_sub_6FB0B6F0(pUnit, &srcDamModMin, &srcDamModMax, &nColor, 0, pSkill);
 
-        srcDamMin = (int64_t)pSkillsTxtRecord->nSrcDam * vUnknown1 / 128;
-        srcDamMax = (int64_t)pSkillsTxtRecord->nSrcDam * vUnknown2 / 128;
+        srcDamMin = pSkillsTxtRecord->nSrcDam * srcDamModMin / 128;
+        srcDamMax = pSkillsTxtRecord->nSrcDam * srcDamModMax / 128;
     }
 
     int64_t minPhysDamage = (ESE_SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8) + srcDamMin;
@@ -1299,10 +1299,10 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam1(D2UnitStrc* pUnit, D2SkillStrc* pSki
     if (UNITS_CanDualWield(pUnit))
     {
         int32_t skillId = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-        int32_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
+        int64_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
 
         int32_t skillIdAgain = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-        int32_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
+        int64_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
 
         ESE_sub_6FB0C400(
             pUnit,
@@ -1320,5 +1320,248 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam1(D2UnitStrc* pUnit, D2SkillStrc* pSki
     else
     {
         ESE_CHARSCREEN_DrawDescDam7(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
+    }
+}
+
+
+void __fastcall ESE_sub_6FB0D4F0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalWeaponMasteryBonus, int a6, D2SkillStrc* pSkill, int a8, D2UnitStrc* pItem)
+{
+    if (pSkill == nullptr) 
+    {
+        return;
+    }
+
+    *pMinDamage = 0;
+    *pMaxDamage = 0;
+    if (pItem == nullptr)
+    {
+        if (pUnit->pInventory == nullptr)
+        {
+            return;
+        }
+
+        pItem = INVENTORY_GetLeftHandWeapon(pUnit->pInventory);
+        if (pItem == nullptr)
+        {
+            return;
+        }
+    }
+
+    if (ITEMS_CheckIfThrowable(pItem))
+    {
+        if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, 38))
+        {
+            int32_t missileType = ITEMS_GetMissileType(pItem);
+            *pColor = 0;
+            int64_t minElemDamage = ESE_MISSILE_GetMinElemDamage(0, pUnit, missileType, 1);
+            int64_t minDamage = ESE_MISSILE_GetMinDamage(0, pUnit, missileType, 1) + minElemDamage;
+            int64_t maxElemDamage = ESE_MISSILE_GetMaxElemDamage(0, pUnit, missileType, 1);
+            int64_t maxDamage = ESE_MISSILE_GetMaxDamage(0, pUnit, missileType, 1) + maxElemDamage;
+
+            int32_t missileElemType = MISSILE_GetElemTypeFromMissileId(missileType);
+            switch (missileElemType)
+            {
+            case ELEMTYPE_FIRE:
+                *pColor = 1;
+                break;
+            case ELEMTYPE_LTNG:
+                *pColor = 4;
+                break;
+            case ELEMTYPE_COLD:
+                *pColor = 3;
+                break;
+            case ELEMTYPE_POIS:
+                *pColor = 2;
+                break;
+            }
+
+            if (missileElemType == ELEMTYPE_POIS)
+            {
+                int64_t elemLength = ESE_MISSILE_GetElementalLength(0, pUnit, missileType, 1) / 25;
+                if (elemLength <= 0)
+                {
+                    elemLength = 1;
+                }
+
+                minDamage /= elemLength;
+                maxDamage /= elemLength;
+            }
+
+            minDamage >>= 8;
+            maxDamage >>= 8;
+
+            if (maxDamage <= minDamage)
+            {
+                maxDamage = minDamage;
+            }
+
+            *pMinDamage = minDamage;
+            *pMaxDamage = maxDamage;
+        }
+        else
+        {
+            int64_t damagePercentFromStats = 0;
+            int64_t strBonus = ITEMS_GetStrengthBonus(pItem);
+            if (strBonus)
+            {
+                damagePercentFromStats = strBonus * STATLIST_UnitGetStatValue(pUnit, STAT_STRENGTH, 0) / 100;
+            }
+
+            int64_t dexBonus = ITEMS_GetDexBonus(pItem);
+            if (dexBonus)
+            {
+                damagePercentFromStats += dexBonus * STATLIST_UnitGetStatValue(pUnit, STAT_DEXTERITY, 0) / 100;
+            }
+
+            *pMinDamage = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_THROW_MINDAMAGE, 0);
+            *pMaxDamage = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_THROW_MAXDAMAGE, 0);
+            int64_t totalDamagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_DAMAGEPERCENT, 0) + damagePercentFromStats;
+            int64_t minDamagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MINDAMAGE_PERCENT, 0);
+            int64_t maxDamagePercent = STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MAXDAMAGE_PERCENT, 0);
+
+            if (totalDamagePercent <= -90)
+            {
+                totalDamagePercent = -90;
+            }
+
+            *pMinDamage += *pMinDamage * (totalDamagePercent + minDamagePercent) / 100;
+            *pMaxDamage += *pMaxDamage * (maxDamagePercent + totalDamagePercent) / 100;
+
+            int64_t totalWeaponMasteryBonus = additionalWeaponMasteryBonus;
+            if (STATES_CheckState(pUnit, STATE_THROWINGMASTERY))
+            {
+                totalWeaponMasteryBonus = additionalWeaponMasteryBonus + SKILLS_GetWeaponMasteryBonus(pUnit, pItem, pSkill, 1);
+            }
+
+            *pMinDamage += ESE_DATATBLS_ApplyRatio(totalWeaponMasteryBonus, *pMinDamage, 100);
+            *pMaxDamage += ESE_DATATBLS_ApplyRatio(totalWeaponMasteryBonus, *pMaxDamage, 100);
+
+            if (*pMaxDamage < *pMinDamage)
+            {
+                *pMaxDamage = *pMinDamage;
+            }
+
+            int64_t nMinElemDamage = 0;
+            int64_t nMaxElemDamage = 0;
+            ESE_sub_6FB0B6F0(pUnit, &nMinElemDamage, &nMaxElemDamage, pColor, pItem, pSkill);
+
+            if (nMaxElemDamage < nMinElemDamage)
+            {
+                nMaxElemDamage = nMinElemDamage;
+            }
+
+            *pMinDamage += nMinElemDamage;
+            *pMaxDamage += nMaxElemDamage;
+        }
+    }
+}
+
+void __fastcall ESE_CHARSCREEN_DrawDescDam22(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+{
+    wchar_t buffA[32] = {0};
+    wchar_t buffB[32] = {0};
+
+    if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
+    {
+        return;
+    }
+
+    int32_t nColorA = 0;
+    int64_t nMinElemDamageATemp = 0;
+    int64_t nMaxElemDamageATemp = 0;
+    ESE_sub_6FB0D4F0(pUnit, &nMinElemDamageATemp, &nMaxElemDamageATemp, &nColorA, 0, 0, pSkill, 0, 0);
+
+    int64_t nMinElemDamageA = ESE_DATATBLS_ApplyRatio(nMinElemDamageATemp, pSkillsTxtRecord->nSrcDam, 128);
+    int64_t nMaxElemDamageA = ESE_DATATBLS_ApplyRatio(nMaxElemDamageATemp, pSkillsTxtRecord->nSrcDam, 128);
+
+    int32_t nColorB = 0;
+    int64_t nMinElemDamageB = 0;
+    int64_t nMaxElemDamageB = 0;
+    ESE_sub_6FB0C840(pUnit, pSkillsTxtRecord, nSkillLevel, &nMinElemDamageB, &nMaxElemDamageB, &nColorB);
+
+    if (nMinElemDamageA || nMaxElemDamageA)
+    {
+        if (nMinElemDamageB || nMaxElemDamageB)
+        {
+            if (nMinElemDamageA == nMaxElemDamageA)
+            {
+                ESE_sub_6FB0B0F0((Unicode *)&buffA[0], nMinElemDamageA, 0);
+            }
+            else
+            {
+                ESE_PrintRangeString_6FB0B140(buffA, nMinElemDamageA, nMaxElemDamageA, 0, 1);
+            }
+
+            ESE_sub_6FB0B250((Unicode*)&buffB[0], nMinElemDamageB, nMaxElemDamageB, 0);
+            ESE_sub_6FB0AC10((Unicode*)&buffA[0], (Unicode*)&buffB[0], offsetA, offsetB, offsetC, nColorA, nColorB);
+        }
+        else
+        {
+            if (nMinElemDamageA >= nMaxElemDamageA)
+            {
+                nMaxElemDamageA = nMinElemDamageA + 1;
+            }
+
+            ESE_sub_6FB0B250((Unicode*)&buffA[0], nMinElemDamageA, nMaxElemDamageA, 0);
+
+            int32_t v20 = 0;
+            int32_t pWidth = 0;
+            int32_t pHeight = 0;
+            D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
+
+            int32_t widthMod = (11 * pWidth) / 7;
+            if (widthMod <= offsetC - offsetA)
+            {
+                D2Win_10127_SetFont(D2FONT_FONT16);
+                v20 = offsetB;
+            }
+            else
+            {
+                D2Win_10127_SetFont(D2FONT_FONT6);
+                v20 = (offsetB - 1);
+            }
+
+            D2Client_DrawTextCentered_6FACFCD0(
+                *D2Client_pDWORD_6FBBA748 + offsetA,
+                *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
+                *D2Client_pDWORD_6FBBA748 + offsetC,
+                (Unicode*)&buffA[0],
+                nColorA
+            );
+        }
+    }
+    else
+    {
+        if (nMinElemDamageB >= nMaxElemDamageB)
+        {
+            nMaxElemDamageB = nMinElemDamageB + 1;
+        }
+
+        ESE_sub_6FB0B250((Unicode*)&buffA[0], nMinElemDamageB, nMaxElemDamageB, 0);
+
+        int32_t v20 = 0;
+        int32_t pWidth = 0;
+        int32_t pHeight = 0;
+        D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
+
+        int32_t widthMod = (11 * pWidth) / 7;
+        if (widthMod <= offsetC - offsetA)
+        {
+            D2Win_10127_SetFont(D2FONT_FONT16);
+            v20 = offsetB;
+        }
+        else
+        {
+            D2Win_10127_SetFont(D2FONT_FONT6);
+            v20 = (offsetB - 1);
+        }
+
+        D2Client_DrawTextCentered_6FACFCD0(
+            *D2Client_pDWORD_6FBBA748 + offsetA,
+            *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
+            *D2Client_pDWORD_6FBBA748 + offsetC,
+            (Unicode*)&buffA[0],
+            nColorA
+        );
     }
 }
