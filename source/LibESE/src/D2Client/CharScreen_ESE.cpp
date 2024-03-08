@@ -271,17 +271,17 @@ void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int64_t* pMinElemDamage, int
         {
             switch (nElement)
             {
-            case 1:
+            case ELEMTYPE_FIRE:
                 *pColor = 1;
                 break;
-            case 2:
+            case ELEMTYPE_LTNG:
                 *pColor = 9;
                 break;
-            case 3:
-            case 4:
+            case ELEMTYPE_MAGIC:
+            case ELEMTYPE_COLD:
                 *pColor = 3;
                 break;
-            case 5:
+            case ELEMTYPE_POIS:
                 *pColor = 2;
                 break;
             default:
@@ -495,20 +495,18 @@ void __fastcall ESE_sub_6FB0C840(D2UnitStrc* pUnit, D2SkillsTxt* pSkillsTxtRecor
     {
         switch (pSkillsTxtRecord->nEType)
         {
-        case 1u:
+        case ELEMTYPE_FIRE:
             *pColor = 1;
             break;
-        case 2u:
+        case ELEMTYPE_LTNG:
             *pColor = 9;
             break;
-        case 3u:
-        case 4u:
+        case ELEMTYPE_MAGIC:
+        case ELEMTYPE_COLD:
             *pColor = 3;
             break;
-        case 5u:
+        case ELEMTYPE_POIS:
             *pColor = 2;
-            break;
-        default:
             break;
         }
     }
@@ -584,32 +582,7 @@ void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2Skill
             ESE_PrintRangeString_6FB0B140(buffA, minDamageB, maxDamageB, 0, 1);
         }
 
-        int32_t pWidth = 0;
-        int32_t pHeight = 0;
-        int32_t v20 = 0;
-
-        D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
-
-        int32_t widthMod = (11 * pWidth) / 7;
-        if (widthMod <= offsetC - offsetA)
-        {
-            D2Win_10127_SetFont(D2FONT_FONT16);
-            v20 = offsetB;
-        }
-        else
-        {
-            D2Win_10127_SetFont(D2FONT_FONT6);
-            v20 = (offsetB - 1);
-        }
-
-        D2Client_DrawTextCentered_6FACFCD0(
-            *D2Client_pDWORD_6FBBA748 + offsetA,
-            *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-            *D2Client_pDWORD_6FBBA748 + offsetC,
-            (Unicode*)&buffA[0],
-            nColorB
-        );
-
+        ESE_Helper_DrawTextCentered(buffA, offsetA, offsetB, offsetC, nColorB);
         return;
     }
 
@@ -622,31 +595,7 @@ void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2Skill
 
         ESE_sub_6FB0B250((Unicode*)&buffA[0], minDamageA, maxDamageA, 0);
 
-        int32_t pWidth = 0;
-        int32_t pHeight = 0;
-        int32_t v20 = 0;
-
-        D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
-
-        int32_t widthMod = (11 * pWidth) / 7;
-        if (widthMod <= offsetC - offsetA)
-        {
-            D2Win_10127_SetFont(D2FONT_FONT16);
-            v20 = offsetB;
-        }
-        else
-        {
-            D2Win_10127_SetFont(D2FONT_FONT6);
-            v20 = (offsetB - 1);
-        }
-
-        D2Client_DrawTextCentered_6FACFCD0(
-            *D2Client_pDWORD_6FBBA748 + offsetA,
-            *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-            *D2Client_pDWORD_6FBBA748 + offsetC,
-            (Unicode*)&buffA[0],
-            nColorA
-        );
+        ESE_Helper_DrawTextCentered(buffA, offsetA, offsetB, offsetC, nColorA);
     }
 
     if (minDamageA == maxDamageA)
@@ -813,7 +762,7 @@ void __fastcall ESE_PrintRangeString_6FB0B140(wchar_t* pText, int64_t minDamage,
 
 void __fastcall ESE_CHARSCREEN_DrawDescDam8(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
-    wchar_t buff[32];
+    wchar_t buff[32] = { 0 };
 
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -850,17 +799,17 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam8(D2UnitStrc* pUnit, D2SkillStrc* pSki
 
     switch (pSkillsTxtRecord->nEType)
     {
-    case 1u:
+    case ELEMTYPE_FIRE:
         nColor = 1;
         break;
-    case 2u:
+    case ELEMTYPE_LTNG:
         nColor = 9;
         break;
-    case 3u:
-    case 4u:
+    case ELEMTYPE_MAGIC:
+    case ELEMTYPE_COLD:
         nColor = 3;
         break;
-    case 5u:
+    case ELEMTYPE_POIS:
         nColor = 2;
         break;
     }
@@ -895,36 +844,12 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam8(D2UnitStrc* pUnit, D2SkillStrc* pSki
         ESE_PrintRangeString_6FB0B140(buff, nMinRange, nMaxRange, 0, 1);
     }
 
-    int32_t pWidth = 0;
-    int32_t pHeight = 0;
-    int32_t v20 = 0;
-
-    D2Win_10131_GetTextDimensions((Unicode*)&buff[0], &pWidth, &pHeight);
-
-    int32_t widthMod = (11 * pWidth) / 7;
-    if (widthMod <= offsetC - offsetA)
-    {
-        D2Win_10127_SetFont(D2FONT_FONT16);
-        v20 = offsetB;
-    }
-    else
-    {
-        D2Win_10127_SetFont(D2FONT_FONT6);
-        v20 = (offsetB - 1);
-    }
-
-    D2Client_DrawTextCentered_6FACFCD0(
-        *D2Client_pDWORD_6FBBA748 + offsetA,
-        *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-        *D2Client_pDWORD_6FBBA748 + offsetC,
-        (Unicode*)&buff[0],
-        nColor
-    );
+    ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
 void __fastcall ESE_CHARSCREEN_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
-    wchar_t buff[32];
+    wchar_t buff[32] = { 0 };
 
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -1000,7 +925,6 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* pSki
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-
 void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buffA[32];
@@ -1030,21 +954,18 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSki
     int32_t nColorB = 0;
     switch (pSkillsTxtRecord->nEType)
     {
-    case 1:
+    case ELEMTYPE_FIRE:
         nColorB = 1;
         break;
-    case 2:
+    case ELEMTYPE_LTNG:
         nColorB = 9;
         break;
-    case 3:
-    case 4:
+    case ELEMTYPE_MAGIC:
+    case ELEMTYPE_COLD:
         nColorB = 3;
         break;
-    case 5:
+    case ELEMTYPE_POIS:
         nColorB = 2;
-        break;
-    default:
-        nColorB = 0;
         break;
     }
 
@@ -1065,7 +986,6 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSki
 
     ESE_sub_6FB0BD60(pUnit, &nMinRange, &nMaxRange, pSkillsTxtRecord->nEType);
 
-
     if (srcDamMin == 0 && srcDamMax == 0)
     {
         if (nMinRange >= nMaxRange)
@@ -1075,31 +995,7 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSki
 
         ESE_sub_6FB0B250((Unicode*)&buffA[0], nMinRange, nMaxRange, 0);
 
-        int32_t v20 = 0;
-        int32_t pWidth = 0;
-        int32_t pHeight = 0;
-        D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
-
-        int32_t widthMod = (11 * pWidth) / 7;
-        if (widthMod <= offsetC - offsetA)
-        {
-            D2Win_10127_SetFont(D2FONT_FONT16);
-            v20 = offsetB;
-        }
-        else
-        {
-            D2Win_10127_SetFont(D2FONT_FONT6);
-            v20 = (offsetB - 1);
-        }
-
-        D2Client_DrawTextCentered_6FACFCD0(
-            *D2Client_pDWORD_6FBBA748 + offsetA,
-            *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-            *D2Client_pDWORD_6FBBA748 + offsetC,
-            (Unicode*)&buffA[0],
-            nColorB
-        );
-
+        ESE_Helper_DrawTextCentered(buffA, offsetA, offsetB, offsetC, nColorB);
         return;
     }
     if (nMinRange == 0 && nMaxRange == 0)
@@ -1111,31 +1007,7 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSki
 
         ESE_sub_6FB0B250((Unicode*)&buffA[0], srcDamMin, srcDamMax, 0);
 
-        int32_t v20 = 0;
-        int32_t pWidth = 0;
-        int32_t pHeight = 0;
-        D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
-
-        int32_t widthMod = (11 * pWidth) / 7;
-        if (widthMod <= offsetC - offsetA)
-        {
-            D2Win_10127_SetFont(D2FONT_FONT16);
-            v20 = offsetB;
-        }
-        else
-        {
-            D2Win_10127_SetFont(D2FONT_FONT6);
-            v20 = (offsetB - 1);
-        }
-
-        D2Client_DrawTextCentered_6FACFCD0(
-            *D2Client_pDWORD_6FBBA748 + offsetA,
-            *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-            *D2Client_pDWORD_6FBBA748 + offsetC,
-            (Unicode*)&buffA[0],
-            nColorA
-        );
-
+        ESE_Helper_DrawTextCentered(buffA, offsetA, offsetB, offsetC, nColorA);
         return;
     }
 
@@ -1162,7 +1034,7 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSki
 
 void __fastcall ESE_CHARSCREEN_DrawDescDam5(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
-    wchar_t buff[32];
+    wchar_t buff[32] = { 0 };
 
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -1170,19 +1042,19 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam5(D2UnitStrc* pUnit, D2SkillStrc* pSki
     }
 
     int32_t nColor = 0;
-    switch (pSkillsTxtRecord->nEType - 1)
+    switch (pSkillsTxtRecord->nEType)
     {
-    case 0:
+    case ELEMTYPE_FIRE:
         nColor = 1;
         break;
-    case 1:
+    case ELEMTYPE_LTNG:
         nColor = 9;
         break;
-    case 2:
-    case 3:
+    case ELEMTYPE_MAGIC:
+    case ELEMTYPE_COLD:
         nColor = 3;
         break;
-    case 4:
+    case ELEMTYPE_POIS:
         nColor = 2;
         break;
     }
@@ -1236,37 +1108,12 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam5(D2UnitStrc* pUnit, D2SkillStrc* pSki
         ESE_PrintRangeString_6FB0B140(buff, nMinRange, nMaxRange, 0, 1);
     }
 
-    int32_t v20 = 0;
-    int32_t pWidth = 0;
-    int32_t pHeight = 0;
-    D2Win_10131_GetTextDimensions((Unicode*)&buff[0], &pWidth, &pHeight);
-
-    int32_t widthMod = (11 * pWidth) / 7;
-    if (widthMod <= offsetC - offsetA)
-    {
-        D2Win_10127_SetFont(D2FONT_FONT16);
-        v20 = offsetB;
-    }
-    else
-    {
-        D2Win_10127_SetFont(D2FONT_FONT6);
-        v20 = (offsetB - 1);
-    }
-
-    D2Client_DrawTextCentered_6FACFCD0(
-        *D2Client_pDWORD_6FBBA748 + offsetA,
-        *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-        *D2Client_pDWORD_6FBBA748 + offsetC,
-        (Unicode*)&buff[0],
-        nColor
-    );
+    ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
 
 void __fastcall ESE_CHARSCREEN_DrawDescDam1(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
-    wchar_t buff[32];
-
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
         return;
@@ -1352,7 +1199,6 @@ void __fastcall ESE_sub_6FB0D4F0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t
         if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, 38))
         {
             int32_t missileType = ITEMS_GetMissileType(pItem);
-            *pColor = 0;
             int64_t minElemDamage = ESE_MISSILE_GetMinElemDamage(0, pUnit, missileType, 1);
             int64_t minDamage = ESE_MISSILE_GetMinDamage(0, pUnit, missileType, 1) + minElemDamage;
             int64_t maxElemDamage = ESE_MISSILE_GetMaxElemDamage(0, pUnit, missileType, 1);
@@ -1372,6 +1218,9 @@ void __fastcall ESE_sub_6FB0D4F0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t
                 break;
             case ELEMTYPE_POIS:
                 *pColor = 2;
+                break;
+            default:
+                *pColor = 0;
                 break;
             }
 
@@ -1401,6 +1250,7 @@ void __fastcall ESE_sub_6FB0D4F0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t
         else
         {
             int64_t damagePercentFromStats = 0;
+
             int64_t strBonus = ITEMS_GetStrengthBonus(pItem);
             if (strBonus)
             {
@@ -1504,30 +1354,7 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam22(D2UnitStrc* pUnit, D2SkillStrc* pSk
 
             ESE_sub_6FB0B250((Unicode*)&buffA[0], nMinElemDamageA, nMaxElemDamageA, 0);
 
-            int32_t v20 = 0;
-            int32_t pWidth = 0;
-            int32_t pHeight = 0;
-            D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
-
-            int32_t widthMod = (11 * pWidth) / 7;
-            if (widthMod <= offsetC - offsetA)
-            {
-                D2Win_10127_SetFont(D2FONT_FONT16);
-                v20 = offsetB;
-            }
-            else
-            {
-                D2Win_10127_SetFont(D2FONT_FONT6);
-                v20 = (offsetB - 1);
-            }
-
-            D2Client_DrawTextCentered_6FACFCD0(
-                *D2Client_pDWORD_6FBBA748 + offsetA,
-                *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-                *D2Client_pDWORD_6FBBA748 + offsetC,
-                (Unicode*)&buffA[0],
-                nColorA
-            );
+            ESE_Helper_DrawTextCentered(buffA, offsetA, offsetB, offsetC, nColorA);
         }
     }
     else
@@ -1539,29 +1366,6 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam22(D2UnitStrc* pUnit, D2SkillStrc* pSk
 
         ESE_sub_6FB0B250((Unicode*)&buffA[0], nMinElemDamageB, nMaxElemDamageB, 0);
 
-        int32_t v20 = 0;
-        int32_t pWidth = 0;
-        int32_t pHeight = 0;
-        D2Win_10131_GetTextDimensions((Unicode*)&buffA[0], &pWidth, &pHeight);
-
-        int32_t widthMod = (11 * pWidth) / 7;
-        if (widthMod <= offsetC - offsetA)
-        {
-            D2Win_10127_SetFont(D2FONT_FONT16);
-            v20 = offsetB;
-        }
-        else
-        {
-            D2Win_10127_SetFont(D2FONT_FONT6);
-            v20 = (offsetB - 1);
-        }
-
-        D2Client_DrawTextCentered_6FACFCD0(
-            *D2Client_pDWORD_6FBBA748 + offsetA,
-            *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + v20 - 0x1e0,
-            *D2Client_pDWORD_6FBBA748 + offsetC,
-            (Unicode*)&buffA[0],
-            nColorA
-        );
+        ESE_Helper_DrawTextCentered(buffA, offsetA, offsetB, offsetC, nColorA);
     }
 }
