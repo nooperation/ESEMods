@@ -739,6 +739,7 @@ void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2Skill
         ESE_sub_6FB0B250((Unicode*)&buffA[0], minDamageA, maxDamageA, 0);
 
         ESE_Helper_DrawTextCentered(buffA, offsetA, offsetB, offsetC, nColorA);
+        return;
     }
 
     if (minDamageA == maxDamageA)
@@ -1968,8 +1969,8 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam10(D2UnitStrc* pUnit, D2SkillStrc* 
     }
 
     nMinDamage += (minDamagePct + nMinDamage * damagePct) / 100;
-    nMaxDamage  += (maxDamagePct + nMaxDamage * damagePct) / 100;
-    if (nMaxDamage >= nMinDamage)
+    nMaxDamage += (maxDamagePct + nMaxDamage * damagePct) / 100;
+    if (nMinDamage >= nMaxDamage)
     {
         nMaxDamage = nMinDamage + 1;
     }
@@ -2448,13 +2449,13 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam17(D2UnitStrc* pUnit, D2SkillStrc* 
         ESE_PrintRangeString_6FB0B140(buffB, minDamage, maxDamage, 0, 1);
     }
 
-    if (minDamage == maxDamage)
+    if (nMinElemDamageB == nMaxElemDamageB)
     {
-        ESE_sub_6FB0B0F0((Unicode*)&buffA[0], minDamage, 0);
+        ESE_sub_6FB0B0F0((Unicode*)&buffA[0], nMinElemDamageB, 0);
     }
     else
     {
-        ESE_PrintRangeString_6FB0B140(buffA, minDamage, maxDamage, 0, 1);
+        ESE_PrintRangeString_6FB0B140(buffA, nMinElemDamageB, nMaxElemDamageB, 0, 1);
     }
 
     ESE_sub_6FB0AC10((Unicode*)&buffB[0], (Unicode*)&buffA[0], offsetA, offsetB, offsetC, nColor, nColorB);
