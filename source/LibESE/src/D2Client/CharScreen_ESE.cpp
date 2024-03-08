@@ -21,9 +21,9 @@ void __fastcall ESE_sub_6FB0D4F0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t
 void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* item, int32_t unknown7);
 void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int64_t* pMinElemDamage, int64_t* pMaxElemDamage, int32_t* pColor);
 void __fastcall ESE_sub_6FB0C3A0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* pItem);
-int __fastcall ESE_sub_6FB0A7D0(D2UnitStrc* pUnit, int64_t* pMinDamageA, int64_t* pMaxDamageA, int32_t* pColorA, int64_t* pMinDamageB, int64_t* pMaxDamageB, int32_t* pColorB, D2SkillStrc* pSkill, DamageCallback7D0_t callback, int ddamCalc1, int ddamCalc2);
+int __fastcall ESE_sub_6FB0A7D0(D2UnitStrc* pUnit, int64_t* pMinDamageA, int64_t* pMaxDamageA, int32_t* pColorA, int64_t* pMinDamageB, int64_t* pMaxDamageB, int32_t* pColorB, D2SkillStrc* pSkill, DamageCallback7D0_t callback, int64_t ddamCalc1, int64_t ddamCalc2);
 void __fastcall ESE_sub_6FB0C840(D2UnitStrc* pUnit, D2SkillsTxt* pSkillsTxtRecord, int nSkillLevel, int64_t* pMinElemDamage, int64_t* pMaxElemDamage, int* pColor);
-void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, DamageCallback7D0_t callback, int32_t ddamCalc1, int32_t ddamCalc2, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t flag);
+void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, DamageCallback7D0_t callback, int64_t ddamCalc1, int64_t ddamCalc2, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t flag);
 void __fastcall ESE_sub_6FB0BD60(const D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, uint8_t elemType);
 
 void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t nColor)
@@ -550,7 +550,7 @@ void __fastcall ESE_sub_6FB0C3A0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t
     ESE_sub_6FB0B6F0(pUnit, pMinDamage, pMaxDamage, pColor, pItem, pSkill);
 }
 
-int __fastcall ESE_sub_6FB0A7D0(D2UnitStrc* pUnit, int64_t* pMinDamageA, int64_t* pMaxDamageA, int32_t* pColorA, int64_t* pMinDamageB, int64_t* pMaxDamageB, int32_t* pColorB, D2SkillStrc* pSkill, DamageCallback7D0_t callback, int ddamCalc1, int ddamCalc2)
+int __fastcall ESE_sub_6FB0A7D0(D2UnitStrc* pUnit, int64_t* pMinDamageA, int64_t* pMaxDamageA, int32_t* pColorA, int64_t* pMinDamageB, int64_t* pMaxDamageB, int32_t* pColorB, D2SkillStrc* pSkill, DamageCallback7D0_t callback, int64_t ddamCalc1, int64_t ddamCalc2)
 {
     D2InventoryStrc* pInventory = pUnit->pInventory;
     if (!pInventory)
@@ -658,7 +658,7 @@ void __fastcall ESE_sub_6FB0C840(D2UnitStrc* pUnit, D2SkillsTxt* pSkillsTxtRecor
     *pMaxElemDamage += maxElemDamage;
 }
 
-void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, DamageCallback7D0_t callback, int32_t ddamCalc1, int32_t ddamCalc2, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t flag)
+void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, DamageCallback7D0_t callback, int64_t ddamCalc1, int64_t ddamCalc2, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t flag)
 {
     wchar_t buffB[64] = {0};
     wchar_t buffA[64] = {0};
@@ -1044,10 +1044,10 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* pSki
     }
 
     int32_t skillId = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-    int32_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
+    int64_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
 
     int32_t skillIdAgain = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-    int32_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
+    int64_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
 
     int64_t srcDamModMin = 0;
     int64_t srcDamModMax = 0;
@@ -1261,10 +1261,10 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam19(D2UnitStrc* pUnit, D2SkillStrc* pSk
         wchar_t buff[32] = { 0 };
 
         int32_t skillId = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-        int32_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
+        int64_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], skillId, nSkillLevel);
 
         int32_t skillIdAgain = SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__);
-        int32_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
+        int64_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], skillIdAgain, nSkillLevel);
 
         int64_t minDamage = 0;
         int64_t maxDamage = 0;
@@ -2400,8 +2400,8 @@ void __fastcall ESE_CHARSCREEN_DrawDescDam17(D2UnitStrc* pUnit, D2SkillStrc* pSk
         return;
     }
 
-    int32_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], pSkillsTxtIndex, nSkillLevel);
-    int32_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], pSkillsTxtIndex, nSkillLevel);
+    int64_t ddamCalc1 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[0], pSkillsTxtIndex, nSkillLevel);
+    int64_t ddamCalc2 = SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescTxt->dwDamCalc[1], pSkillsTxtIndex, nSkillLevel);
 
     int32_t nColor = 0;
     int64_t minDamage = 0;
