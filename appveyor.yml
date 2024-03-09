@@ -20,11 +20,13 @@ build_script:
 
     mkdir staging\patch
 
-    copy %APPVEYOR_BUILD_FOLDER%\build\bin\RelWithDebInfo\*.dll staging\patch
+    cd staging
 
-    copy %APPVEYOR_BUILD_FOLDER%\build\external\D2.Detours\source\RelWithDebInfo\*.dll staging
+    copy %APPVEYOR_BUILD_FOLDER%\build\bin\RelWithDebInfo\*.dll patch
 
-    7z a -r %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%.zip staging\
+    copy %APPVEYOR_BUILD_FOLDER%\build\external\D2.Detours\source\RelWithDebInfo\*.dll .
+
+    7z a -r %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%.zip .
 artifacts:
 - path: ./build/*.zip
   name: ESEMods_v${APPVEYOR_BUILD_VERSION}
