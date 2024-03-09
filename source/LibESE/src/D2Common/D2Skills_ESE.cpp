@@ -652,10 +652,9 @@ int64_t __stdcall ESE_SKILLS_GetMaxElemDamage(D2UnitStrc* pUnit, int nSkillId, i
 		if (pSkillsTxtRecord->dwEDmgSymPerCalc != -1)
 		{
 			nBonus = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwEDmgSymPerCalc, nSkillId, nSkillLevel);
-
 			if (nBonus)
 			{
-				nDamage += nDamage * nBonus / 100;
+				nDamage += ESE_DATATBLS_ApplyRatio(nDamage, nBonus, 100);
 			}
 		}
 

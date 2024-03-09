@@ -672,7 +672,7 @@ void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2Skill
     int64_t nMaxElemDamage = 0;
     int32_t nColor = 0;
 
-    if (!flag)
+    if (flag)
     {
         ESE_sub_6FB0C840(pUnit, pSkillsTxtRecord, nSkillLevel, &nMinElemDamage, &nMaxElemDamage, &nColor);
     }
@@ -2309,24 +2309,26 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam16(D2UnitStrc* pUnit, D2SkillStrc* 
     int64_t nMinDamageTotal = ESE_SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8;
     int64_t nMaxDamageTotal = ESE_SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0) >> 8;
 
-    int32_t v14 = D2Client_sub_6FB0B580();
+    int32_t stateBonus = D2Client_sub_6FB0B580();
 
-    nMinDamageTotal += ESE_DATATBLS_ApplyRatio(nMinDamageTotal, v14, 100);
-    nMaxDamageTotal += ESE_DATATBLS_ApplyRatio(nMaxDamageTotal, v14, 100);
+    nMinDamageTotal += ESE_DATATBLS_ApplyRatio(nMinDamageTotal, stateBonus, 100);
+    nMaxDamageTotal += ESE_DATATBLS_ApplyRatio(nMaxDamageTotal, stateBonus, 100);
 
     int64_t minKickDamage = 0;
     int64_t maxKickDamage = 0;
-    int64_t kickDamagePct = v14;
+    int64_t kickDamagePct = stateBonus;
     ESE_SKILLS_CalculateKickDamage(pUnit, &minKickDamage, &maxKickDamage, &kickDamagePct);
 
-    nMinDamageTotal += ESE_DATATBLS_ApplyRatio(minKickDamage, kickDamagePct, 100);
-    nMaxDamageTotal += ESE_DATATBLS_ApplyRatio(maxKickDamage, kickDamagePct, 100);
+    minKickDamage += ESE_DATATBLS_ApplyRatio(minKickDamage, kickDamagePct, 100);
+    maxKickDamage += ESE_DATATBLS_ApplyRatio(maxKickDamage, kickDamagePct, 100);
 
+    minKickDamage += nMinDamageTotal;
+    maxKickDamage += nMaxDamageTotal;
 
     int32_t skillDamage0 = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], pSkillsTxtRecord->nSkillId, nSkillLevel);
 
-    nMinDamageTotal += ESE_DATATBLS_ApplyRatio(minKickDamage, skillDamage0, 100);
-    nMaxDamageTotal += ESE_DATATBLS_ApplyRatio(maxKickDamage, skillDamage0, 100);
+    minKickDamage += ESE_DATATBLS_ApplyRatio(minKickDamage, skillDamage0, 100);
+    maxKickDamage += ESE_DATATBLS_ApplyRatio(maxKickDamage, skillDamage0, 100);
 
     if (pUnit->pInventory != nullptr)
     {
@@ -2356,19 +2358,19 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam16(D2UnitStrc* pUnit, D2SkillStrc* 
             STATLIST_MergeStatLists(pUnit, otherHandWeapon, 0);
         }
 
-        ESE_sub_6FB0B6F0(pUnit, &nMinDamageTotal, &nMaxDamageTotal, &nColor, 0, pSkill);
+        ESE_sub_6FB0B6F0(pUnit, &minKickDamage, &maxKickDamage, &nColor, 0, pSkill);
         if (leftHandWeapon != nullptr)
         {
             STATLIST_MergeStatLists(pUnit, leftHandWeapon, 1);
         }
     }
 
-    if (nMinDamageTotal >= nMaxDamageTotal)
+    if (minKickDamage >= maxKickDamage)
     {
-        nMaxDamageTotal = nMinDamageTotal + 1;
+        maxKickDamage = minKickDamage + 1;
     }
 
-    ESE_sub_6FB0B250((Unicode *)&buff[0], nMinDamageTotal, nMaxDamageTotal, 0);
+    ESE_sub_6FB0B250((Unicode *)&buff[0], minKickDamage, maxKickDamage, 0);
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
