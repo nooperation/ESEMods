@@ -174,8 +174,8 @@ int32_t __fastcall ESE_SKILLS_SrvDo150_Smite(D2GameStrc* pGame, D2UnitStrc* pUni
             return 0;
         }
 
-        int64_t nMinDamage = pItemsTxtRecord->nMinDam << 8;
-        int64_t nMaxDamage = pItemsTxtRecord->nMaxDam << 8;
+        int64_t nMinDamage = (int64_t)pItemsTxtRecord->nMinDam << 8;
+        int64_t nMaxDamage = (int64_t)pItemsTxtRecord->nMaxDam << 8;
         if (STATES_CheckState(pUnit, STATE_HOLYSHIELD))
         {
             D2StatListStrc* pStatList = STATLIST_GetStatListFromUnitAndState(pUnit, STATE_HOLYSHIELD);

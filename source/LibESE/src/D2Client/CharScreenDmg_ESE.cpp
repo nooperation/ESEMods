@@ -1841,8 +1841,8 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam9(D2UnitStrc* pUnit, D2SkillStrc* p
     {
         return;
     }
-    int64_t nMinDamage = pSkillsTxtRecord->dwMinDam << pSkillsTxtRecord->nToHitShift;
-    int64_t nMaxDamage = pSkillsTxtRecord->dwMaxDam << pSkillsTxtRecord->nToHitShift;
+    int64_t nMinDamage = (int64_t)pSkillsTxtRecord->dwMinDam << pSkillsTxtRecord->nToHitShift;
+    int64_t nMaxDamage = (int64_t)pSkillsTxtRecord->dwMaxDam << pSkillsTxtRecord->nToHitShift;
     int64_t minElemDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) + nMinDamage;
     int64_t maxElemDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) + nMaxDamage;
 

@@ -359,7 +359,7 @@ void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAt
 			pDamage->dwFireDamage = std::max<int64_t>(pDamage->dwFireDamage, 0);
 		}
 
-		nMaxDamage = STATLIST_UnitGetStatValue(pAttacker, STAT_LIGHTMAXDAM, 0) << 8;
+		nMaxDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_LIGHTMAXDAM, 0) << 8;
 		if (nMaxDamage >= 8)
 		{
 			const int64_t nMinDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_LIGHTMINDAM, 0) << 8;
@@ -371,7 +371,7 @@ void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAt
 			pDamage->dwLtngDamage = std::max<int64_t>(pDamage->dwLtngDamage, 0);
 		}
 
-		nMaxDamage = STATLIST_UnitGetStatValue(pAttacker, STAT_COLDMAXDAM, 0) << 8;
+		nMaxDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_COLDMAXDAM, 0) << 8;
 		if (nMaxDamage >= 8)
 		{
 			const int64_t nMinDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_COLDMINDAM, 0) << 8;
@@ -383,7 +383,7 @@ void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAt
 			pDamage->dwColdDamage = std::max<int64_t>(pDamage->dwColdDamage, 0);
 		}
 
-		nMaxDamage = STATLIST_UnitGetStatValue(pAttacker, STAT_MAGICMAXDAM, 0) << 8;
+		nMaxDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_MAGICMAXDAM, 0) << 8;
 		if (nMaxDamage >= 8)
 		{
 			const int64_t nMinDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_MAGICMINDAM, 0) << 8;
@@ -400,7 +400,7 @@ void __fastcall ESE_SUNITDMG_FillDamageValues(D2GameStrc* pGame, D2UnitStrc* pAt
 		int64_t nMaxDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_FIREMAXDAM, 0) << 8;
 		if (nMaxDamage >= 8)
 		{
-			int64_t nMinDamage = STATLIST_UnitGetStatValue(pAttacker, STAT_FIREMINDAM, 0) << 8;
+			int64_t nMinDamage = (int64_t)STATLIST_UnitGetStatValue(pAttacker, STAT_FIREMINDAM, 0) << 8;
 			const int64_t nMastery = STATLIST_UnitGetStatValue(pAttacker, STAT_PASSIVE_FIRE_MASTERY, 0);
 			if (nMaxDamage > 0)
 			{
@@ -1054,7 +1054,7 @@ void __fastcall ESE_SUNITDMG_ApplyResistancesAndAbsorb(ESE_D2DamageInfoStrc* pDa
 			pDamageInfo->pDamage->dwAbsLife = 0;
 		} 
 
-		int64_t nAbsorbValue = STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbStatId, 0) << 8;
+		int64_t nAbsorbValue = (int64_t)STATLIST_UnitGetStatValue(pDamageInfo->pDefender, pDamageStatTableRecord->nAbsorbStatId, 0) << 8;
 		if (nAbsorbValue > 0)
 		{
 			nAbsorbValue = std::min<int64_t>(nAbsorbValue, nValue);

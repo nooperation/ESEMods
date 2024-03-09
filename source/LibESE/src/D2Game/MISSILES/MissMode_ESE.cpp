@@ -2209,8 +2209,8 @@ int32_t __fastcall ESE_MISSMODE_SrvHit07_HolyBolt_FistOfTheHeavenBolt(D2GameStrc
         return 1;
     }
 
-    const int64_t nMin = SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[0], nSkillId, nLevel) << 8;
-    const int64_t nMax = SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[1], nSkillId, nLevel) << 8;
+    const int64_t nMin = (int64_t)SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[0], nSkillId, nLevel) << 8;
+    const int64_t nMax = (int64_t)SKILLS_EvaluateSkillFormula(pOwner, pSkillsTxtRecord->dwCalc[1], nSkillId, nLevel) << 8;
     int64_t nRand = ESE_ITEMS_RollLimitedRandomNumber(&pMissile->pSeed, nMax - nMin) + nMin;
     if (nRand <= 0)
     {
@@ -4542,6 +4542,7 @@ void __fastcall ESE_MISSMODE_SrvDmg14_MoltenBoulder(D2GameStrc* pGame, D2UnitStr
                 nChance = pMissilesTxtRecord->dwDmgParam[1];
             }
         }
+        break;
     }
     default:
     {
