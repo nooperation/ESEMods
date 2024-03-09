@@ -2096,7 +2096,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam11(D2UnitStrc* pUnit, D2SkillStrc* 
     nMinDamageTotal += ESE_DATATBLS_ApplyRatio(statValueMin, coldSkillValue, 100);
     nMaxDamageTotal += ESE_DATATBLS_ApplyRatio(statValueMax, coldSkillValue, 100);
 
-    int32_t lightningSkillValue = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], pSkillsTxtRecord->nSkillId, nSkillLevel);
+    int32_t lightningSkillValue = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[2], pSkillsTxtRecord->nSkillId, nSkillLevel);
     if (lightningSkillValue)
     {
         int32_t lightningMastery = STATLIST_UnitGetStatValue(pUnit, STAT_PASSIVE_LTNG_MASTERY, 0);
@@ -2253,24 +2253,29 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam15(D2UnitStrc* pUnit, D2SkillStrc* 
         }
     }
 
-    int64_t v13 = v12 + v10;
+    int64_t extraDamagePct = v12 + v10;
 
-    if (v13)
+    if (extraDamagePct)
     {
         pColor = 3;
     }
 
-    minDamage += ESE_DATATBLS_ApplyRatio(minDamage, v13, 100);
-    maxDamage += ESE_DATATBLS_ApplyRatio(maxDamage, v13, 100);
+    minDamage += ESE_DATATBLS_ApplyRatio(minDamage, extraDamagePct, 100);
+    maxDamage += ESE_DATATBLS_ApplyRatio(maxDamage, extraDamagePct, 100);
 
     int64_t nMinKickDamage = 0;
     int64_t nMaxKickDamage = 0;
-    ESE_SKILLS_CalculateKickDamage(pUnit, &nMinKickDamage, &nMaxKickDamage, &v13);
+    ESE_SKILLS_CalculateKickDamage(pUnit, &nMinKickDamage, &nMaxKickDamage, &extraDamagePct);
 
-    minDamage += ESE_DATATBLS_ApplyRatio(nMinKickDamage, v13, 100);
-    maxDamage += ESE_DATATBLS_ApplyRatio(nMaxKickDamage, v13, 100);
+    minDamage += nMinKickDamage + ESE_DATATBLS_ApplyRatio(nMinKickDamage, extraDamagePct, 100);
+    maxDamage += nMaxKickDamage + ESE_DATATBLS_ApplyRatio(nMaxKickDamage, extraDamagePct, 100);
 
-    ESE_sub_6FB0BB10(pUnit, &minDamage, &maxDamage, &pColor);
+    int64_t nMinElemDamage = 0;
+    int64_t nMaxElemDamage = 0;
+    ESE_sub_6FB0BB10(pUnit, &nMinElemDamage, &nMaxElemDamage, &pColor);
+
+    minDamage += nMinElemDamage;
+    maxDamage += nMaxElemDamage;
     ESE_sub_6FB0F5E0(pUnit, minDamage, maxDamage, pColor, offsetA, offsetB, offsetC);
 }
 
