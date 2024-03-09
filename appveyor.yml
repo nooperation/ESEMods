@@ -18,9 +18,13 @@ build_script:
 
     7z a %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%_symbols.zip %APPVEYOR_BUILD_FOLDER%/build/bin/RelWithDebInfo/*.pdb
 
-    7z a %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%.zip ./patch/ %APPVEYOR_BUILD_FOLDER%/build/bin/RelWithDebInfo/*.dll
+    mkdir -p staging/patch
 
-    7z a %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%.zip %APPVEYOR_BUILD_FOLDER%/build/external/D2.Detours/source/RelWithDebInfo/*.dll
+    cp %APPVEYOR_BUILD_FOLDER%/build/bin/RelWithDebInfo/*.dll staging/patch/
+
+    cp %APPVEYOR_BUILD_FOLDER%/build/external/D2.Detours/source/RelWithDebInfo/*.dll staging/
+
+    7z a -r %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%.zip staging/
 artifacts:
 - path: ./build/*.zip
   name: ESEMods_v${APPVEYOR_BUILD_VERSION}
