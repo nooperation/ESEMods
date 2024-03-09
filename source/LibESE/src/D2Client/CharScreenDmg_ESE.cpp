@@ -10,22 +10,6 @@
 
 void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t nColor);
 
-typedef void(__fastcall* DamageCallback7D0_t)(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* pItem);
-
-void __fastcall ESE_PrintRangeString_6FB0B140(wchar_t* pText, int64_t minDamage, int64_t maxDamage, int isAdditonRange, int allowThousandsSuffix);
-void __fastcall ESE_sub_6FB0AC10(Unicode* pTextA, Unicode* pTextB, int offsetA, int offsetB, int offsetC, int nColorA, int nColorB);
-void __fastcall ESE_sub_6FB0B0F0(struct Unicode* pText, int64_t damage, int isAdditonRange);
-void __fastcall ESE_sub_6FB0B250(struct Unicode* pText, int64_t minDamage, int64_t maxDamage, int isAdditonRange);
-void __fastcall ESE_sub_6FB0B6F0(D2UnitStrc* pUnit, int64_t* pMinElemDamage, int64_t* pMaxElemDamage, int32_t* pColor, D2UnitStrc* pItem, D2SkillStrc* pSkill);
-void __fastcall ESE_sub_6FB0D4F0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalWeaponMasteryBonus, int64_t a6, D2SkillStrc* pSkill, int64_t a8, D2UnitStrc* pItem);
-void __fastcall ESE_sub_6FB0B2C0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* item, int32_t unknown7);
-void __fastcall ESE_sub_6FB0BB10(D2UnitStrc* pUnit, int64_t* pMinElemDamage, int64_t* pMaxElemDamage, int32_t* pColor);
-void __fastcall ESE_sub_6FB0C3A0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalDamagePct, int64_t additionalDamage, D2SkillStrc* pSkill, int64_t nSrcDamOverride, D2UnitStrc* pItem);
-int __fastcall ESE_sub_6FB0A7D0(D2UnitStrc* pUnit, int64_t* pMinDamageA, int64_t* pMaxDamageA, int32_t* pColorA, int64_t* pMinDamageB, int64_t* pMaxDamageB, int32_t* pColorB, D2SkillStrc* pSkill, DamageCallback7D0_t callback, int64_t ddamCalc1, int64_t ddamCalc2);
-void __fastcall ESE_sub_6FB0C840(D2UnitStrc* pUnit, D2SkillsTxt* pSkillsTxtRecord, int nSkillLevel, int64_t* pMinElemDamage, int64_t* pMaxElemDamage, int* pColor);
-void __fastcall ESE_sub_6FB0C400(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, DamageCallback7D0_t callback, int64_t ddamCalc1, int64_t ddamCalc2, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t flag);
-void __fastcall ESE_sub_6FB0BD60(const D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, uint8_t elemType);
-
 void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB, int32_t offsetC, int32_t nColor)
 {
     int32_t pWidth = 0;
@@ -53,6 +37,27 @@ void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB
         (Unicode*)&buff[0],
         nColor
     );
+}
+
+void __fastcall ESE_sub_6FB0F5E0(D2UnitStrc* pUnit, int64_t nMinDamage, int64_t nMaxDamage, int nColor, int offsetA, int offsetB, int offsetC)
+{
+    wchar_t buff[32];
+
+    if (nMinDamage >= nMaxDamage)
+    {
+        nMinDamage = nMinDamage + 1;
+    }
+
+    if (nMaxDamage == nMinDamage)
+    {
+        swprintf_s(buff, L"%lld", nMaxDamage);
+    }
+    else
+    {
+        ESE_PrintRangeString_6FB0B140(buff, nMinDamage, nMaxDamage, 0, 1);
+    }
+
+    ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
 void __fastcall ESE_sub_6FB0D4F0(D2UnitStrc* pUnit, int64_t* pMinDamage, int64_t* pMaxDamage, int32_t* pColor, int64_t additionalWeaponMasteryBonus, int64_t a6, D2SkillStrc* pSkill, int64_t a8, D2UnitStrc* pItem)
@@ -1588,7 +1593,6 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam5(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-
 void __fastcall ESE_CHARSCREENDMG_DrawDescDam24(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
@@ -1667,7 +1671,6 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam24(D2UnitStrc* pUnit, D2SkillStrc* 
 
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
-
 
 void __fastcall ESE_CHARSCREENDMG_DrawDescDam23(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
@@ -1973,27 +1976,6 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam10(D2UnitStrc* pUnit, D2SkillStrc* 
     if (nMinDamage >= nMaxDamage)
     {
         nMaxDamage = nMinDamage + 1;
-    }
-
-    if (nMaxDamage == nMinDamage)
-    {
-        swprintf_s(buff, L"%lld", nMaxDamage);
-    }
-    else
-    {
-        ESE_PrintRangeString_6FB0B140(buff, nMinDamage, nMaxDamage, 0, 1);
-    }
-
-    ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
-}
-
-void __fastcall ESE_sub_6FB0F5E0(D2UnitStrc* pUnit, int64_t nMinDamage, int64_t nMaxDamage, int nColor, int offsetA, int offsetB, int offsetC)
-{
-    wchar_t buff[32];
-
-    if (nMinDamage >= nMaxDamage)
-    {
-        nMinDamage = nMinDamage + 1;
     }
 
     if (nMaxDamage == nMinDamage)
