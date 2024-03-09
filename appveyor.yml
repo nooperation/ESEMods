@@ -7,12 +7,19 @@ image: Visual Studio 2022
 build_script:
 - cmd: >-
     git submodule update --init --recursive
+
     mkdir build
+
     cd build
+
     cmake -A Win32 -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+
     cmake --build . --config RelWithDebInfo --target ALL_BUILD
+
     7z a %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%_symbols.zip %APPVEYOR_BUILD_FOLDER%/build/bin/RelWithDebInfo/*.pdb
+
     7z a %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%.zip ./patch/ %APPVEYOR_BUILD_FOLDER%/build/bin/RelWithDebInfo/*.dll
+
     7z a %APPVEYOR_PROJECT_NAME%_v%APPVEYOR_BUILD_VERSION%.zip %APPVEYOR_BUILD_FOLDER%/build/external/D2.Detours/source/RelWithDebInfo/*.dll
 artifacts:
 - path: ./build/*.zip
