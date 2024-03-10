@@ -319,7 +319,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo017_ChargedBolt_BoltSentry(D2GameStrc* pGame,
 void __fastcall ESE_SKILLS_CurseStateCallback_DefensiveBuff(D2UnitStrc* pUnit, int32_t nState, D2StatListStrc* pStatList)
 {
     D2_MAYBE_UNUSED(pStatList);
-    SUNITEVENT_FreeTimer(pUnit->pGame, pUnit, 1, nState);
+    ESE_SUNITEVENT_FreeTimer(pUnit->pGame, pUnit, 1, nState);
 
     if (SUNIT_IsDead(pUnit) && STATES_CheckStateMaskStayDeathOnUnitByStateId(pUnit, nState))
     {
@@ -370,7 +370,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo018_DefensiveBuff(D2GameStrc* pGame, D2UnitSt
 
     if (pSkillsTxtRecord->wAuraEvent[0] >= 0)
     {
-        SUNITEVENT_FreeTimer(pGame, pUnit, 1, pSkillsTxtRecord->nAuraState);
+        ESE_SUNITEVENT_FreeTimer(pGame, pUnit, 1, pSkillsTxtRecord->nAuraState);
 
         for (int32_t i = 0; i < 3; ++i)
         {
@@ -628,7 +628,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo023_Blaze_EnergyShield_SpiderLay(D2GameStrc* 
 
     if (pSkillsTxtRecord->wAuraEvent[0] >= 0)
     {
-        SUNITEVENT_FreeTimer(pGame, pUnit, 1, pSkillsTxtRecord->nAuraState);
+        ESE_SUNITEVENT_FreeTimer(pGame, pUnit, 1, pSkillsTxtRecord->nAuraState);
         for (int32_t i = 0; i < 3; ++i)
         {
             if (pSkillsTxtRecord->wAuraEvent[i] < 0)

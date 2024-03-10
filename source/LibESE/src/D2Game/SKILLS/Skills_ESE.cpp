@@ -1241,7 +1241,7 @@ void __fastcall ESE_sub_6FD10E20(D2GameStrc* pGame, D2UnitFindDataStrc* pUnitFin
 void __fastcall ESE_sub_6FD10E50(D2UnitStrc* pUnit, int32_t nState, D2StatListStrc* pStatList)
 {
     D2_MAYBE_UNUSED(pStatList);
-    SUNITEVENT_FreeTimer(SUNIT_GetGameFromUnit(pUnit), pUnit, 1, nState);
+    ESE_SUNITEVENT_FreeTimer(SUNIT_GetGameFromUnit(pUnit), pUnit, 1, nState);
 
     if (!SUNIT_IsDead(pUnit) || !STATES_CheckStateMaskStayDeathOnUnitByStateId(pUnit, nState))
     {

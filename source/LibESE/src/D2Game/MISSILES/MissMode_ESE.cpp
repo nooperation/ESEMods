@@ -4606,7 +4606,7 @@ void __fastcall ESE_MISSMODE_SetDamageFlags(D2GameStrc* pGame, D2UnitStrc* pMiss
         }
     }
 
-    uint32_t nBlockFlags = SUNITDMG_ApplyBlockOrDodge(pGame, pOwner, pDefender, 1, pDamage->dwPhysDamage != 0);
+    uint32_t nBlockFlags = ESE_SUNITDMG_ApplyBlockOrDodge(pGame, pOwner, pDefender, 1, pDamage->dwPhysDamage != 0);
     if (nBlockFlags & 0x1F && !(pMissilesTxtRecord->dwMissileFlags & gdwBitMasks[MISSILESFLAGINDEX_GETHIT]) && !pMissilesTxtRecord->nKnockBack)
     {
         pDamage->wResultFlags = pDamage->wResultFlags & (uint16_t)~DAMAGERESULTFLAG_SUCCESSFULHIT | DAMAGERESULTFLAG_SOFTHIT;

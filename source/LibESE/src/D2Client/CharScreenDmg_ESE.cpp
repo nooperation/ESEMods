@@ -956,16 +956,16 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* p
     int64_t nMinRange = 0;
     int64_t nMaxRange = 0;
 
-    int64_t minPhysDamage = SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
+    int64_t minPhysDamage = ESE_SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
     nMinRange += minPhysDamage >> 8;
 
-    int64_t maxPhysDamage = SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
+    int64_t maxPhysDamage = ESE_SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
     nMaxRange += maxPhysDamage >> 8;
 
-    int64_t minElemDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+    int64_t minElemDamage = ESE_SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     nMinRange += minElemDamage >> 8;
 
-    int64_t maxElemDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+    int64_t maxElemDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     nMaxRange += maxElemDamage >> 8;
 
     ESE_sub_6FB0BD60(pUnit, &nMinRange, &nMaxRange, pSkillsTxtRecord->nEType);
@@ -1065,16 +1065,16 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* p
     int64_t nMinRange = ESE_DATATBLS_ApplyRatio(pSkillsTxtRecord->nSrcDam, srcDamModMin, 128);
     int64_t nMaxRange = ESE_DATATBLS_ApplyRatio(pSkillsTxtRecord->nSrcDam, srcDamModMax, 128);
 
-    int64_t minPhysDamage = SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
+    int64_t minPhysDamage = ESE_SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
     nMinRange += minPhysDamage >> 8;
 
-    int64_t maxPhysDamage = SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
+    int64_t maxPhysDamage = ESE_SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 0);
     nMaxRange += maxPhysDamage >> 8;
 
-    int64_t minElemDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+    int64_t minElemDamage = ESE_SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     nMinRange += minElemDamage >> 8;
 
-    int64_t maxElemDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
+    int64_t maxElemDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1);
     nMaxRange += maxElemDamage >> 8;
 
     if (nMinRange >= nMaxRange)
@@ -1843,8 +1843,8 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam9(D2UnitStrc* pUnit, D2SkillStrc* p
     }
     int64_t nMinDamage = (int64_t)pSkillsTxtRecord->dwMinDam << pSkillsTxtRecord->nToHitShift;
     int64_t nMaxDamage = (int64_t)pSkillsTxtRecord->dwMaxDam << pSkillsTxtRecord->nToHitShift;
-    int64_t minElemDamage = SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) + nMinDamage;
-    int64_t maxElemDamage = SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) + nMaxDamage;
+    int64_t minElemDamage = ESE_SKILLS_GetMinElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) + nMinDamage;
+    int64_t maxElemDamage = ESE_SKILLS_GetMaxElemDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) + nMaxDamage;
 
     int32_t nColor = 0;
     switch (pSkillsTxtRecord->nEType)
@@ -1921,8 +1921,8 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam10(D2UnitStrc* pUnit, D2SkillStrc* 
     if (pHolyShieldSkillTxt && STATES_CheckState(pUnit, STATE_HOLYSHIELD))
     {
         int32_t holyShieldSkillLevel = SKILLS_GetSkillLevel(pUnit, pHolyShieldSkillTxt, 1);
-        nMinDamage += SKILLS_GetMinPhysDamage(pUnit, SKILL_HOLYSHIELD, holyShieldSkillLevel, 1) >> 8;
-        nMaxDamage += SKILLS_GetMaxPhysDamage(pUnit, SKILL_HOLYSHIELD, holyShieldSkillLevel, 1) >> 8;
+        nMinDamage += ESE_SKILLS_GetMinPhysDamage(pUnit, SKILL_HOLYSHIELD, holyShieldSkillLevel, 1) >> 8;
+        nMaxDamage += ESE_SKILLS_GetMaxPhysDamage(pUnit, SKILL_HOLYSHIELD, holyShieldSkillLevel, 1) >> 8;
     }
 
     int64_t additionalDamagePercent = 0;
@@ -2117,7 +2117,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam12(D2UnitStrc* pUnit, D2SkillStrc* 
     {
         ESE_sub_6FB0C840(pUnit, pSkillsTxtRecord, nSkillLevel, &nMinDamage, &nMaxDamage, &nColor);
 
-        int64_t concentrationDamageBonus = SKILLS_GetConcentrationDamageBonus(pUnit, pSkillsTxtRecord->nSkillId);
+        int64_t concentrationDamageBonus = ESE_SKILLS_GetConcentrationDamageBonus(pUnit, pSkillsTxtRecord->nSkillId);
         nMinDamage += nMinDamage * concentrationDamageBonus / 100;
         nMaxDamage += nMaxDamage * concentrationDamageBonus / 100;
 
@@ -2221,8 +2221,8 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam15(D2UnitStrc* pUnit, D2SkillStrc* 
     }
 
     int32_t pColor = 0;
-    int64_t minDamage = SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) >> 8;
-    int64_t maxDamage = SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) >> 8;
+    int64_t minDamage = ESE_SKILLS_GetMinPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) >> 8;
+    int64_t maxDamage = ESE_SKILLS_GetMaxPhysDamage(pUnit, pSkillsTxtRecord->nSkillId, nSkillLevel, 1) >> 8;
     int32_t v10 = D2Client_sub_6FB0B580();
 
     int64_t v12 = 0;

@@ -457,7 +457,7 @@ int32_t __fastcall ESE_sub_6FC63B30(D2GameStrc* pGame, D2ModeChangeStrc* pModeCh
         }
         else if (pMonStatsTxtRecord->nBaseId == MONSTER_SIEGEBEAST1)
         {
-            sub_6FC64090(pGame, pModeChange->pUnit);
+            ESE_sub_6FC64090(pGame, pModeChange->pUnit);
             return 1;
         }
     }

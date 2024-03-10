@@ -206,7 +206,7 @@ void __fastcall ESE_sub_6FD0B250(D2UnitStrc* pUnit, int32_t nState, D2StatListSt
     if (pUnit)
     {
         D2GameStrc* pGame = SUNIT_GetGameFromUnit(pUnit);
-        SUNITEVENT_FreeTimer(pGame, pUnit, 1, nState);
+        ESE_SUNITEVENT_FreeTimer(pGame, pUnit, 1, nState);
 
         if (pUnit->dwUnitType == UNIT_MONSTER)
         {
@@ -427,7 +427,7 @@ int32_t __fastcall ESE_sub_6FD0B450(D2UnitStrc* pUnit, void* pArgs)
 
     if (v2->nAuraEvent[0] >= 0 && v2->nAuraEventFunc[0] > 0)
     {
-        SUNITEVENT_FreeTimer(v2->pGame, pUnit, 1, v2->nAuraTargetState);
+        ESE_SUNITEVENT_FreeTimer(v2->pGame, pUnit, 1, v2->nAuraTargetState);
         
         for (int32_t i = 0; i < 3; ++i)
         {
@@ -960,7 +960,7 @@ int32_t __fastcall ESE_D2GAME_SetSummonPassiveStats_6FD0C530(D2GameStrc* pGame, 
                 if (pItemStatCostTxtRecord->wItemEvent[0] > 0)
                 {
                     const int32_t nPetGUID = pPet ? pPet->dwUnitId : -1;
-                    if (!SUNITEVENT_GetTimer(pGame, pPet, 2, nPetGUID, pSkillsTxtRecord->nPassiveStat[i]))
+                    if (!ESE_SUNITEVENT_GetTimer(pGame, pPet, 2, nPetGUID, pSkillsTxtRecord->nPassiveStat[i]))
                     {
                         const int32_t nLayer_StatId = pSkillsTxtRecord->nPassiveStat[i] << 16;
                         ESE_sub_6FD156A0(pGame, pPet, pItemStatCostTxtRecord->wItemEvent[0], nLayer_StatId, 0, pItemStatCostTxtRecord->wItemEventFunc[0], 2, nPetGUID);
@@ -1010,7 +1010,7 @@ int32_t __fastcall ESE_D2GAME_SetSummonPassiveStats_6FD0C530(D2GameStrc* pGame, 
                     if (pItemStatCostTxtRecord->wItemEvent[0] > 0)
                     {
                         const int32_t nPetGUID = pPet ? pPet->dwUnitId : -1;
-                        if (!SUNITEVENT_GetTimer(pGame, pPet, 2, nPetGUID, pSkillsTxtRecord->wAuraStat[i]))
+                        if (!ESE_SUNITEVENT_GetTimer(pGame, pPet, 2, nPetGUID, pSkillsTxtRecord->wAuraStat[i]))
                         {
                             const int32_t nLayer_StatId = pSkillsTxtRecord->wAuraStat[i] << 16;
                             ESE_sub_6FD156A0(pGame, pPet, pItemStatCostTxtRecord->wItemEvent[0], nLayer_StatId, 0, pItemStatCostTxtRecord->wItemEventFunc[0], 2, nPetGUID);
@@ -1059,7 +1059,7 @@ int32_t __fastcall ESE_D2GAME_SetSummonPassiveStats_6FD0C530(D2GameStrc* pGame, 
 
     if (pSkillsTxtRecord->wAuraEvent[0] >= 0)
     {
-        SUNITEVENT_FreeTimer(pGame, pPet, 1, pSkillsTxtRecord->nAuraState);
+        ESE_SUNITEVENT_FreeTimer(pGame, pPet, 1, pSkillsTxtRecord->nAuraState);
 
         for (int32_t i = 0; i < 3; ++i)
         {

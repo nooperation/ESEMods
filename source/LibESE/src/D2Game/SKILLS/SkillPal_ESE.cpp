@@ -156,7 +156,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo150_Smite(D2GameStrc* pGame, D2UnitStrc* pUni
     ESE_D2DamageStrc damage = {};
     if (!pUnit || pUnit->dwUnitType != UNIT_PLAYER)
     {
-        sub_6FC627B0(pUnit, MONMODE_ATTACK2);
+        ESE_sub_6FC627B0(pUnit, MONMODE_ATTACK2);
         damage.dwStunLen = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[1], nSkillId, nSkillLevel);
         damage.wResultFlags = ESE_SUNITDMG_GetResultFlags(pGame, pUnit, pTarget, 0, 0);
     }
@@ -819,7 +819,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo067_Charge(D2GameStrc* pGame, D2UnitStrc* pUn
                 nMonMode = MONMODE_ATTACK2;
             }
 
-            sub_6FC627B0(pUnit, nMonMode);
+            ESE_sub_6FC627B0(pUnit, nMonMode);
         }
 
         damage.dwHitClass = 0x70u;

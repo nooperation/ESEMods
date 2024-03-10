@@ -5,6 +5,7 @@
 #include "D2Game/SKILLS/SkillNec_ESE.h"
 #include "D2Game/SKILLS/Skills_ESE.h"
 #include "D2Game/UNIT/SUnitDmg_ESE.h"
+#include "D2Game/UNIT/SUnit_ESE.h"
 #include "D2Game/SKILLS/SkillMonst_ESE.h"
 #include "D2Common/Units/Missile_ESE.h"
 #include "D2Common/D2Skills_ESE.h"
@@ -68,7 +69,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt42_FireHit(D2GameStrc* pGame, D2UnitStrc* pUn
         {
             damage.dwHitClass = pSkillsTxtRecord->dwHitClass;
         }
-        sub_6FC627B0(pUnit, MONMODE_SKILL1);
+        ESE_sub_6FC627B0(pUnit, MONMODE_SKILL1);
     }
 
     ESE_SUNITDMG_AllocCombat(pGame, pUnit, pTarget, &damage, 128);
@@ -473,7 +474,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt47_Jump(D2GameStrc* pGame, D2UnitStrc* pUnit,
     }
 
     COLLISION_SetMaskWithPattern(pRoom, nX, nY, PATH_GetUnitCollisionPattern(pUnit), 0x100u);
-    sub_6FCBDE90(pUnit, 1);
+    ESE_sub_6FCBDE90(pUnit, 1);
     SKILLS_SetParam1(pSkill, nX);
     SKILLS_SetParam2(pSkill, nY);
     SKILLS_SetFlags(pSkill, 0x80u);
@@ -550,7 +551,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo089_Jump(D2GameStrc* pGame, D2UnitStrc* pUnit
     else
     {
         SKILLS_SetFlags(pSkill, 0);
-        sub_6FCBDE90(pUnit, 0);
+        ESE_sub_6FCBDE90(pUnit, 0);
         COLLISION_ResetMaskWithPattern(UNITS_GetRoom(pUnit), nX, nY, PATH_GetUnitCollisionPattern(pUnit), 0x100u);
         PATH_SetFootprintCollisionMask(pUnit->pDynamicPath, COLLIDE_MONSTER);
         PATH_SetMoveTestCollisionMask(pUnit->pDynamicPath, COLLIDE_MASK_MONSTER_DEFAULT);
@@ -684,7 +685,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt49_Nest_EvilHutSpawner(D2GameStrc* pGame, D2U
     D2ActiveRoomStrc* pRoom = D2GAME_GetRoom_6FC52070(UNITS_GetRoom(pUnit), nX, nY);
 
     COLLISION_SetMaskWithPattern(pRoom, nX, nY, 1, 0x100u);
-    sub_6FCBDE90(pUnit, 1);
+    ESE_sub_6FCBDE90(pUnit, 1);
     D2GAME_EVENTS_Delete_6FC34840(pGame, pUnit, 1, 0);
     return 1;
 }
@@ -705,7 +706,7 @@ int32_t __fastcall ESE_SKILLS_SrvDo091_Nest_EvilHutSpawner(D2GameStrc* pGame, D2
     }
     
     D2GAME_EVENTS_Delete_6FC34840(pGame, pUnit, 1, 0);
-    sub_6FCBDE90(pUnit, 0);
+    ESE_sub_6FCBDE90(pUnit, 0);
     const int32_t nMonsterId = SKILLS_GetParam1(pSkill);
     const int32_t nX = SKILLS_GetParam2(pSkill);
     const int32_t nY = SKILLS_GetParam3(pSkill);

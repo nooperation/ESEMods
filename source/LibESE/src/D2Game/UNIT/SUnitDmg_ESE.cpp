@@ -1088,7 +1088,7 @@ void INTERNAL_SUNITDMG_ExecuteEvents_ApplyLifeManaLeech(D2UnitStrc* pAttacker, E
 			nLeechedMana = MONSTERUNIQUE_CalculatePercentage(nLeechedMana, nDrain, 100);
 		}
 
-		SUNITDMG_AddLeechedMana(pAttacker, Clamp64To32(nLeechedMana / 64));
+		ESE_SUNITDMG_AddLeechedMana(pAttacker, nLeechedMana / 64);
 	}
 
 	if (pDamage->dwLifeLeech)
@@ -1099,7 +1099,7 @@ void INTERNAL_SUNITDMG_ExecuteEvents_ApplyLifeManaLeech(D2UnitStrc* pAttacker, E
 			nLeechedHp = MONSTERUNIQUE_CalculatePercentage(nLeechedHp, nDrain, 100);
 		}
 
-		SUNITDMG_AddLeechedLife(pAttacker, Clamp64To32(nLeechedHp / 64));
+		ESE_SUNITDMG_AddLeechedLife(pAttacker, nLeechedHp / 64);
 	}
 
 	if (pDamage->dwLifeLeech && pDamage->dwManaLeech)

@@ -4,9 +4,11 @@
 #include "D2Game/SKILLS/SkillNec_ESE.h"
 #include "D2Game/SKILLS/Skills_ESE.h"
 #include "D2Game/UNIT/SUnitDmg_ESE.h"
+#include "D2Game/UNIT/SUnit_ESE.h"
 #include "D2Common/Units/Missile_ESE.h"
 #include "D2Common/D2Skills_ESE.h"
 #include "D2Game/MISSILES/Missiles_ESE.h"
+#include "D2Game/MONSTER/MonsterMode_ESE.h"
 
 #include <D2DataTbls.h>
 #include <DataTbls/SkillsTbls.h>
@@ -735,7 +737,7 @@ void __fastcall ESE_SKILLS_CurseStateCallback_Whirlwind(D2UnitStrc* pUnit, int32
     D2_MAYBE_UNUSED(pStatList);
     D2GameStrc* pGame = SUNIT_GetGameFromUnit(pUnit);
 
-    SUNITEVENT_FreeTimer(pGame, pUnit, 1, nState);
+    ESE_SUNITEVENT_FreeTimer(pGame, pUnit, 1, nState);
 
     if (!SUNIT_IsDead(pUnit) || !STATES_CheckStateMaskStayDeathOnUnitByStateId(pUnit, nState))
     {
@@ -814,7 +816,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt38_Whirlwind(D2GameStrc* pGame, D2UnitStrc* p
     nX = ppPathPoints[nPathPoints - 1].X;
     nY = ppPathPoints[nPathPoints - 1].Y;
     COLLISION_SetMaskWithPattern(UNITS_GetRoom(pUnit), nX, nY, PATH_GetUnitCollisionPattern(pUnit), nUnitType == UNIT_PLAYER ? 0x80u : 0x100u);
-    sub_6FCBDE90(pUnit, 1);
+    ESE_sub_6FCBDE90(pUnit, 1);
     STATES_ToggleState(pUnit, STATE_SKILL_MOVE, 1);
 
     SKILLS_SetFlags(pSkill, 1);
@@ -853,7 +855,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt38_Whirlwind(D2GameStrc* pGame, D2UnitStrc* p
 
     if (pSkillsTxtRecord->wAuraEvent[0] >= 0)
     {
-        SUNITEVENT_FreeTimer(pGame, pUnit, 1, pSkillsTxtRecord->nAuraState);
+        ESE_SUNITEVENT_FreeTimer(pGame, pUnit, 1, pSkillsTxtRecord->nAuraState);
 
         for (int32_t i = 0; i < 3; ++i)
         {
@@ -876,7 +878,7 @@ int32_t __fastcall ESE_SKILLS_RemoveWhirlwindStats(D2GameStrc* pGame, D2UnitStrc
     // TODO: v9, pUnita
 
     SKILLS_SetFlags(pSkill, 0);
-    sub_6FCBDE90(pUnit, 0);
+    ESE_sub_6FCBDE90(pUnit, 0);
     sub_6FCC63D0(pUnit, a4);
 
     if (!pUnit->pDynamicPath)
@@ -1213,8 +1215,8 @@ int32_t __fastcall ESE_SKILLS_SrvSt40_Leap(D2GameStrc* pGame, D2UnitStrc* pUnit,
         D2UnitStrc* pTarget = SUNIT_GetTargetUnit(pGame, pUnit);
         if (pTarget)
         {
-            sub_6FC627B0(pUnit, MONMODE_ATTACK1);
-            sub_6FC62D90(pUnit, pGame);
+            ESE_sub_6FC627B0(pUnit, MONMODE_ATTACK1);
+            ESE_sub_6FC62D90(pUnit, pGame);
             ESE_SUNITDMG_DrainItemDurability(pGame, pUnit, pTarget, 0);
             SKILLS_SetParam3(pSkill, pTarget->dwUnitType);
             SKILLS_SetParam4(pSkill, pTarget->dwUnitId);
@@ -1276,7 +1278,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt40_Leap(D2GameStrc* pGame, D2UnitStrc* pUnit,
     }
 
     COLLISION_SetMaskWithPattern(D2GAME_GetRoom_6FC52070(UNITS_GetRoom(pUnit), nX, nY), nX, nY, PATH_GetUnitCollisionPattern(pUnit), 0x80u);
-    sub_6FCBDE90(pUnit, 1);
+    ESE_sub_6FCBDE90(pUnit, 1);
     STATES_ToggleState(pUnit, STATE_SKILL_MOVE, 1);
     SKILLS_SetParam1(pSkill, nX);
     SKILLS_SetParam2(pSkill, nY);
@@ -1531,7 +1533,7 @@ int32_t __fastcall ESE_SKILLS_Leap(D2GameStrc* pGame, D2UnitStrc* pUnit, D2Skill
             EVENT_SetEvent(pGame, pUnit, UNITEVENTCALLBACK_ENDANIM, pGame->dwGameFrame + 1, 0, 0);
         }
 
-        sub_6FCBDE90(pUnit, 0);
+        ESE_sub_6FCBDE90(pUnit, 0);
         sub_6FCC63D0(pUnit, SKILLS_GetSkillIdFromSkill(pSkill, __FILE__, __LINE__));
         return 1;
     }
@@ -1589,7 +1591,7 @@ int32_t __fastcall ESE_SKILLS_SrvSt41_LeapAttack(D2GameStrc* pGame, D2UnitStrc* 
 
     COLLISION_SetMaskWithPattern(pRoom, nX, nY, PATH_GetUnitCollisionPattern(pUnit), COLLIDE_PLAYER);
 
-    sub_6FCBDE90(pUnit, 1);
+    ESE_sub_6FCBDE90(pUnit, 1);
     SKILLS_SetParam1(pSkill, nX);
     SKILLS_SetParam2(pSkill, nY);
 

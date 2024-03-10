@@ -42,7 +42,7 @@
 //D2Game.0x6FCFDCF0
 int32_t __fastcall ESE_SKILLS_SrvDo114_Raven(D2GameStrc* pGame, D2UnitStrc* pUnit, int32_t nSkillId, int32_t nSkillLevel)
 {
-    D2SkillsTxt* pSkillsTxtRecord = SKILLS_GetSkillsTxtRecord(nSkillId);
+    D2SkillsTxt* pSkillsTxtRecord = ESE_SKILLS_GetSkillsTxtRecord(nSkillId);
     if (!pSkillsTxtRecord)
     {
         return 0;
