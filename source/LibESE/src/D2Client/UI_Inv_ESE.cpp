@@ -10,7 +10,7 @@
 #include <string>
 #include <codecvt>
 
-void AppendString(std::wstring &dest, const char* source)
+void AppendString(std::wstring& dest, const char* source)
 {
     std::string str(source);
     std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -18,16 +18,16 @@ void AppendString(std::wstring &dest, const char* source)
     dest.append(converter.from_bytes(str));
 }
 
-void ColorizeString(std::wstring &str, int32_t color)
+void ColorizeString(std::wstring& str, int32_t color)
 {
-    auto colorCodeToken = (wchar_t *)D2LANG_GetStringFromTblIndex(3994);
+    auto colorCodeToken = (wchar_t*)D2LANG_GetStringFromTblIndex(3994);
     std::wstring colorStr(colorCodeToken);
     colorStr.append(std::to_wstring(color));
 
     str.insert(0, str);
 }
 
-void AppendColorizedString(std::wstring &dest, const std::wstring &src, int32_t color)
+void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t color)
 {
     auto colorCodeToken = (wchar_t*)D2LANG_GetStringFromTblIndex(3994);
     dest.append(colorCodeToken);
@@ -64,7 +64,7 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame(D2UnitStrc* pItemMaybe, int32_
                 auto v220 = *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 - 98;
                 auto v52 = *D2Client_pDWORD_6FBBA748 + 287;
                 auto v53 = (wchar_t*)D2LANG_GetStringFromTblIndex(4144);
-                D2Win_10129_DrawFramedText((Unicode *)v53, v52, v220, 0, 1);
+                D2Win_10129_DrawFramedText((Unicode*)v53, v52, v220, 0, 1);
             }
         }
         if (!D2Client_sub_6FB23230(1)
@@ -169,7 +169,7 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame(D2UnitStrc* pItemMaybe, int32_
             v76 = 600;
         }
 
-        D2Win_10129_DrawFramedText((Unicode *)itemDescription.c_str(), v76 + *D2Client_pDWORD_6FBBA748, 21 - *D2Client_pDWORD_6FBBA74C, 0, 1);
+        D2Win_10129_DrawFramedText((Unicode*)itemDescription.c_str(), v76 + *D2Client_pDWORD_6FBBA748, 21 - *D2Client_pDWORD_6FBBA74C, 0, 1);
     }
 LABEL_97:
     if (!*D2Client_pDWORD_6FBB58E4 && !*D2Client_pDWORD_6FBB58E0)
@@ -204,7 +204,8 @@ LABEL_97:
     {
         itemDescription.clear();
 
-        D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode *)scratchpad, std::size(scratchpad));
+        scratchpad[0] = 0;
+        D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
         auto strUnidentified = (wchar_t*)D2LANG_GetStringFromTblIndex(3455);
         itemDescription.append(strUnidentified);
         itemDescription.append(strNewline_1);
@@ -259,7 +260,7 @@ LABEL_97:
         ColorizeString(itemDescription, 0);
 
         scratchpad[0] = 0;
-        D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode *)itemDescription.c_str(), (Unicode *)scratchpad);
+        D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
 
         int32_t nWidth = 0;
         int32_t nHeight = 0;
@@ -315,8 +316,9 @@ LABEL_97:
         auto v215 = (wchar_t*)D2LANG_GetStringFromTblIndex(5387);
         itemDescription.append(v215);
         itemDescription.append(v209);
-        
-        D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode *)scratchpad, std::size(scratchpad));
+
+        scratchpad[0] = 0;
+        D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
         itemDescription.append(scratchpad);
 
         const wchar_t* finalFramedText = itemDescription.c_str();
@@ -326,13 +328,14 @@ LABEL_97:
         }
         else
         {
-            D2Client_AddExtraTradeStatLines_6FAE5A40((Unicode *)itemDescription.c_str(), (Unicode *)scratchpad);
+            scratchpad[0] = 0;
+            D2Client_AddExtraTradeStatLines_6FAE5A40((Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
             finalFramedText = scratchpad;
         }
 
         int32_t height = 0;
         int32_t width = 0;
-        D2Win_10131_GetTextDimensions((const Unicode *)finalFramedText, &height, &width);
+        D2Win_10131_GetTextDimensions((const Unicode*)finalFramedText, &height, &width);
 
         if (*D2Client_pDWORD_6FB79294 - width > 0)
         {
@@ -375,7 +378,8 @@ LABEL_97:
                 exit(-1);
             }
 
-            D2Client_sub_6FAE54B0(pItemUnderCursor, (Unicode *)scratchpad, pItemTxtRecord);
+            scratchpad[0] = 0;
+            D2Client_sub_6FAE54B0(pItemUnderCursor, (Unicode*)scratchpad, pItemTxtRecord);
             if (!*D2Client_pDWORD_6FBB58EC)
             {
                 auto v129 = (wchar_t*)D2LANG_GetStringFromTblIndex(2203);
@@ -387,10 +391,11 @@ LABEL_97:
                 itemDescription.append(v126);
             }
 
-            D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode *)scratchpad, std::size(scratchpad));
+            scratchpad[0] = 0;
+            D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
             itemDescription.append(scratchpad);
 
-            const wchar_t *finalFramedText = nullptr;
+            const wchar_t* finalFramedText = nullptr;
 
             if (*D2Client_pDWORD_6FBB58EC < 1 || *D2Client_pDWORD_6FBB58EC > 9)
             {
@@ -398,13 +403,14 @@ LABEL_97:
             }
             else
             {
-                D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode *)itemDescription.c_str(), (Unicode *)scratchpad);
+                scratchpad[0] = 0;
+                D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
                 finalFramedText = scratchpad;
             }
 
             int32_t height = 0;
             int32_t width = 0;
-            D2Win_10131_GetTextDimensions((const Unicode *)finalFramedText, &width, &height);
+            D2Win_10131_GetTextDimensions((const Unicode*)finalFramedText, &width, &height);
 
             if (*D2Client_pDWORD_6FB79294 - height > 0)
             {
@@ -468,7 +474,8 @@ LABEL_97:
         }
         else
         {
-            D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, (Unicode *)scratchpad, itemTxtRecord);
+            scratchpad[0] = 0;
+            D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
             statLine_Durability_512.append(scratchpad);
         }
 
@@ -508,7 +515,8 @@ LABEL_97:
                 FOG_DisplayAssert("ITEMSIsA(sghSelItem, ITEMTYPE_SOCKETFILLER_TYPE)", __FILE__, __LINE__);
                 exit(-1);
             }
-            D2Client_GetItemTextLineRuneGemStats_6FAF1480(pItemUnderCursor, (Unicode *)scratchpad, std::size(scratchpad));
+            scratchpad[0] = 0;
+            D2Client_GetItemTextLineRuneGemStats_6FAF1480(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
             auto v153 = (wchar_t*)D2LANG_GetStringFromTblIndex(11080);
             statLine_RuneGemStats_512.append(v153);
             statLine_RuneGemStats_512.append(v152);
@@ -584,7 +592,8 @@ LABEL_97:
         if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_WEAPON)
             || D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_ARMOR))
         {
-            D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, (Unicode *)scratchpad);
+            scratchpad[0] = 0;
+            D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, (Unicode*)scratchpad);
             statLine_Socketed_512.append(scratchpad);
 
             auto v166 = 0;
@@ -652,9 +661,11 @@ LABEL_97:
                 if (STATLIST_GetMinDamageFromUnit(pItemUnderCursor, 0) >= 0
                     && STATLIST_GetMaxDamageFromUnit(pItemUnderCursor, 0) >= 0)
                 {
-                    D2Client_GetItemTextLineDamage_6FAE43D0(pItemUnderCursor, (Unicode *)scratchpad, itemTxtRecord);
+                    scratchpad[0] = 0;
+                    D2Client_GetItemTextLineDamage_6FAE43D0(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
                     statLine_Damage_512.append(scratchpad);
                 }
+                scratchpad[0] = 0;
                 D2Client_GetItemTextLineAttackSpeed_6FAE5570(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
                 statLine_AttackSpeed_2048.append(scratchpad);
             }
@@ -665,15 +676,18 @@ LABEL_97:
                     && (!ITEMS_IsClassValid(pItemUnderCursor)
                         || ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor) == PCLASS_PALADIN))
                 {
-                    D2Client_GetItemTextLineUnknownA_6FAE5040(pItemUnderCursor, (Unicode *)scratchpad, itemTxtRecord);
+                    scratchpad[0] = 0;
+                    D2Client_GetItemTextLineUnknownA_6FAE5040(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
                     statLine_v273_512.append(scratchpad);
                 }
+                scratchpad[0] = 0;
                 D2Client_GetItemTextLineBlockChance_6FAE4EE0(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
                 statLine_blockChance_512.append(scratchpad);
 
             }
             else if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_BOOTS) && v229 && v229->dwClassId == 6)
             {
+                scratchpad[0] = 0;
                 D2Client_GetItemTextLineUnknownA_6FAE5040(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
                 statLine_v273_512.append(scratchpad);
             }
@@ -681,6 +695,7 @@ LABEL_97:
                 && STATLIST_GetDefenseFromUnit(pItemUnderCursor) > 0)
             {
                 // TODO: This is a shady call, investigate it
+                scratchpad[0] = 0;
                 D2Client_GetItemTextLineDefense_6FAE51D0(v229, pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
                 statLine_Defense_512.append(scratchpad);
             }
@@ -744,7 +759,9 @@ LABEL_97:
                     statLine_Quantity_512.append(v179);
                 }
             }
-            D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, (Unicode *)scratchpad, std::size(scratchpad), 1, 0);
+
+            scratchpad[0] = 0;
+            D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad), 1, 0);
             statLine_Stats_8192.append(scratchpad);
         }
         else
@@ -754,10 +771,11 @@ LABEL_97:
             itemLineUnidentified.append(strNewline_1);
         }
 
-        D2Client_GetItemTextLineQuantity_6FAE5710(pItemUnderCursor, (Unicode *)scratchpad, itemTxtRecord);
+        scratchpad[0] = 0;
+        D2Client_GetItemTextLineQuantity_6FAE5710(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
         statLine_Quantity_512.append(scratchpad);
 
-        
+        scratchpad[0] = 0;
         D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, 256);
         std::wstring itemLineName(scratchpad);
 
@@ -787,10 +805,11 @@ LABEL_97:
 
         AppendColorizedString(itemDescription, itemLineName, colorCode_Name);
 
-        const wchar_t *itemDescriptionFinalBuffer2046 = nullptr;
+        const wchar_t* itemDescriptionFinalBuffer2046 = nullptr;
         if (*D2Client_pDWORD_6FBB58EC && *D2Client_pDWORD_6FBB58EC >= 1 && *D2Client_pDWORD_6FBB58EC <= 9)
         {
-            D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode *)itemDescription.c_str(), (Unicode *)scratchpad);
+            scratchpad[0] = 0;
+            D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
             itemDescriptionFinalBuffer2046 = scratchpad;
         }
         else
@@ -808,7 +827,7 @@ LABEL_97:
 
             int32_t nWidth = 0;
             int32_t nHeight = 0;
-            D2Win_10131_GetTextDimensions((const Unicode *)itemDescriptionFinalBuffer2046, &nWidth, &nHeight);
+            D2Win_10131_GetTextDimensions((const Unicode*)itemDescriptionFinalBuffer2046, &nWidth, &nHeight);
             if (*D2Client_pDWORD_6FB79294 - nHeight > 0)
             {
                 D2Win_10129_DrawFramedText((const Unicode*)itemDescriptionFinalBuffer2046, *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 1);
@@ -845,7 +864,7 @@ LABEL_97:
 
         // TODO: Colorize this
         //D2Client_ColorizeLine_6FB20430(itemDescriptionFinalBuffer2046, 4);
-        
+
         //if (Unicode::strlen(itemDescriptionFinalBuffer2046) >= 1023u)
         //{
         //    // This is injecting a null terminator somewhere. I'm just going to assume itemDescriptionFinalBuffer
@@ -854,7 +873,7 @@ LABEL_97:
 
         int32_t nWidth = 0;
         int32_t nHeight = 0;
-        D2Win_10131_GetTextDimensions((const Unicode *)itemDescriptionFinalBuffer2046, &nWidth, &nHeight);
+        D2Win_10131_GetTextDimensions((const Unicode*)itemDescriptionFinalBuffer2046, &nWidth, &nHeight);
         if (*D2Client_pDWORD_6FB79294 - nHeight > 0)
         {
             D2Win_10129_DrawFramedText((const Unicode*)itemDescriptionFinalBuffer2046, *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 4, 1);
@@ -919,7 +938,8 @@ LABEL_97:
                 BOOL bRequiresLevel = false;
                 ITEMS_CheckRequirements(pItemUnderCursor, pUnit_, 0, &bRequiresStr, &bRequiresDex, &bRequiresLevel);
 
-                D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, (Unicode *)scratchpad, pItemsTxtRecord);
+                scratchpad[0] = 0;
+                D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
                 itemLineDurability.append(scratchpad);
 
                 auto levelRequirement = ITEMS_GetLevelRequirement(pItemUnderCursor, pUnit_);
@@ -930,7 +950,8 @@ LABEL_97:
                         colorCode = 1;
                     }
 
-                    D2Client_GetItemTextLineLevelRequirement_6FAE41B0((Unicode *)scratchpad, levelRequirement);
+                    scratchpad[0] = 0;
+                    D2Client_GetItemTextLineLevelRequirement_6FAE41B0((Unicode*)scratchpad, levelRequirement);
                     itemLineLevelRequirement.append(scratchpad);
                 }
                 if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_WEAPON)
@@ -957,7 +978,8 @@ LABEL_97:
                             colorCode2 = 1;
                         }
 
-                        D2Client_GetItemTextStrRequirement_6FAE4250((Unicode *)scratchpad, pItemsTxtRecord, strRequirement);
+                        scratchpad[0] = 0;
+                        D2Client_GetItemTextStrRequirement_6FAE4250((Unicode*)scratchpad, pItemsTxtRecord, strRequirement);
                         itemLineStrRequirement.append(scratchpad);
                     }
                     if (pItemsTxtRecord->wReqDex)
@@ -967,16 +989,15 @@ LABEL_97:
                             colorCode3 = 1;
                         }
 
+                        scratchpad[0] = 0;
                         D2Client_GetItemTextDexRequirement_6FAE4310((Unicode*)scratchpad, pItemsTxtRecord, dexRequirement);
                         itemLineDexRequirement.append(scratchpad);
                     }
                 }
-                ColorizeString(itemLineLevelRequirement, colorCode);
-                itemLineBasicInfo.append(itemLineLevelRequirement);
-                ColorizeString(itemLineStrRequirement, colorCode2);
-                itemLineBasicInfo.append(itemLineStrRequirement);
-                ColorizeString(itemLineDexRequirement, colorCode3);
-                itemLineBasicInfo.append(itemLineDexRequirement);
+
+                AppendColorizedString(itemLineBasicInfo, itemLineLevelRequirement, colorCode);
+                AppendColorizedString(itemLineBasicInfo, itemLineStrRequirement, colorCode2);
+                AppendColorizedString(itemLineBasicInfo, itemLineDexRequirement, colorCode3);
                 auto v99 = ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor);
                 if (v99 != PCLASS_EVILFORCE)
                 {
@@ -989,21 +1010,20 @@ LABEL_97:
                     {
                         colorCode245 = 1;
                     }
-
-                    ColorizeString(itemLineUnknownB, colorCode245);
-                    itemLineBasicInfo.append(itemLineUnknownB);
+                    AppendColorizedString(itemLineBasicInfo, itemLineUnknownB, colorCode245);
                 }
-                ColorizeString(itemLineDurability, 0);
-                itemLineBasicInfo.append(itemLineDurability);
+                AppendColorizedString(itemLineBasicInfo, itemLineDurability, 0);
 
                 if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_WEAPON))
                 {
-                    D2Client_GetItemTextLineAttackSpeed_6FAE5570(pItemUnderCursor, (Unicode *)scratchpad, pItemsTxtRecord);
+                    scratchpad[0] = 0;
+                    D2Client_GetItemTextLineAttackSpeed_6FAE5570(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
                     AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
 
                     if (STATLIST_GetMinDamageFromUnit(pItemUnderCursor, 0) >= 0
                         && STATLIST_GetMaxDamageFromUnit(pItemUnderCursor, 0) >= 0)
                     {
+                        scratchpad[0] = 0;
                         D2Client_GetItemTextLineDamage_6FAE43D0(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
                         AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
                     }
@@ -1017,10 +1037,12 @@ LABEL_97:
                             || ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor) == PCLASS_PALADIN))
                     {
 
+                        scratchpad[0] = 0;
                         D2Client_GetItemTextLineUnknownA_6FAE5040(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
                         AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
                     }
 
+                    scratchpad[0] = 0;
                     D2Client_GetItemTextLineBlockChance_6FAE4EE0(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
                     AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
                 }
@@ -1028,18 +1050,21 @@ LABEL_97:
                     && STATLIST_GetDefenseFromUnit(pItemUnderCursor) > 0)
                 {
                     // TODO: This is a shady call, investigate it
+                    scratchpad[0] = 0;
                     D2Client_GetItemTextLineDefense_6FAE51D0(pUnit_, pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
                     AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
                 }
 
-                D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode *)scratchpad, std::size(scratchpad));
+                scratchpad[0] = 0;
+                D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
                 auto isItemBroken = ITEMS_CheckItemFlag(pItemUnderCursor, IFLAG_BROKEN, __LINE__, __FILE__);
                 AppendColorizedString(itemLineBasicInfo, scratchpad, isItemBroken ? 1 : 2);
 
                 std::wstring textLineDetailsA;
                 if (ITEMS_CheckItemFlag(pItemUnderCursor, IFLAG_SOCKETED, __LINE__, __FILE__))
                 {
-                    D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, (Unicode *)scratchpad);
+                    scratchpad[0] = 0;
+                    D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, (Unicode*)scratchpad);
                     textLineDetailsA.append(scratchpad);
                 }
 
@@ -1048,15 +1073,17 @@ LABEL_97:
                 textLineDetailsA.append(scratchpad);
 
                 std::wstring textLineSet;
-                D2Client_GetItemTextSet_6FAF32B0(pUnit_, pItemUnderCursor, (Unicode *)scratchpad, std::size(scratchpad));
+                scratchpad[0] = 0;
+                D2Client_GetItemTextSet_6FAF32B0(pUnit_, pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
                 textLineSet.append(scratchpad);
 
                 std::wstring textLineSetB;
                 if (pItemUnderCursor && pItemUnderCursor->dwAnimMode == 1)
                 {
+                    scratchpad[0] = 0;
                     D2Client_GetItemTextSetB_6FAF33C0(pUnit_, pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
                 }
-               
+
                 std::wstring scratchpadBuffer;
                 if (v233->nSetItems > 0)
                 {
@@ -1074,34 +1101,31 @@ LABEL_97:
                         {
                             auto v224 = D2LANG_GetStringFromTblIndex(pUnita->wStringId);
                             auto v111 = D2LANG_GetStringFromTblIndex(10089);
-                            D2Client_sub_6FADCFE0((Unicode *)scratchpad, v111, v224);
+                            D2Client_sub_6FADCFE0((Unicode*)scratchpad, v111, v224);
                             scratchpadBuffer.append(scratchpad);
                             scratchpadBuffer.append(v235);
                         }
-                        ColorizeString(scratchpadBuffer, v108 ? 2 : 1);
-                        textLineDetailsA.append(scratchpadBuffer);
+                        AppendColorizedString(textLineDetailsA, scratchpadBuffer, v108 ? 2 : 1);
                     }
                 }
 
                 scratchpadBuffer.clear();
-                ColorizeString(textLineDetailsA, 2);
-                scratchpadBuffer.append(textLineDetailsA);
-                ColorizeString(itemLineUnknownC, 4);
-                scratchpadBuffer.append(itemLineUnknownC);
+                AppendColorizedString(scratchpadBuffer, textLineDetailsA, 2);
+                AppendColorizedString(scratchpadBuffer, itemLineUnknownC, 4);
+
                 if (textLineSetB[0])
                 {
                     scratchpadBuffer.append(v235);
-                    ColorizeString(textLineSetB, 4);
-                    scratchpadBuffer.append(textLineSetB);
+
+                    AppendColorizedString(scratchpadBuffer, textLineSetB, 4);
                 }
                 scratchpadBuffer.append(v235);
                 if (textLineSet[0])
                 {
-                    ColorizeString(textLineSet, 2);
-                    scratchpadBuffer.append(textLineSet);
+                    AppendColorizedString(scratchpadBuffer, textLineSet, 2);
                 }
-                ColorizeString(textLineDetailsA, 3);
-                scratchpadBuffer.append(textLineDetailsA);
+
+                AppendColorizedString(scratchpadBuffer, textLineDetailsA, 3);
                 scratchpadBuffer.append(itemLineBasicInfo);
 
                 std::wstring pTextToDisplay;
@@ -1110,7 +1134,7 @@ LABEL_97:
                 {
                     int32_t hasSkillCharges = false;
                     scratchpad[0] = 0;
-                    if (D2Client_GetItemTextPriceMaybe_6FAFB200(pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &hasSkillCharges, (Unicode *)scratchpad, std::size(scratchpad)))
+                    if (D2Client_GetItemTextPriceMaybe_6FAFB200(pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &hasSkillCharges, (Unicode*)scratchpad, std::size(scratchpad)))
                     {
                         pTextToDisplay.append(scratchpadBuffer);
                         if (scratchpad[0])
@@ -1128,9 +1152,7 @@ LABEL_97:
                             pTextToDisplay.append(v235);
 
                             auto v118 = (wchar_t*)D2LANG_GetStringFromTblIndex(3333);
-                            std::wstring itemLinePriceMaybe(v118);
-                            ColorizeString(itemLinePriceMaybe, 1);
-                            pTextToDisplay.append(itemLinePriceMaybe);
+                            AppendColorizedString(pTextToDisplay, v118, 1);
                         }
                     }
                 }
@@ -1141,7 +1163,7 @@ LABEL_97:
 
                 int32_t width = 0;
                 int32_t height = 0;
-                D2Win_10131_GetTextDimensions((const Unicode *)pTextToDisplay.c_str(), &width, &height);
+                D2Win_10131_GetTextDimensions((const Unicode*)pTextToDisplay.c_str(), &width, &height);
 
                 if (*D2Client_pDWORD_6FB79294 - height > 0)
                 {
