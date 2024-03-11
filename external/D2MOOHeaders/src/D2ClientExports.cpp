@@ -68,7 +68,7 @@ int32_t* D2Client_pDWORD_6FBB59BC = nullptr; // 1159BC
 int32_t* D2Client_pDWORD_6FBB59C0 = nullptr; // 1159C0
 int32_t* D2Client_pDWORD_6FBB59C4 = nullptr; // 1159C4
 
-D2UnitStrc* D2Client_pItemUnderCursor_6FBB58F0 = nullptr; // 1158F0
+D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0 = nullptr; // 1158F0
 
 void InitD2ClientExports()
 {
@@ -141,5 +141,5 @@ void InitD2ClientExports()
     D2Client_pDWORD_6FBB59C0 = (int32_t*)((char*)d2ClientModule + 0x1159C0);
     D2Client_pDWORD_6FBB59C4 = (int32_t*)((char*)d2ClientModule + 0x1159C4);
 
-    D2Client_pItemUnderCursor_6FBB58F0 = (D2UnitStrc*)((char*)d2ClientModule + 0x1158F0);
+    D2Client_pItemUnderCursor_6FBB58F0 = (D2UnitStrc**)((char*)d2ClientModule + 0x1158F0);
 }

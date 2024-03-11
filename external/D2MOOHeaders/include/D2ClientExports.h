@@ -127,4 +127,4 @@ extern int32_t* D2Client_pDWORD_6FBB59BC; // 1159BC
 extern int32_t* D2Client_pDWORD_6FBB59C0; // 1159C0
 extern int32_t* D2Client_pDWORD_6FBB59C4; // 1159C4
 
-extern D2UnitStrc* D2Client_pItemUnderCursor_6FBB58F0; // 1158F0
+extern D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0; // 1158F0
