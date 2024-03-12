@@ -57,6 +57,7 @@ typedef void (__fastcall* D2Client_GetItemTextLineUnknownA_6FAE5040_t)(D2UnitStr
 typedef void (__fastcall* D2Client_GetItemTextLineBlockChance_6FAE4EE0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
 typedef void (__fastcall* D2Client_GetItemTextLineDefense_6FAE51D0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
 typedef void (__fastcall* D2Client_GetItemTextLineProperties_6FAF3160_t)(D2UnitStrc* pItem, struct Unicode* outBuff, int maxLen, int bFlag, const struct Unicode* existingContents);
+typedef void (__fastcall* D2Client_GetItemTextLinePropertiesInternal_6FAF19C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffMaxLen, int bUnknownFlag1, int unitState, int nUnitState, int nUnitFlags, int bUnknownFlag2);
 typedef void (__fastcall* D2Client_GetItemTextLineQuantity_6FAE5710_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
 typedef D2SetsTxt* (__fastcall* D2Client_sub_6FAE5C50_t)(int32_t setsTxtIndex);
 typedef D2SetItemsTxt* (__fastcall* D2Client_GetSetItemsTxt_6FAE5C80_t)(int32_t setsTxtIndex);
@@ -69,6 +70,11 @@ typedef void (__fastcall* D2Client_GetItemTextSetB_6FAF33C0_t)(D2UnitStrc* pUnit
 typedef void (__stdcall* D2Client_sub_6FADCFE0_t)(struct Unicode* outBuff, const struct Unicode* format, ...);
 typedef D2UnitStrc* (__fastcall* D2Client_sub_6FAE5990_t)(D2InventoryStrc* pInventory, int nSetItemId);
 typedef bool (__fastcall* D2Client_GetItemTextPriceMaybe_6FAFB200_t)(D2UnitStrc* pItem, int a2, int* hasChargedSkills, struct Unicode* outBuff, int maxLength);
+
+// UI-Inv-Mod
+typedef void(__fastcall* D2Client_sub_6FAF12C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffLen);
+typedef int(__fastcall* D2Client_sub_6FAF3460_t)(int* statValues, D2C_ItemStats nStatId, struct Unicode* outBuff);
+typedef int(__fastcall* D2Client_GetItemPropertyLine_6FAF21C0_t)(D2UnitStrc* pUnit, D2StatListStrc* pStatListEx, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, Unicode* outputBuffer256);
 
 extern D2Client_sub_6FB283D0_t D2Client_sub_6FB283D0; // 883D0
 extern D2Client_sub_6FAFE9E0_t D2Client_sub_6FAFE9E0; // 5E9E0
@@ -92,6 +98,7 @@ extern D2Client_GetItemTextLineUnknownA_6FAE5040_t D2Client_GetItemTextLineUnkno
 extern D2Client_GetItemTextLineBlockChance_6FAE4EE0_t D2Client_GetItemTextLineBlockChance_6FAE4EE0; // 44EE0
 extern D2Client_GetItemTextLineDefense_6FAE51D0_t D2Client_GetItemTextLineDefense_6FAE51D0; // 451D0
 extern D2Client_GetItemTextLineProperties_6FAF3160_t D2Client_GetItemTextLineProperties_6FAF3160; // 53160
+extern D2Client_GetItemTextLinePropertiesInternal_6FAF19C0_t D2Client_GetItemTextLinePropertiesInternal_6FAF19C0; // 519C0
 extern D2Client_GetItemTextLineQuantity_6FAE5710_t D2Client_GetItemTextLineQuantity_6FAE5710; // 45710
 extern D2Client_sub_6FAE5C50_t D2Client_sub_6FAE5C50; // 45C50
 extern D2Client_GetSetItemsTxt_6FAE5C80_t D2Client_GetSetItemsTxt_6FAE5C80; // 45C80
@@ -128,3 +135,14 @@ extern int32_t* D2Client_pDWORD_6FBB59C0; // 1159C0
 extern int32_t* D2Client_pDWORD_6FBB59C4; // 1159C4
 
 extern D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0; // 1158F0
+
+// UI-Inv-Mod
+extern D2Client_sub_6FAF12C0_t D2Client_sub_6FAF12C0; //512C0
+extern D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460; //53460
+extern D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0; //521C0
+
+extern int32_t* D2Client_pDWORD_6FB7A438; // DA438
+extern int32_t* D2Client_pDWORD_6FB79B48; // D9B48
+extern int32_t* D2Client_pDWORD_6FB7A4A0; // DA4A0
+extern int32_t* D2Client_pDWORD_6FB7A440; // DA440
+

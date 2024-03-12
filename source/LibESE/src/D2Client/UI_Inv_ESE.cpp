@@ -36,6 +36,588 @@ void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t 
     dest.append(src);
 }
 
+int ESE_D2Client_sub_6FAF3460(int32_t* statValues, D2C_ItemStats nStatId, std::wstring& outBuff)
+{
+    wchar_t scratchpad[256] = { 0 };
+
+    switch (nStatId)
+    {
+    case STAT_ITEM_MAXDAMAGE_PERCENT:
+        return statValues[10];
+    case STAT_ITEM_MINDAMAGE_PERCENT:
+    {
+        auto v26 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4001_percent);
+        auto v38 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+        auto v37 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4002_plus);
+
+        if (statValues[10])
+        {
+            auto v29 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_10023_strModEnhancedDamage);
+
+            outBuff.append(v37);
+            outBuff.append(std::to_wstring(statValues[6]));
+            outBuff.append(v26);
+            outBuff.append(v38);
+            outBuff.append(v29);
+            return 1;
+        }
+        return 0;
+    }
+    case STAT_MINDAMAGE:
+    case STAT_MAXDAMAGE:
+    case STAT_SECONDARY_MINDAMAGE:
+        if (statValues[5])
+        {
+            return 1;
+        }
+
+        if (statValues[4])
+        {
+            if (*statValues < statValues[1])
+            {
+                statValues[5] = 1;
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3623_strModMinDamageRange);
+                swprintf_s(scratchpad, fmt, *statValues, statValues[1]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+            statValues[5] = 0;
+            statValues[4] = 0;
+        }
+        return 0;
+    case STAT_SECONDARY_MAXDAMAGE:
+        if (statValues[5])
+        {
+            return 1;
+        }
+
+        return statValues[4];
+    case STAT_FIREMINDAM:
+        if (statValues[28])
+        {
+            if (statValues[24] >= statValues[25])
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3612_strModFireDamage);
+                swprintf_s(scratchpad, fmt, statValues[25]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+            else
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3613_strModFireDamageRange);
+                swprintf_s(scratchpad, fmt, statValues[24], statValues[25]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+        }
+        return 0;
+    case STAT_FIREMAXDAM:
+        return statValues[28];
+    case STAT_LIGHTMINDAM:
+        if (statValues[22])
+        {
+            if (statValues[18] >= statValues[19])
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3616_strModLightningDamage);
+                swprintf_s(scratchpad, fmt, statValues[19]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+            else
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3617_strModLightningDamageRange);
+                swprintf_s(scratchpad, fmt, statValues[18], statValues[19]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+        }
+        return 0;
+    case STAT_LIGHTMAXDAM:
+        return statValues[22];
+    case STAT_MAGICMINDAM:
+        if (statValues[40])
+        {
+            if (statValues[36] < statValues[37])
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3619_strModMagicDamageRange);
+                swprintf_s(scratchpad, fmt, statValues[36], statValues[37]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+            else
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3618_strModMagicDamage);
+                swprintf_s(scratchpad, fmt, statValues[37]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+        }
+        return 0;
+    case STAT_MAGICMAXDAM:
+        return statValues[40];
+    case STAT_COLDMINDAM:
+        if (statValues[16])
+        {
+            if (statValues[12] < statValues[13])
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3615_strModColdDamageRange);
+                swprintf_s(scratchpad, fmt, statValues[12], statValues[13]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+            else
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3614_strModColdDamage);
+                swprintf_s(scratchpad, fmt, statValues[13]);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+        }
+        return 0;
+    case STAT_COLDMAXDAM:
+        return statValues[16];
+    case STAT_POISONMINDAM:
+        if (statValues[34])
+        {
+            if (statValues[33] <= 0)
+            {
+                statValues[33] = 1;
+            }
+
+            int32_t v20 = statValues[32] / statValues[33];
+            statValues[32] = v20;
+            int32_t v21 = (v20 * statValues[30] + 128) >> 8;
+            int32_t v22 = (v20 * statValues[31] + 128) >> 8;
+            int32_t v36 = v20 / 25;
+            statValues[30] = v21;
+            statValues[31] = v22;
+
+            if (v21 < v22)
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3621_strModPoisonDamageRange);
+                swprintf_s(scratchpad, fmt, v21, v22, v36);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+            else
+            {
+                auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3620_strModPoisonDamage);
+                swprintf_s(scratchpad, fmt, v22, v36);
+                outBuff.append(scratchpad);
+                return 1;
+            }
+        }
+        return 0;
+    case STAT_POISONMAXDAM:
+    case STAT_POISONLENGTH:
+        return statValues[34];
+    }
+
+    return 0;
+}
+
+void ESE_D2Client_sub_6FAF12C0(std::wstring& outBuff)
+{
+    auto strPlus = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4002_plus);
+    auto strNewline = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    auto strPercent = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4001_percent);
+
+    outBuff.append(strPlus);
+    outBuff.append(std::to_wstring(50));
+    outBuff.append(strPercent);
+    outBuff.append(strSpace);
+    auto v9 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3554_ModStr4f);
+    outBuff.append(v9);
+    outBuff.append(strNewline);
+}
+
+void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, std::wstring& outBuff, int outBuffMaxLen, int bUnknownFlag1, int unitState, int nUnitState, int nUnitFlags, int bUnknownFlag2)
+{
+    auto strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    auto strComma = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3852_KeyComma);
+
+    if (ITEMS_GetItemType(pUnit) != ITEMTYPE_ELIXIR)
+    {
+        auto v20 = STATLIST_GetStatListFromUnitStateAndFlag(pUnit, unitState, nUnitFlags);
+        if (!v20)
+        {
+            return;
+        }
+
+        D2StatListStrc* pStatList = nullptr;
+
+        if (pUnit)
+        {
+            pStatList = STATLIST_AllocStatList(pUnit->pMemoryPool, 0, 0, pUnit->dwUnitType, pUnit->dwUnitId);
+        }
+        else
+        {
+            pStatList = STATLIST_AllocStatList(0, 0, 0, 6, -1);
+        }
+
+        STATLIST_MergeBaseStats(pStatList, v20);
+        if (nUnitState)
+        {
+            auto baseStatList = STATLIST_GetStatListFromUnitStateAndFlag(pUnit, nUnitState, nUnitFlags);
+            if (baseStatList)
+            {
+                STATLIST_MergeBaseStats(pStatList, baseStatList);
+            }
+        }
+
+        if (pUnit)
+        {
+            if (pUnit->dwUnitType == 4)
+            {
+                if (pUnit->pInventory)
+                {
+                    auto childItem = INVENTORY_GetFirstItem(pUnit->pInventory);
+                    while (childItem)
+                    {
+                        auto childItem1 = INVENTORY_UnitIsItem(childItem);
+                        if (!childItem1)
+                        {
+                            break;
+                        }
+
+                        childItem = INVENTORY_GetNextItem(childItem);
+
+                        auto childStatList = STATLIST_GetStatListFromUnitStateAndFlag(childItem1, unitState, nUnitFlags);
+                        if (childStatList)
+                        {
+                            STATLIST_MergeBaseStats(pStatList, childStatList);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (bUnknownFlag1 && D2Common_10731_ITEMS_CheckItemTypeId(pUnit, ITEMTYPE_BLUNT) && !STATLIST_UnitGetItemStatOrSkillStatValue(pUnit, STAT_ITEM_UNDEADDAMAGE_PERCENT, 0))
+        {
+            ESE_D2Client_sub_6FAF12C0(outBuff);
+        }
+
+        int32_t statValues[42];
+        memset(statValues, 0, sizeof(statValues));
+
+        if (D2Client_pDWORD_6FB7A438 > 0)
+        {
+            auto v45 = D2Client_pDWORD_6FB79B48;
+            auto v29 = 0;
+            do
+            {
+                switch (*v45)
+                {
+                case STAT_ITEM_MAXDAMAGE_PERCENT:
+                    statValues[7] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_ITEM_MINDAMAGE_PERCENT:
+                    statValues[6] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_MINDAMAGE:
+                    statValues[0] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    if (!statValues[0])
+                    {
+                        statValues[0] = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_SECONDARY_MINDAMAGE, 0);
+                    }
+                    break;
+                case STAT_MAXDAMAGE:
+                    statValues[1] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    if (!statValues[1])
+                        statValues[1] = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_SECONDARY_MAXDAMAGE, 0);
+                    break;
+                case STAT_FIREMINDAM:
+                    statValues[24] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_FIREMAXDAM:
+                    statValues[25] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_LIGHTMINDAM:
+                    statValues[18] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_LIGHTMAXDAM:
+                    statValues[19] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_MAGICMINDAM:
+                    statValues[36] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_MAGICMAXDAM:
+                    statValues[37] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_COLDMINDAM:
+                    statValues[12] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_COLDMAXDAM:
+                    statValues[13] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_POISONMINDAM:
+                    statValues[30] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_POISONMAXDAM:
+                    statValues[31] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    break;
+                case STAT_POISONLENGTH:
+                    statValues[32] = D2Common_10466_STATLIST_GetStatValue(pStatList, *v45, 0);
+                    statValues[33] = STATLIST_UnitGetStatValue(pUnit, STAT_POISON_COUNT, 0);
+                    break;
+                default:
+                    break;
+                }
+
+                ++v29;
+                v45 += 4;
+            } while (v29 < *D2Client_pDWORD_6FB7A438);
+        }
+
+        auto pStatValues = &statValues[1];
+        auto v32 = 7;
+        do
+        {
+            if (*(pStatValues - 1) > 0 && *pStatValues > 0)
+            {
+                pStatValues[3] = 1;
+            }
+
+            pStatValues += 6;
+            --v32;
+        } while (v32);
+
+        auto v48 = 0;
+        auto v50 = 0;
+        if (sgptDataTables->nStatsWithDescFunc <= 0)
+        {
+        LABEL_106:
+            if (pUnit)
+            {
+                if (pUnit->dwUnitType == 4)
+                {
+                    auto itemTxtRecord1 = DATATBLS_GetItemsTxtRecord(pUnit->dwClassId);
+                    if (!itemTxtRecord1->nNoDurability
+                        && itemTxtRecord1->nDurability
+                        && STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_INDESCTRUCTIBLE, 0) <= 0
+                        && !STATLIST_GetMaxDurabilityFromUnit(pUnit))
+                    {
+                        auto strIndestructable = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21240_ModStre9s);
+                        if (v48 && !bUnknownFlag2)
+                        {
+                            outBuff.append(strComma);
+                            outBuff.append(strSpace);
+                        }
+                        outBuff.append(strIndestructable);
+                        if (bUnknownFlag2)
+                        {
+                            outBuff.append(strNewLine);
+                        }
+                    }
+                }
+            }
+            STATLIST_FreeStatList(pStatList);
+            return;
+        }
+
+        int32_t v34 = 0;
+        int32_t nCopiedStats = 0;
+
+        D2StatStrc d2StatStrcBuffer[511];
+        int32_t nStatId = 0;
+        while (1)
+        {
+            nStatId = sgptDataTables->pStatsWithDescFunc[v34];
+            if (nStatId >= STAT_STRENGTH && nStatId < sgptDataTables->nItemStatCostTxtRecordCount)
+            {
+                nCopiedStats = D2Common_11269_CopyStats((D2StatListExStrc*)pStatList, nStatId, d2StatStrcBuffer, std::size(d2StatStrcBuffer));
+                if (nCopiedStats > 0)
+                {
+                    break;
+                }
+            }
+        LABEL_105:
+            v50 = ++v34;
+            if (v34 >= sgptDataTables->nStatsWithDescFunc)
+            {
+                goto LABEL_106;
+            }
+        }
+
+        int32_t v37 = 0;
+        int32_t v46 = 0;
+        while (1)
+        {
+            wchar_t propertyLineBuffer256[1024] = { 0 };
+
+            if (
+                d2StatStrcBuffer[v37].nValue &&
+                !ESE_D2Client_sub_6FAF3460(statValues, (D2C_ItemStats)nStatId, outBuff) &&
+                D2Client_GetItemPropertyLine_6FAF21C0(pUnit, pStatList, nStatId, d2StatStrcBuffer[v37].nStat, d2StatStrcBuffer[v37].nValue, (Unicode*)propertyLineBuffer256))
+            {
+                int32_t statValue = 0;
+                if (nStatId == STAT_SECONDARY_MINDAMAGE)
+                {
+                    statValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MINDAMAGE, 0);
+                }
+                else
+                {
+                    if (nStatId != STAT_SECONDARY_MAXDAMAGE)
+                    {
+                        goto LABEL_96;
+                    }
+
+                    statValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MAXDAMAGE, 0);
+                }
+                if (!statValue)
+                {
+                LABEL_96:
+
+                    if (!v48 || bUnknownFlag2)
+                    {
+                    }
+                    else
+                    {
+                        outBuff.append(strComma);
+                        outBuff.append(strSpace);
+                    }
+                    v48 = 1;
+
+                    outBuff.append(propertyLineBuffer256);
+                    if (bUnknownFlag2)
+                    {
+                        outBuff.append(strNewLine);
+                    }
+
+                    goto LABEL_103;
+                }
+            }
+        LABEL_103:
+            v37 = ++v46;
+            if (v46 >= nCopiedStats)
+            {
+                v34 = v50;
+                goto LABEL_105;
+            }
+        }
+    }
+
+    auto v49 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    auto v51 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    auto v53 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4002_plus);
+    auto v56 = ITEMS_GetFileIndex(pUnit);
+    auto v47 = 0;
+    if (*D2Client_pDWORD_6FB7A4A0)
+    {
+        int32_t* i = nullptr;
+        for (i = D2Client_pDWORD_6FB7A440; *i != v56; i += 16)
+        {
+        LABEL_32:
+            if (++v47 >= *D2Client_pDWORD_6FB7A4A0)
+            {
+                return;
+            }
+        }
+
+        auto v16 = STATLIST_UnitGetStatValue(pUnit, STAT_VALUE, 0);
+
+        if (*i == 8 || *i == 9)
+        {
+            v16 >>= 8;
+        }
+        if (*i == 6 || *i == 7)
+        {
+            v16 >>= 8;
+        }
+        if (*i == 10 || *i == 11)
+        {
+            v16 >>= 8;
+        }
+
+        int32_t v19 = 0;
+        if (v16 <= 0)
+        {
+            if (v16 >= 0)
+            {
+                goto LABEL_25;
+            }
+
+            v19 = *(i + 5);
+        }
+        else
+        {
+            v19 = *(i + 4);
+        }
+
+        auto v18 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v19);
+    LABEL_25:
+        if (v16)
+        {
+            if (*(i + 1) != 1)
+            {
+                FOG_DisplayAssert("0", __FILE__, __LINE__);
+                exit(-1);
+            }
+
+            if (*(i + 3) != 2)
+            {
+                FOG_DisplayAssert("0", __FILE__, __LINE__);
+                exit(-1);
+            }
+
+            outBuff.append(v18);
+            outBuff.append(v51);
+
+            if (v16 <= 0)
+            {
+                outBuff.append(std::to_wstring(v16));
+            }
+            else
+            {
+                outBuff.append(v53);
+                outBuff.append(std::to_wstring(v16));
+            }
+
+            outBuff.append(v49);
+        }
+        goto LABEL_32;
+    }
+}
+
+void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wstring& outBuff, int maxLen, int bFlag, const std::wstring* existingContents)
+{
+    wchar_t scratchpad[8192] = {};
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strComma = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3852_KeyComma);
+
+    // STATE_RUNEWORD and UNITFLAG_SKSRVDOFUNC may not be the correct names/enums. 171 and 64
+    //D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(pItem, (Unicode *)scratchpad, std::size(scratchpad), 1, 0, STATE_RUNEWORD, UNITFLAG_SKSRVDOFUNC, bFlag);
+    //std::wstring propertiesBuff(scratchpad);
+
+    std::wstring propertiesBuff;
+    ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(pItem, propertiesBuff, std::size(scratchpad), 1, 0, STATE_RUNEWORD, UNITFLAG_SKSRVDOFUNC, bFlag);
+
+    if (existingContents != nullptr && propertiesBuff.length() != 0)
+    {
+        size_t newlinePosition = propertiesBuff.find_last_of(strNewLine, 0);
+        if (newlinePosition != std::wstring::npos)
+        {
+            outBuff.append(propertiesBuff.substr(0, newlinePosition));
+            outBuff.append(strNewLine);
+            outBuff.append(*existingContents);
+            outBuff.append(propertiesBuff.substr(newlinePosition + 1));
+            outBuff.append(strComma);
+            outBuff.append(strNewLine);
+        }
+        else
+        {
+            outBuff.append(*existingContents);
+            outBuff.append(propertiesBuff);
+        }
+    }
+    else
+    {
+        outBuff.append(propertiesBuff);
+    }
+}
+
 void __fastcall ESE_UI_INV_DrawMouseOverItemFrame(D2UnitStrc* pItemMaybe, int32_t bFlag)
 {
     std::wstring itemDescription;
@@ -751,8 +1333,7 @@ LABEL_97:
             }
 
             scratchpad[0] = 0;
-            D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad), 1, 0);
-            statLine_Stats_8192.append(scratchpad);
+            ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, statLine_Stats_8192, std::size(scratchpad), 1, 0);
         }
         else
         {
@@ -1019,8 +1600,7 @@ LABEL_97:
                 }
 
                 scratchpad[0] = 0;
-                D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad), 1, 0);
-                textLineProperties.append(scratchpad);
+                ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, textLineProperties, std::size(scratchpad), 1, 0);
 
                 std::wstring textLineSet;
                 scratchpad[0] = 0;
@@ -1058,7 +1638,7 @@ LABEL_97:
                             auto strSetItemNameFormat = (wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_10089_SetItemFormatX);
 
                             scratchpad[0] = 0;
-                            D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode *)strSetItemNameFormat, (const Unicode*)strSetItemName, 0);
+                            D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strSetItemNameFormat, (const Unicode*)strSetItemName, 0);
                             scratchpadBuffer.append(scratchpad);
                             scratchpadBuffer.append(strNewLine);
                         }

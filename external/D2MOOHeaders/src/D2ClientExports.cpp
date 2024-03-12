@@ -33,6 +33,7 @@ D2Client_GetItemTextLineUnknownA_6FAE5040_t D2Client_GetItemTextLineUnknownA_6FA
 D2Client_GetItemTextLineBlockChance_6FAE4EE0_t D2Client_GetItemTextLineBlockChance_6FAE4EE0 = nullptr; // 44EE0
 D2Client_GetItemTextLineDefense_6FAE51D0_t D2Client_GetItemTextLineDefense_6FAE51D0 = nullptr; // 451D0
 D2Client_GetItemTextLineProperties_6FAF3160_t D2Client_GetItemTextLineProperties_6FAF3160 = nullptr; // 53160
+D2Client_GetItemTextLinePropertiesInternal_6FAF19C0_t D2Client_GetItemTextLinePropertiesInternal_6FAF19C0 = nullptr; // 519C0
 D2Client_GetItemTextLineQuantity_6FAE5710_t D2Client_GetItemTextLineQuantity_6FAE5710 = nullptr; // 45710
 D2Client_sub_6FAE5C50_t D2Client_sub_6FAE5C50 = nullptr; // 45C50
 D2Client_GetSetItemsTxt_6FAE5C80_t D2Client_GetSetItemsTxt_6FAE5C80 = nullptr; // 45C80
@@ -45,6 +46,12 @@ D2Client_GetItemTextSetB_6FAF33C0_t D2Client_GetItemTextSetB_6FAF33C0 = nullptr;
 D2Client_sub_6FADCFE0_t D2Client_sub_6FADCFE0 = nullptr; // 3CFE0
 D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990 = nullptr; // 45990
 D2Client_GetItemTextPriceMaybe_6FAFB200_t D2Client_GetItemTextPriceMaybe_6FAFB200 = nullptr; // 5B200
+
+// UI-INV-MOD stuff
+D2Client_sub_6FAF12C0_t D2Client_sub_6FAF12C0 = nullptr; //512C0
+D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460 = nullptr; //53460
+D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0 = nullptr; //521C0
+
 
 int32_t* D2Client_pDWORD_6FBBA748 = nullptr; // 11A748
 int32_t* D2Client_pDWORD_6FBBA74C = nullptr; // 11A74C
@@ -69,6 +76,13 @@ int32_t* D2Client_pDWORD_6FBB59C0 = nullptr; // 1159C0
 int32_t* D2Client_pDWORD_6FBB59C4 = nullptr; // 1159C4
 
 D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0 = nullptr; // 1158F0
+
+// UI-INV-MOD stuff
+
+int32_t* D2Client_pDWORD_6FB7A438 = nullptr; // DA438
+int32_t* D2Client_pDWORD_6FB79B48 = nullptr; // D9B48
+int32_t* D2Client_pDWORD_6FB7A4A0 = nullptr; // DA4A0
+int32_t* D2Client_pDWORD_6FB7A440 = nullptr; // DA440
 
 void InitD2ClientExports()
 {
@@ -106,6 +120,7 @@ void InitD2ClientExports()
     D2Client_GetItemTextLineBlockChance_6FAE4EE0 = (D2Client_GetItemTextLineBlockChance_6FAE4EE0_t)((char*)d2ClientModule + 0x44EE0);
     D2Client_GetItemTextLineDefense_6FAE51D0 = (D2Client_GetItemTextLineDefense_6FAE51D0_t)((char*)d2ClientModule + 0x451D0);
     D2Client_GetItemTextLineProperties_6FAF3160 = (D2Client_GetItemTextLineProperties_6FAF3160_t)((char*)d2ClientModule + 0x53160);
+    D2Client_GetItemTextLinePropertiesInternal_6FAF19C0 = (D2Client_GetItemTextLinePropertiesInternal_6FAF19C0_t)((char*)d2ClientModule + 0x519C0);
     D2Client_GetItemTextLineQuantity_6FAE5710 = (D2Client_GetItemTextLineQuantity_6FAE5710_t)((char*)d2ClientModule + 0x45710);
     D2Client_sub_6FAE5C50 = (D2Client_sub_6FAE5C50_t)((char*)d2ClientModule + 0x45C50);
     D2Client_GetSetItemsTxt_6FAE5C80 = (D2Client_GetSetItemsTxt_6FAE5C80_t)((char*)d2ClientModule + 0x45C80);
@@ -118,6 +133,10 @@ void InitD2ClientExports()
     D2Client_sub_6FADCFE0 = (D2Client_sub_6FADCFE0_t)((char*)d2ClientModule + 0x3CFE0);
     D2Client_sub_6FAE5990 = (D2Client_sub_6FAE5990_t)((char*)d2ClientModule + 0x45990);
     D2Client_GetItemTextPriceMaybe_6FAFB200 = (D2Client_GetItemTextPriceMaybe_6FAFB200_t)((char*)d2ClientModule + 0x5B200);
+
+    D2Client_sub_6FAF12C0 = (D2Client_sub_6FAF12C0_t)((char*)d2ClientModule + 0x512C0);
+    D2Client_sub_6FAF3460 = (D2Client_sub_6FAF3460_t)((char*)d2ClientModule + 0x53460);
+    D2Client_GetItemPropertyLine_6FAF21C0 = (D2Client_GetItemPropertyLine_6FAF21C0_t)((char*)d2ClientModule + 0x521C0);
 
     D2Client_pDWORD_6FBBA748 = (int32_t*)((char*)d2ClientModule + 0x11A748);
     D2Client_pDWORD_6FBBA74C = (int32_t*)((char*)d2ClientModule + 0x11A74C);
@@ -142,4 +161,11 @@ void InitD2ClientExports()
     D2Client_pDWORD_6FBB59C4 = (int32_t*)((char*)d2ClientModule + 0x1159C4);
 
     D2Client_pItemUnderCursor_6FBB58F0 = (D2UnitStrc**)((char*)d2ClientModule + 0x1158F0);
+
+
+    D2Client_pDWORD_6FB7A438 = (int32_t*)((char*)d2ClientModule + 0xDA438);
+    D2Client_pDWORD_6FB79B48 = (int32_t*)((char*)d2ClientModule + 0xD9B48);
+    D2Client_pDWORD_6FB7A4A0 = (int32_t*)((char*)d2ClientModule + 0xDA4A0);
+    D2Client_pDWORD_6FB7A440 = (int32_t*)((char*)d2ClientModule + 0xDA440);
+
 }
