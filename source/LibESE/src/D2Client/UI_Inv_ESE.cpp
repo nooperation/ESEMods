@@ -831,14 +831,9 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
         if (itemStatCostTxtForStat->wDescGrp != currentItemStatCostTxt->wDescGrp)
         {
             statValueMaybe = a5a;
-            nDescGrpFunc = 1;
-            if (nDescFunc)
-            {
-                goto LABEL_37;
-            }
-
-            return 0;
+            continue;
         }
+
         nDescFunc = itemStatCostTxtIndex == nStatId;
         auto v18 = D2Common_10466_STATLIST_GetStatValue(pStatList, itemStatCostTxtIndex, 0);
         auto v19 = currentItemStatCostTxt->nOp;
@@ -1304,7 +1299,7 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
             if (
                 d2StatStrcBuffer[v37].nValue &&
                 !ESE_D2Client_sub_6FAF3460(statValues, (D2C_ItemStats)nStatId, outBuff) &&
-                ESE_D2Client_GetItemPropertyLine_6FAF21C0(pUnit, pStatList, nStatId, d2StatStrcBuffer[v37].nStat, d2StatStrcBuffer[v37].nValue, propertyLineBuffer256))
+                ESE_D2Client_GetItemPropertyLine_6FAF21C0(pUnit, pStatList, nStatId, d2StatStrcBuffer[v37].nLayer, d2StatStrcBuffer[v37].nValue, propertyLineBuffer256))
             {
                 int32_t statValue = 0;
                 if (nStatId == STAT_SECONDARY_MINDAMAGE)
