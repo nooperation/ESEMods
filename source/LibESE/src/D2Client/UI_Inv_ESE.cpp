@@ -36,7 +36,7 @@ void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t 
     dest.append(src);
 }
 
-int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t nItemStatCostTxtRecordCount, std::wstring outBuff)
+int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t nItemStatCostTxtRecordCount, std::wstring &outBuff)
 {
     if (nDescFunc < 6 || nDescFunc > 10 && nDescFunc != 21)
     {
@@ -60,8 +60,10 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t
     }
 }
 
-int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc* pStatList, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, std::wstring outBuff)
+int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc* pStatList, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, std::wstring &outBuff)
 {
+    wchar_t scratchpad[1024] = { 0 };
+
     if (nStatId < 0)
     {
         return 0;
@@ -147,8 +149,7 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
         }
 
         auto strDesc = (const wchar_t *)D2LANG_GetStringFromTblIndex(v25);
-        SStrPrintf(v97, 10, "%i", statValueMaybe);
-        Unicode::toUnicode(v95, v97, 9);
+        auto v95 = std::to_wstring(statValueMaybe);
 
         auto strPercentSign = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4001_percent);
         auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
@@ -159,161 +160,176 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
         case 1:
         case 6:
         case 12:
+        {
+            std::wstring v99;
             if (statValueMaybe <= 0)
             {
-                Unicode::strcpy(v99, v95);
+                v99.assign(v95);
             }
             else if (nDescFunc != 12 || statValueMaybe > 1)
             {
-                Unicode::strcpy(v99, strPlusSign);
-                Unicode::strcat(v99, v95);
+                v99.assign(strPlusSign);
+                v99.append(v95);
             }
             if (nDescVal == 1)
             {
-                Unicode::strcpy(outputBuffer256, v99);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(v99);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             if (nDescVal != 2)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            Unicode::strcpy(outputBuffer256, strDesc);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v99);
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            outBuff.append(v99);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 2:
         case 7:
+        {
             if (nDescVal == 1)
             {
-                Unicode::strcpy(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(v95);
+                outBuff.append(strPercentSign);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
 
             if (nDescVal != 2)
             {
-                Unicode::strcpy(outputBuffer256, strDesc);
+                outBuff.assign(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            Unicode::strcpy(outputBuffer256, strDesc);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v95);
-            Unicode::strcat(outputBuffer256, strPercentSign);
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            outBuff.append(v95);
+            outBuff.append(strPercentSign);
 
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 3:
         case 9:
+        {
             if (nDescVal == 1)
             {
-                Unicode::strcpy(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(v95);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             if (nDescVal != 2)
             {
-                Unicode::strcpy(outputBuffer256, strDesc);
+                outBuff.assign(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            Unicode::strcpy(outputBuffer256, strDesc);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v95);
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            outBuff.append(v95);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 4:
         case 8:
+        {
             if (nDescVal != 1)
             {
                 if (nDescVal != 2)
                 {
-                    Unicode::strcpy(outputBuffer256, strDesc);
+                    outBuff.assign(strDesc);
                     return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
                 }
-                Unicode::strcpy(outputBuffer256, strDesc);
-                Unicode::strcat(outputBuffer256, strSpace);
+                outBuff.assign(strDesc);
+                outBuff.append(strSpace);
                 if (statValueMaybe >= 0)
                 {
-                    Unicode::strcat(outputBuffer256, strPlusSign);
+                    outBuff.append(strPlusSign);
                 }
-                Unicode::strcat(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
+                outBuff.append(v95);
+                outBuff.append(strPercentSign);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             if (statValueMaybe >= 0)
             {
-                Unicode::strcpy(outputBuffer256, strPlusSign);
-                Unicode::strcat(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(strPlusSign);
+                outBuff.append(v95);
+                outBuff.append(strPercentSign);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
 
-            *outputBuffer256 = 0;
-            Unicode::strcat(outputBuffer256, v95);
-            Unicode::strcat(outputBuffer256, strPercentSign);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, strDesc);
+            outBuff.assign(v95);
+            outBuff.append(strPercentSign);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 5:
         case 10:
-            SStrPrintf(v97, 10, "%i", 100 * statValueMaybe / 128);
-            Unicode::toUnicode(v95, v97, 9);
+        {
+            auto v95 = std::to_wstring(100 * statValueMaybe / 128);
             if (nDescVal == 1)
             {
-                Unicode::strcpy(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(v95);
+                outBuff.append(strPercentSign);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
 
             if (nDescVal != 2)
             {
-                Unicode::strcpy(outputBuffer256, strDesc);
+                outBuff.assign(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
 
-            Unicode::strcpy(outputBuffer256, strDesc);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v95);
-            Unicode::strcat(outputBuffer256, strPercentSign);
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            outBuff.append(v95);
+            outBuff.append(strPercentSign);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 11:
+        {
             if (statValueMaybe <= 0)
             {
                 auto strRepairsNDurabilityPerSecond = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21241_ModStre9t);
-                Unicode::sprintf(128, outputBuffer256, strRepairsNDurabilityPerSecond, 25);
+                swprintf_s(scratchpad, strRepairsNDurabilityPerSecond, 25);
+                outBuff.append(scratchpad);
             }
             else if (2500 / statValueMaybe > 30)
             {
                 auto strRepairsNDurabilityInNSeconds = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21242_ModStre9u);
-                Unicode::sprintf(128, outputBuffer256, strRepairsNDurabilityInNSeconds, 1, (2500 / statValueMaybe + 12) / 25);
+                swprintf_s(scratchpad, strRepairsNDurabilityInNSeconds, 1, (2500 / statValueMaybe + 12) / 25);
+                outBuff.append(scratchpad);
             }
             else
             {
                 auto strRepairsNDurabilityPerSecond1 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21241_ModStre9t);
-                Unicode::sprintf(128, outputBuffer256, strRepairsNDurabilityPerSecond1, 1);
+                swprintf_s(scratchpad, strRepairsNDurabilityPerSecond1, 1);
+                outBuff.append(scratchpad);
             }
 
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 13:
-            v99[0] = 0;
+        {
+            std::wstring v99;
             if (statValueMaybe <= 0)
             {
                 if (statValueMaybe >= 0)
                 {
                     return 0;
                 }
-                Unicode::strcpy(v99, v95);
+                v99.assign(v95);
             }
             else
             {
-                Unicode::strcpy(v99, strPlusSign);
-                Unicode::strcat(v99, v95);
+                v99.assign(strPlusSign);
+                v99.append(v95);
             }
             if (charStatsTxtRecordIndex < 0)
             {
@@ -331,41 +347,50 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             auto strDesc = (const wchar_t*)D2LANG_GetStringFromTblIndex(v39->wStrAllSkills);
             if (nDescVal == 1)
             {
-                Unicode::strcpy(outputBuffer256, v99);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(v99);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             if (nDescVal != 2)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            Unicode::strcpy(outputBuffer256, strDesc);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v99);
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            outBuff.append(v99);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 14:
+        {
             auto v40 = charStatsTxtRecordIndex >> 3;
             if (charStatsTxtRecordIndex >> 3 < 0)
             {
                 return 0;
             }
+
             if (v40 >= sgptDataTables->nCharStatsTxtRecordCount)
             {
                 return 0;
             }
+
             auto v41 = &sgptDataTables->pCharStatsTxt[v40];
             if (!v41 || (charStatsTxtRecordIndex & 7u) >= 3)
             {
                 return 0;
             }
+
             auto v42 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v41->wStrSkillTab[charStatsTxtRecordIndex & 7]);
-            Unicode::sprintf(256, outputBuffer256, v42, statValueMaybe);
-            Unicode::strcat(outputBuffer256, strSpace);
+            swprintf_s(scratchpad, v42, statValueMaybe);
+            outBuff.append(scratchpad);
+
+            outBuff.append(strSpace);
             auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v41->wStrClassOnly);
-            Unicode::strcat(outputBuffer256, v28);
+            outBuff.append(v28);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 15:
+        {
             auto v43 = sgptDataTables->nStuff;
             auto v44 = charStatsTxtRecordIndex & sgptDataTables->nShiftedStuff;
             if (charStatsTxtRecordIndex >> v43 <= 0 || charStatsTxtRecordIndex >> v43 >= sgptDataTables->nSkillsTxtRecordCount)
@@ -373,21 +398,31 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
                 return 0;
             }
             auto v45 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex >> v43, 0);
-            auto v78 = (const wchar_t *)D2LANG_GetStringFromTblIndex(v45);
-            auto v46 = (const wchar_t *)D2LANG_GetStringFromTblIndex(itemStatCostTxtForStat->wDescStrPos);
-            Unicode::sprintf(256, outputBuffer256, v46, statValueMaybe, 0, v44, v78);
+            auto v78 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v45);
+            auto v46 = (const wchar_t*)D2LANG_GetStringFromTblIndex(itemStatCostTxtForStat->wDescStrPos);
+
+            swprintf_s(scratchpad, v46, statValueMaybe, v44, v78);
+            outBuff.append(scratchpad);
+
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 16:
+        {
             auto v47 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex, 0);
             auto v48 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v47);
             if (!v48)
             {
                 return 0;
             }
-            Unicode::sprintf(256, outputBuffer256, strDesc, statValueMaybe, v48);
+
+            swprintf_s(scratchpad, strDesc, statValueMaybe, v48);
+            outBuff.append(scratchpad);
+
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 17:
         case 18:
+        {
             int32_t preiodOfDay = 0;
             int32_t pItemModPeriodOfDay = 0;
             int32_t baseTime = 0;
@@ -404,120 +439,126 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             {
                 timeAdjustmentThing = itemModMin;
             }
-            
+
             auto v52 = (const wchar_t*)D2LANG_GetStringFromTblIndex(D2Client_pWORD_6FB6FA30[pItemModPeriodOfDay]);
-            Unicode::strcat(outputBuffer256, v52);
+            outBuff.append(v52);
             auto v53 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
-            Unicode::strcat(outputBuffer256, v53);
-            SStrPrintf(v97, 10, "%i", timeAdjustmentThing);
-            Unicode::toUnicode(v95, v97, 9);
+            outBuff.append(v53);
+
+            auto v95 = std::to_wstring(timeAdjustmentThing);
+            std::wstring v99;
+
             if (timeAdjustmentThing < 0)
             {
                 if (statValueMaybe < 0)
                 {
-                    Unicode::strcpy(v99, v95);
+                    v99.assign(v95);
                 }
             }
             else
             {
-                Unicode::strcpy(v99, strPlusSign);
-                Unicode::strcat(v99, v95);
+                v99.assign(strPlusSign);
+                v99.append(v95);
             }
             if (nDescFunc == 18)
             {
-                Unicode::strcat(v99, strPercentSign);
+                v99.append(strPercentSign);
             }
             if (nDescVal == 1)
             {
-                Unicode::strcat(outputBuffer256, v99);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.append(v99);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             if (nDescVal != 2)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            Unicode::strcat(outputBuffer256, strDesc);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v99);
+            outBuff.append(strDesc);
+            outBuff.append(strSpace);
+            outBuff.append(v99);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 19:
-            Unicode::sprintf(256, outputBuffer256, strDesc, statValueMaybe);
+        {
+            swprintf_s(scratchpad, strDesc, statValueMaybe);
+            outBuff.append(scratchpad);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 20:
         case 21:
+        {
             statValueMaybe = -statValueMaybe;
-            SStrPrintf(v97, 10, "%i", statValueMaybe);
-            Unicode::toUnicode(v95, v97, 9);
+
+            auto v95 = std::to_wstring(statValueMaybe);
+
             if (nDescVal == 1)
             {
                 if (statValueMaybe < 0)
                 {
-                    *outputBuffer256 = 0;
-                    Unicode::strcat(outputBuffer256, v95);
+                    outBuff.assign(v95);
                 }
                 else
                 {
-                    Unicode::strcpy(outputBuffer256, strPlusSign);
-                    Unicode::strcat(outputBuffer256, v95);
+                    outBuff.assign(strPlusSign);
+                    outBuff.append(v95);
                 }
 
-                Unicode::strcat(outputBuffer256, strPercentSign);
-                Unicode::strcat(outputBuffer256, strSpace);
-                v28 = strDesc;
-                Unicode::strcat(outputBuffer256, v28);
+                outBuff.append(strPercentSign);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             else
             {
                 if (nDescVal != 2)
                 {
-                    Unicode::strcpy(outputBuffer256, strDesc);
+                    outBuff.assign(strDesc);
                     return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
                 }
-                Unicode::strcpy(outputBuffer256, strDesc);
-                Unicode::strcat(outputBuffer256, strSpace);
+                outBuff.assign(strDesc);
+                outBuff.append(strSpace);
                 if (statValueMaybe >= 0)
                 {
-                    Unicode::strcat(outputBuffer256, strPlusSign);
+                    outBuff.append(strPlusSign);
                 }
-                Unicode::strcat(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
+                outBuff.append(v95);
+                outBuff.append(strPercentSign);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
+        }
         case 22:
+        {
             if (nDescVal == 1)
             {
-                if (statValueMaybe < 0)
+                if (statValueMaybe >= 0)
                 {
-                    *outputBuffer256 = 0;
-                }
-                else
-                {
-                    Unicode::strcpy(outputBuffer256, strPlusSign);
+                    outBuff.assign(strPlusSign);
                 }
 
-                Unicode::strcat(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.append(v95);
+                outBuff.append(strPercentSign);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
             }
             else if (nDescVal == 2)
             {
-                Unicode::strcpy(outputBuffer256, strDesc);
-                Unicode::strcat(outputBuffer256, strSpace);
+                outBuff.assign(strDesc);
+                outBuff.append(strSpace);
                 if (statValueMaybe >= 0)
                 {
-                    Unicode::strcat(outputBuffer256, strPlusSign);
+                    outBuff.append(strPlusSign);
                 }
-                Unicode::strcat(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
+                outBuff.append(v95);
+                outBuff.append(strPercentSign);
             }
             else
             {
-                Unicode::strcpy(outputBuffer256, strDesc);
+                outBuff.assign(strDesc);
             }
+
+            D2MonTypeTxt* v54 = nullptr;
             if (charStatsTxtRecordIndex < 0 || charStatsTxtRecordIndex >= sgptDataTables->nMonPropTxtRecordCount)
             {
                 v54 = sgptDataTables->pMonTypeTxt;
@@ -526,18 +567,22 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             {
                 v54 = &sgptDataTables->pMonTypeTxt[charStatsTxtRecordIndex];
             }
+
             if (!v54)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
+
             auto v55 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
-            Unicode::strcat(outputBuffer256, v55);
+            outBuff.append(v55);
             auto v56 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
-            Unicode::strcat(outputBuffer256, v56);
+            outBuff.append(v56);
             auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v54->wStrPlur);
-            Unicode::strcat(outputBuffer256, v28);
+            outBuff.append(v28);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 23:
+        {
             if (charStatsTxtRecordIndex < 0)
             {
                 return 0;
@@ -546,34 +591,36 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             {
                 return 0;
             }
-            v57 = &sgptDataTables->pMonStatsTxt[charStatsTxtRecordIndex];
+            auto v57 = &sgptDataTables->pMonStatsTxt[charStatsTxtRecordIndex];
             if (!v57)
             {
                 return 0;
             }
             if (nDescVal == 1)
             {
-                Unicode::strcpy(outputBuffer256, v95);
-                Unicode::strcat(outputBuffer256, strPercentSign);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(v95);
+                outBuff.append(strPercentSign);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
             }
             else
             {
-                Unicode::strcpy(outputBuffer256, strDesc);
+                outBuff.assign(strDesc);
                 if (nDescVal == 2)
                 {
-                    Unicode::strcat(outputBuffer256, strSpace);
-                    Unicode::strcat(outputBuffer256, v95);
-                    Unicode::strcat(outputBuffer256, strPercentSign);
+                    outBuff.append(strSpace);
+                    outBuff.append(v95);
+                    outBuff.append(strPercentSign);
                 }
             }
             auto v58 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
-            Unicode::strcat(outputBuffer256, v58);
+            outBuff.append(v58);
             auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v57->wNameStr);
-            Unicode::strcat(outputBuffer256, v28);
+            outBuff.append(v28);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 24:
+        {
             auto v59 = charStatsTxtRecordIndex >> sgptDataTables->nStuff;
             auto v92 = (charStatsTxtRecordIndex & sgptDataTables->nShiftedStuff);
             auto v96 = statValueMaybe >> 8;
@@ -585,50 +632,56 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             }
 
             auto v62 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21249_ModStre10b);
-            Unicode::strcat(outputBuffer256, v62);
-            Unicode::strcat(outputBuffer256, strSpace);
-            SStrPrintf(v97, 10, "%i", v92);
-            Unicode::toUnicode(v95, v97, 9);
-            Unicode::strcat(outputBuffer256, v95);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v61);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::sprintf(128, v99, strDesc, statValueMaybe, v96);
-            Unicode::strcat(outputBuffer256, v99);
+            outBuff.append(v62);
+            outBuff.append(strSpace);
+            outBuff.append(std::to_wstring(v92));
+            outBuff.append(strSpace);
+            outBuff.append(v61);
+            outBuff.append(strSpace);
+
+            swprintf_s(scratchpad, strDesc, statValueMaybe, v96);
+            outBuff.append(scratchpad);
+
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 25:
         case 26:
+        {
+            std::wstring v99;
             if (statValueMaybe >= 0)
             {
-                Unicode::strcpy(v99, v95);
+                v99.assign(v95);
             }
             else
             {
-                Unicode::strcpy(v99, strPlusSign);
-                Unicode::strcat(v99, v95);
+                v99.assign(strPlusSign);
+                v99.append(v95);
             }
 
             if (nDescVal == 1)
             {
-                Unicode::strcpy(outputBuffer256, v99);
-                Unicode::strcat(outputBuffer256, strSpace);
-                Unicode::strcat(outputBuffer256, strDesc);
+                outBuff.assign(v99);
+                outBuff.append(strSpace);
+                outBuff.append(strDesc);
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             if (nDescVal != 2)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            Unicode::strcpy(outputBuffer256, strDesc);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v99);
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            outBuff.append(v99);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 27:
+        {
             auto v92 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4003_to);
             if (!v92)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
+
             if (!statValueMaybe)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
@@ -642,18 +695,18 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             }
             if (statValueMaybe <= 0)
             {
-                Unicode::strcpy(outputBuffer256, v95);
+                outBuff.assign(v95);
             }
             else
             {
-                Unicode::strcat(outputBuffer256, strPlusSign);
-                Unicode::strcat(outputBuffer256, v95);
+                outBuff.append(strPlusSign);
+                outBuff.append(v95);
             }
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v92);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v65);
-            Unicode::strcat(outputBuffer256, strSpace);
+            outBuff.append(strSpace);
+            outBuff.append(v92);
+            outBuff.append(strSpace);
+            outBuff.append(v65);
+            outBuff.append(strSpace);
 
             int32_t playerClass = 7;
             if (!SKILLS_IsPlayerClassSkill(charStatsTxtRecordIndex, &playerClass))
@@ -672,16 +725,18 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            
+
             auto charStatsTxt = &sgptDataTables->pCharStatsTxt[playerClass];
             if (!charStatsTxt)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
             auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(charStatsTxt->wStrClassOnly);
-            Unicode::strcat(outputBuffer256, v28);
+            outBuff.append(v28);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         case 28:
+        {
             int32_t statVal = statValueMaybe;
             if (!statValueMaybe)
             {
@@ -695,14 +750,14 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            
+
             auto pSkillsTxtRecord = &sgptDataTables->pSkillsTxt[charStatsTxtRecordIndex];
             if (!pSkillsTxtRecord)
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
 
-            D2SkillsTxt *v67 = pSkillsTxtRecord;
+            D2SkillsTxt* v67 = pSkillsTxtRecord;
             D2UnitStrc* v68 = pItem;
 
             if (!pItem || pItem->dwUnitType)
@@ -733,22 +788,24 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             {
                 return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
             }
-            SStrPrintf(v97, 10, "%i", statVal);
-            Unicode::toUnicode(v95, v97, 9);
+
+            auto v95 = std::to_wstring(statVal);
             if (statVal <= 0)
             {
-                Unicode::strcpy(outputBuffer256, v95);
+                outBuff.assign(v95);
             }
             else
             {
-                Unicode::strcpy(outputBuffer256, strPlusSign);
-                Unicode::strcat(outputBuffer256, v95);
+                outBuff.assign(strPlusSign);
+                outBuff.append(v95);
             }
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v92);
-            Unicode::strcat(outputBuffer256, strSpace);
-            Unicode::strcat(outputBuffer256, v71);
+
+            outBuff.append(strSpace);
+            outBuff.append(v92);
+            outBuff.append(strSpace);
+            outBuff.append(v71);
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
         default:
             return 0;
         }
@@ -1242,12 +1299,12 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
         int32_t v46 = 0;
         while (1)
         {
-            wchar_t propertyLineBuffer256[1024] = { 0 };
+            std::wstring propertyLineBuffer256;
 
             if (
                 d2StatStrcBuffer[v37].nValue &&
                 !ESE_D2Client_sub_6FAF3460(statValues, (D2C_ItemStats)nStatId, outBuff) &&
-                D2Client_GetItemPropertyLine_6FAF21C0(pUnit, pStatList, nStatId, d2StatStrcBuffer[v37].nStat, d2StatStrcBuffer[v37].nValue, (Unicode*)propertyLineBuffer256))
+                ESE_D2Client_GetItemPropertyLine_6FAF21C0(pUnit, pStatList, nStatId, d2StatStrcBuffer[v37].nStat, d2StatStrcBuffer[v37].nValue, propertyLineBuffer256))
             {
                 int32_t statValue = 0;
                 if (nStatId == STAT_SECONDARY_MINDAMAGE)
