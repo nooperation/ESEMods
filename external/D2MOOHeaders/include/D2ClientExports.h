@@ -72,6 +72,7 @@ typedef D2UnitStrc* (__fastcall* D2Client_sub_6FAE5990_t)(D2InventoryStrc* pInve
 typedef bool (__fastcall* D2Client_GetItemTextPriceMaybe_6FAFB200_t)(D2UnitStrc* pItem, int a2, int* hasChargedSkills, struct Unicode* outBuff, int maxLength);
 
 // UI-Inv-Mod
+typedef __int16(__fastcall* D2Client_sub_6FB0A440_t)(int nSkillsTxtIndex, int offset);
 typedef void(__fastcall* D2Client_sub_6FAF12C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffLen);
 typedef int(__fastcall* D2Client_sub_6FAF3460_t)(int* statValues, D2C_ItemStats nStatId, struct Unicode* outBuff);
 typedef int(__fastcall* D2Client_GetItemPropertyLine_6FAF21C0_t)(D2UnitStrc* pUnit, D2StatListStrc* pStatListEx, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, Unicode* outputBuffer256);
@@ -137,6 +138,7 @@ extern int32_t* D2Client_pDWORD_6FBB59C4; // 1159C4
 extern D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0; // 1158F0
 
 // UI-Inv-Mod
+extern D2Client_sub_6FB0A440_t D2Client_sub_6FB0A440; //6A440
 extern D2Client_sub_6FAF12C0_t D2Client_sub_6FAF12C0; //512C0
 extern D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460; //53460
 extern D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0; //521C0
@@ -145,4 +147,7 @@ extern int32_t* D2Client_pDWORD_6FB7A438; // DA438
 extern int32_t* D2Client_pDWORD_6FB79B48; // D9B48
 extern int32_t* D2Client_pDWORD_6FB7A4A0; // DA4A0
 extern int32_t* D2Client_pDWORD_6FB7A440; // DA440
+extern D2DrlgActStrc** D2Client_pDWORD_6FBA7984; // 6A440
+extern uint16_t* D2Client_pWORD_6FB6FA30; // CFA30
+
 
