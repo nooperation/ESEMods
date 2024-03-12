@@ -624,6 +624,7 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             auto v59 = charStatsTxtRecordIndex >> sgptDataTables->nStuff;
             auto v92 = (charStatsTxtRecordIndex & sgptDataTables->nShiftedStuff);
             auto v96 = statValueMaybe >> 8;
+            auto v96b = statValueMaybe & 0xFF;
             auto v60 = D2Client_sub_6FB0A440(v59, 0);
             auto v61 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v60);
             if (!v61)
@@ -639,7 +640,7 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             outBuff.append(v61);
             outBuff.append(strSpace);
 
-            swprintf_s(scratchpad, strDesc, statValueMaybe, v96);
+            swprintf_s(scratchpad, strDesc, v96b, v96);
             outBuff.append(scratchpad);
 
             return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
