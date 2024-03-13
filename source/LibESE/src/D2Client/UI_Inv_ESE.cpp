@@ -60,10 +60,707 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t
     }
 }
 
-int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc* pStatList, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, std::wstring &outBuff)
+int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pItem, int nDescGrpFunc, int statValue, int charStatsTxtRecordIndex, D2ItemStatCostTxt * itemStatCostTxtForStat, std::wstring& outBuff)
 {
     wchar_t scratchpad[1024] = { 0 };
 
+    auto nDescFunc = itemStatCostTxtForStat->nDescFunc;
+    auto nDescVal = itemStatCostTxtForStat->nDescVal;
+    auto descStrIndex = itemStatCostTxtForStat->wDescStr2;
+    int16_t strDescIndex = 0;
+
+    if (nDescGrpFunc)
+    {
+        nDescFunc = itemStatCostTxtForStat->nDescGrpFunc;
+        nDescVal = itemStatCostTxtForStat->nDescGrpVal;
+        descStrIndex = itemStatCostTxtForStat->wDescGrpStr2;
+        if (statValue < 0)
+        {
+            strDescIndex = itemStatCostTxtForStat->wDescGrpStrNeg;
+        }
+        else
+        {
+            strDescIndex = itemStatCostTxtForStat->wDescGrpStrPos;
+        }
+    }
+    else if (statValue < 0)
+    {
+        strDescIndex = itemStatCostTxtForStat->wDescStrNeg;
+    }
+    else
+    {
+        strDescIndex = itemStatCostTxtForStat->wDescStrPos;
+    }
+
+    auto strDesc = (const wchar_t*)D2LANG_GetStringFromTblIndex(strDescIndex);
+    auto strStatValue = std::to_wstring(statValue);
+
+    auto strPercentSign = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4001_percent);
+    auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    auto strPlusSign = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4002_plus);
+
+    switch (nDescFunc)
+    {
+    case 1:
+    case 6:
+    case 12:
+    {
+        std::wstring v99;
+        if (statValue <= 0)
+        {
+            v99.assign(strStatValue);
+        }
+        else if (nDescFunc != 12 || statValue > 1)
+        {
+            v99.assign(strPlusSign);
+            v99.append(strStatValue);
+        }
+        if (nDescVal == 1)
+        {
+            outBuff.assign(v99);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (nDescVal != 2)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        outBuff.assign(strDesc);
+        outBuff.append(strSpace);
+        outBuff.append(v99);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 2:
+    case 7:
+    {
+        if (nDescVal == 1)
+        {
+            outBuff.assign(strStatValue);
+            outBuff.append(strPercentSign);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        if (nDescVal != 2)
+        {
+            outBuff.assign(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        outBuff.assign(strDesc);
+        outBuff.append(strSpace);
+        outBuff.append(strStatValue);
+        outBuff.append(strPercentSign);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 3:
+    case 9:
+    {
+        if (nDescVal == 1)
+        {
+            outBuff.assign(strStatValue);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (nDescVal != 2)
+        {
+            outBuff.assign(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        outBuff.assign(strDesc);
+        outBuff.append(strSpace);
+        outBuff.append(strStatValue);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 4:
+    case 8:
+    {
+        if (nDescVal != 1)
+        {
+            if (nDescVal != 2)
+            {
+                outBuff.assign(strDesc);
+                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+            }
+
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            if (statValue >= 0)
+            {
+                outBuff.append(strPlusSign);
+            }
+            outBuff.append(strStatValue);
+            outBuff.append(strPercentSign);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (statValue >= 0)
+        {
+            outBuff.assign(strPlusSign);
+            outBuff.append(strStatValue);
+            outBuff.append(strPercentSign);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        outBuff.assign(strStatValue);
+        outBuff.append(strPercentSign);
+        outBuff.append(strSpace);
+        outBuff.append(strDesc);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 5:
+    case 10:
+    {
+        auto percentage = std::to_wstring(100 * statValue / 128);
+        if (nDescVal == 1)
+        {
+            outBuff.assign(percentage);
+            outBuff.append(strPercentSign);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        if (nDescVal != 2)
+        {
+            outBuff.assign(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        outBuff.assign(strDesc);
+        outBuff.append(strSpace);
+        outBuff.append(percentage);
+        outBuff.append(strPercentSign);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 11:
+    {
+        if (statValue <= 0)
+        {
+            auto strRepairsNDurabilityPerSecond = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21241_ModStre9t);
+            swprintf_s(scratchpad, strRepairsNDurabilityPerSecond, 25);
+            outBuff.append(scratchpad);
+        }
+        else if (2500 / statValue > 30)
+        {
+            auto strRepairsNDurabilityInNSeconds = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21242_ModStre9u);
+            swprintf_s(scratchpad, strRepairsNDurabilityInNSeconds, 1, (2500 / statValue + 12) / 25);
+            outBuff.append(scratchpad);
+        }
+        else
+        {
+            auto strRepairsNDurabilityPerSecond1 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21241_ModStre9t);
+            swprintf_s(scratchpad, strRepairsNDurabilityPerSecond1, 1);
+            outBuff.append(scratchpad);
+        }
+
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 13:
+    {
+        std::wstring v99;
+        if (statValue <= 0)
+        {
+            if (statValue >= 0)
+            {
+                return 0;
+            }
+            v99.assign(strStatValue);
+        }
+        else
+        {
+            v99.assign(strPlusSign);
+            v99.append(strStatValue);
+        }
+        if (charStatsTxtRecordIndex < 0)
+        {
+            return 0;
+        }
+        if (charStatsTxtRecordIndex >= sgptDataTables->nCharStatsTxtRecordCount)
+        {
+            return 0;
+        }
+        auto v39 = &sgptDataTables->pCharStatsTxt[charStatsTxtRecordIndex];
+        if (!v39)
+        {
+            return 0;
+        }
+        auto strDesc = (const wchar_t*)D2LANG_GetStringFromTblIndex(v39->wStrAllSkills);
+        if (nDescVal == 1)
+        {
+            outBuff.assign(v99);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (nDescVal != 2)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        outBuff.assign(strDesc);
+        outBuff.append(strSpace);
+        outBuff.append(v99);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 14:
+    {
+        auto v40 = charStatsTxtRecordIndex >> 3;
+        if (charStatsTxtRecordIndex >> 3 < 0)
+        {
+            return 0;
+        }
+
+        if (v40 >= sgptDataTables->nCharStatsTxtRecordCount)
+        {
+            return 0;
+        }
+
+        auto v41 = &sgptDataTables->pCharStatsTxt[v40];
+        if (!v41 || (charStatsTxtRecordIndex & 7u) >= 3)
+        {
+            return 0;
+        }
+
+        auto v42 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v41->wStrSkillTab[charStatsTxtRecordIndex & 7]);
+        swprintf_s(scratchpad, v42, statValue);
+        outBuff.append(scratchpad);
+
+        outBuff.append(strSpace);
+        auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v41->wStrClassOnly);
+        outBuff.append(v28);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 15:
+    {
+        auto v43 = sgptDataTables->nStuff;
+        auto v44 = charStatsTxtRecordIndex & sgptDataTables->nShiftedStuff;
+        if (charStatsTxtRecordIndex >> v43 <= 0 || charStatsTxtRecordIndex >> v43 >= sgptDataTables->nSkillsTxtRecordCount)
+        {
+            return 0;
+        }
+        auto v45 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex >> v43, 0);
+        auto v78 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v45);
+        auto v46 = (const wchar_t*)D2LANG_GetStringFromTblIndex(itemStatCostTxtForStat->wDescStrPos);
+
+        swprintf_s(scratchpad, v46, statValue, v44, v78);
+        outBuff.append(scratchpad);
+
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 16:
+    {
+        auto v47 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex, 0);
+        auto v48 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v47);
+        if (!v48)
+        {
+            return 0;
+        }
+
+        swprintf_s(scratchpad, strDesc, statValue, v48);
+        outBuff.append(scratchpad);
+
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 17:
+    case 18:
+    {
+        int32_t preiodOfDay = 0;
+        int32_t pItemModPeriodOfDay = 0;
+        int32_t baseTime = 0;
+        if (*D2Client_pDWORD_6FBA7984)
+        {
+            preiodOfDay = ENVIRONMENT_GetPeriodOfDayFromAct(*D2Client_pDWORD_6FBA7984, &baseTime);
+            pItemModPeriodOfDay = preiodOfDay;
+        }
+
+        int32_t itemModMin = 0;
+        int32_t itemModMax = 0;
+        auto timeAdjustmentThing = ITEMMODS_GetByTimeAdjustment(statValue, preiodOfDay, baseTime, &pItemModPeriodOfDay, &itemModMin, &itemModMax);
+        if (!*D2Client_pDWORD_6FBA7984)
+        {
+            timeAdjustmentThing = itemModMin;
+        }
+
+        auto v52 = (const wchar_t*)D2LANG_GetStringFromTblIndex(D2Client_pWORD_6FB6FA30[pItemModPeriodOfDay]);
+        outBuff.append(v52);
+        auto v53 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+        outBuff.append(v53);
+
+        auto v95 = std::to_wstring(timeAdjustmentThing);
+        std::wstring v99;
+
+        if (timeAdjustmentThing < 0)
+        {
+            if (statValue < 0)
+            {
+                v99.assign(v95);
+            }
+        }
+        else
+        {
+            v99.assign(strPlusSign);
+            v99.append(v95);
+        }
+        if (nDescFunc == 18)
+        {
+            v99.append(strPercentSign);
+        }
+        if (nDescVal == 1)
+        {
+            outBuff.append(v99);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (nDescVal != 2)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        outBuff.append(strDesc);
+        outBuff.append(strSpace);
+        outBuff.append(v99);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 19:
+    {
+        swprintf_s(scratchpad, strDesc, statValue);
+        outBuff.append(scratchpad);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 20:
+    case 21:
+    {
+        statValue = -statValue;
+
+        auto v95 = std::to_wstring(statValue);
+
+        if (nDescVal == 1)
+        {
+            if (statValue < 0)
+            {
+                outBuff.assign(v95);
+            }
+            else
+            {
+                outBuff.assign(strPlusSign);
+                outBuff.append(v95);
+            }
+
+            outBuff.append(strPercentSign);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        else
+        {
+            if (nDescVal != 2)
+            {
+                outBuff.assign(strDesc);
+                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+            }
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            if (statValue >= 0)
+            {
+                outBuff.append(strPlusSign);
+            }
+            outBuff.append(v95);
+            outBuff.append(strPercentSign);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+    }
+    case 22:
+    {
+        if (nDescVal == 1)
+        {
+            if (statValue >= 0)
+            {
+                outBuff.assign(strPlusSign);
+            }
+
+            outBuff.append(strStatValue);
+            outBuff.append(strPercentSign);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+        }
+        else if (nDescVal == 2)
+        {
+            outBuff.assign(strDesc);
+            outBuff.append(strSpace);
+            if (statValue >= 0)
+            {
+                outBuff.append(strPlusSign);
+            }
+            outBuff.append(strStatValue);
+            outBuff.append(strPercentSign);
+        }
+        else
+        {
+            outBuff.assign(strDesc);
+        }
+
+        D2MonTypeTxt* v54 = nullptr;
+        if (charStatsTxtRecordIndex < 0 || charStatsTxtRecordIndex >= sgptDataTables->nMonPropTxtRecordCount)
+        {
+            v54 = sgptDataTables->pMonTypeTxt;
+        }
+        else
+        {
+            v54 = &sgptDataTables->pMonTypeTxt[charStatsTxtRecordIndex];
+        }
+
+        if (!v54)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        auto v55 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
+        outBuff.append(v55);
+        auto v56 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+        outBuff.append(v56);
+        auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v54->wStrPlur);
+        outBuff.append(v28);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 23:
+    {
+        if (charStatsTxtRecordIndex < 0)
+        {
+            return 0;
+        }
+        if (charStatsTxtRecordIndex >= sgptDataTables->nMonStatsTxtRecordCount)
+        {
+            return 0;
+        }
+        auto v57 = &sgptDataTables->pMonStatsTxt[charStatsTxtRecordIndex];
+        if (!v57)
+        {
+            return 0;
+        }
+        if (nDescVal == 1)
+        {
+            outBuff.assign(strStatValue);
+            outBuff.append(strPercentSign);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+        }
+        else
+        {
+            outBuff.assign(strDesc);
+            if (nDescVal == 2)
+            {
+                outBuff.append(strSpace);
+                outBuff.append(strStatValue);
+                outBuff.append(strPercentSign);
+            }
+        }
+        auto v58 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+        outBuff.append(v58);
+        auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v57->wNameStr);
+        outBuff.append(v28);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 24:
+    {
+        auto v59 = charStatsTxtRecordIndex >> sgptDataTables->nStuff;
+        auto v92 = (charStatsTxtRecordIndex & sgptDataTables->nShiftedStuff);
+        auto v96 = statValue >> 8;
+        auto v96b = statValue & 0xFF;
+        auto v60 = D2Client_sub_6FB0A440(v59, 0);
+        auto v61 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v60);
+        if (!v61)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        auto v62 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21249_ModStre10b);
+        outBuff.append(v62);
+        outBuff.append(strSpace);
+        outBuff.append(std::to_wstring(v92));
+        outBuff.append(strSpace);
+        outBuff.append(v61);
+        outBuff.append(strSpace);
+
+        swprintf_s(scratchpad, strDesc, v96b, v96);
+        outBuff.append(scratchpad);
+
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 25:
+    case 26:
+    {
+        std::wstring v99;
+        if (statValue >= 0)
+        {
+            v99.assign(strStatValue);
+        }
+        else
+        {
+            v99.assign(strPlusSign);
+            v99.append(strStatValue);
+        }
+
+        if (nDescVal == 1)
+        {
+            outBuff.assign(v99);
+            outBuff.append(strSpace);
+            outBuff.append(strDesc);
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (nDescVal != 2)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        outBuff.assign(strDesc);
+        outBuff.append(strSpace);
+        outBuff.append(v99);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 27:
+    {
+        auto v92 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4003_to);
+        if (!v92)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        if (!statValue)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        auto v64 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex, 0);
+        auto v65 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v64);
+        if (!v65)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (statValue <= 0)
+        {
+            outBuff.assign(strStatValue);
+        }
+        else
+        {
+            outBuff.append(strPlusSign);
+            outBuff.append(strStatValue);
+        }
+        outBuff.append(strSpace);
+        outBuff.append(v92);
+        outBuff.append(strSpace);
+        outBuff.append(v65);
+        outBuff.append(strSpace);
+
+        int32_t playerClass = 7;
+        if (!SKILLS_IsPlayerClassSkill(charStatsTxtRecordIndex, &playerClass))
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (playerClass < 0)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (playerClass >= 7)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (playerClass >= sgptDataTables->nCharStatsTxtRecordCount)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        auto charStatsTxt = &sgptDataTables->pCharStatsTxt[playerClass];
+        if (!charStatsTxt)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(charStatsTxt->wStrClassOnly);
+        outBuff.append(v28);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    case 28:
+    {
+        int32_t statVal = statValue;
+        if (!statValue)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (charStatsTxtRecordIndex < 0)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        if (charStatsTxtRecordIndex >= sgptDataTables->nSkillsTxtRecordCount)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        auto pSkillsTxtRecord = &sgptDataTables->pSkillsTxt[charStatsTxtRecordIndex];
+        if (!pSkillsTxtRecord)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        D2SkillsTxt* v67 = pSkillsTxtRecord;
+        D2UnitStrc* v68 = pItem;
+
+        if (!pItem || pItem->dwUnitType)
+        {
+            v68 = D2Client_sub_6FB283D0();
+            v67 = pSkillsTxtRecord;
+        }
+
+        int32_t classId = -1;
+        if (v68)
+        {
+            classId = v68->dwClassId;
+        }
+
+        if (v67->nCharClass == classId && statValue > 3)
+        {
+            statVal = 3;
+        }
+
+        auto v92 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4003_to);
+        if (!v92)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+        auto v70 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex, 0);
+        auto v71 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v70);
+        if (!v71)
+        {
+            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+        }
+
+        auto v95 = std::to_wstring(statVal);
+        if (statVal <= 0)
+        {
+            outBuff.assign(v95);
+        }
+        else
+        {
+            outBuff.assign(strPlusSign);
+            outBuff.append(v95);
+        }
+
+        outBuff.append(strSpace);
+        outBuff.append(v92);
+        outBuff.append(strSpace);
+        outBuff.append(v71);
+        return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
+    }
+    default:
+        return 0;
+    }
+
+    return 0;
+}
+
+int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc* pStatList, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, std::wstring &outBuff)
+{
     if (nStatId < 0)
     {
         return 0;
@@ -107,727 +804,26 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
         }
     }
 
-    auto wDescGrpIsZero = itemStatCostTxtForStat->wDescGrp == 0;
-    auto a5a = statValueMaybe;
-
-    uint8_t nDescFunc = 1;
-    uint8_t nDescVal = 1;
-    uint8_t nDescGrpFunc = 0;
-
-    uint16_t descStrIndex = 0;
-
-    if (wDescGrpIsZero)
+    if (itemStatCostTxtForStat->wDescGrp == 0)
     {
-        nDescGrpFunc = 0;
-    LABEL_37:
-        nDescFunc = itemStatCostTxtForStat->nDescFunc;
-        nDescVal = itemStatCostTxtForStat->nDescVal;
-        descStrIndex = itemStatCostTxtForStat->wDescStr2;
-        int16_t v25 = 0;
-
-        if (nDescGrpFunc)
-        {
-            nDescFunc = itemStatCostTxtForStat->nDescGrpFunc;
-            nDescVal = itemStatCostTxtForStat->nDescGrpVal;
-            descStrIndex = itemStatCostTxtForStat->wDescGrpStr2;
-            if (statValueMaybe < 0)
-            {
-                v25 = itemStatCostTxtForStat->wDescGrpStrNeg;
-            }
-            else
-            {
-                v25 = itemStatCostTxtForStat->wDescGrpStrPos;
-            }
-        }
-        else if (statValueMaybe < 0)
-        {
-            v25 = itemStatCostTxtForStat->wDescStrNeg;
-        }
-        else
-        {
-            v25 = itemStatCostTxtForStat->wDescStrPos;
-        }
-
-        auto strDesc = (const wchar_t *)D2LANG_GetStringFromTblIndex(v25);
-        auto v95 = std::to_wstring(statValueMaybe);
-
-        auto strPercentSign = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4001_percent);
-        auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
-        auto strPlusSign = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4002_plus);
-
-        switch (nDescFunc)
-        {
-        case 1:
-        case 6:
-        case 12:
-        {
-            std::wstring v99;
-            if (statValueMaybe <= 0)
-            {
-                v99.assign(v95);
-            }
-            else if (nDescFunc != 12 || statValueMaybe > 1)
-            {
-                v99.assign(strPlusSign);
-                v99.append(v95);
-            }
-            if (nDescVal == 1)
-            {
-                outBuff.assign(v99);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (nDescVal != 2)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            outBuff.assign(strDesc);
-            outBuff.append(strSpace);
-            outBuff.append(v99);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 2:
-        case 7:
-        {
-            if (nDescVal == 1)
-            {
-                outBuff.assign(v95);
-                outBuff.append(strPercentSign);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            if (nDescVal != 2)
-            {
-                outBuff.assign(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            outBuff.assign(strDesc);
-            outBuff.append(strSpace);
-            outBuff.append(v95);
-            outBuff.append(strPercentSign);
-
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 3:
-        case 9:
-        {
-            if (nDescVal == 1)
-            {
-                outBuff.assign(v95);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (nDescVal != 2)
-            {
-                outBuff.assign(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            outBuff.assign(strDesc);
-            outBuff.append(strSpace);
-            outBuff.append(v95);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 4:
-        case 8:
-        {
-            if (nDescVal != 1)
-            {
-                if (nDescVal != 2)
-                {
-                    outBuff.assign(strDesc);
-                    return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-                }
-                outBuff.assign(strDesc);
-                outBuff.append(strSpace);
-                if (statValueMaybe >= 0)
-                {
-                    outBuff.append(strPlusSign);
-                }
-                outBuff.append(v95);
-                outBuff.append(strPercentSign);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (statValueMaybe >= 0)
-            {
-                outBuff.assign(strPlusSign);
-                outBuff.append(v95);
-                outBuff.append(strPercentSign);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            outBuff.assign(v95);
-            outBuff.append(strPercentSign);
-            outBuff.append(strSpace);
-            outBuff.append(strDesc);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 5:
-        case 10:
-        {
-            auto v95 = std::to_wstring(100 * statValueMaybe / 128);
-            if (nDescVal == 1)
-            {
-                outBuff.assign(v95);
-                outBuff.append(strPercentSign);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            if (nDescVal != 2)
-            {
-                outBuff.assign(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            outBuff.assign(strDesc);
-            outBuff.append(strSpace);
-            outBuff.append(v95);
-            outBuff.append(strPercentSign);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 11:
-        {
-            if (statValueMaybe <= 0)
-            {
-                auto strRepairsNDurabilityPerSecond = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21241_ModStre9t);
-                swprintf_s(scratchpad, strRepairsNDurabilityPerSecond, 25);
-                outBuff.append(scratchpad);
-            }
-            else if (2500 / statValueMaybe > 30)
-            {
-                auto strRepairsNDurabilityInNSeconds = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21242_ModStre9u);
-                swprintf_s(scratchpad, strRepairsNDurabilityInNSeconds, 1, (2500 / statValueMaybe + 12) / 25);
-                outBuff.append(scratchpad);
-            }
-            else
-            {
-                auto strRepairsNDurabilityPerSecond1 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21241_ModStre9t);
-                swprintf_s(scratchpad, strRepairsNDurabilityPerSecond1, 1);
-                outBuff.append(scratchpad);
-            }
-
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 13:
-        {
-            std::wstring v99;
-            if (statValueMaybe <= 0)
-            {
-                if (statValueMaybe >= 0)
-                {
-                    return 0;
-                }
-                v99.assign(v95);
-            }
-            else
-            {
-                v99.assign(strPlusSign);
-                v99.append(v95);
-            }
-            if (charStatsTxtRecordIndex < 0)
-            {
-                return 0;
-            }
-            if (charStatsTxtRecordIndex >= sgptDataTables->nCharStatsTxtRecordCount)
-            {
-                return 0;
-            }
-            auto v39 = &sgptDataTables->pCharStatsTxt[charStatsTxtRecordIndex];
-            if (!v39)
-            {
-                return 0;
-            }
-            auto strDesc = (const wchar_t*)D2LANG_GetStringFromTblIndex(v39->wStrAllSkills);
-            if (nDescVal == 1)
-            {
-                outBuff.assign(v99);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (nDescVal != 2)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            outBuff.assign(strDesc);
-            outBuff.append(strSpace);
-            outBuff.append(v99);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 14:
-        {
-            auto v40 = charStatsTxtRecordIndex >> 3;
-            if (charStatsTxtRecordIndex >> 3 < 0)
-            {
-                return 0;
-            }
-
-            if (v40 >= sgptDataTables->nCharStatsTxtRecordCount)
-            {
-                return 0;
-            }
-
-            auto v41 = &sgptDataTables->pCharStatsTxt[v40];
-            if (!v41 || (charStatsTxtRecordIndex & 7u) >= 3)
-            {
-                return 0;
-            }
-
-            auto v42 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v41->wStrSkillTab[charStatsTxtRecordIndex & 7]);
-            swprintf_s(scratchpad, v42, statValueMaybe);
-            outBuff.append(scratchpad);
-
-            outBuff.append(strSpace);
-            auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v41->wStrClassOnly);
-            outBuff.append(v28);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 15:
-        {
-            auto v43 = sgptDataTables->nStuff;
-            auto v44 = charStatsTxtRecordIndex & sgptDataTables->nShiftedStuff;
-            if (charStatsTxtRecordIndex >> v43 <= 0 || charStatsTxtRecordIndex >> v43 >= sgptDataTables->nSkillsTxtRecordCount)
-            {
-                return 0;
-            }
-            auto v45 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex >> v43, 0);
-            auto v78 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v45);
-            auto v46 = (const wchar_t*)D2LANG_GetStringFromTblIndex(itemStatCostTxtForStat->wDescStrPos);
-
-            swprintf_s(scratchpad, v46, statValueMaybe, v44, v78);
-            outBuff.append(scratchpad);
-
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 16:
-        {
-            auto v47 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex, 0);
-            auto v48 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v47);
-            if (!v48)
-            {
-                return 0;
-            }
-
-            swprintf_s(scratchpad, strDesc, statValueMaybe, v48);
-            outBuff.append(scratchpad);
-
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 17:
-        case 18:
-        {
-            int32_t preiodOfDay = 0;
-            int32_t pItemModPeriodOfDay = 0;
-            int32_t baseTime = 0;
-            if (*D2Client_pDWORD_6FBA7984)
-            {
-                preiodOfDay = ENVIRONMENT_GetPeriodOfDayFromAct(*D2Client_pDWORD_6FBA7984, &baseTime);
-                pItemModPeriodOfDay = preiodOfDay;
-            }
-
-            int32_t itemModMin = 0;
-            int32_t itemModMax = 0;
-            auto timeAdjustmentThing = ITEMMODS_GetByTimeAdjustment(statValueMaybe, preiodOfDay, baseTime, &pItemModPeriodOfDay, &itemModMin, &itemModMax);
-            if (!*D2Client_pDWORD_6FBA7984)
-            {
-                timeAdjustmentThing = itemModMin;
-            }
-
-            auto v52 = (const wchar_t*)D2LANG_GetStringFromTblIndex(D2Client_pWORD_6FB6FA30[pItemModPeriodOfDay]);
-            outBuff.append(v52);
-            auto v53 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
-            outBuff.append(v53);
-
-            auto v95 = std::to_wstring(timeAdjustmentThing);
-            std::wstring v99;
-
-            if (timeAdjustmentThing < 0)
-            {
-                if (statValueMaybe < 0)
-                {
-                    v99.assign(v95);
-                }
-            }
-            else
-            {
-                v99.assign(strPlusSign);
-                v99.append(v95);
-            }
-            if (nDescFunc == 18)
-            {
-                v99.append(strPercentSign);
-            }
-            if (nDescVal == 1)
-            {
-                outBuff.append(v99);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (nDescVal != 2)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            outBuff.append(strDesc);
-            outBuff.append(strSpace);
-            outBuff.append(v99);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 19:
-        {
-            swprintf_s(scratchpad, strDesc, statValueMaybe);
-            outBuff.append(scratchpad);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 20:
-        case 21:
-        {
-            statValueMaybe = -statValueMaybe;
-
-            auto v95 = std::to_wstring(statValueMaybe);
-
-            if (nDescVal == 1)
-            {
-                if (statValueMaybe < 0)
-                {
-                    outBuff.assign(v95);
-                }
-                else
-                {
-                    outBuff.assign(strPlusSign);
-                    outBuff.append(v95);
-                }
-
-                outBuff.append(strPercentSign);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            else
-            {
-                if (nDescVal != 2)
-                {
-                    outBuff.assign(strDesc);
-                    return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-                }
-                outBuff.assign(strDesc);
-                outBuff.append(strSpace);
-                if (statValueMaybe >= 0)
-                {
-                    outBuff.append(strPlusSign);
-                }
-                outBuff.append(v95);
-                outBuff.append(strPercentSign);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-        }
-        case 22:
-        {
-            if (nDescVal == 1)
-            {
-                if (statValueMaybe >= 0)
-                {
-                    outBuff.assign(strPlusSign);
-                }
-
-                outBuff.append(v95);
-                outBuff.append(strPercentSign);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-            }
-            else if (nDescVal == 2)
-            {
-                outBuff.assign(strDesc);
-                outBuff.append(strSpace);
-                if (statValueMaybe >= 0)
-                {
-                    outBuff.append(strPlusSign);
-                }
-                outBuff.append(v95);
-                outBuff.append(strPercentSign);
-            }
-            else
-            {
-                outBuff.assign(strDesc);
-            }
-
-            D2MonTypeTxt* v54 = nullptr;
-            if (charStatsTxtRecordIndex < 0 || charStatsTxtRecordIndex >= sgptDataTables->nMonPropTxtRecordCount)
-            {
-                v54 = sgptDataTables->pMonTypeTxt;
-            }
-            else
-            {
-                v54 = &sgptDataTables->pMonTypeTxt[charStatsTxtRecordIndex];
-            }
-
-            if (!v54)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            auto v55 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
-            outBuff.append(v55);
-            auto v56 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
-            outBuff.append(v56);
-            auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v54->wStrPlur);
-            outBuff.append(v28);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 23:
-        {
-            if (charStatsTxtRecordIndex < 0)
-            {
-                return 0;
-            }
-            if (charStatsTxtRecordIndex >= sgptDataTables->nMonStatsTxtRecordCount)
-            {
-                return 0;
-            }
-            auto v57 = &sgptDataTables->pMonStatsTxt[charStatsTxtRecordIndex];
-            if (!v57)
-            {
-                return 0;
-            }
-            if (nDescVal == 1)
-            {
-                outBuff.assign(v95);
-                outBuff.append(strPercentSign);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-            }
-            else
-            {
-                outBuff.assign(strDesc);
-                if (nDescVal == 2)
-                {
-                    outBuff.append(strSpace);
-                    outBuff.append(v95);
-                    outBuff.append(strPercentSign);
-                }
-            }
-            auto v58 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
-            outBuff.append(v58);
-            auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v57->wNameStr);
-            outBuff.append(v28);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 24:
-        {
-            auto v59 = charStatsTxtRecordIndex >> sgptDataTables->nStuff;
-            auto v92 = (charStatsTxtRecordIndex & sgptDataTables->nShiftedStuff);
-            auto v96 = statValueMaybe >> 8;
-            auto v96b = statValueMaybe & 0xFF;
-            auto v60 = D2Client_sub_6FB0A440(v59, 0);
-            auto v61 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v60);
-            if (!v61)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            auto v62 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_21249_ModStre10b);
-            outBuff.append(v62);
-            outBuff.append(strSpace);
-            outBuff.append(std::to_wstring(v92));
-            outBuff.append(strSpace);
-            outBuff.append(v61);
-            outBuff.append(strSpace);
-
-            swprintf_s(scratchpad, strDesc, v96b, v96);
-            outBuff.append(scratchpad);
-
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 25:
-        case 26:
-        {
-            std::wstring v99;
-            if (statValueMaybe >= 0)
-            {
-                v99.assign(v95);
-            }
-            else
-            {
-                v99.assign(strPlusSign);
-                v99.append(v95);
-            }
-
-            if (nDescVal == 1)
-            {
-                outBuff.assign(v99);
-                outBuff.append(strSpace);
-                outBuff.append(strDesc);
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (nDescVal != 2)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            outBuff.assign(strDesc);
-            outBuff.append(strSpace);
-            outBuff.append(v99);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 27:
-        {
-            auto v92 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4003_to);
-            if (!v92)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            if (!statValueMaybe)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            auto v64 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex, 0);
-            auto v65 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v64);
-            if (!v65)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (statValueMaybe <= 0)
-            {
-                outBuff.assign(v95);
-            }
-            else
-            {
-                outBuff.append(strPlusSign);
-                outBuff.append(v95);
-            }
-            outBuff.append(strSpace);
-            outBuff.append(v92);
-            outBuff.append(strSpace);
-            outBuff.append(v65);
-            outBuff.append(strSpace);
-
-            int32_t playerClass = 7;
-            if (!SKILLS_IsPlayerClassSkill(charStatsTxtRecordIndex, &playerClass))
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (playerClass < 0)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (playerClass >= 7)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (playerClass >= sgptDataTables->nCharStatsTxtRecordCount)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            auto charStatsTxt = &sgptDataTables->pCharStatsTxt[playerClass];
-            if (!charStatsTxt)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            auto v28 = (const wchar_t*)D2LANG_GetStringFromTblIndex(charStatsTxt->wStrClassOnly);
-            outBuff.append(v28);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        case 28:
-        {
-            int32_t statVal = statValueMaybe;
-            if (!statValueMaybe)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (charStatsTxtRecordIndex < 0)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            if (charStatsTxtRecordIndex >= sgptDataTables->nSkillsTxtRecordCount)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            auto pSkillsTxtRecord = &sgptDataTables->pSkillsTxt[charStatsTxtRecordIndex];
-            if (!pSkillsTxtRecord)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            D2SkillsTxt* v67 = pSkillsTxtRecord;
-            D2UnitStrc* v68 = pItem;
-
-            if (!pItem || pItem->dwUnitType)
-            {
-                v68 = D2Client_sub_6FB283D0();
-                v67 = pSkillsTxtRecord;
-            }
-
-            int32_t classId = -1;
-            if (v68)
-            {
-                classId = v68->dwClassId;
-            }
-
-            if (v67->nCharClass == classId && statValueMaybe > 3)
-            {
-                statVal = 3;
-            }
-
-            auto v92 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4003_to);
-            if (!v92)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-            auto v70 = D2Client_sub_6FB0A440(charStatsTxtRecordIndex, 0);
-            auto v71 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v70);
-            if (!v71)
-            {
-                return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-            }
-
-            auto v95 = std::to_wstring(statVal);
-            if (statVal <= 0)
-            {
-                outBuff.assign(v95);
-            }
-            else
-            {
-                outBuff.assign(strPlusSign);
-                outBuff.append(v95);
-            }
-
-            outBuff.append(strSpace);
-            outBuff.append(v92);
-            outBuff.append(strSpace);
-            outBuff.append(v71);
-            return ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(nDescFunc, descStrIndex, outBuff);
-        }
-        default:
-            return 0;
-        }
-
-        return 0;
+        return ESE_GetItemPropertyLine_HelperA(pItem, 0, statValueMaybe, charStatsTxtRecordIndex, itemStatCostTxtForStat, outBuff);
     }
 
+    auto a5a = statValueMaybe;
+    uint8_t nDescFunc = 1;
     auto itemStatCostTxtIndex = sgptDataTables->nItemStatCostTxtRecordCount;
+
     while (--itemStatCostTxtIndex >= 0)
     {
         if (itemStatCostTxtIndex >= sgptDataTables->nItemStatCostTxtRecordCount)
         {
-            nDescGrpFunc = 0;
-            goto LABEL_37;
+            return ESE_GetItemPropertyLine_HelperA(pItem, 0, statValueMaybe, charStatsTxtRecordIndex, itemStatCostTxtForStat, outBuff);
         }
         
         auto currentItemStatCostTxt = &sgptDataTables->pItemStatCostTxt[itemStatCostTxtIndex];
         if (!currentItemStatCostTxt)
         {
-            nDescGrpFunc = 0;
-            goto LABEL_37;
+            return ESE_GetItemPropertyLine_HelperA(pItem, 0, statValueMaybe, charStatsTxtRecordIndex, itemStatCostTxtForStat, outBuff);
         }
         if (itemStatCostTxtForStat->wDescGrp != currentItemStatCostTxt->wDescGrp)
         {
@@ -845,19 +841,17 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
             {
                 if (a5a != 0)
                 {
-                    statValueMaybe = a5a;
-                    nDescGrpFunc = 0;
-                    goto LABEL_37;
+                    return ESE_GetItemPropertyLine_HelperA(pItem, 0, a5a, charStatsTxtRecordIndex, itemStatCostTxtForStat, outBuff);
                 }
-                statValueMaybe = a5a;
-                nDescGrpFunc = 1;
+
                 if (nDescFunc)
                 {
-                    goto LABEL_37;
+                    return ESE_GetItemPropertyLine_HelperA(pItem, 1, a5a, charStatsTxtRecordIndex, itemStatCostTxtForStat, outBuff);
                 }
 
                 return 0;
             }
+
             auto v22 = D2Client_sub_6FB283D0();
             v18 = (v18 * (STATLIST_UnitGetStatValue(v22, v20, 0) >> itemStatCostTxtForStat->nValShift)) >> currentItemStatCostTxt->nOpParam;
         }
@@ -869,18 +863,15 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
 
         if (a5a != v21)
         {
-            statValueMaybe = a5a;
-            nDescGrpFunc = 0;
-            goto LABEL_37;
+            return ESE_GetItemPropertyLine_HelperA(pItem, 0, a5a, charStatsTxtRecordIndex, itemStatCostTxtForStat, outBuff);
         }
 
         statValueMaybe = a5a;
     }
 
-    nDescGrpFunc = 1;
     if (nDescFunc)
     {
-        goto LABEL_37;
+        return ESE_GetItemPropertyLine_HelperA(pItem, 1, a5a, charStatsTxtRecordIndex, itemStatCostTxtForStat, outBuff);
     }
 
     return 0;
