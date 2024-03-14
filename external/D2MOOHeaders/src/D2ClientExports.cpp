@@ -11,7 +11,7 @@ D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580 = nullptr;
 D2Client_sub_6FAAC080_t D2Client_sub_6FAAC080 = nullptr;
 
 // UI-INV stuff
-D2Client_sub_6FB283D0_t D2Client_sub_6FB283D0 = nullptr; // 883D0
+D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0 = nullptr; // 883D0
 D2Client_sub_6FAFE9E0_t D2Client_sub_6FAFE9E0 = nullptr; // 5E9E0
 D2Client_sub_6FB23230_t D2Client_sub_6FB23230 = nullptr; // 83230
 D2Client_sub_6FB57BC0_t D2Client_sub_6FB57BC0 = nullptr; // B7BC0
@@ -101,7 +101,7 @@ void InitD2ClientExports()
     D2Client_sub_6FB0B580 = (D2Client_sub_6FB0B580_t)((char*)d2ClientModule + 0x6B580);
     D2Client_sub_6FAAC080 = (D2Client_sub_6FAAC080_t)((char*)d2ClientModule + 0xC080);
 
-    D2Client_sub_6FB283D0 = (D2Client_sub_6FB283D0_t)((char*)d2ClientModule + 0x883D0);
+    D2Client_GetCurrentPlayer_6FB283D0 = (D2Client_GetCurrentPlayer_6FB283D0_t)((char*)d2ClientModule + 0x883D0);
     D2Client_sub_6FAFE9E0 = (D2Client_sub_6FAFE9E0_t)((char*)d2ClientModule + 0x5E9E0);
     D2Client_sub_6FB23230 = (D2Client_sub_6FB23230_t)((char*)d2ClientModule + 0x83230);
     D2Client_sub_6FB57BC0 = (D2Client_sub_6FB57BC0_t)((char*)d2ClientModule + 0xB7BC0);

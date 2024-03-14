@@ -35,7 +35,7 @@ extern D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580;
 
 
 // UI-Inv
-typedef D2UnitStrc* (__fastcall* D2Client_sub_6FB283D0_t)();
+typedef D2UnitStrc* (__fastcall* D2Client_GetCurrentPlayer_6FB283D0_t)();
 typedef bool (__fastcall* D2Client_sub_6FAFE9E0_t)();
 typedef int32_t (__fastcall* D2Client_sub_6FB23230_t)(unsigned int a1);
 typedef int32_t (__fastcall* D2Client_sub_6FB57BD0_t)();
@@ -77,7 +77,7 @@ typedef void(__fastcall* D2Client_sub_6FAF12C0_t)(D2UnitStrc* pUnit, struct Unic
 typedef int(__fastcall* D2Client_sub_6FAF3460_t)(int* statValues, D2C_ItemStats nStatId, struct Unicode* outBuff);
 typedef int(__fastcall* D2Client_GetItemPropertyLine_6FAF21C0_t)(D2UnitStrc* pUnit, D2StatListStrc* pStatListEx, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, Unicode* outputBuffer256);
 
-extern D2Client_sub_6FB283D0_t D2Client_sub_6FB283D0; // 883D0
+extern D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0; // 883D0
 extern D2Client_sub_6FAFE9E0_t D2Client_sub_6FAFE9E0; // 5E9E0
 extern D2Client_sub_6FB23230_t D2Client_sub_6FB23230; // 83230
 extern D2Client_sub_6FB57BC0_t D2Client_sub_6FB57BC0; // B7BC0
