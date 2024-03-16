@@ -16,17 +16,17 @@ void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB
     int32_t pHeight = 0;
     int32_t textOffsetY = 0;
 
-    D2Win_10131_GetTextDimensions((Unicode*)&buff[0], &pWidth, &pHeight);
+    D2Win_GetTextDimensions_10131((Unicode*)&buff[0], &pWidth, &pHeight);
 
     int32_t widthMod = (11 * pWidth) / 7;
     if (widthMod <= offsetC - offsetA)
     {
-        D2Win_10127_SetFont(D2FONT_FONT16);
+        D2Win_SetFont_10127(D2FONT_FONT16);
         textOffsetY = offsetB;
     }
     else
     {
-        D2Win_10127_SetFont(D2FONT_FONT6);
+        D2Win_SetFont_10127(D2FONT_FONT6);
         textOffsetY = (offsetB - 1);
     }
 
@@ -773,7 +773,7 @@ void __fastcall ESE_sub_6FB0AC10(Unicode* pTextA, Unicode* pTextB, int offsetA, 
     static bool hasLoadedLanguageOffset = false;
     static int32_t languageOffset = -7;
 
-    D2Win_10127_SetFont(D2FONT_FONT6);
+    D2Win_SetFont_10127(D2FONT_FONT6);
     if (!hasLoadedLanguageOffset)
     {
         int32_t language = STRTABLE_GetLanguage();

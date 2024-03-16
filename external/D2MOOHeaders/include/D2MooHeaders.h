@@ -21,6 +21,7 @@
 #include <../D2WinExports.h>
 #include <../D2ClientExports.h>
 #include <../D2LangExports.h>
+#include <../D2GfxExports.h>
 
 void InitD2MooHeaders();
 

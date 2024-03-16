@@ -11,6 +11,7 @@
 #include <D2States.h>
 #include <string>
 #include <codecvt>
+#include "D2Gfx.h"
 
 void AppendString(std::wstring& dest, const char* source)
 {
@@ -1460,6 +1461,16 @@ void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wst
     }
 }
 
+void DrawRect(int32_t x, int32_t y, int32_t width, int32_t height, int32_t color)
+{
+    RECT rectDimensions = {
+        x, y - height,
+        x + width, y
+    };
+    //D2Gfx_DrawBoxAlpha_10056(closeButtonX, closeButtonY - 30, closeButtonX + 32, closeButtonY, 3, 128);
+    D2Gfx_UtilRect_10052(&rectDimensions, color);
+}
+
 void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, int32_t bFlag)
 {
     std::wstring itemDescription;
@@ -1490,7 +1501,7 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
                 auto v220 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 98;
                 auto v52 = *D2Client_pScreenXOffset + 287;
                 auto v53 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
-                D2Win_10129_DrawFramedText((Unicode*)v53, v52, v220, 0, 1);
+                D2Win_DrawFramedText_10129((Unicode*)v53, v52, v220, 0, 1);
             }
         }
         if (!D2Client_sub_6FB23230(1)
@@ -1502,70 +1513,73 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
         {
             goto LABEL_97;
         }
-        static int xOffset = 0;
-        static int yOffset = 0;
 
-        auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 64;
-        auto closeButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 302;
         auto mouseX = D2Client_GetMouseXPos();
         auto mouseY = D2Client_GetMouseYPos();
 
         // Close button
+        auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 64;
+        auto closeButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 302;
+        //DrawRect(closeButtonX, closeButtonY, 32, 32, D2Win_MixRGB_10034(255, 0, 0));
         if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
         {
-            auto v221 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 99;
-            auto v58 = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 287;
+            auto closeButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 287;
+            auto closeButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 99;
             auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
-            D2Win_10129_DrawFramedText((Unicode*)strClose, v58, v221, 0, 1);
+            D2Win_DrawFramedText_10129((Unicode*)strClose, closeButtonTextX, closeButtonTextY, 0, 1);
         }
 
-        auto v60 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 69;
-        auto v61 = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 237;
-        auto v62 = D2Client_GetMouseXPos();
-        auto v63 = D2Client_GetMouseYPos();
-        if (v62 >= v61 && v62 <= v61 + 20 && v63 >= v60 - 18 && v63 <= v60 && !D2Client_sub_6FAFC0E0())
+        // Drop gold button
+        auto dropGoldButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 69;
+        auto dropGoldButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 237;
+        //DrawRect(dropGoldButtonX, dropGoldButtonY, 20, 18, D2Win_MixRGB_10034(255, 128, 0));
+        if (mouseX >= dropGoldButtonX && mouseX <= dropGoldButtonX + 20 && mouseY >= dropGoldButtonY - 18 && mouseY <= dropGoldButtonY && !D2Client_sub_6FAFC0E0())
         {
-            auto v64 = 4125;
+            // "Drop Gold"
+            auto strDropGoldButtonTextId = 4125;
             switch (*D2Client_pDWORD_6FBB58EC)
             {
             case 1:
-                v64 = 4099;
+                // "Gold"
+                strDropGoldButtonTextId = 4099;
                 break;
             case 11:
-                v64 = 4129;
+                // "Trade Gold"
+                strDropGoldButtonTextId = 4129;
                 break;
             case 12:
             case 13:
             case 15:
-                v64 = 4126;
+                // "Deposit"
+                strDropGoldButtonTextId = 4126;
                 break;
             default:
                 break;
             }
-            auto v222 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 89;
-            auto v65 = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 222;
-            auto v66 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v64);
-            D2Win_10129_DrawFramedText((Unicode*)v66, v65, v222, 0, 1);
+
+            auto dropGoldButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 222;
+            auto dropGoldButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 89;
+            auto strDropGoldButtonText = (const wchar_t*)D2LANG_GetStringFromTblIndex(strDropGoldButtonTextId);
+            D2Win_DrawFramedText_10129((Unicode*)strDropGoldButtonText, dropGoldButtonTextX, dropGoldButtonTextY, 0, 1);
         }
 
         auto isExpansion = FOG_IsExpansion();
         auto is6FAAC080 = D2Client_sub_6FAAC080();
 
-        auto v67 = D2Client_GetMouseYPos();
-        auto v68 = D2Client_GetMouseXPos();
-        auto cmp1 = (v68 < *D2Client_pDWORD_6FBB59BC)
-            || v68 > *D2Client_pDWORD_6FBB59C0
-            || v67 < *D2Client_pDWORD_6FBB59C4 - 24
-            || v67 >= *D2Client_pDWORD_6FBB59C4;
+        auto cmp1 = (mouseX < *D2Client_pDWORD_6FBB59BC)
+            || mouseX > *D2Client_pDWORD_6FBB59C0
+            || mouseY < *D2Client_pDWORD_6FBB59C4 - 24
+            || mouseY >= *D2Client_pDWORD_6FBB59C4;
 
-        auto cmp2 = v68 < *D2Client_pDWORD_6FBB59A8 || v68 > *D2Client_pDWORD_6FBB59AC ||
-            v67 < *D2Client_pDWORD_6FBB59B0 - 24 || v67 >= *D2Client_pDWORD_6FBB59B0;
+        auto cmp2 = mouseX < *D2Client_pDWORD_6FBB59A8 || mouseX > *D2Client_pDWORD_6FBB59AC ||
+            mouseY < *D2Client_pDWORD_6FBB59B0 - 24 || mouseY >= *D2Client_pDWORD_6FBB59B0;
 
         if (!isExpansion || !is6FAAC080 || cmp1 && cmp2)
         {
             goto LABEL_97;
         }
 
+        // Swap weapons button
         auto v73 = 0;
         auto v71 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_22726_Cfgswapweapons);
 
@@ -1575,12 +1589,12 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
             if (D2Client_sub_6FAD4B60(44, 0) == 0xFFFF)
             {
                 auto v76 = 368;
-                if (D2Client_GetMouseXPos() > *D2Client_pScreenXOffset + 500)
+                if (mouseX > *D2Client_pScreenXOffset + 500)
                 {
                     v76 = 600;
                 }
 
-                D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
+                D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
                 goto LABEL_97;
             }
             auto v74 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
@@ -1596,12 +1610,12 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
         auto v75 = (wchar_t*)D2Client_sub_6FAD56B0(44, v73);
         itemDescription.append(v75);
         auto v76 = 368;
-        if (D2Client_GetMouseXPos() > *D2Client_pScreenXOffset + 500)
+        if (mouseX > *D2Client_pScreenXOffset + 500)
         {
             v76 = 600;
         }
 
-        D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
+        D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
     }
 LABEL_97:
     if (!*D2Client_pDWORD_6FBB58E4 && !*D2Client_pDWORD_6FBB58E0)
@@ -1696,15 +1710,15 @@ LABEL_97:
 
         int32_t nWidth = 0;
         int32_t nHeight = 0;
-        D2Win_10131_GetTextDimensions((const Unicode*)itemDescription.c_str(), &nWidth, &nHeight);
+        D2Win_GetTextDimensions_10131((const Unicode*)itemDescription.c_str(), &nWidth, &nHeight);
 
         if (*D2Client_pDWORD_6FB79294 - nHeight > 0)
         {
-            D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 1);
+            D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 1);
             return;
         }
         auto v120 = (*D2Client_pDWORD_6FB7929C + nHeight);
-        D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, v120, 0, 1);
+        D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, v120, 0, 1);
         return;
     }
 
@@ -1762,15 +1776,15 @@ LABEL_97:
 
         int32_t height = 0;
         int32_t width = 0;
-        D2Win_10131_GetTextDimensions((const Unicode*)itemDescription.c_str(), &height, &width);
+        D2Win_GetTextDimensions_10131((const Unicode*)itemDescription.c_str(), &height, &width);
 
         if (*D2Client_pDWORD_6FB79294 - width > 0)
         {
-            D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 0);
+            D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 0);
             return;
         }
 
-        D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, width + *D2Client_pDWORD_6FB7929C, 0, 0);
+        D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, width + *D2Client_pDWORD_6FB7929C, 0, 0);
         return;
     }
 
@@ -1830,16 +1844,16 @@ LABEL_97:
 
             int32_t height = 0;
             int32_t width = 0;
-            D2Win_10131_GetTextDimensions((const Unicode*)itemDescription.c_str(), &width, &height);
+            D2Win_GetTextDimensions_10131((const Unicode*)itemDescription.c_str(), &width, &height);
 
             if (*D2Client_pDWORD_6FB79294 - height > 0)
             {
-                D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 0);
+                D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 0);
                 return;
             }
 
             auto v120 = height + *D2Client_pDWORD_6FB7929C;
-            D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, v120, 0, 0);
+            D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, v120, 0, 0);
             return;
         }
 
@@ -2216,14 +2230,14 @@ LABEL_97:
         {
             int32_t nWidth = 0;
             int32_t nHeight = 0;
-            D2Win_10131_GetTextDimensions((const Unicode*)itemDescription.c_str(), &nWidth, &nHeight);
+            D2Win_GetTextDimensions_10131((const Unicode*)itemDescription.c_str(), &nWidth, &nHeight);
             if (*D2Client_pDWORD_6FB79294 - nHeight > 0)
             {
-                D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 1);
+                D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 1);
                 return;
             }
 
-            D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, (*D2Client_pDWORD_6FB7929C + nHeight), 0, 1);
+            D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, (*D2Client_pDWORD_6FB7929C + nHeight), 0, 1);
             return;
         }
 
@@ -2245,14 +2259,14 @@ LABEL_97:
 
         int32_t nWidth = 0;
         int32_t nHeight = 0;
-        D2Win_10131_GetTextDimensions((const Unicode*)itemDescription.c_str(), &nWidth, &nHeight);
+        D2Win_GetTextDimensions_10131((const Unicode*)itemDescription.c_str(), &nWidth, &nHeight);
         if (*D2Client_pDWORD_6FB79294 - nHeight > 0)
         {
-            D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 4, 1);
+            D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 4, 1);
             return;
         }
 
-        D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, (*D2Client_pDWORD_6FB7929C + nHeight), 4, 1);
+        D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pDWORD_6FB79298, (*D2Client_pDWORD_6FB7929C + nHeight), 4, 1);
         return;
     }
 
@@ -2526,16 +2540,16 @@ LABEL_97:
 
                 int32_t width = 0;
                 int32_t height = 0;
-                D2Win_10131_GetTextDimensions((const Unicode*)pTextToDisplay.c_str(), &width, &height);
+                D2Win_GetTextDimensions_10131((const Unicode*)pTextToDisplay.c_str(), &width, &height);
 
                 if (*D2Client_pDWORD_6FB79294 - height > 0)
                 {
-                    D2Win_10129_DrawFramedText((const Unicode*)pTextToDisplay.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 1);
+                    D2Win_DrawFramedText_10129((const Unicode*)pTextToDisplay.c_str(), *D2Client_pDWORD_6FB79290, *D2Client_pDWORD_6FB79294, 0, 1);
                     return;
                 }
 
                 auto v120 = height + *D2Client_pDWORD_6FB7929C;
-                D2Win_10129_DrawFramedText((const Unicode*)pTextToDisplay.c_str(), *D2Client_pDWORD_6FB79298, v120, 0, 1);
+                D2Win_DrawFramedText_10129((const Unicode*)pTextToDisplay.c_str(), *D2Client_pDWORD_6FB79298, v120, 0, 1);
                 return;
             }
         }
