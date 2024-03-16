@@ -48,7 +48,7 @@ D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990 = nullptr; // 45990
 D2Client_GetItemTextPriceMaybe_6FAFB200_t D2Client_GetItemTextPriceMaybe_6FAFB200 = nullptr; // 5B200
 
 // UI-INV-MOD stuff
-D2Client_sub_6FB0A440_t D2Client_sub_6FB0A440 = nullptr; //6A440
+D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440 = nullptr; //6A440
 D2Client_sub_6FAF12C0_t D2Client_sub_6FAF12C0 = nullptr; //512C0
 D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460 = nullptr; //53460
 D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0 = nullptr; //521C0
@@ -137,7 +137,7 @@ void InitD2ClientExports()
     D2Client_sub_6FAE5990 = (D2Client_sub_6FAE5990_t)((char*)d2ClientModule + 0x45990);
     D2Client_GetItemTextPriceMaybe_6FAFB200 = (D2Client_GetItemTextPriceMaybe_6FAFB200_t)((char*)d2ClientModule + 0x5B200);
 
-    D2Client_sub_6FB0A440 = (D2Client_sub_6FB0A440_t)((char*)d2ClientModule + 0x6A440);
+    D2Client_GetSkillStringId_6FB0A440 = (D2Client_GetSkillStringId_6FB0A440_t)((char*)d2ClientModule + 0x6A440);
     D2Client_sub_6FAF12C0 = (D2Client_sub_6FAF12C0_t)((char*)d2ClientModule + 0x512C0);
     D2Client_sub_6FAF3460 = (D2Client_sub_6FAF3460_t)((char*)d2ClientModule + 0x53460);
     D2Client_GetItemPropertyLine_6FAF21C0 = (D2Client_GetItemPropertyLine_6FAF21C0_t)((char*)d2ClientModule + 0x521C0);
