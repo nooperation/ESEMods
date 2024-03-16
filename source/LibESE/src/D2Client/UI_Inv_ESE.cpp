@@ -1460,18 +1460,18 @@ void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wst
     }
 }
 
-void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pItemMaybe, int32_t bFlag)
+void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, int32_t bFlag)
 {
     std::wstring itemDescription;
     itemDescription.reserve(4096);
     wchar_t scratchpad[8192] = { 0 };
 
-    auto pItemUnderCursor = *D2Client_pItemUnderCursor_6FBB58F0;
+    auto pItemUnderCursor = *D2Client_pItemUnderCursor;
 
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
 
-    D2UnitStrc* v229 = pItemMaybe;
+    D2UnitStrc* v229 = pUnit;
     if (bFlag && D2Client_GetCurrentPlayer_6FB283D0())
     {
         v229 = D2Client_GetCurrentPlayer_6FB283D0();
@@ -1481,14 +1481,14 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pItemMayb
     {
         if (D2Client_sub_6FB23230(36))
         {
-            auto v48 = *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 - 63;
-            auto v49 = *D2Client_pDWORD_6FBBA748 + 272;
-            auto v50 = D2Client_sub_6FB57BC0();
-            auto v51 = D2Client_sub_6FB57BD0();
+            auto v48 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 63;
+            auto v49 = *D2Client_pScreenXOffset + 272;
+            auto v50 = D2Client_GetMouseXPos();
+            auto v51 = D2Client_GetMouseYPos();
             if (v50 >= v49 && v50 <= v49 + 32 && v51 >= v48 - 32 && v51 <= v48)
             {
-                auto v220 = *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 - 98;
-                auto v52 = *D2Client_pDWORD_6FBBA748 + 287;
+                auto v220 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 98;
+                auto v52 = *D2Client_pScreenXOffset + 287;
                 auto v53 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
                 D2Win_10129_DrawFramedText((Unicode*)v53, v52, v220, 0, 1);
             }
@@ -1502,21 +1502,27 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pItemMayb
         {
             goto LABEL_97;
         }
-        auto v54 = *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 - 64;
-        auto v55 = *D2Client_pDWORD_6FB740EC - *D2Client_pDWORD_6FBBA748 - 302;
-        auto v56 = D2Client_sub_6FB57BC0();
-        auto v57 = D2Client_sub_6FB57BD0();
-        if (v56 >= v55 && v56 <= v55 + 32 && v57 >= v54 - 32 && v57 <= v54)
+        static int xOffset = 0;
+        static int yOffset = 0;
+
+        auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 64;
+        auto closeButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 302;
+        auto mouseX = D2Client_GetMouseXPos();
+        auto mouseY = D2Client_GetMouseYPos();
+
+        // Close button
+        if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
         {
-            auto v221 = *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 - 99;
-            auto v58 = *D2Client_pDWORD_6FB740EC - *D2Client_pDWORD_6FBBA748 - 287;
-            auto v59 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
-            D2Win_10129_DrawFramedText((Unicode*)v59, v58, v221, 0, 1);
+            auto v221 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 99;
+            auto v58 = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 287;
+            auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
+            D2Win_10129_DrawFramedText((Unicode*)strClose, v58, v221, 0, 1);
         }
-        auto v60 = *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 - 69;
-        auto v61 = *D2Client_pDWORD_6FB740EC - *D2Client_pDWORD_6FBBA748 - 237;
-        auto v62 = D2Client_sub_6FB57BC0();
-        auto v63 = D2Client_sub_6FB57BD0();
+
+        auto v60 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 69;
+        auto v61 = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 237;
+        auto v62 = D2Client_GetMouseXPos();
+        auto v63 = D2Client_GetMouseYPos();
         if (v62 >= v61 && v62 <= v61 + 20 && v63 >= v60 - 18 && v63 <= v60 && !D2Client_sub_6FAFC0E0())
         {
             auto v64 = 4125;
@@ -1536,8 +1542,8 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pItemMayb
             default:
                 break;
             }
-            auto v222 = *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 - 89;
-            auto v65 = *D2Client_pDWORD_6FB740EC - *D2Client_pDWORD_6FBBA748 - 222;
+            auto v222 = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 89;
+            auto v65 = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 222;
             auto v66 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v64);
             D2Win_10129_DrawFramedText((Unicode*)v66, v65, v222, 0, 1);
         }
@@ -1545,8 +1551,8 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pItemMayb
         auto isExpansion = FOG_IsExpansion();
         auto is6FAAC080 = D2Client_sub_6FAAC080();
 
-        auto v67 = D2Client_sub_6FB57BD0();
-        auto v68 = D2Client_sub_6FB57BC0();
+        auto v67 = D2Client_GetMouseYPos();
+        auto v68 = D2Client_GetMouseXPos();
         auto cmp1 = (v68 < *D2Client_pDWORD_6FBB59BC)
             || v68 > *D2Client_pDWORD_6FBB59C0
             || v67 < *D2Client_pDWORD_6FBB59C4 - 24
@@ -1569,12 +1575,12 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pItemMayb
             if (D2Client_sub_6FAD4B60(44, 0) == 0xFFFF)
             {
                 auto v76 = 368;
-                if (D2Client_sub_6FB57BC0() > *D2Client_pDWORD_6FBBA748 + 500)
+                if (D2Client_GetMouseXPos() > *D2Client_pScreenXOffset + 500)
                 {
                     v76 = 600;
                 }
 
-                D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pDWORD_6FBBA748, 21 - *D2Client_pDWORD_6FBBA74C, 0, 1);
+                D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
                 goto LABEL_97;
             }
             auto v74 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
@@ -1590,12 +1596,12 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pItemMayb
         auto v75 = (wchar_t*)D2Client_sub_6FAD56B0(44, v73);
         itemDescription.append(v75);
         auto v76 = 368;
-        if (D2Client_sub_6FB57BC0() > *D2Client_pDWORD_6FBBA748 + 500)
+        if (D2Client_GetMouseXPos() > *D2Client_pScreenXOffset + 500)
         {
             v76 = 600;
         }
 
-        D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pDWORD_6FBBA748, 21 - *D2Client_pDWORD_6FBBA74C, 0, 1);
+        D2Win_10129_DrawFramedText((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
     }
 LABEL_97:
     if (!*D2Client_pDWORD_6FBB58E4 && !*D2Client_pDWORD_6FBB58E0)
@@ -1608,20 +1614,20 @@ LABEL_97:
         return;
     }
 
-    if (!pItemMaybe->pInventory)
+    if (!pUnit->pInventory)
     {
         return;
     }
 
-    if (INVENTORY_GetCursorItem(pItemMaybe->pInventory))
+    if (INVENTORY_GetCursorItem(pUnit->pInventory))
     {
         return;
     }
 
     if (!D2Client_sub_6FB23230(23)
-        && pItemMaybe->pInventory
+        && pUnit->pInventory
         && pItemUnderCursor
-        && !INVENTORY_CompareWithItemsParentInventory(pItemMaybe->pInventory, pItemUnderCursor))
+        && !INVENTORY_CompareWithItemsParentInventory(pUnit->pInventory, pItemUnderCursor))
     {
         return;
     }
@@ -1636,49 +1642,49 @@ LABEL_97:
         itemDescription.append(strUnidentified);
         itemDescription.append(strNewLine);
 
-        int32_t v79 = 0;
+        int32_t classRequirementStringId = 0;
         switch (ITEMS_GetItemType(pItemUnderCursor))
         {
         case ITEMTYPE_AMAZON_ITEM:
         case ITEMTYPE_AMAZON_BOW:
         case ITEMTYPE_AMAZON_SPEAR:
         case ITEMTYPE_AMAZON_JAVELIN:
-            v79 = STR_IDX_10917_AmaOnly;
+            classRequirementStringId = STR_IDX_10917_AmaOnly;
             break;
         case ITEMTYPE_BARBARIAN_ITEM:
         case ITEMTYPE_PRIMAL_HELM:
-            v79 = STR_IDX_10921_BarOnly;
+            classRequirementStringId = STR_IDX_10921_BarOnly;
             break;
         case ITEMTYPE_NECROMANCER_ITEM:
         case ITEMTYPE_VOODOO_HEADS:
-            v79 = STR_IDX_10919_NecOnly;
+            classRequirementStringId = STR_IDX_10919_NecOnly;
             break;
         case ITEMTYPE_PALADIN_ITEM:
         case ITEMTYPE_AURIC_SHIELDS:
-            v79 = STR_IDX_10920_PalOnly;
+            classRequirementStringId = STR_IDX_10920_PalOnly;
             break;
         case ITEMTYPE_SORCERESS_ITEM:
         case ITEMTYPE_ORB:
-            v79 = STR_IDX_10918_SorOnly;
+            classRequirementStringId = STR_IDX_10918_SorOnly;
             break;
         case ITEMTYPE_ASSASSIN_ITEM:
         case ITEMTYPE_HAND_TO_HAND:
         case ITEMTYPE_HAND_TO_HAND_2:
-            v79 = STR_IDX_10923_AssOnly;
+            classRequirementStringId = STR_IDX_10923_AssOnly;
             break;
         case ITEMTYPE_DRUID_ITEM:
         case ITEMTYPE_PELT:
         case ITEMTYPE_CLOAK:
-            v79 = STR_IDX_10922_DruOnly;
+            classRequirementStringId = STR_IDX_10922_DruOnly;
             break;
         default:
             break;
         }
 
-        if (v79 > 0)
+        if (classRequirementStringId > 0)
         {
-            auto v80 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v79);
-            itemDescription.append(v80);
+            auto strClassRequirement = (const wchar_t*)D2LANG_GetStringFromTblIndex(classRequirementStringId);
+            itemDescription.append(strClassRequirement);
             itemDescription.append(strNewLine);
         }
 
@@ -2255,13 +2261,13 @@ LABEL_97:
     int32_t colorCode3 = 0;
     int32_t colorCode245 = 0;
 
-    auto pUnit_ = pItemMaybe;
-    if (pItemMaybe->dwUnitType == UNIT_MONSTER && !MONSTERS_GetHirelingTypeId(pItemMaybe))
+    auto pUnit_ = pUnit;
+    if (pUnit->dwUnitType == UNIT_MONSTER && !MONSTERS_GetHirelingTypeId(pUnit))
     {
         pUnit_ = D2Client_GetCurrentPlayer_6FB283D0();
     }
 
-    if ((*D2Client_pDWORD_6FBB58E4 || *D2Client_pDWORD_6FBB58E0) && pItemUnderCursor && !INVENTORY_GetCursorItem(pItemMaybe->pInventory))
+    if ((*D2Client_pDWORD_6FBB58E4 || *D2Client_pDWORD_6FBB58E0) && pItemUnderCursor && !INVENTORY_GetCursorItem(pUnit->pInventory))
     {
         int32_t dwClassId = -1;
         if (pItemUnderCursor)
@@ -2450,7 +2456,7 @@ LABEL_97:
                             break;
                         }
 
-                        D2UnitStrc* setItem = D2Client_sub_6FAE5990(pItemMaybe->pInventory, pUnita->wSetItemId);
+                        D2UnitStrc* setItem = D2Client_sub_6FAE5990(pUnit->pInventory, pUnita->wSetItemId);
                         scratchpadBuffer.clear();
 
                         if (pUnita->wStringId)

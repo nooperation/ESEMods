@@ -14,8 +14,8 @@ D2Client_sub_6FAAC080_t D2Client_sub_6FAAC080 = nullptr;
 D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0 = nullptr; // 883D0
 D2Client_sub_6FAFE9E0_t D2Client_sub_6FAFE9E0 = nullptr; // 5E9E0
 D2Client_sub_6FB23230_t D2Client_sub_6FB23230 = nullptr; // 83230
-D2Client_sub_6FB57BC0_t D2Client_sub_6FB57BC0 = nullptr; // B7BC0
-D2Client_sub_6FB57BD0_t D2Client_sub_6FB57BD0 = nullptr; // B7BD0
+D2Client_GetMouseXPos_t D2Client_GetMouseXPos = nullptr; // B7BC0
+D2Client_GetMouseYPos_t D2Client_GetMouseYPos = nullptr; // B7BD0
 D2Client_sub_6FAFC0E0_t D2Client_sub_6FAFC0E0 = nullptr; // 5C0E0
 D2Client_sub_6FAD4B60_t D2Client_sub_6FAD4B60 = nullptr; // 34B60
 D2Client_sub_6FAD56B0_t D2Client_sub_6FAD56B0 = nullptr; // 356B0
@@ -54,29 +54,29 @@ D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460 = nullptr; //53460
 D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0 = nullptr; //521C0
 
 
-int32_t* D2Client_pDWORD_6FBBA748 = nullptr; // 11A748
-int32_t* D2Client_pDWORD_6FBBA74C = nullptr; // 11A74C
-int32_t* D2Client_pDWORD_6FB740EC = nullptr; // D40EC
-int32_t* D2Client_pDWORD_6FB740F0 = nullptr; // D40F0
-int32_t* D2Client_pDWORD_6FB8CCF8 = nullptr; // ECCF8
+int32_t* D2Client_pScreenXOffset = nullptr;
+int32_t* D2Client_pScreenYOffset = nullptr;
+int32_t* D2Client_pScreenWidthUI = nullptr;
+int32_t* D2Client_pScreenHeightUI = nullptr;
+int32_t* D2Client_pDWORD_6FB8CCF8 = nullptr;
 
-int32_t* D2Client_pDWORD_6FBB58E0 = nullptr; // 1158E0
-int32_t* D2Client_pDWORD_6FBB58E4 = nullptr; // 1158E4
-int32_t* D2Client_pDWORD_6FBB58EC = nullptr; // 1158EC
-int32_t* D2Client_pDWORD_6FB7928C = nullptr; // D928C
-int32_t* D2Client_pDWORD_6FB79290 = nullptr; // D9290
-int32_t* D2Client_pDWORD_6FB79294 = nullptr; // D9294
-int32_t* D2Client_pDWORD_6FB79298 = nullptr; // D9298
-int32_t* D2Client_pDWORD_6FB7929C = nullptr; // D929C
+int32_t* D2Client_pDWORD_6FBB58E0 = nullptr;
+int32_t* D2Client_pDWORD_6FBB58E4 = nullptr;
+int32_t* D2Client_pDWORD_6FBB58EC = nullptr;
+int32_t* D2Client_pDWORD_6FB7928C = nullptr;
+int32_t* D2Client_pDWORD_6FB79290 = nullptr;
+int32_t* D2Client_pDWORD_6FB79294 = nullptr;
+int32_t* D2Client_pDWORD_6FB79298 = nullptr;
+int32_t* D2Client_pDWORD_6FB7929C = nullptr;
 
-int32_t* D2Client_pDWORD_6FBB59A8 = nullptr; // 1159A8
-int32_t* D2Client_pDWORD_6FBB59AC = nullptr; // 1159AC
-int32_t* D2Client_pDWORD_6FBB59B0 = nullptr; // 1159B0
-int32_t* D2Client_pDWORD_6FBB59BC = nullptr; // 1159BC
-int32_t* D2Client_pDWORD_6FBB59C0 = nullptr; // 1159C0
-int32_t* D2Client_pDWORD_6FBB59C4 = nullptr; // 1159C4
+int32_t* D2Client_pDWORD_6FBB59A8 = nullptr;
+int32_t* D2Client_pDWORD_6FBB59AC = nullptr;
+int32_t* D2Client_pDWORD_6FBB59B0 = nullptr;
+int32_t* D2Client_pDWORD_6FBB59BC = nullptr;
+int32_t* D2Client_pDWORD_6FBB59C0 = nullptr;
+int32_t* D2Client_pDWORD_6FBB59C4 = nullptr;
 
-D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0 = nullptr; // 1158F0
+D2UnitStrc** D2Client_pItemUnderCursor = nullptr; // 1158F0
 
 // UI-INV-MOD stuff
 
@@ -104,8 +104,8 @@ void InitD2ClientExports()
     D2Client_GetCurrentPlayer_6FB283D0 = (D2Client_GetCurrentPlayer_6FB283D0_t)((char*)d2ClientModule + 0x883D0);
     D2Client_sub_6FAFE9E0 = (D2Client_sub_6FAFE9E0_t)((char*)d2ClientModule + 0x5E9E0);
     D2Client_sub_6FB23230 = (D2Client_sub_6FB23230_t)((char*)d2ClientModule + 0x83230);
-    D2Client_sub_6FB57BC0 = (D2Client_sub_6FB57BC0_t)((char*)d2ClientModule + 0xB7BC0);
-    D2Client_sub_6FB57BD0 = (D2Client_sub_6FB57BD0_t)((char*)d2ClientModule + 0xB7BD0);
+    D2Client_GetMouseXPos = (D2Client_GetMouseXPos_t)((char*)d2ClientModule + 0xB7BC0);
+    D2Client_GetMouseYPos = (D2Client_GetMouseYPos_t)((char*)d2ClientModule + 0xB7BD0);
     D2Client_sub_6FAFC0E0 = (D2Client_sub_6FAFC0E0_t)((char*)d2ClientModule + 0x5C0E0);
     D2Client_sub_6FAD4B60 = (D2Client_sub_6FAD4B60_t)((char*)d2ClientModule + 0x34B60);
     D2Client_sub_6FAD56B0 = (D2Client_sub_6FAD56B0_t)((char*)d2ClientModule + 0x356B0);
@@ -142,10 +142,10 @@ void InitD2ClientExports()
     D2Client_sub_6FAF3460 = (D2Client_sub_6FAF3460_t)((char*)d2ClientModule + 0x53460);
     D2Client_GetItemPropertyLine_6FAF21C0 = (D2Client_GetItemPropertyLine_6FAF21C0_t)((char*)d2ClientModule + 0x521C0);
 
-    D2Client_pDWORD_6FBBA748 = (int32_t*)((char*)d2ClientModule + 0x11A748);
-    D2Client_pDWORD_6FBBA74C = (int32_t*)((char*)d2ClientModule + 0x11A74C);
-    D2Client_pDWORD_6FB740EC = (int32_t*)((char*)d2ClientModule + 0xD40EC);
-    D2Client_pDWORD_6FB740F0 = (int32_t*)((char*)d2ClientModule + 0xD40F0);
+    D2Client_pScreenXOffset = (int32_t*)((char*)d2ClientModule + 0x11A748);
+    D2Client_pScreenYOffset = (int32_t*)((char*)d2ClientModule + 0x11A74C);
+    D2Client_pScreenWidthUI = (int32_t*)((char*)d2ClientModule + 0xD40EC);
+    D2Client_pScreenHeightUI = (int32_t*)((char*)d2ClientModule + 0xD40F0);
     D2Client_pDWORD_6FB8CCF8 = (int32_t*)((char*)d2ClientModule + 0xECCF8);
 
     D2Client_pDWORD_6FBB58E0 = (int32_t*)((char*)d2ClientModule + 0x1158E0);
@@ -164,8 +164,7 @@ void InitD2ClientExports()
     D2Client_pDWORD_6FBB59C0 = (int32_t*)((char*)d2ClientModule + 0x1159C0);
     D2Client_pDWORD_6FBB59C4 = (int32_t*)((char*)d2ClientModule + 0x1159C4);
 
-    D2Client_pItemUnderCursor_6FBB58F0 = (D2UnitStrc**)((char*)d2ClientModule + 0x1158F0);
-
+    D2Client_pItemUnderCursor = (D2UnitStrc**)((char*)d2ClientModule + 0x1158F0);
 
     D2Client_pDWORD_6FB7A438 = (int32_t*)((char*)d2ClientModule + 0xDA438);
     D2Client_pDWORD_6FB79B48 = (int32_t*)((char*)d2ClientModule + 0xD9B48);
