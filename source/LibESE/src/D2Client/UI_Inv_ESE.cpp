@@ -1580,6 +1580,23 @@ void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY)
     }
 }
 
+void __fastcall ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(D2UnitStrc* pUnit, std::wstring &outBuff, D2ItemsTxt* pItemTxtRecord)
+{
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+
+    if (STATLIST_UnitGetStatValue(pUnit, STAT_QUANTITY, 0) > 0 || ITEMS_GetTotalMaxStack(pUnit) > 0)
+    {
+        int32_t nQuantity = STATLIST_UnitGetStatValue(pUnit, STAT_QUANTITY, 0);
+        const wchar_t* strQuantity = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3462_ItemStats1i);
+
+        outBuff.append(strQuantity);
+        outBuff.append(strSpace);
+        outBuff.append(std::to_wstring(nQuantity));
+        outBuff.append(strNewLine);
+    }
+}
+
 void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQuality)
 {
     std::wstring itemDescription;
@@ -1595,8 +1612,6 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
 
-    itemDescription.clear();
-
     int32_t colorCodeClassRestriction = 0;
     int32_t colorCodeDexRequirement = 0;
     int32_t colorCodeStrRequirement = 0;
@@ -1610,13 +1625,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
             exit(-1);
         }
 
-        int32_t itemClassId = -1;
-        if (pItemUnderCursor)
-        {
-            itemClassId = pItemUnderCursor->dwClassId;
-        }
-
-        auto pItemTxtRecord = DATATBLS_GetItemsTxtRecord(itemClassId);
+        auto pItemTxtRecord = DATATBLS_GetItemsTxtRecord(pItemUnderCursor->dwClassId);
         if (!pItemTxtRecord)
         {
             FOG_DisplayAssert("ptItemStats", __FILE__, __LINE__);
@@ -1624,15 +1633,15 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
         }
 
         scratchpad[0] = 0;
-        D2Client_sub_6FAE54B0(pItemUnderCursor, (Unicode*)scratchpad, pItemTxtRecord);
+        ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(pItemUnderCursor, itemDescription, pItemTxtRecord);
         if (*D2Client_pVendorMode_6FBB58EC == VENDORMODE_NONE)
         {
-            auto v129 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2203_RightClicktoUse);
-            itemDescription.append(v129);
+            auto strRightClickToUse = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2203_RightClicktoUse);
+            itemDescription.append(strRightClickToUse);
             itemDescription.append(strNewLine);
 
-            auto v130 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2206_InsertScrolls);
-            itemDescription.append(v130);
+            auto strInsertScrolls = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2206_InsertScrolls);
+            itemDescription.append(strInsertScrolls);
             itemDescription.append(strNewLine);
         }
 

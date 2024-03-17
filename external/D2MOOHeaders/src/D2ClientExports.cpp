@@ -24,7 +24,7 @@ D2Client_ColorizeLine_6FB20430_t D2Client_ColorizeLine_6FB20430 = nullptr; // 80
 D2Client_AddExtraTradeStatLines_6FAE5A40_t D2Client_AddExtraTradeStatLines_6FAE5A40 = nullptr; // 45A40
 D2Client_BuildItemName_6FADD360_t D2Client_BuildItemName_6FADD360 = nullptr; // 3D360
 D2Client_sub_6FB57CC0_t D2Client_sub_6FB57CC0 = nullptr; // B7CC0
-D2Client_sub_6FAE54B0_t D2Client_sub_6FAE54B0 = nullptr; // 454B0
+D2Client_GetItemTextLineBookQuantity_6FAE54B0_t D2Client_GetItemTextLineBookQuantity_6FAE54B0 = nullptr; // 454B0
 D2Client_GetItemTextLineDurability_6FAE4060_t D2Client_GetItemTextLineDurability_6FAE4060 = nullptr; // 44060
 D2Client_GetItemTextLineRuneGemStats_6FAF1480_t D2Client_GetItemTextLineRuneGemStats_6FAF1480 = nullptr; // 51480
 D2Client_GetItemTextLineDamage_6FAE43D0_t D2Client_GetItemTextLineDamage_6FAE43D0 = nullptr; // 443D0
@@ -114,7 +114,7 @@ void InitD2ClientExports()
     D2Client_AddExtraTradeStatLines_6FAE5A40 = (D2Client_AddExtraTradeStatLines_6FAE5A40_t)((char*)d2ClientModule + 0x45A40);
     D2Client_BuildItemName_6FADD360 = (D2Client_BuildItemName_6FADD360_t)((char*)d2ClientModule + 0x3D360);
     D2Client_sub_6FB57CC0 = (D2Client_sub_6FB57CC0_t)((char*)d2ClientModule + 0xB7CC0);
-    D2Client_sub_6FAE54B0 = (D2Client_sub_6FAE54B0_t)((char*)d2ClientModule + 0x454B0);
+    D2Client_GetItemTextLineBookQuantity_6FAE54B0 = (D2Client_GetItemTextLineBookQuantity_6FAE54B0_t)((char*)d2ClientModule + 0x454B0);
     D2Client_GetItemTextLineDurability_6FAE4060 = (D2Client_GetItemTextLineDurability_6FAE4060_t)((char*)d2ClientModule + 0x44060);
     D2Client_GetItemTextLineRuneGemStats_6FAF1480 = (D2Client_GetItemTextLineRuneGemStats_6FAF1480_t)((char*)d2ClientModule + 0x51480);
     D2Client_GetItemTextLineDamage_6FAE43D0 = (D2Client_GetItemTextLineDamage_6FAE43D0_t)((char*)d2ClientModule + 0x443D0);

@@ -47,7 +47,7 @@ typedef Unicode* (__fastcall* D2Client_ColorizeLine_6FB20430_t)(const struct Uni
 typedef void (__fastcall* D2Client_BuildItemName_6FADD360_t)(D2UnitStrc* pItem, struct Unicode* buff, int maxLen);
 typedef Unicode* (__fastcall* D2Client_AddExtraTradeStatLines_6FAE5A40_t)(const struct Unicode* sourceStr, struct Unicode* newOutput);
 typedef int32_t (__fastcall* D2Client_sub_6FB57CC0_t)();
-typedef void (__fastcall* D2Client_sub_6FAE54B0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void (__fastcall* D2Client_GetItemTextLineBookQuantity_6FAE54B0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
 typedef void (__fastcall* D2Client_GetItemTextLineDurability_6FAE4060_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
 typedef void (__fastcall* D2Client_GetItemTextLineRuneGemStats_6FAF1480_t)(D2UnitStrc* pItem, struct Unicode* outBuff, int maxLen);
 typedef void (__fastcall* D2Client_GetItemTextLineDamage_6FAE43D0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
@@ -89,7 +89,7 @@ extern D2Client_ColorizeLine_6FB20430_t D2Client_ColorizeLine_6FB20430; // 80430
 extern D2Client_AddExtraTradeStatLines_6FAE5A40_t D2Client_AddExtraTradeStatLines_6FAE5A40; // 45A40                           | 6FAE5A40
 extern D2Client_BuildItemName_6FADD360_t D2Client_BuildItemName_6FADD360; // 3D360                                             | 6FADD360
 extern D2Client_sub_6FB57CC0_t D2Client_sub_6FB57CC0; // B7CC0                                                                 | 6FB57CC0
-extern D2Client_sub_6FAE54B0_t D2Client_sub_6FAE54B0; // 454B0                                                                 | 6FAE54B0
+extern D2Client_GetItemTextLineBookQuantity_6FAE54B0_t D2Client_GetItemTextLineBookQuantity_6FAE54B0; // 454B0                                                                 | 6FAE54B0
 extern D2Client_GetItemTextLineDurability_6FAE4060_t D2Client_GetItemTextLineDurability_6FAE4060; // 44060                     | 6FAE4060
 extern D2Client_GetItemTextLineRuneGemStats_6FAF1480_t D2Client_GetItemTextLineRuneGemStats_6FAF1480; // 51480                 | 6FAF1480
 extern D2Client_GetItemTextLineDamage_6FAE43D0_t D2Client_GetItemTextLineDamage_6FAE43D0; // 443D0                             | 6FAE43D0
