@@ -39,7 +39,7 @@ void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t 
     dest.append(src);
 }
 
-int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t nItemStatCostTxtRecordCount, std::wstring& outBuff)
+int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t descStrIndex, std::wstring& outBuff)
 {
     if (nDescFunc < 6 || nDescFunc > 10 && nDescFunc != 21)
     {
@@ -47,7 +47,7 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t
     }
 
     auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
-    if (nItemStatCostTxtRecordCount == 5382)
+    if (descStrIndex == 5382)
     {
         auto v75 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11091_increaseswithplaylevelX);
         outBuff.append(strSpace);
@@ -56,7 +56,7 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0_Case199(int32_t nDescFunc, int32_t
     }
     else
     {
-        auto v73 = (const wchar_t*)D2LANG_GetStringFromTblIndex(nItemStatCostTxtRecordCount);
+        auto v73 = (const wchar_t*)D2LANG_GetStringFromTblIndex(descStrIndex);
         outBuff.append(strSpace);
         outBuff.append(v73);
         return 1;
@@ -1597,6 +1597,110 @@ void __fastcall ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(D2UnitStrc* pU
     }
 }
 
+void __fastcall ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(D2UnitStrc* pItem, std::wstring &outBuff, D2ItemsTxt* pItemTxtRecord)
+{
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+
+    int64_t minDamage = pItemTxtRecord->nMinDam;
+    int64_t maxDamage = pItemTxtRecord->nMaxDam;
+    int32_t strIndex = 0;
+
+    if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_ANY_SHIELD))
+    {
+        strIndex = 3468;
+        D2UnitStrc* currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+        D2SkillStrc* holyShieldSkill = SKILLS_GetHighestLevelSkillFromUnitAndId(currentPlayer, SKILL_HOLYSHIELD);
+        if (holyShieldSkill)
+        {
+            if (STATES_CheckState(currentPlayer, STATE_HOLYSHIELD))
+            {
+                int32_t skillLevel = SKILLS_GetSkillLevel(currentPlayer, holyShieldSkill, 1);
+                minDamage += SKILLS_GetMinPhysDamage(currentPlayer, SKILL_HOLYSHIELD, skillLevel, 1) >> 8;
+                maxDamage += SKILLS_GetMaxPhysDamage(currentPlayer, SKILL_HOLYSHIELD, skillLevel, 1) >> 8;
+            }
+        }
+    }
+    else
+    {
+        if (!D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_BOOTS))
+        {
+            return;
+        }
+
+        strIndex = 21782;
+    }
+
+    const wchar_t* v12 = (const wchar_t*)D2LANG_GetStringFromTblIndex(strIndex);
+    const wchar_t* v13 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3464_ItemStast1k);
+
+    outBuff.append(v12);
+    outBuff.append(strSpace);
+    outBuff.append(std::to_wstring(minDamage));
+    outBuff.append(strSpace);
+
+    outBuff.append(v13);
+    outBuff.append(strSpace);
+    outBuff.append(std::to_wstring(maxDamage));
+    outBuff.append(strNewLine);
+}
+
+void DrawTextForBookItem(D2UnitStrc* pItemUnderCursor)
+{
+    wchar_t scratchpad[8192] = { 0 };
+
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+
+    if (!pItemUnderCursor || ITEMS_GetItemType(pItemUnderCursor) != ITEMTYPE_BOOK)
+    {
+        FOG_DisplayAssert("sghSelItem && ITEMSGetType(sghSelItem) == ITEMTYPE_BOOK", __FILE__, __LINE__);
+        exit(-1);
+    }
+
+    auto pItemTxtRecord = DATATBLS_GetItemsTxtRecord(pItemUnderCursor->dwClassId);
+    if (!pItemTxtRecord)
+    {
+        FOG_DisplayAssert("ptItemStats", __FILE__, __LINE__);
+        exit(-1);
+    }
+
+    std::wstring itemDescription;
+    ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(pItemUnderCursor, itemDescription, pItemTxtRecord);
+    if (*D2Client_pVendorMode_6FBB58EC == VENDORMODE_NONE)
+    {
+        auto strRightClickToUse = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2203_RightClicktoUse);
+        itemDescription.append(strRightClickToUse);
+        itemDescription.append(strNewLine);
+
+        auto strInsertScrolls = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2206_InsertScrolls);
+        itemDescription.append(strInsertScrolls);
+        itemDescription.append(strNewLine);
+    }
+
+    scratchpad[0] = 0;
+    D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
+    itemDescription.append(scratchpad);
+
+    if (*D2Client_pVendorMode_6FBB58EC >= VENDORMODE_TRADE && *D2Client_pVendorMode_6FBB58EC <= VENDORMODE_UNKNOWN)
+    {
+        scratchpad[0] = 0;
+        D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
+        itemDescription = std::wstring(scratchpad);
+    }
+
+    int32_t height = 0;
+    int32_t width = 0;
+    D2Win_GetTextDimensions_10131((const Unicode*)itemDescription.c_str(), &width, &height);
+
+    if (*D2Client_pItemUnderCursorPosYb_6FB79294 - height > 0)
+    {
+        D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pItemUnderCursorPosXb_6FB79290, *D2Client_pItemUnderCursorPosYb_6FB79294, 0, 0);
+        return;
+    }
+
+    D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pItemUnderCursorPosX_6FB79298, height + *D2Client_pItemUnderCursorPosY_6FB7929C, 0, 0);
+}
+
 void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQuality)
 {
     std::wstring itemDescription;
@@ -1619,54 +1723,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
 
     if (ITEMS_GetItemType(pItemUnderCursor) == ITEMTYPE_BOOK)
     {
-        if (!pItemUnderCursor || ITEMS_GetItemType(pItemUnderCursor) != ITEMTYPE_BOOK)
-        {
-            FOG_DisplayAssert("sghSelItem && ITEMSGetType(sghSelItem) == ITEMTYPE_BOOK", __FILE__, __LINE__);
-            exit(-1);
-        }
-
-        auto pItemTxtRecord = DATATBLS_GetItemsTxtRecord(pItemUnderCursor->dwClassId);
-        if (!pItemTxtRecord)
-        {
-            FOG_DisplayAssert("ptItemStats", __FILE__, __LINE__);
-            exit(-1);
-        }
-
-        scratchpad[0] = 0;
-        ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(pItemUnderCursor, itemDescription, pItemTxtRecord);
-        if (*D2Client_pVendorMode_6FBB58EC == VENDORMODE_NONE)
-        {
-            auto strRightClickToUse = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2203_RightClicktoUse);
-            itemDescription.append(strRightClickToUse);
-            itemDescription.append(strNewLine);
-
-            auto strInsertScrolls = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_2206_InsertScrolls);
-            itemDescription.append(strInsertScrolls);
-            itemDescription.append(strNewLine);
-        }
-
-        scratchpad[0] = 0;
-        D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
-        itemDescription.append(scratchpad);
-
-        if (*D2Client_pVendorMode_6FBB58EC >= VENDORMODE_TRADE && *D2Client_pVendorMode_6FBB58EC <= VENDORMODE_UNKNOWN)
-        {
-            scratchpad[0] = 0;
-            D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
-            itemDescription = std::wstring(scratchpad);
-        }
-
-        int32_t height = 0;
-        int32_t width = 0;
-        D2Win_GetTextDimensions_10131((const Unicode*)itemDescription.c_str(), &width, &height);
-
-        if (*D2Client_pItemUnderCursorPosYb_6FB79294 - height > 0)
-        {
-            D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pItemUnderCursorPosXb_6FB79290, *D2Client_pItemUnderCursorPosYb_6FB79294, 0, 0);
-            return;
-        }
-
-        D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pItemUnderCursorPosX_6FB79298, height + *D2Client_pItemUnderCursorPosY_6FB7929C, 0, 0);
+        DrawTextForBookItem(pItemUnderCursor);
         return;
     }
 
@@ -1825,7 +1882,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     std::wstring statLine_Damage_512;
     std::wstring statLine_AttackSpeed_2048;
     std::wstring statLine_blockChance_512;
-    std::wstring statLine_v273_512;
+    std::wstring statLine_KickSmiteDamage;
     std::wstring statLine_Defense_512;
 
     if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_WEAPON) || D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_ARMOR))
@@ -1905,22 +1962,18 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
         }
         if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_SHIELD))
         {
-            if (v229 && v229->dwClassId == 3 && (!ITEMS_IsClassValid(pItemUnderCursor) || ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor) == PCLASS_PALADIN))
+            if (v229 && v229->dwClassId == PCLASS_PALADIN && (!ITEMS_IsClassValid(pItemUnderCursor) || ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor) == PCLASS_PALADIN))
             {
-                scratchpad[0] = 0;
-                D2Client_GetItemTextLineUnknownA_6FAE5040(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
-                statLine_v273_512.append(scratchpad);
+                ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(pItemUnderCursor, statLine_KickSmiteDamage, itemTxtRecord);
             }
             scratchpad[0] = 0;
             D2Client_GetItemTextLineBlockChance_6FAE4EE0(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
             statLine_blockChance_512.append(scratchpad);
 
         }
-        else if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_BOOTS) && v229 && v229->dwClassId == 6)
+        else if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_BOOTS) && v229 && v229->dwClassId == PCLASS_ASSASSIN)
         {
-            scratchpad[0] = 0;
-            D2Client_GetItemTextLineUnknownA_6FAE5040(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
-            statLine_v273_512.append(scratchpad);
+            ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(pItemUnderCursor, statLine_KickSmiteDamage, itemTxtRecord);
         }
         if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_ARMOR)
             && STATLIST_GetDefenseFromUnit(pItemUnderCursor) > 0)
@@ -2020,7 +2073,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     AppendColorizedString(itemDescription, statLine_CharmKeepInInv_512, 0);
     AppendColorizedString(itemDescription, statLine_Quantity_512, 0);
     AppendColorizedString(itemDescription, statLine_Damage_512, 0);
-    AppendColorizedString(itemDescription, statLine_v273_512, 0);
+    AppendColorizedString(itemDescription, statLine_KickSmiteDamage, 0);
     AppendColorizedString(itemDescription, statLine_blockChance_512, 0);
     AppendColorizedString(itemDescription, statLine_Defense_512, 0);
     AppendColorizedString(itemDescription, statLine_RunewordName_512, 4);
@@ -2224,11 +2277,11 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
             }
             if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_SHIELD))
             {
-                if (pUnit_ && !pUnit_->dwUnitType && pUnit_->dwClassId == 3 && (!ITEMS_IsClassValid(pItemUnderCursor) || ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor) == PCLASS_PALADIN))
+                if (pUnit_ && !pUnit_->dwUnitType && pUnit_->dwClassId == PCLASS_PALADIN && (!ITEMS_IsClassValid(pItemUnderCursor) || ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor) == PCLASS_PALADIN))
                 {
-                    scratchpad[0] = 0;
-                    D2Client_GetItemTextLineUnknownA_6FAE5040(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
-                    AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
+                    std::wstring smiteDamageLine;
+                    ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(pItemUnderCursor, smiteDamageLine, pItemsTxtRecord);
+                    AppendColorizedString(itemLineBasicInfo, smiteDamageLine, 0);
                 }
 
                 scratchpad[0] = 0;
