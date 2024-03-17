@@ -2107,7 +2107,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam12(D2UnitStrc* pUnit, D2SkillStrc* 
         return;
     }
 
-    int32_t v9 = D2Client_sub_6FAAC080();
+    int32_t v9 = D2Client_IsLod_6FAAC080();
 
     int32_t nColor = 0;
     int64_t nMinDamage = 0;

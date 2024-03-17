@@ -8,7 +8,7 @@ D2Client_sub_6FB0BB10_t D2Client_sub_6FB0BB10 = nullptr;
 D2Client_sub_6FB0A950_t D2Client_sub_6FB0A950 = nullptr;
 D2Client_sub_6FB0AA00_t D2Client_sub_6FB0AA00 = nullptr;
 D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580 = nullptr;
-D2Client_sub_6FAAC080_t D2Client_sub_6FAAC080 = nullptr;
+D2Client_IsLod_6FAAC080_t D2Client_IsLod_6FAAC080 = nullptr;
 
 // UI-INV stuff
 D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0 = nullptr; // 883D0
@@ -17,8 +17,8 @@ D2Client_sub_6FB23230_t D2Client_sub_6FB23230 = nullptr; // 83230
 D2Client_GetMouseXPos_t D2Client_GetMouseXPos = nullptr; // B7BC0
 D2Client_GetMouseYPos_t D2Client_GetMouseYPos = nullptr; // B7BD0
 D2Client_sub_6FAFC0E0_t D2Client_sub_6FAFC0E0 = nullptr; // 5C0E0
-D2Client_sub_6FAD4B60_t D2Client_sub_6FAD4B60 = nullptr; // 34B60
-D2Client_sub_6FAD56B0_t D2Client_sub_6FAD56B0 = nullptr; // 356B0
+D2Client_GetHotkeyCharCode_6FAD4B60_t D2Client_GetHotkeyCharCode_6FAD4B60 = nullptr; // 34B60
+D2Client_GetHotkeyString_6FAD56B0_t D2Client_GetHotkeyString_6FAD56B0 = nullptr; // 356B0
 D2Client_sub_6FAFC130_t D2Client_sub_6FAFC130 = nullptr; // 5C130
 D2Client_ColorizeLine_6FB20430_t D2Client_ColorizeLine_6FB20430 = nullptr; // 80430
 D2Client_AddExtraTradeStatLines_6FAE5A40_t D2Client_AddExtraTradeStatLines_6FAE5A40 = nullptr; // 45A40
@@ -69,12 +69,12 @@ int32_t* D2Client_pDWORD_6FB79294 = nullptr;
 int32_t* D2Client_pDWORD_6FB79298 = nullptr;
 int32_t* D2Client_pDWORD_6FB7929C = nullptr;
 
-int32_t* D2Client_pDWORD_6FBB59A8 = nullptr;
-int32_t* D2Client_pDWORD_6FBB59AC = nullptr;
-int32_t* D2Client_pDWORD_6FBB59B0 = nullptr;
-int32_t* D2Client_pDWORD_6FBB59BC = nullptr;
-int32_t* D2Client_pDWORD_6FBB59C0 = nullptr;
-int32_t* D2Client_pDWORD_6FBB59C4 = nullptr;
+int32_t* D2Client_pLeftSwapWeaponButtonXLeft_6FBB59A8 = nullptr;
+int32_t* D2Client_pLeftSwapWeaponButtonXRight_6FBB59AC = nullptr;
+int32_t* D2Client_pLeftSwapWeaponButtonYTop_6FBB59B0 = nullptr;
+int32_t* D2Client_pRightSwapWeaponButtonXLeft_6FBB59BC = nullptr;
+int32_t* D2Client_pRightSwapWeaponButtonXRight_6FBB59C0 = nullptr;
+int32_t* D2Client_pRightSwapWeaponButtonYTop_6FBB59C4 = nullptr;
 
 D2UnitStrc** D2Client_pItemUnderCursor = nullptr; // 1158F0
 
@@ -99,7 +99,7 @@ void InitD2ClientExports()
     D2Client_sub_6FB0A950 = (D2Client_sub_6FB0A950_t)((char*)d2ClientModule + 0x6A950);
     D2Client_sub_6FB0AA00 = (D2Client_sub_6FB0AA00_t)((char*)d2ClientModule + 0x6AA00);
     D2Client_sub_6FB0B580 = (D2Client_sub_6FB0B580_t)((char*)d2ClientModule + 0x6B580);
-    D2Client_sub_6FAAC080 = (D2Client_sub_6FAAC080_t)((char*)d2ClientModule + 0xC080);
+    D2Client_IsLod_6FAAC080 = (D2Client_IsLod_6FAAC080_t)((char*)d2ClientModule + 0xC080);
 
     D2Client_GetCurrentPlayer_6FB283D0 = (D2Client_GetCurrentPlayer_6FB283D0_t)((char*)d2ClientModule + 0x883D0);
     D2Client_sub_6FAFE9E0 = (D2Client_sub_6FAFE9E0_t)((char*)d2ClientModule + 0x5E9E0);
@@ -107,8 +107,8 @@ void InitD2ClientExports()
     D2Client_GetMouseXPos = (D2Client_GetMouseXPos_t)((char*)d2ClientModule + 0xB7BC0);
     D2Client_GetMouseYPos = (D2Client_GetMouseYPos_t)((char*)d2ClientModule + 0xB7BD0);
     D2Client_sub_6FAFC0E0 = (D2Client_sub_6FAFC0E0_t)((char*)d2ClientModule + 0x5C0E0);
-    D2Client_sub_6FAD4B60 = (D2Client_sub_6FAD4B60_t)((char*)d2ClientModule + 0x34B60);
-    D2Client_sub_6FAD56B0 = (D2Client_sub_6FAD56B0_t)((char*)d2ClientModule + 0x356B0);
+    D2Client_GetHotkeyCharCode_6FAD4B60 = (D2Client_GetHotkeyCharCode_6FAD4B60_t)((char*)d2ClientModule + 0x34B60);
+    D2Client_GetHotkeyString_6FAD56B0 = (D2Client_GetHotkeyString_6FAD56B0_t)((char*)d2ClientModule + 0x356B0);
     D2Client_sub_6FAFC130 = (D2Client_sub_6FAFC130_t)((char*)d2ClientModule + 0x5C130);
     D2Client_ColorizeLine_6FB20430 = (D2Client_ColorizeLine_6FB20430_t)((char*)d2ClientModule + 0x80430);
     D2Client_AddExtraTradeStatLines_6FAE5A40 = (D2Client_AddExtraTradeStatLines_6FAE5A40_t)((char*)d2ClientModule + 0x45A40);
@@ -157,12 +157,12 @@ void InitD2ClientExports()
     D2Client_pDWORD_6FB79298 = (int32_t*)((char*)d2ClientModule + 0xD9298);
     D2Client_pDWORD_6FB7929C = (int32_t*)((char*)d2ClientModule + 0xD929C);
 
-    D2Client_pDWORD_6FBB59A8 = (int32_t*)((char*)d2ClientModule + 0x1159A8);
-    D2Client_pDWORD_6FBB59AC = (int32_t*)((char*)d2ClientModule + 0x1159AC);
-    D2Client_pDWORD_6FBB59B0 = (int32_t*)((char*)d2ClientModule + 0x1159B0);
-    D2Client_pDWORD_6FBB59BC = (int32_t*)((char*)d2ClientModule + 0x1159BC);
-    D2Client_pDWORD_6FBB59C0 = (int32_t*)((char*)d2ClientModule + 0x1159C0);
-    D2Client_pDWORD_6FBB59C4 = (int32_t*)((char*)d2ClientModule + 0x1159C4);
+    D2Client_pLeftSwapWeaponButtonXLeft_6FBB59A8 = (int32_t*)((char*)d2ClientModule + 0x1159A8);
+    D2Client_pLeftSwapWeaponButtonXRight_6FBB59AC = (int32_t*)((char*)d2ClientModule + 0x1159AC);
+    D2Client_pLeftSwapWeaponButtonYTop_6FBB59B0 = (int32_t*)((char*)d2ClientModule + 0x1159B0);
+    D2Client_pRightSwapWeaponButtonXLeft_6FBB59BC = (int32_t*)((char*)d2ClientModule + 0x1159BC);
+    D2Client_pRightSwapWeaponButtonXRight_6FBB59C0 = (int32_t*)((char*)d2ClientModule + 0x1159C0);
+    D2Client_pRightSwapWeaponButtonYTop_6FBB59C4 = (int32_t*)((char*)d2ClientModule + 0x1159C4);
 
     D2Client_pItemUnderCursor = (D2UnitStrc**)((char*)d2ClientModule + 0x1158F0);
 

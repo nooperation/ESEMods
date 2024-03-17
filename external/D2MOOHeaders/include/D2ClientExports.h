@@ -21,13 +21,13 @@ typedef int32_t(__fastcall* D2Client_sub_6FB0B580_t)();
 typedef void(__fastcall* D2Client_sub_6FB0B2C0_t)(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor, int32_t unknown3, int32_t unknown4, D2SkillStrc* pSkill, int32_t unknown5, D2UnitStrc* unknown6, int32_t unknown7);
 typedef void(__fastcall* D2Client_sub_6FB0B6F0_t)(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor, D2UnitStrc* unknown3, D2SkillStrc* pSkill);
 typedef void(__fastcall* D2Client_sub_6FB0BB10_t)(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor);
-typedef int32_t(__fastcall* D2Client_sub_6FAAC080_t)();
+typedef int32_t(__fastcall* D2Client_IsLod_6FAAC080_t)();
 
 extern D2Client_DrawTextCentered_6FACFCD0_t D2Client_DrawTextCentered_6FACFCD0; //                                             | 6FACFCD0
 extern D2Client_sub_6FB0B2C0_t D2Client_sub_6FB0B2C0; //                                                                       | 6FB0B2C0
 extern D2Client_sub_6FB0B6F0_t D2Client_sub_6FB0B6F0; //                                                                       | 6FB0B6F0
 extern D2Client_sub_6FB0BB10_t D2Client_sub_6FB0BB10; //                                                                       | 6FB0BB10
-extern D2Client_sub_6FAAC080_t D2Client_sub_6FAAC080; //                                                                       | 6FAAC080
+extern D2Client_IsLod_6FAAC080_t D2Client_IsLod_6FAAC080; //                                                       | 6FAAC080
 extern D2Client_sub_6FB0A950_t D2Client_sub_6FB0A950; //                                                                       | 6FB0A950
 extern D2Client_sub_6FB0AA00_t D2Client_sub_6FB0AA00; //                                                                       | 6FB0AA00
 extern D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580; //                                                                       | 6FB0B580
@@ -40,8 +40,8 @@ typedef int32_t (__fastcall* D2Client_sub_6FB23230_t)(unsigned int a1);
 typedef int32_t (__fastcall* D2Client_GetMouseYPos_t)();
 typedef int32_t (__fastcall* D2Client_GetMouseXPos_t)();
 typedef bool (__fastcall* D2Client_sub_6FAFC0E0_t)();
-typedef int16_t (__fastcall* D2Client_sub_6FAD4B60_t)(int32_t a1, int32_t a2);
-typedef Unicode* (__fastcall* D2Client_sub_6FAD56B0_t)(int32_t a1, int32_t a2);
+typedef int16_t (__fastcall* D2Client_GetHotkeyCharCode_6FAD4B60_t)(int32_t a1, int32_t a2);
+typedef Unicode* (__fastcall* D2Client_GetHotkeyString_6FAD56B0_t)(int32_t hotkeyId, int32_t useAlternativeHotkey);
 typedef int32_t (__fastcall* D2Client_sub_6FAFC130_t)();
 typedef Unicode* (__fastcall* D2Client_ColorizeLine_6FB20430_t)(const struct Unicode* sourceStr, char colorCode);
 typedef void (__fastcall* D2Client_BuildItemName_6FADD360_t)(D2UnitStrc* pItem, struct Unicode* buff, int maxLen);
@@ -82,8 +82,8 @@ extern D2Client_sub_6FB23230_t D2Client_sub_6FB23230; // 83230                  
 extern D2Client_GetMouseXPos_t D2Client_GetMouseXPos; // B7BC0                                                                 | 6FB57BC0
 extern D2Client_GetMouseYPos_t D2Client_GetMouseYPos; // B7BD0                                                                 | 6FB57BD0
 extern D2Client_sub_6FAFC0E0_t D2Client_sub_6FAFC0E0; // 5C0E0                                                                 | 6FAFC0E0
-extern D2Client_sub_6FAD4B60_t D2Client_sub_6FAD4B60; // 34B60                                                                 | 6FAD4B60
-extern D2Client_sub_6FAD56B0_t D2Client_sub_6FAD56B0; // 356B0                                                                 | 6FAD56B0
+extern D2Client_GetHotkeyCharCode_6FAD4B60_t D2Client_GetHotkeyCharCode_6FAD4B60; // 34B60                                     | 6FAD4B60
+extern D2Client_GetHotkeyString_6FAD56B0_t D2Client_GetHotkeyString_6FAD56B0; // 356B0                                         | 6FAD56B0
 extern D2Client_sub_6FAFC130_t D2Client_sub_6FAFC130; // 5C130                                                                 | 6FAFC130
 extern D2Client_ColorizeLine_6FB20430_t D2Client_ColorizeLine_6FB20430; // 80430                                               | 6FB20430
 extern D2Client_AddExtraTradeStatLines_6FAE5A40_t D2Client_AddExtraTradeStatLines_6FAE5A40; // 45A40                           | 6FAE5A40
@@ -127,12 +127,12 @@ extern int32_t* D2Client_pDWORD_6FB79294; // D9294                              
 extern int32_t* D2Client_pDWORD_6FB79298; // D9298                                                                             | 6FB79298
 extern int32_t* D2Client_pDWORD_6FB7929C; // D929C                                                                             | 6FB7929C
 
-extern int32_t* D2Client_pDWORD_6FBB59A8; // 1159A8                                                                            | 6FBB59A8
-extern int32_t* D2Client_pDWORD_6FBB59AC; // 1159AC                                                                            | 6FBB59AC
-extern int32_t* D2Client_pDWORD_6FBB59B0; // 1159B0                                                                            | 6FBB59B0
-extern int32_t* D2Client_pDWORD_6FBB59BC; // 1159BC                                                                            | 6FBB59BC
-extern int32_t* D2Client_pDWORD_6FBB59C0; // 1159C0                                                                            | 6FBB59C0
-extern int32_t* D2Client_pDWORD_6FBB59C4; // 1159C4                                                                            | 6FBB59C4
+extern int32_t* D2Client_pLeftSwapWeaponButtonXLeft_6FBB59A8; // 1159A8                                                        | 6FBB59A8
+extern int32_t* D2Client_pLeftSwapWeaponButtonXRight_6FBB59AC; // 1159AC                                                       | 6FBB59AC
+extern int32_t* D2Client_pLeftSwapWeaponButtonYTop_6FBB59B0; // 1159B0                                                         | 6FBB59B0
+extern int32_t* D2Client_pRightSwapWeaponButtonXLeft_6FBB59BC; // 1159BC                                                       | 6FBB59BC
+extern int32_t* D2Client_pRightSwapWeaponButtonXRight_6FBB59C0; // 1159C0                                                      | 6FBB59C0
+extern int32_t* D2Client_pRightSwapWeaponButtonYTop_6FBB59C4; // 1159C4                                                        | 6FBB59C4
 
 extern D2UnitStrc** D2Client_pItemUnderCursor; // 1158F0                                                                       | 6FBB58F0
                                                                                                                                  

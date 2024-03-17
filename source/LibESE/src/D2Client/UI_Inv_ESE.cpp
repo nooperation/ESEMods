@@ -12,6 +12,7 @@
 #include <string>
 #include <codecvt>
 #include "D2Gfx.h"
+#include "D2Config.h"
 
 void AppendString(std::wstring& dest, const char* source)
 {
@@ -1471,6 +1472,110 @@ void DrawRect(int32_t x, int32_t y, int32_t width, int32_t height, int32_t color
     D2Gfx_UtilRect_10052(&rectDimensions, color);
 }
 
+void RenderCloseButtonText(int32_t mouseX, int32_t mouseY) 
+{
+    auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 64;
+    auto closeButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 302;
+
+    if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
+    {
+        auto closeButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 287;
+        auto closeButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 99;
+        auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
+        D2Win_DrawFramedText_10129((Unicode*)strClose, closeButtonTextX, closeButtonTextY, 0, 1);
+    }
+}
+
+void RenderDropGoldText(int32_t mouseX, int32_t mouseY)
+{
+    auto dropGoldButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 69;
+    auto dropGoldButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 237;
+
+    if (mouseX >= dropGoldButtonX && mouseX <= dropGoldButtonX + 20 && mouseY >= dropGoldButtonY - 18 && mouseY <= dropGoldButtonY && !D2Client_sub_6FAFC0E0())
+    {
+        // "Drop Gold"
+        auto strDropGoldButtonTextId = 4125;
+        switch (*D2Client_pDWORD_6FBB58EC)
+        {
+        case 1:
+            // "Gold"
+            strDropGoldButtonTextId = 4099;
+            break;
+        case 11:
+            // "Trade Gold"
+            strDropGoldButtonTextId = 4129;
+            break;
+        case 12:
+        case 13:
+        case 15:
+            // "Deposit"
+            strDropGoldButtonTextId = 4126;
+            break;
+        default:
+            break;
+        }
+
+        auto dropGoldButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 222;
+        auto dropGoldButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 89;
+        auto strDropGoldButtonText = (const wchar_t*)D2LANG_GetStringFromTblIndex(strDropGoldButtonTextId);
+        D2Win_DrawFramedText_10129((Unicode*)strDropGoldButtonText, dropGoldButtonTextX, dropGoldButtonTextY, 0, 1);
+    }
+}
+
+void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY) 
+{
+    auto isExpansion = FOG_IsExpansion();
+    auto isLod = D2Client_IsLod_6FAAC080();
+
+    auto mouseIsOverRightSwapWeaponButton = (mouseX >= *D2Client_pRightSwapWeaponButtonXLeft_6FBB59BC)
+        && mouseX <= *D2Client_pRightSwapWeaponButtonXRight_6FBB59C0
+        && mouseY >= *D2Client_pRightSwapWeaponButtonYTop_6FBB59C4 - 24
+        && mouseY < *D2Client_pRightSwapWeaponButtonYTop_6FBB59C4;
+
+    auto mouseIsOverLeftSwapWeaponButton =
+        mouseX >= *D2Client_pLeftSwapWeaponButtonXLeft_6FBB59A8 &&
+        mouseX <= *D2Client_pLeftSwapWeaponButtonXRight_6FBB59AC &&
+        mouseY >= *D2Client_pLeftSwapWeaponButtonYTop_6FBB59B0 - 24 &&
+        mouseY < *D2Client_pLeftSwapWeaponButtonYTop_6FBB59B0;
+
+    if (isExpansion && isLod && (mouseIsOverRightSwapWeaponButton || mouseIsOverLeftSwapWeaponButton))
+    {
+        const auto kWeaponSwapHotkeyIndex = 44;
+
+        auto framedTextXOffset = 368;
+        if (mouseX > *D2Client_pScreenXOffset + 500)
+        {
+            framedTextXOffset = 600;
+        }
+
+        auto primaryHotkeyCode = D2Client_GetHotkeyCharCode_6FAD4B60(kWeaponSwapHotkeyIndex, 0);
+        auto secondaryHotkeyCode = D2Client_GetHotkeyCharCode_6FAD4B60(kWeaponSwapHotkeyIndex, 0);
+
+        int32_t useAlternativeHotkey = -1;
+        if (primaryHotkeyCode != -1)
+        {
+            useAlternativeHotkey = 0;
+        }
+        else if (secondaryHotkeyCode != -1)
+        {
+            useAlternativeHotkey = 1;
+        }
+
+        std::wstring buttonText = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_22726_Cfgswapweapons);
+
+        if (useAlternativeHotkey != -1)
+        {
+            auto strColon = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
+            auto strWeaponSwapHotkey = (wchar_t*)D2Client_GetHotkeyString_6FAD56B0(kWeaponSwapHotkeyIndex, useAlternativeHotkey);
+
+            buttonText.append(strColon);
+            buttonText.append(strWeaponSwapHotkey);
+        }
+
+        D2Win_DrawFramedText_10129((const Unicode*)buttonText.c_str(), framedTextXOffset + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
+    }
+}
+
 void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, int32_t bFlag)
 {
     std::wstring itemDescription;
@@ -1517,106 +1622,11 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
         auto mouseX = D2Client_GetMouseXPos();
         auto mouseY = D2Client_GetMouseYPos();
 
-        // Close button
-        auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 64;
-        auto closeButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 302;
-        //DrawRect(closeButtonX, closeButtonY, 32, 32, D2Win_MixRGB_10034(255, 0, 0));
-        if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
-        {
-            auto closeButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 287;
-            auto closeButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 99;
-            auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
-            D2Win_DrawFramedText_10129((Unicode*)strClose, closeButtonTextX, closeButtonTextY, 0, 1);
-        }
-
-        // Drop gold button
-        auto dropGoldButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 69;
-        auto dropGoldButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 237;
-        //DrawRect(dropGoldButtonX, dropGoldButtonY, 20, 18, D2Win_MixRGB_10034(255, 128, 0));
-        if (mouseX >= dropGoldButtonX && mouseX <= dropGoldButtonX + 20 && mouseY >= dropGoldButtonY - 18 && mouseY <= dropGoldButtonY && !D2Client_sub_6FAFC0E0())
-        {
-            // "Drop Gold"
-            auto strDropGoldButtonTextId = 4125;
-            switch (*D2Client_pDWORD_6FBB58EC)
-            {
-            case 1:
-                // "Gold"
-                strDropGoldButtonTextId = 4099;
-                break;
-            case 11:
-                // "Trade Gold"
-                strDropGoldButtonTextId = 4129;
-                break;
-            case 12:
-            case 13:
-            case 15:
-                // "Deposit"
-                strDropGoldButtonTextId = 4126;
-                break;
-            default:
-                break;
-            }
-
-            auto dropGoldButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 222;
-            auto dropGoldButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 89;
-            auto strDropGoldButtonText = (const wchar_t*)D2LANG_GetStringFromTblIndex(strDropGoldButtonTextId);
-            D2Win_DrawFramedText_10129((Unicode*)strDropGoldButtonText, dropGoldButtonTextX, dropGoldButtonTextY, 0, 1);
-        }
-
-        auto isExpansion = FOG_IsExpansion();
-        auto is6FAAC080 = D2Client_sub_6FAAC080();
-
-        auto cmp1 = (mouseX < *D2Client_pDWORD_6FBB59BC)
-            || mouseX > *D2Client_pDWORD_6FBB59C0
-            || mouseY < *D2Client_pDWORD_6FBB59C4 - 24
-            || mouseY >= *D2Client_pDWORD_6FBB59C4;
-
-        auto cmp2 = mouseX < *D2Client_pDWORD_6FBB59A8 || mouseX > *D2Client_pDWORD_6FBB59AC ||
-            mouseY < *D2Client_pDWORD_6FBB59B0 - 24 || mouseY >= *D2Client_pDWORD_6FBB59B0;
-
-        if (!isExpansion || !is6FAAC080 || cmp1 && cmp2)
-        {
-            goto LABEL_97;
-        }
-
-        // Swap weapons button
-        auto v73 = 0;
-        auto v71 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_22726_Cfgswapweapons);
-
-        itemDescription.append(v71);
-        if (D2Client_sub_6FAD4B60(44, 1) == 0xFFFF)
-        {
-            if (D2Client_sub_6FAD4B60(44, 0) == 0xFFFF)
-            {
-                auto v76 = 368;
-                if (mouseX > *D2Client_pScreenXOffset + 500)
-                {
-                    v76 = 600;
-                }
-
-                D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
-                goto LABEL_97;
-            }
-            auto v74 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
-            itemDescription.append(v74);
-            v73 = 0;
-        }
-        else
-        {
-            auto v72 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
-            itemDescription.append(v72);
-            v73 = 1;
-        }
-        auto v75 = (wchar_t*)D2Client_sub_6FAD56B0(44, v73);
-        itemDescription.append(v75);
-        auto v76 = 368;
-        if (mouseX > *D2Client_pScreenXOffset + 500)
-        {
-            v76 = 600;
-        }
-
-        D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), v76 + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
+        RenderCloseButtonText(mouseX, mouseY);
+        RenderDropGoldText(mouseX, mouseY);
+        RenderSwapWeaponsButtonText(mouseX, mouseY);
     }
+
 LABEL_97:
     if (!*D2Client_pDWORD_6FBB58E4 && !*D2Client_pDWORD_6FBB58E0)
     {
