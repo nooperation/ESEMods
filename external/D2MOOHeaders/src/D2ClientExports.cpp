@@ -12,14 +12,14 @@ D2Client_IsLod_6FAAC080_t D2Client_IsLod_6FAAC080 = nullptr;
 
 // UI-INV stuff
 D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0 = nullptr; // 883D0
-D2Client_sub_6FAFE9E0_t D2Client_sub_6FAFE9E0 = nullptr; // 5E9E0
-D2Client_sub_6FB23230_t D2Client_sub_6FB23230 = nullptr; // 83230
+D2Client_IsBeltOpen_6FAFE9E0_t D2Client_IsBeltOpen_6FAFE9E0 = nullptr; // 5E9E0
+D2Client_IsUiOpen_6FB23230_t D2Client_IsUiOpen_6FB23230 = nullptr; // 83230
 D2Client_GetMouseXPos_t D2Client_GetMouseXPos = nullptr; // B7BC0
 D2Client_GetMouseYPos_t D2Client_GetMouseYPos = nullptr; // B7BD0
 D2Client_sub_6FAFC0E0_t D2Client_sub_6FAFC0E0 = nullptr; // 5C0E0
 D2Client_GetHotkeyCharCode_6FAD4B60_t D2Client_GetHotkeyCharCode_6FAD4B60 = nullptr; // 34B60
 D2Client_GetHotkeyString_6FAD56B0_t D2Client_GetHotkeyString_6FAD56B0 = nullptr; // 356B0
-D2Client_sub_6FAFC130_t D2Client_sub_6FAFC130 = nullptr; // 5C130
+D2Client_IsGambling_6FAFC130_t D2Client_IsGambling_6FAFC130 = nullptr; // 5C130
 D2Client_ColorizeLine_6FB20430_t D2Client_ColorizeLine_6FB20430 = nullptr; // 80430
 D2Client_AddExtraTradeStatLines_6FAE5A40_t D2Client_AddExtraTradeStatLines_6FAE5A40 = nullptr; // 45A40
 D2Client_BuildItemName_6FADD360_t D2Client_BuildItemName_6FADD360 = nullptr; // 3D360
@@ -60,14 +60,14 @@ int32_t* D2Client_pScreenWidthUI = nullptr;
 int32_t* D2Client_pScreenHeightUI = nullptr;
 int32_t* D2Client_pDWORD_6FB8CCF8 = nullptr;
 
-int32_t* D2Client_pDWORD_6FBB58E0 = nullptr;
-int32_t* D2Client_pDWORD_6FBB58E4 = nullptr;
-int32_t* D2Client_pDWORD_6FBB58EC = nullptr;
+int32_t* D2Client_pIsItemUnderCursorInInventory_6FBB58E0 = nullptr;
+int32_t* D2Client_pIsItemUnderCursorEquipped_6FBB58E4 = nullptr;
+D2C_VendorInventoryModes* D2Client_pVendorMode_6FBB58EC = nullptr;
 int32_t* D2Client_pDWORD_6FB7928C = nullptr;
-int32_t* D2Client_pDWORD_6FB79290 = nullptr;
-int32_t* D2Client_pDWORD_6FB79294 = nullptr;
-int32_t* D2Client_pDWORD_6FB79298 = nullptr;
-int32_t* D2Client_pDWORD_6FB7929C = nullptr;
+int32_t* D2Client_pItemUnderCursorPosXb_6FB79290 = nullptr;
+int32_t* D2Client_pItemUnderCursorPosYb_6FB79294 = nullptr;
+int32_t* D2Client_pItemUnderCursorPosX_6FB79298 = nullptr;
+int32_t* D2Client_pItemUnderCursorPosY_6FB7929C = nullptr;
 
 int32_t* D2Client_pLeftSwapWeaponButtonXLeft_6FBB59A8 = nullptr;
 int32_t* D2Client_pLeftSwapWeaponButtonXRight_6FBB59AC = nullptr;
@@ -102,14 +102,14 @@ void InitD2ClientExports()
     D2Client_IsLod_6FAAC080 = (D2Client_IsLod_6FAAC080_t)((char*)d2ClientModule + 0xC080);
 
     D2Client_GetCurrentPlayer_6FB283D0 = (D2Client_GetCurrentPlayer_6FB283D0_t)((char*)d2ClientModule + 0x883D0);
-    D2Client_sub_6FAFE9E0 = (D2Client_sub_6FAFE9E0_t)((char*)d2ClientModule + 0x5E9E0);
-    D2Client_sub_6FB23230 = (D2Client_sub_6FB23230_t)((char*)d2ClientModule + 0x83230);
+    D2Client_IsBeltOpen_6FAFE9E0 = (D2Client_IsBeltOpen_6FAFE9E0_t)((char*)d2ClientModule + 0x5E9E0);
+    D2Client_IsUiOpen_6FB23230 = (D2Client_IsUiOpen_6FB23230_t)((char*)d2ClientModule + 0x83230);
     D2Client_GetMouseXPos = (D2Client_GetMouseXPos_t)((char*)d2ClientModule + 0xB7BC0);
     D2Client_GetMouseYPos = (D2Client_GetMouseYPos_t)((char*)d2ClientModule + 0xB7BD0);
     D2Client_sub_6FAFC0E0 = (D2Client_sub_6FAFC0E0_t)((char*)d2ClientModule + 0x5C0E0);
     D2Client_GetHotkeyCharCode_6FAD4B60 = (D2Client_GetHotkeyCharCode_6FAD4B60_t)((char*)d2ClientModule + 0x34B60);
     D2Client_GetHotkeyString_6FAD56B0 = (D2Client_GetHotkeyString_6FAD56B0_t)((char*)d2ClientModule + 0x356B0);
-    D2Client_sub_6FAFC130 = (D2Client_sub_6FAFC130_t)((char*)d2ClientModule + 0x5C130);
+    D2Client_IsGambling_6FAFC130 = (D2Client_IsGambling_6FAFC130_t)((char*)d2ClientModule + 0x5C130);
     D2Client_ColorizeLine_6FB20430 = (D2Client_ColorizeLine_6FB20430_t)((char*)d2ClientModule + 0x80430);
     D2Client_AddExtraTradeStatLines_6FAE5A40 = (D2Client_AddExtraTradeStatLines_6FAE5A40_t)((char*)d2ClientModule + 0x45A40);
     D2Client_BuildItemName_6FADD360 = (D2Client_BuildItemName_6FADD360_t)((char*)d2ClientModule + 0x3D360);
@@ -148,14 +148,14 @@ void InitD2ClientExports()
     D2Client_pScreenHeightUI = (int32_t*)((char*)d2ClientModule + 0xD40F0);
     D2Client_pDWORD_6FB8CCF8 = (int32_t*)((char*)d2ClientModule + 0xECCF8);
 
-    D2Client_pDWORD_6FBB58E0 = (int32_t*)((char*)d2ClientModule + 0x1158E0);
-    D2Client_pDWORD_6FBB58E4 = (int32_t*)((char*)d2ClientModule + 0x1158E4);
-    D2Client_pDWORD_6FBB58EC = (int32_t*)((char*)d2ClientModule + 0x1158EC);
+    D2Client_pIsItemUnderCursorInInventory_6FBB58E0 = (int32_t*)((char*)d2ClientModule + 0x1158E0);
+    D2Client_pIsItemUnderCursorEquipped_6FBB58E4 = (int32_t*)((char*)d2ClientModule + 0x1158E4);
+    D2Client_pVendorMode_6FBB58EC = (D2C_VendorInventoryModes*)((char*)d2ClientModule + 0x1158EC);
     D2Client_pDWORD_6FB7928C = (int32_t*)((char*)d2ClientModule + 0xD928C);
-    D2Client_pDWORD_6FB79290 = (int32_t*)((char*)d2ClientModule + 0xD9290);
-    D2Client_pDWORD_6FB79294 = (int32_t*)((char*)d2ClientModule + 0xD9294);
-    D2Client_pDWORD_6FB79298 = (int32_t*)((char*)d2ClientModule + 0xD9298);
-    D2Client_pDWORD_6FB7929C = (int32_t*)((char*)d2ClientModule + 0xD929C);
+    D2Client_pItemUnderCursorPosXb_6FB79290 = (int32_t*)((char*)d2ClientModule + 0xD9290);
+    D2Client_pItemUnderCursorPosYb_6FB79294 = (int32_t*)((char*)d2ClientModule + 0xD9294);
+    D2Client_pItemUnderCursorPosX_6FB79298 = (int32_t*)((char*)d2ClientModule + 0xD9298);
+    D2Client_pItemUnderCursorPosY_6FB7929C = (int32_t*)((char*)d2ClientModule + 0xD929C);
 
     D2Client_pLeftSwapWeaponButtonXLeft_6FBB59A8 = (int32_t*)((char*)d2ClientModule + 0x1159A8);
     D2Client_pLeftSwapWeaponButtonXRight_6FBB59AC = (int32_t*)((char*)d2ClientModule + 0x1159AC);
