@@ -16,24 +16,24 @@ void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB
     int32_t pHeight = 0;
     int32_t textOffsetY = 0;
 
-    D2Win_10131_GetTextDimensions((Unicode*)&buff[0], &pWidth, &pHeight);
+    D2Win_GetTextDimensions_10131((Unicode*)&buff[0], &pWidth, &pHeight);
 
     int32_t widthMod = (11 * pWidth) / 7;
     if (widthMod <= offsetC - offsetA)
     {
-        D2Win_10127_SetFont(D2FONT_FONT16);
+        D2Win_SetFont_10127(D2FONT_FONT16);
         textOffsetY = offsetB;
     }
     else
     {
-        D2Win_10127_SetFont(D2FONT_FONT6);
+        D2Win_SetFont_10127(D2FONT_FONT6);
         textOffsetY = (offsetB - 1);
     }
 
     D2Client_DrawTextCentered_6FACFCD0(
-        *D2Client_pDWORD_6FBBA748 + offsetA,
-        *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB740F0 + textOffsetY - 0x1e0,
-        *D2Client_pDWORD_6FBBA748 + offsetC,
+        *D2Client_pScreenXOffset + offsetA,
+        *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI + textOffsetY - 0x1e0,
+        *D2Client_pScreenXOffset + offsetC,
         (Unicode*)&buff[0],
         nColor
     );
@@ -773,7 +773,7 @@ void __fastcall ESE_sub_6FB0AC10(Unicode* pTextA, Unicode* pTextB, int offsetA, 
     static bool hasLoadedLanguageOffset = false;
     static int32_t languageOffset = -7;
 
-    D2Win_10127_SetFont(D2FONT_FONT6);
+    D2Win_SetFont_10127(D2FONT_FONT6);
     if (!hasLoadedLanguageOffset)
     {
         int32_t language = STRTABLE_GetLanguage();
@@ -784,16 +784,16 @@ void __fastcall ESE_sub_6FB0AC10(Unicode* pTextA, Unicode* pTextB, int offsetA, 
     }
 
     D2Client_DrawTextCentered_6FACFCD0(
-        *D2Client_pDWORD_6FBBA748 + offsetA,
-        languageOffset + *D2Client_pDWORD_6FB740F0 + *D2Client_pDWORD_6FBBA74C + offsetB - 480,
-        *D2Client_pDWORD_6FBBA748 + offsetC,
+        *D2Client_pScreenXOffset + offsetA,
+        languageOffset + *D2Client_pScreenHeightUI + *D2Client_pScreenYOffset + offsetB - 480,
+        *D2Client_pScreenXOffset + offsetC,
         pTextA,
         nColorA);
 
     D2Client_DrawTextCentered_6FACFCD0(
-        *D2Client_pDWORD_6FBBA748 + offsetA,
-        *D2Client_pDWORD_6FB740F0 + *D2Client_pDWORD_6FBBA74C + *D2Client_pDWORD_6FB8CCF8 + offsetB - 480,
-        *D2Client_pDWORD_6FBBA748 + offsetC,
+        *D2Client_pScreenXOffset + offsetA,
+        *D2Client_pScreenHeightUI + *D2Client_pScreenYOffset + *D2Client_pDWORD_6FB8CCF8 + offsetB - 480,
+        *D2Client_pScreenXOffset + offsetC,
         pTextB,
         nColorB);
 }
@@ -2107,7 +2107,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam12(D2UnitStrc* pUnit, D2SkillStrc* 
         return;
     }
 
-    int32_t v9 = D2Client_sub_6FAAC080();
+    int32_t v9 = D2Client_IsLod_6FAAC080();
 
     int32_t nColor = 0;
     int64_t nMinDamage = 0;
