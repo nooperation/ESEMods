@@ -49,7 +49,7 @@ D2Client_GetItemTextPriceMaybe_6FAFB200_t D2Client_GetItemTextPriceMaybe_6FAFB20
 
 // UI-INV-MOD stuff
 D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440 = nullptr; //6A440
-D2Client_sub_6FAF12C0_t D2Client_sub_6FAF12C0 = nullptr; //512C0
+D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLineDamageToUndead_6FAF12C0 = nullptr; //512C0
 D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460 = nullptr; //53460
 D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0 = nullptr; //521C0
 
@@ -82,8 +82,8 @@ D2UnitStrc** D2Client_pItemUnderCursor = nullptr; // 1158F0
 
 int32_t* D2Client_pDWORD_6FB7A438 = nullptr; // DA438
 int32_t* D2Client_pDWORD_6FB79B48 = nullptr; // D9B48
-int32_t* D2Client_pDWORD_6FB7A4A0 = nullptr; // DA4A0
-int32_t* D2Client_pDWORD_6FB7A440 = nullptr; // DA440
+int32_t* D2Client_pElixirDescCount_6FB7A4A0 = nullptr; // DA4A0
+ElixirDesc_6FB7A440* D2Client_pElixirDescs_6FB7A440 = nullptr; // DA440
 D2DrlgActStrc** D2Client_pDWORD_6FBA7984 = nullptr; // 6A440
 uint16_t* D2Client_pWORD_6FB6FA30 = nullptr; // CFA30
 
@@ -138,7 +138,7 @@ void InitD2ClientExports()
     D2Client_GetItemTextPriceMaybe_6FAFB200 = (D2Client_GetItemTextPriceMaybe_6FAFB200_t)((char*)d2ClientModule + 0x5B200);
 
     D2Client_GetSkillStringId_6FB0A440 = (D2Client_GetSkillStringId_6FB0A440_t)((char*)d2ClientModule + 0x6A440);
-    D2Client_sub_6FAF12C0 = (D2Client_sub_6FAF12C0_t)((char*)d2ClientModule + 0x512C0);
+    D2Client_GetItemTextLineDamageToUndead_6FAF12C0 = (D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t)((char*)d2ClientModule + 0x512C0);
     D2Client_sub_6FAF3460 = (D2Client_sub_6FAF3460_t)((char*)d2ClientModule + 0x53460);
     D2Client_GetItemPropertyLine_6FAF21C0 = (D2Client_GetItemPropertyLine_6FAF21C0_t)((char*)d2ClientModule + 0x521C0);
 
@@ -168,8 +168,8 @@ void InitD2ClientExports()
 
     D2Client_pDWORD_6FB7A438 = (int32_t*)((char*)d2ClientModule + 0xDA438);
     D2Client_pDWORD_6FB79B48 = (int32_t*)((char*)d2ClientModule + 0xD9B48);
-    D2Client_pDWORD_6FB7A4A0 = (int32_t*)((char*)d2ClientModule + 0xDA4A0);
-    D2Client_pDWORD_6FB7A440 = (int32_t*)((char*)d2ClientModule + 0xDA440);
+    D2Client_pElixirDescCount_6FB7A4A0 = (int32_t*)((char*)d2ClientModule + 0xDA4A0);
+    D2Client_pElixirDescs_6FB7A440 = (ElixirDesc_6FB7A440*)((char*)d2ClientModule + 0xDA440);
     D2Client_pDWORD_6FBA7984 = (D2DrlgActStrc**)((char*)d2ClientModule + 0x107984);
     D2Client_pWORD_6FB6FA30 = (uint16_t*)((char*)d2ClientModule + 0xCFA30);
 }

@@ -11,6 +11,17 @@
 struct Unicode;
 struct D2SkillStrc;
 
+#pragma pack(push, 1)
+struct ElixirDesc_6FB7A440
+{
+    int32_t StatId;
+    int32_t UnknownMustBeOne;
+    int16_t NegativeStatStringIndex;
+    int16_t PositiveStatStringIndex;
+    int32_t UnknownMustBeTwo;
+};
+#pragma pack(pop)
+
 void InitD2ClientExports();
 
 typedef void(__fastcall* D2Client_DrawTextCentered_6FACFCD0_t)(int nX, int nY, int maxWidthMaybe, const Unicode* text, int nColor);
@@ -72,7 +83,7 @@ typedef bool (__fastcall* D2Client_GetItemTextPriceMaybe_6FAFB200_t)(D2UnitStrc*
 
 // UI-Inv-Mod
 typedef __int16(__fastcall* D2Client_GetSkillStringId_6FB0A440_t)(int nSkillsTxtIndex, int offset);
-typedef void(__fastcall* D2Client_sub_6FAF12C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffLen);
+typedef void(__fastcall* D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffLen);
 typedef int(__fastcall* D2Client_sub_6FAF3460_t)(int* statValues, D2C_ItemStats nStatId, struct Unicode* outBuff);
 typedef int(__fastcall* D2Client_GetItemPropertyLine_6FAF21C0_t)(D2UnitStrc* pUnit, D2StatListStrc* pStatListEx, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, Unicode* outputBuffer256);
 
@@ -138,13 +149,13 @@ extern D2UnitStrc** D2Client_pItemUnderCursor; // 1158F0                        
                                                                                                                                  
 // UI-Inv-Mod
 extern D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440; //6A440                                        | 6FB0A440
-extern D2Client_sub_6FAF12C0_t D2Client_sub_6FAF12C0; //512C0                                                                  | 6FAF12C0
+extern D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLineDamageToUndead_6FAF12C0; //512C0                                                                  | 6FAF12C0
 extern D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460; //53460                                                                  | 6FAF3460
 extern D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0; //521C0                                  | 6FAF21C0
                                                                                                                                  
 extern int32_t* D2Client_pDWORD_6FB7A438; // DA438                                                                             | 6FB7A438
 extern int32_t* D2Client_pDWORD_6FB79B48; // D9B48                                                                             | 6FB79B48
-extern int32_t* D2Client_pDWORD_6FB7A4A0; // DA4A0                                                                             | 6FB7A4A0
-extern int32_t* D2Client_pDWORD_6FB7A440; // DA440                                                                             | 6FB7A440
+extern int32_t* D2Client_pElixirDescCount_6FB7A4A0; // DA4A0                                                                             | 6FB7A4A0
+extern ElixirDesc_6FB7A440* D2Client_pElixirDescs_6FB7A440; // DA440                                                              | 6FB7A440
 extern D2DrlgActStrc** D2Client_pDWORD_6FBA7984; // 6A440                                                                      | 6FBA7984
 extern uint16_t* D2Client_pWORD_6FB6FA30; // CFA30                                                                             | 6FB6FA30

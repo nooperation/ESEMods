@@ -436,20 +436,14 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
     {
         statValue = -statValue;
 
-        auto v95 = std::to_wstring(statValue);
-
         if (nDescVal == 1)
         {
-            if (statValue < 0)
-            {
-                outBuff.assign(v95);
-            }
-            else
+            if (statValue >= 0)
             {
                 outBuff.assign(strPlusSign);
-                outBuff.append(v95);
             }
 
+            outBuff.append(std::to_wstring(statValue));
             outBuff.append(strPercentSign);
             outBuff.append(strSpace);
             outBuff.append(strDesc);
@@ -462,13 +456,16 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
                 outBuff.assign(strDesc);
                 break;
             }
+
             outBuff.assign(strDesc);
             outBuff.append(strSpace);
+
             if (statValue >= 0)
             {
                 outBuff.append(strPlusSign);
             }
-            outBuff.append(v95);
+
+            outBuff.append(std::to_wstring(statValue));
             outBuff.append(strPercentSign);
             break;
         }
@@ -491,10 +488,12 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
         {
             outBuff.assign(strDesc);
             outBuff.append(strSpace);
+
             if (statValue >= 0)
             {
                 outBuff.append(strPlusSign);
             }
+
             outBuff.append(strStatValue);
             outBuff.append(strPercentSign);
         }
@@ -503,24 +502,24 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
             outBuff.assign(strDesc);
         }
 
-        D2MonTypeTxt* v54 = nullptr;
+        D2MonTypeTxt* pMonTypeTxt = nullptr;
         if (recordId < 0 || recordId >= sgptDataTables->nMonPropTxtRecordCount)
         {
-            v54 = sgptDataTables->pMonTypeTxt;
+            pMonTypeTxt = sgptDataTables->pMonTypeTxt;
         }
         else
         {
-            v54 = &sgptDataTables->pMonTypeTxt[recordId];
+            pMonTypeTxt = &sgptDataTables->pMonTypeTxt[recordId];
         }
 
-        if (!v54)
+        if (!pMonTypeTxt)
         {
             break;
         }
 
         auto strColon = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon);
         auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
-        auto strPlur = (const wchar_t*)D2LANG_GetStringFromTblIndex(v54->wStrPlur);
+        auto strPlur = (const wchar_t*)D2LANG_GetStringFromTblIndex(pMonTypeTxt->wStrPlur);
 
         outBuff.append(strColon);
         outBuff.append(strSpace);
@@ -557,6 +556,7 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
                 outBuff.append(strPercentSign);
             }
         }
+
         auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
         auto strName = (const wchar_t*)D2LANG_GetStringFromTblIndex(monStatsTxtRecord->wNameStr);
 
@@ -710,6 +710,7 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
         {
             break;
         }
+
         auto skillStringId = D2Client_GetSkillStringId_6FB0A440(recordId, 0);
         auto strSkillName = (const wchar_t*)D2LANG_GetStringFromTblIndex(skillStringId);
         if (!strSkillName)
@@ -717,17 +718,12 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
             break;
         }
 
-        auto v95 = std::to_wstring(statVal);
-        if (statVal <= 0)
-        {
-            outBuff.assign(v95);
-        }
-        else
+        if (statVal > 0)
         {
             outBuff.assign(strPlusSign);
-            outBuff.append(v95);
         }
 
+        outBuff.append(std::to_wstring(statVal));
         outBuff.append(strSpace);
         outBuff.append(strTo);
         outBuff.append(strSpace);
@@ -852,7 +848,6 @@ int ESE_D2Client_GetItemPropertyLine_6FAF21C0(D2UnitStrc* pItem, D2StatListStrc*
 
 bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_ItemStats nStatId, std::wstring& outBuff)
 {
-    wchar_t scratchpad[256] = { 0 };
 
     switch (nStatId)
     {
@@ -874,10 +869,13 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
 
         if (damageRangeValue->minDamage < damageRangeValue->maxDamage)
         {
-            damageRangeValue->bHasBeenHandled = 1;
             auto fmt = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3623_strModMinDamageRange);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, fmt, damageRangeValue->minDamage, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
+            damageRangeValue->bHasBeenHandled = 1;
             return true;
         }
         else
@@ -935,15 +933,21 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
         if (damageRangeValue->minDamage < damageRangeValue->maxDamage)
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3615_strModColdDamageRange);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->minDamage, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
         else
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3614_strModColdDamage);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
     }
@@ -964,15 +968,21 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
         if (damageRangeValue->minDamage >= damageRangeValue->maxDamage)
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3616_strModLightningDamage);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
         else
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3617_strModLightningDamageRange);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->minDamage, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
     }
@@ -992,15 +1002,21 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
         if (damageRangeValue->minDamage >= damageRangeValue->maxDamage)
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3612_strModFireDamage);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
         else
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3613_strModFireDamageRange);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->minDamage, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
     }
@@ -1029,15 +1045,21 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
         if (damageRangeValue->minDamage < damageRangeValue->maxDamage)
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3621_strModPoisonDamageRange);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->minDamage, damageRangeValue->maxDamage, damageRangeValue->length / 25);
             outBuff.append(scratchpad);
+            
             return true;
         }
         else
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3620_strModPoisonDamage);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->maxDamage, damageRangeValue->length / 25);
             outBuff.append(scratchpad);
+            
             return true;
         }
     }
@@ -1059,15 +1081,21 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
         if (damageRangeValue->minDamage < damageRangeValue->maxDamage)
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3619_strModMagicDamageRange);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->minDamage, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
         else
         {
             auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3618_strModMagicDamage);
+
+            wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->maxDamage);
             outBuff.append(scratchpad);
+
             return true;
         }
     }
@@ -1081,19 +1109,19 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
     return false;
 }
 
-void ESE_D2Client_sub_6FAF12C0(std::wstring& outBuff)
+void ESE_D2Client_GetItemTextLineDamageToUndead_6FAF12C0(std::wstring& outBuff)
 {
     auto strPlus = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4002_plus);
     auto strNewline = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
     auto strPercent = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4001_percent);
+    auto strDamageToUndead = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3554_ModStr4f);
 
     outBuff.append(strPlus);
     outBuff.append(std::to_wstring(50));
     outBuff.append(strPercent);
     outBuff.append(strSpace);
-    auto v9 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3554_ModStr4f);
-    outBuff.append(v9);
+    outBuff.append(strDamageToUndead);
     outBuff.append(strNewline);
 }
 
@@ -1142,43 +1170,37 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
             }
         }
 
-        if (pUnit)
+        if (pUnit && pUnit->dwUnitType == UNIT_ITEM && pUnit->pInventory != nullptr)
         {
-            if (pUnit->dwUnitType == UNIT_ITEM)
+            auto childItem = INVENTORY_GetFirstItem(pUnit->pInventory);
+            while (childItem)
             {
-                if (pUnit->pInventory)
+                auto childItem1 = INVENTORY_UnitIsItem(childItem);
+                if (!childItem1)
                 {
-                    auto childItem = INVENTORY_GetFirstItem(pUnit->pInventory);
-                    while (childItem)
-                    {
-                        auto childItem1 = INVENTORY_UnitIsItem(childItem);
-                        if (!childItem1)
-                        {
-                            break;
-                        }
+                    break;
+                }
 
-                        childItem = INVENTORY_GetNextItem(childItem);
+                childItem = INVENTORY_GetNextItem(childItem);
 
-                        auto childStatList = STATLIST_GetStatListFromUnitStateAndFlag(childItem1, unitState, nUnitFlags);
-                        if (childStatList)
-                        {
-                            STATLIST_MergeBaseStats(pStatList, childStatList);
-                        }
-                    }
+                auto childStatList = STATLIST_GetStatListFromUnitStateAndFlag(childItem1, unitState, nUnitFlags);
+                if (childStatList)
+                {
+                    STATLIST_MergeBaseStats(pStatList, childStatList);
                 }
             }
         }
 
         if (bUnknownFlag1 && D2Common_10731_ITEMS_CheckItemTypeId(pUnit, ITEMTYPE_BLUNT) && !STATLIST_UnitGetItemStatOrSkillStatValue(pUnit, STAT_ITEM_UNDEADDAMAGE_PERCENT, 0))
         {
-            ESE_D2Client_sub_6FAF12C0(outBuff);
+            ESE_D2Client_GetItemTextLineDamageToUndead_6FAF12C0(outBuff);
         }
 
 
         DamageRangeValue statValues[DAMAGE_RANGE_MAX];
         memset(statValues, 0, sizeof(statValues));
 
-        auto unknownStatArray = (UnknownStructA*)D2Client_pDWORD_6FB79B48;
+        UnknownStructA* unknownStatArray = (UnknownStructA*)D2Client_pDWORD_6FB79B48;
         int32_t numUnknownStatArrayElements = *D2Client_pDWORD_6FB7A438;
 
         for (int32_t unknownStatArrayIndex = 0; unknownStatArrayIndex < numUnknownStatArrayElements; ++unknownStatArrayIndex)
@@ -1281,8 +1303,8 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
                         continue;
                     }
 
-                    std::wstring propertyLineBuffer256;
-                    if (!ESE_D2Client_GetItemPropertyLine_6FAF21C0(pUnit, pStatList, nStatId, d2StatStrcBuffer[copiedStatIndex].nLayer, d2StatStrcBuffer[copiedStatIndex].nValue, propertyLineBuffer256))
+                    std::wstring propertyLineBuffer;
+                    if (!ESE_D2Client_GetItemPropertyLine_6FAF21C0(pUnit, pStatList, nStatId, d2StatStrcBuffer[copiedStatIndex].nLayer, d2StatStrcBuffer[copiedStatIndex].nValue, propertyLineBuffer))
                     {
                         continue;
                     }
@@ -1306,7 +1328,7 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
                         }
 
                         hasSecondaryMinMaxDmg = 1;
-                        outBuff.append(propertyLineBuffer256);
+                        outBuff.append(propertyLineBuffer);
 
                         if (addNewline)
                         {
@@ -1345,87 +1367,73 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
         STATLIST_FreeStatList(pStatList);
     }
 
-    auto v56 = ITEMS_GetFileIndex(pUnit);
-    auto v47 = 0;
-
-    if (*D2Client_pDWORD_6FB7A4A0)
+    auto pUnitFileIndex = ITEMS_GetFileIndex(pUnit);
+    if (*D2Client_pElixirDescCount_6FB7A4A0)
     {
-        int32_t* i = nullptr;
-        for (i = D2Client_pDWORD_6FB7A440; *i != v56; i += 16)
+        for (int32_t i = 0; i < *D2Client_pElixirDescCount_6FB7A4A0; ++i)
         {
-        LABEL_32:
-            if (++v47 >= *D2Client_pDWORD_6FB7A4A0)
+            ElixirDesc_6FB7A440* pElixierDesc = pElixierDesc = &D2Client_pElixirDescs_6FB7A440[i];
+            if (pElixierDesc->StatId != pUnitFileIndex)
             {
-                return;
-            }
-        }
-
-        auto v16 = STATLIST_UnitGetStatValue(pUnit, STAT_VALUE, 0);
-
-        if (*i == 8 || *i == 9)
-        {
-            v16 >>= 8;
-        }
-        if (*i == 6 || *i == 7)
-        {
-            v16 >>= 8;
-        }
-        if (*i == 10 || *i == 11)
-        {
-            v16 >>= 8;
-        }
-
-        int32_t v19 = 0;
-        if (v16 <= 0)
-        {
-            if (v16 >= 0)
-            {
-                goto LABEL_25;
+                continue;
             }
 
-            v19 = *(i + 5);
+            int32_t statValue = STATLIST_UnitGetStatValue(pUnit, STAT_VALUE, 0);
+
+            if (pElixierDesc->StatId == 8 || pElixierDesc->StatId == 9)
+            {
+                statValue >>= 8;
+            }
+            if (pElixierDesc->StatId == 6 || pElixierDesc->StatId == 7)
+            {
+                statValue >>= 8;
+            }
+            if (pElixierDesc->StatId == 10 || pElixierDesc->StatId == 11)
+            {
+                statValue >>= 8;
+            }
+
+            if (statValue != 0)
+            {
+                if (pElixierDesc->UnknownMustBeOne != 1)
+                {
+                    FOG_DisplayAssert("0", __FILE__, __LINE__);
+                    exit(-1);
+                }
+
+                if (pElixierDesc->UnknownMustBeTwo != 2)
+                {
+                    FOG_DisplayAssert("0", __FILE__, __LINE__);
+                    exit(-1);
+                }
+
+                int32_t elixirNameStrIndex = 0;
+                if (statValue <= 0)
+                {
+                    elixirNameStrIndex = pElixierDesc->PositiveStatStringIndex;
+                }
+                else
+                {
+                    elixirNameStrIndex = pElixierDesc->NegativeStatStringIndex;
+                }
+
+                auto strElixirName = (const wchar_t*)D2LANG_GetStringFromTblIndex(elixirNameStrIndex);
+                outBuff.append(strElixirName);
+                outBuff.append(strSpace);
+
+                if (statValue > 0)
+                {
+                    outBuff.append(strPlus);
+                }
+
+                outBuff.append(std::to_wstring(statValue));
+                outBuff.append(strNewLine);
+            }
         }
-        else
-        {
-            v19 = *(i + 4);
-        }
-
-        auto v18 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v19);
-    LABEL_25:
-        if (v16)
-        {
-            if (*(i + 1) != 1)
-            {
-                FOG_DisplayAssert("0", __FILE__, __LINE__);
-                exit(-1);
-            }
-
-            if (*(i + 3) != 2)
-            {
-                FOG_DisplayAssert("0", __FILE__, __LINE__);
-                exit(-1);
-            }
-
-            outBuff.append(v18);
-            outBuff.append(strSpace);
-
-            if (v16 <= 0)
-            {
-                outBuff.append(std::to_wstring(v16));
-            }
-            else
-            {
-                outBuff.append(strPlus);
-                outBuff.append(std::to_wstring(v16));
-            }
-
-            outBuff.append(strNewLine);
-        }
-        goto LABEL_32;
     }
 }
 
-void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wstring& outBuff, int maxLen, int bFlag, const std::wstring* existingContents)
+void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wstring& outBuff, int bFlag, const std::wstring* existingContents)
 {
     wchar_t scratchpad[8192] = {};
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
@@ -1647,7 +1655,7 @@ void __fastcall ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(D2UnitStr
 
 void DrawTextForBookItem(D2UnitStrc* pItemUnderCursor)
 {
-    wchar_t scratchpad[8192] = { 0 };
+    wchar_t scratchpad[1024] = { 0 };
 
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
 
@@ -1705,7 +1713,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
 {
     std::wstring itemDescription;
     itemDescription.reserve(4096);
-    wchar_t scratchpad[8192] = { 0 };
+    wchar_t scratchpad[1024] = { 0 };
 
     auto pItemUnderCursor = *D2Client_pItemUnderCursor;
     if (pItemUnderCursor == nullptr)
@@ -1816,6 +1824,8 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
         scratchpad[0] = 0;
         D2Client_GetItemTextLineRuneGemStats_6FAF1480(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
         auto v153 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11080_ExInsertSocketsX);
+
+        statLine_RuneGemStats_512.append(scratchpad);
         statLine_RuneGemStats_512.append(v153);
         statLine_RuneGemStats_512.append(strNewLine);
     }
@@ -2041,8 +2051,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
             }
         }
 
-        scratchpad[0] = 0;
-        ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, statLine_Stats_8192, std::size(scratchpad), 1, 0);
+        ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, statLine_Stats_8192, 1, 0);
     }
     else
     {
@@ -2056,7 +2065,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     statLine_Quantity_512.append(scratchpad);
 
     scratchpad[0] = 0;
-    D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, 256);
+    D2Client_BuildItemName_6FADD360(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
     std::wstring itemLineName(scratchpad);
 
     itemDescription.clear();
@@ -2309,8 +2318,7 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                 textLineProperties.append(scratchpad);
             }
 
-            scratchpad[0] = 0;
-            ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, textLineProperties, std::size(scratchpad), 1, 0);
+            ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, textLineProperties, 1, 0);
 
             std::wstring textLineSet;
             scratchpad[0] = 0;
@@ -2564,14 +2572,14 @@ void DrawTextForGambleItem(D2UnitStrc* pItemUnderCursor)
     D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pItemUnderCursorPosX_6FB79298, *D2Client_pItemUnderCursorPosY_6FB7929C + nHeight, 0, 1);
 }
 
-void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, int32_t bFlag)
+void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, int32_t bUnitIsMerchant)
 {
     auto pItemUnderCursor = *D2Client_pItemUnderCursor;
 
-    D2UnitStrc* v229 = pUnit;
-    if (bFlag && D2Client_GetCurrentPlayer_6FB283D0())
+    D2UnitStrc* currentPlayer = pUnit;
+    if (bUnitIsMerchant && D2Client_GetCurrentPlayer_6FB283D0())
     {
-        v229 = D2Client_GetCurrentPlayer_6FB283D0();
+        currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
     }
 
     if (!D2Client_IsBeltOpen_6FAFE9E0())
@@ -2621,6 +2629,7 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
         && pUnit->pInventory
         && !INVENTORY_CompareWithItemsParentInventory(pUnit->pInventory, pItemUnderCursor))
     {
+        // todo: skip this return for maphack inventory viewer
         return;
     }
 
@@ -2639,7 +2648,7 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
 
     if (itemQuality != ITEMQUAL_SET || !ITEMS_CheckItemFlag(pItemUnderCursor, IFLAG_IDENTIFIED, __LINE__, __FILE__))
     {
-        DrawTextForNonSetOrUnidSetItem(v229, bFlag, itemQuality);
+        DrawTextForNonSetOrUnidSetItem(currentPlayer, bUnitIsMerchant, itemQuality);
         return;
     }
 
@@ -2652,7 +2661,7 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
     bool itemIsEquippedOrInInventory = (*D2Client_pIsItemUnderCursorEquipped_6FBB58E4 || *D2Client_pIsItemUnderCursorInInventory_6FBB58E0);
     if (itemIsEquippedOrInInventory && !INVENTORY_GetCursorItem(pUnit->pInventory))
     {
-        DrawTextForSetItem(pUnit_, bFlag, itemQuality);
+        DrawTextForSetItem(pUnit_, bUnitIsMerchant, itemQuality);
         return;
     }
 }
