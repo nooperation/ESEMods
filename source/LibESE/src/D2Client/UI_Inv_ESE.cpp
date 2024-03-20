@@ -1741,6 +1741,91 @@ void __fastcall ESE_D2Client_GetItemTextLineDurability_6FAE4060(D2UnitStrc* pUni
     outBuff.append(strNewLine);
 }
 
+void ESE_D2Client_GetItemTextSocketed_6FAE3EE0(D2UnitStrc* pItem, std::wstring &outBuff)
+{
+    const wchar_t* strNewLine = (const wchar_t* )D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+
+    bool isEthereal = false;
+
+    outBuff.assign(L""); // todo: D2Client_pUnknownStr_6FB9A828? this seems to always be empty and nothing writes to it?
+    if (ITEMS_CheckItemFlag(pItem, IFLAG_ETHEREAL, __LINE__, __FILE__))
+    {
+        std::wstring strEtherealUnused = L"Ethereal";
+
+        const wchar_t* strCannotBeRepaired = (const wchar_t*) D2LANG_GetStringFromTblIndex(STR_IDX_22745_X_Ethereal_CanNotBeRepaired);
+        outBuff.append(strCannotBeRepaired);
+
+        isEthereal = true;
+    }
+
+    if (ITEMS_CheckItemFlag(pItem, IFLAG_SOCKETED, __LINE__, __FILE__))
+    {
+        if (isEthereal)
+        {
+            outBuff.append(L", ");
+        }
+
+        const wchar_t* strSocketed = (const wchar_t*) D2LANG_GetStringFromTblIndex(STR_IDX_3453_Socketable);
+        int32_t numSockets = ITEMS_GetSockets(pItem);
+
+        outBuff.append(strSocketed);
+        outBuff.append(strSpace);
+        outBuff.append(L"(" + std::to_wstring(numSockets) + L")");
+        outBuff.append(strNewLine);
+    }
+    else if (isEthereal)
+    {
+        outBuff.append(strNewLine);
+    }
+}
+
+void ESE_D2Client_GetItemTextLineBlockChance_6FAE4EE0(D2UnitStrc* pUnit, std::wstring &outBuff, D2ItemsTxt* pItemTxtRecord)
+{
+    int32_t blockChance = STATLIST_UnitGetStatValue(pUnit, STAT_TOBLOCK, 0);
+    const auto pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+    if (pCurrentPlayer != nullptr)
+    {
+        D2CharStatsTxt* pCharStatsTxt = nullptr;
+        if (pCurrentPlayer->dwClassId >= 0 && pCurrentPlayer->dwClassId < sgptDataTables->nCharStatsTxtRecordCount)
+        {
+            pCharStatsTxt = &sgptDataTables->pCharStatsTxt[pCurrentPlayer->dwClassId];
+        }
+
+        blockChance += pCharStatsTxt->nBlockFactor;
+
+        auto pHolyShieldSkill = SKILLS_GetHighestLevelSkillFromUnitAndId(pCurrentPlayer, SKILL_HOLYSHIELD);
+        if (pHolyShieldSkill && STATES_CheckState(pCurrentPlayer, STATE_HOLYSHIELD))
+        {
+            auto holyShieldLevel = SKILLS_GetSkillLevel(pCurrentPlayer, pHolyShieldSkill, 1);
+            blockChance += D2Common_11036_GetMonCurseResistanceSubtraction(holyShieldLevel, SKILL_HOLYSHIELD);
+        }
+    }
+
+    if (blockChance == 0)
+    {
+        return;
+    }
+
+    if (blockChance > 75)
+    {
+        blockChance = 75;
+    }
+
+    std::wstring blockChanceString = std::to_wstring(blockChance) + L"%\n";
+
+    if (blockChance > pItemTxtRecord->nBlock)
+    {
+        ColorizeString(blockChanceString, 3);
+    }
+
+    std::wstring strChanceToBlock = (const wchar_t *)D2LANG_GetStringFromTblIndex(STR_IDX_11018_ItemStats1r);
+    ColorizeString(strChanceToBlock, 0);
+
+    outBuff.append(strChanceToBlock);
+    outBuff.append(blockChanceString);
+}
+
 void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQuality)
 {
     std::wstring itemDescription;
@@ -1921,9 +2006,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
 
     if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_WEAPON) || D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_ARMOR))
     {
-        scratchpad[0] = 0;
-        D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, (Unicode*)scratchpad);
-        statLine_Socketed_512.append(scratchpad);
+        ESE_D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, statLine_Socketed_512);
 
         auto requiredDex = 0;
         auto requiredStr = 0;
@@ -1998,10 +2081,8 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
             {
                 ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(pItemUnderCursor, statLine_KickSmiteDamage, itemTxtRecord);
             }
-            scratchpad[0] = 0;
-            D2Client_GetItemTextLineBlockChance_6FAE4EE0(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
-            statLine_blockChance_512.append(scratchpad);
 
+            ESE_D2Client_GetItemTextLineBlockChance_6FAE4EE0(pItemUnderCursor, statLine_blockChance_512, itemTxtRecord);
         }
         else if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_BOOTS) && v229 && v229->dwClassId == PCLASS_ASSASSIN)
         {
@@ -2436,9 +2517,10 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                     AppendColorizedString(itemLineBasicInfo, smiteDamageLine, 0);
                 }
 
-                scratchpad[0] = 0;
-                D2Client_GetItemTextLineBlockChance_6FAE4EE0(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
-                AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
+                std::wstring blockChanceLine;
+                ESE_D2Client_GetItemTextLineBlockChance_6FAE4EE0(pItemUnderCursor, blockChanceLine, pItemsTxtRecord);
+                ColorizeString(blockChanceLine, 0);
+                itemLineBasicInfo.append(blockChanceLine);
             }
             if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_ARMOR)
                 && STATLIST_GetDefenseFromUnit(pItemUnderCursor) > 0)
@@ -2456,9 +2538,7 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
             std::wstring textLineProperties;
             if (ITEMS_CheckItemFlag(pItemUnderCursor, IFLAG_SOCKETED, __LINE__, __FILE__))
             {
-                scratchpad[0] = 0;
-                D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, (Unicode*)scratchpad);
-                textLineProperties.append(scratchpad);
+                ESE_D2Client_GetItemTextSocketed_6FAE3EE0(pItemUnderCursor, textLineProperties);
             }
 
             ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItemUnderCursor, textLineProperties, 1, 0);

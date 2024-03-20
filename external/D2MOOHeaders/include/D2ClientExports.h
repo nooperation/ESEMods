@@ -172,3 +172,5 @@ extern int32_t* D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360;
 extern int32_t* D2Client_pDWORD_6FB794C8;
 extern IdToStringIndexPair* D2Client_pAttackSpeedStringIndices_6FB79334;
 extern IdToStringIndexPair* D2Client_pWeaponClassStringIndices_6FB792D8;
+
+extern const char* D2Client_pUnknownStr_6FB9A828;

@@ -91,6 +91,7 @@ int32_t* D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360 = nullptr; // D936
 int32_t* D2Client_pDWORD_6FB794C8 = nullptr; // D94C8
 IdToStringIndexPair* D2Client_pAttackSpeedStringIndices_6FB79334 = nullptr; // D9334
 IdToStringIndexPair* D2Client_pWeaponClassStringIndices_6FB792D8 = nullptr; // D92D8
+const char* D2Client_pUnknownStr_6FB9A828 = nullptr; // FA828
 
 void InitD2ClientExports()
 {
@@ -182,4 +183,6 @@ void InitD2ClientExports()
     D2Client_pDWORD_6FB794C8 = (int32_t*)((char*)d2ClientModule + 0xD94C8);
     D2Client_pAttackSpeedStringIndices_6FB79334 = (IdToStringIndexPair*)((char*)d2ClientModule + 0xD9334);
     D2Client_pWeaponClassStringIndices_6FB792D8 = (IdToStringIndexPair*)((char*)d2ClientModule + 0xD92D8);
+
+    D2Client_pUnknownStr_6FB9A828 = (const char*)((char*)d2ClientModule + 0xFA828);
 }
