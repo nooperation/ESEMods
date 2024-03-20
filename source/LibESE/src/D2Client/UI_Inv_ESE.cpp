@@ -1651,6 +1651,44 @@ void __fastcall ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(D2UnitStr
     outBuff.append(strNewLine);
 }
 
+void ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(std::wstring &outBuff)
+{
+    const wchar_t* newlineChar1 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+
+    if (*D2Client_pVendorMode_6FBB58EC == VENDORMODE_REPAIR && ITEMS_CheckItemFlag(*D2Client_pItemUnderCursor, IFLAG_ETHEREAL, __LINE__, __FILE__))
+    {
+        const wchar_t* v7 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_22746_X_ItemCanNotBeRepaired);
+
+        std::wstring cannotBeTradedString = std::wstring(v7);
+        ColorizeString(cannotBeTradedString, 1);
+
+        outBuff.append(newlineChar1);
+        outBuff.append(cannotBeTradedString);
+    }
+
+    wchar_t scratchpad[1024] = { 0 };
+    int32_t hasChargedSkills = false;
+    if (D2Client_GetItemTextPriceMaybe_6FAFB200(*D2Client_pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &hasChargedSkills, (struct Unicode*)&scratchpad, std::size(scratchpad)))
+    {
+        if (scratchpad[0] != 0)
+        {
+            outBuff.append(newlineChar1);
+        }
+
+        outBuff.append(scratchpad);
+    }
+    else if (*D2Client_pVendorMode_6FBB58EC != VENDORMODE_REPAIR)
+    {
+        const wchar_t* strItemCannotBeTradedHere = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3333_priceless);
+
+        std::wstring itemCannotBeTradedHereString = std::wstring(strItemCannotBeTradedHere);
+        ColorizeString(itemCannotBeTradedHereString, 1);
+
+        outBuff.append(newlineChar1);
+        outBuff.append(itemCannotBeTradedHereString);
+    }
+}
+
 void DrawTextForBookItem(D2UnitStrc* pItemUnderCursor)
 {
     wchar_t scratchpad[1024] = { 0 };
@@ -1689,9 +1727,7 @@ void DrawTextForBookItem(D2UnitStrc* pItemUnderCursor)
 
     if (*D2Client_pVendorMode_6FBB58EC >= VENDORMODE_TRADE && *D2Client_pVendorMode_6FBB58EC <= VENDORMODE_UNKNOWN)
     {
-        scratchpad[0] = 0;
-        D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
-        itemDescription = std::wstring(scratchpad);
+        ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(itemDescription);
     }
 
     int32_t height = 0;
@@ -2199,9 +2235,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
 
     if (*D2Client_pVendorMode_6FBB58EC && *D2Client_pVendorMode_6FBB58EC >= VENDORMODE_TRADE && *D2Client_pVendorMode_6FBB58EC <= VENDORMODE_UNKNOWN)
     {
-        scratchpad[0] = 0;
-        D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
-        itemDescription = std::wstring(scratchpad);
+        ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(itemDescription);
     }
 
     if (!itemTxtRecord->nQuest || itemTxtRecord->dwCode == 543647084)
@@ -2697,9 +2731,7 @@ void DrawTextForTransmogrifyItem(D2UnitStrc* pItemUnderCursor)
 
     if (*D2Client_pVendorMode_6FBB58EC >= VENDORMODE_TRADE && *D2Client_pVendorMode_6FBB58EC <= VENDORMODE_UNKNOWN)
     {
-        scratchpad[0] = 0;
-        D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
-        itemDescription = std::wstring(scratchpad);
+        ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(itemDescription);
     }
 
     int32_t height = 0;
@@ -2778,9 +2810,7 @@ void DrawTextForGambleItem(D2UnitStrc* pItemUnderCursor)
     itemDescription.append(scratchpad);
     ColorizeString(itemDescription, 0);
 
-    scratchpad[0] = 0;
-    D2Client_AddExtraTradeStatLines_6FAE5A40((const Unicode*)itemDescription.c_str(), (Unicode*)scratchpad);
-    itemDescription = std::wstring(scratchpad);
+    ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(itemDescription);
 
     int32_t nWidth = 0;
     int32_t nHeight = 0;
