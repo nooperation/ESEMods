@@ -1736,16 +1736,14 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     }
 
     std::wstring statLine_ClassRestriction_512;
-    auto v132 = ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor);
-    if (v132 != PCLASS_EVILFORCE)
+    auto itemUnderCursorClass = ITEMS_GetClassOfClassSpecificItem(pItemUnderCursor);
+    if (itemUnderCursorClass != PCLASS_EVILFORCE)
     {
-        auto v134 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v132 + 10917);
-        statLine_ClassRestriction_512.append(v134);
+        auto strClassRestriction = (const wchar_t*)D2LANG_GetStringFromTblIndex(itemUnderCursorClass + 10917);
+        statLine_ClassRestriction_512.append(strClassRestriction);
         statLine_ClassRestriction_512.append(strNewLine);
 
-        auto v135 = v229 ? v229->dwClassId : -1;
-
-        if (v135 != v132)
+        if(v229 && v229->dwClassId != itemUnderCursorClass)
         {
             colorCodeClassRestriction = 1;
         }
@@ -1770,16 +1768,16 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
         if (STATLIST_UnitGetStatValue(pItemUnderCursor, STAT_QUANTITY, 0) > 0)
         {
             // TODO: This is going to be wiped out later with a strcpy to itemDescription...
-            auto v143 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3462_ItemStats1i);
-            itemDescription.append(v143);
+            auto strQuantity = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3462_ItemStats1i);
+            itemDescription.append(strQuantity);
 
             auto itemQuantity = STATLIST_UnitGetStatValue(pItemUnderCursor, STAT_QUANTITY, 0);
             itemDescription.append(strSpace);
             itemDescription.append(std::to_wstring(itemQuantity));
             itemDescription.append(strNewLine);
 
-            auto v145 = (const wchar_t*)D2LANG_GetStringFromTblIndex(itemTxtRecord->wNameStr);
-            itemDescription.append(v145);
+            auto strItemName = (const wchar_t*)D2LANG_GetStringFromTblIndex(itemTxtRecord->wNameStr);
+            itemDescription.append(strItemName);
         }
     }
     else
@@ -1823,10 +1821,10 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
         }
         scratchpad[0] = 0;
         D2Client_GetItemTextLineRuneGemStats_6FAF1480(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
-        auto v153 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11080_ExInsertSocketsX);
+        auto strCanBeInsertedIntoSocket = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11080_ExInsertSocketsX);
 
         statLine_RuneGemStats_512.append(scratchpad);
-        statLine_RuneGemStats_512.append(v153);
+        statLine_RuneGemStats_512.append(strCanBeInsertedIntoSocket);
         statLine_RuneGemStats_512.append(strNewLine);
     }
 
@@ -1835,43 +1833,39 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     {
         if (pItemUnderCursor->pInventory)
         {
-            auto v157 = INVENTORY_GetFirstItem(pItemUnderCursor->pInventory);
-            if (v157)
+            auto pItemInventoryIter = INVENTORY_GetFirstItem(pItemUnderCursor->pInventory);
+            if (pItemInventoryIter)
             {
+                auto bHasAddedStartingQuote = 0;
+                auto strRuneQuote = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_20506_RuneQuote);
 
-                auto v158 = 0;
-                do
+                while (INVENTORY_UnitIsItem(pItemInventoryIter))
                 {
-                    auto v159 = INVENTORY_UnitIsItem(v157);
-                    if (!v159)
+                    if (D2Common_10731_ITEMS_CheckItemTypeId(pItemInventoryIter, ITEMTYPE_RUNE))
                     {
-                        break;
-                    }
-
-                    if (D2Common_10731_ITEMS_CheckItemTypeId(v159, ITEMTYPE_RUNE))
-                    {
-                        auto v161 = DATATBLS_GetItemsTxtRecord(v159->dwClassId)->dwGemOffset;
-                        if (v161 > 0)
+                        auto gemTxtRecordIndex = DATATBLS_GetItemsTxtRecord(pItemInventoryIter->dwClassId)->dwGemOffset;
+                        if (gemTxtRecordIndex > 0)
                         {
-                            auto v162 = DATATBLS_GetGemsTxtRecord(v161);
-                            if (v162)
+                            auto gemsTxtRecord = DATATBLS_GetGemsTxtRecord(gemTxtRecordIndex);
+                            if (gemsTxtRecord)
                             {
-                                if (!v158)
+                                if (!bHasAddedStartingQuote)
                                 {
-                                    v158 = 1;
-                                    auto v163 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_20506_RuneQuote);
-                                    statLine_RunewordName_512.append(v163);
+                                    bHasAddedStartingQuote = 1;
+                                    statLine_RunewordName_512.append(strRuneQuote);
                                 }
 
-                                AppendString(statLine_RunewordName_512, v162->szLetter);
+                                AppendString(statLine_RunewordName_512, gemsTxtRecord->szLetter);
                             }
                         }
                     }
-                    v157 = INVENTORY_GetNextItem(v157);
-                } while (v157);
-                if (v158)
+
+                    pItemInventoryIter = INVENTORY_GetNextItem(pItemInventoryIter);
+                }
+
+                if (bHasAddedStartingQuote)
                 {
-                    AppendString(statLine_RunewordName_512, "'");
+                    statLine_RunewordName_512.append(strRuneQuote);
                     statLine_RunewordName_512.append(strNewLine);
                 }
             }
