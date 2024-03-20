@@ -14,6 +14,8 @@
 #include "D2Gfx.h"
 #include "D2Config.h"
 
+void ESE_D2Client_GetItemTextLineAttackSpeed_6FAE5570(D2UnitStrc* pItem, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord);
+
 void AppendString(std::wstring& dest, const char* source)
 {
     std::string str(source);
@@ -345,7 +347,7 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
         auto strSkillName = (const wchar_t*)D2LANG_GetStringFromTblIndex(skillNameStrIndex);
         auto strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(itemStatCostTxtForStat->wDescStrPos);
 
-        swprintf_s(scratchpad, strFormat, statValue, recordId& sgptDataTables->nShiftedStuff, strSkillName);
+        swprintf_s(scratchpad, strFormat, statValue, recordId & sgptDataTables->nShiftedStuff, strSkillName);
         outBuff.append(scratchpad);
 
         break;
@@ -1049,7 +1051,7 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
             wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->minDamage, damageRangeValue->maxDamage, damageRangeValue->length / 25);
             outBuff.append(scratchpad);
-            
+
             return true;
         }
         else
@@ -1059,7 +1061,7 @@ bool ESE_D2Client_PrintDamageRange_6FAF3460(DamageRangeValue* statValues, D2C_It
             wchar_t scratchpad[256] = { 0 };
             swprintf_s(scratchpad, strFormat, damageRangeValue->maxDamage, damageRangeValue->length / 25);
             outBuff.append(scratchpad);
-            
+
             return true;
         }
     }
@@ -1134,7 +1136,7 @@ struct UnknownStructA
     int32_t unknownC;
 };
 #pragma pack(pop)
-void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, std::wstring& outBuff, int outBuffMaxLen, int bUnknownFlag1, int unitState, int nUnitState, int nUnitFlags, int addNewline)
+void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, std::wstring& outBuff, int bUnknownFlag1, int unitState, int nUnitState, int nUnitFlags, int addNewline)
 {
     auto strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     auto strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
@@ -1435,16 +1437,12 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
 
 void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wstring& outBuff, int bFlag, const std::wstring* existingContents)
 {
-    wchar_t scratchpad[8192] = {};
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     const wchar_t* strComma = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3852_KeyComma);
 
     // STATE_RUNEWORD and UNITFLAG_SKSRVDOFUNC may not be the correct names/enums. 171 and 64
-    //D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(pItem, (Unicode *)scratchpad, std::size(scratchpad), 1, 0, STATE_RUNEWORD, UNITFLAG_SKSRVDOFUNC, bFlag);
-    //std::wstring propertiesBuff(scratchpad);
-
     std::wstring propertiesBuff;
-    ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(pItem, propertiesBuff, std::size(scratchpad), 1, 0, STATE_RUNEWORD, UNITFLAG_SKSRVDOFUNC, bFlag);
+    ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(pItem, propertiesBuff, 1, 0, STATE_RUNEWORD, UNITFLAG_SKSRVDOFUNC, bFlag);
 
     if (existingContents != nullptr && propertiesBuff.length() != 0)
     {
@@ -1470,7 +1468,7 @@ void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wst
     }
 }
 
-void RenderMercCloseButtonText(int32_t mouseX, int32_t mouseY) 
+void RenderMercCloseButtonText(int32_t mouseX, int32_t mouseY)
 {
     auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 63;
     auto closeButtonX = *D2Client_pScreenXOffset + 272;
@@ -1484,7 +1482,7 @@ void RenderMercCloseButtonText(int32_t mouseX, int32_t mouseY)
     }
 }
 
-void RenderCloseButtonText(int32_t mouseX, int32_t mouseY) 
+void RenderCloseButtonText(int32_t mouseX, int32_t mouseY)
 {
     auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 64;
     auto closeButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 302;
@@ -1534,7 +1532,7 @@ void RenderDropGoldText(int32_t mouseX, int32_t mouseY)
     }
 }
 
-void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY) 
+void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY)
 {
     auto isExpansion = FOG_IsExpansion();
     auto isLod = D2Client_IsLod_6FAAC080();
@@ -1588,7 +1586,7 @@ void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY)
     }
 }
 
-void __fastcall ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(D2UnitStrc* pUnit, std::wstring &outBuff, D2ItemsTxt* pItemTxtRecord)
+void __fastcall ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(D2UnitStrc* pUnit, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord)
 {
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
@@ -1605,7 +1603,7 @@ void __fastcall ESE_D2Client_GetItemTextLineBookQuantity_6FAE54B0(D2UnitStrc* pU
     }
 }
 
-void __fastcall ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(D2UnitStrc* pItem, std::wstring &outBuff, D2ItemsTxt* pItemTxtRecord)
+void __fastcall ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(D2UnitStrc* pItem, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord)
 {
     const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
@@ -1709,6 +1707,40 @@ void DrawTextForBookItem(D2UnitStrc* pItemUnderCursor)
     D2Win_DrawFramedText_10129((const Unicode*)itemDescription.c_str(), *D2Client_pItemUnderCursorPosX_6FB79298, height + *D2Client_pItemUnderCursorPosY_6FB7929C, 0, 0);
 }
 
+void __fastcall ESE_D2Client_GetItemTextLineDurability_6FAE4060(D2UnitStrc* pUnit, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord)
+{
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+
+    if (!ITEMS_HasDurability(pUnit) || STATLIST_GetMaxDurabilityFromUnit(pUnit) <= 0 || ITEMS_CheckIfThrowable(pUnit))
+    {
+        return;
+    }
+
+    auto strDurability = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3457_ItemStats1d);
+    auto strOf = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3463_ItemStats1j);
+
+    auto maxDurabilityPercent = STATLIST_GetUnitStatBonus(pUnit, STAT_ITEM_MAXDURABILITY_PERCENT, 0);
+    auto durability = STATLIST_UnitGetStatValue(pUnit, STAT_DURABILITY, 0);
+    auto maxDurability = STATLIST_GetMaxDurabilityFromUnit(pUnit);
+
+    outBuff.append(strDurability);
+    outBuff.append(strSpace);
+    outBuff.append(std::to_wstring(durability));
+    outBuff.append(strSpace);
+    outBuff.append(strOf);
+    outBuff.append(strSpace);
+
+    std::wstring maxDurabilityStr = std::to_wstring(maxDurability);
+    if (maxDurabilityPercent != 0)
+    {
+        ColorizeString(maxDurabilityStr, 3);
+    }
+
+    outBuff.append(maxDurabilityStr);
+    outBuff.append(strNewLine);
+}
+
 void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQuality)
 {
     std::wstring itemDescription;
@@ -1743,7 +1775,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
         statLine_ClassRestriction_512.append(strClassRestriction);
         statLine_ClassRestriction_512.append(strNewLine);
 
-        if(v229 && v229->dwClassId != itemUnderCursorClass)
+        if (v229 && v229->dwClassId != itemUnderCursorClass)
         {
             colorCodeClassRestriction = 1;
         }
@@ -1782,9 +1814,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     }
     else
     {
-        scratchpad[0] = 0;
-        D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
-        statLine_Durability_512.append(scratchpad);
+        ESE_D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, statLine_Durability_512, itemTxtRecord);
     }
 
     std::wstring statLine_RequiredLevel512;
@@ -1960,9 +1990,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
                 D2Client_GetItemTextLineDamage_6FAE43D0(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
                 statLine_Damage_512.append(scratchpad);
             }
-            scratchpad[0] = 0;
-            D2Client_GetItemTextLineAttackSpeed_6FAE5570(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
-            statLine_AttackSpeed_2048.append(scratchpad);
+            ESE_D2Client_GetItemTextLineAttackSpeed_6FAE5570(pItemUnderCursor, statLine_AttackSpeed_2048, itemTxtRecord);
         }
         if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_SHIELD))
         {
@@ -2139,6 +2167,135 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     return;
 }
 
+void ESE_D2Client_GetItemTextLineLevelRequirement_6FAE41B0(std::wstring& outBuff, int levelRequirement)
+{
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strRequiredLevel = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3469_ItemStats1p);
+
+    outBuff.assign(strRequiredLevel);
+    outBuff.append(strSpace);
+    outBuff.append(std::to_wstring(levelRequirement));
+    outBuff.append(strNewLine);
+}
+
+void ESE_D2Client_GetItemTextStrRequirement_6FAE4250(std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord, int requiredStr)
+{
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    auto totalRequiredStr = requiredStr + pItemTxtRecord->wReqStr;
+    if (totalRequiredStr > 0)
+    {
+        const wchar_t* v9 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3458_ItemStats1e);
+
+        outBuff.assign(v9);
+        outBuff.append(strSpace);
+        outBuff.append(std::to_wstring(totalRequiredStr));
+        outBuff.append(strNewLine);
+    }
+    else
+    {
+        outBuff.clear();
+    }
+}
+
+void ESE_D2Client_GetItemTextDexRequirement_6FAE4310(std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord, int requiredDex)
+{
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    auto totalRequiredDex = requiredDex + pItemTxtRecord->wReqDex;
+    if (totalRequiredDex > 0)
+    {
+        const wchar_t* v9 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3459_ItemStats1f);
+
+        outBuff.append(v9);
+        outBuff.append(strSpace);
+        outBuff.append(std::to_wstring(totalRequiredDex));
+        outBuff.append(strNewLine);
+    }
+    else
+    {
+        outBuff.clear();
+    }
+}
+
+void ESE_D2Client_GetItemTextLineAttackSpeed_6FAE5570(D2UnitStrc* pItem, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord)
+{
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strDash = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3996_dash);
+    D2UnitStrc* pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+    int32_t weaponAttackSpeed = ITEMS_GetWeaponAttackSpeed(pCurrentPlayer, pItem);
+    int32_t fasterCastRateBonus = STATLIST_GetUnitStatBonus(pItem, STAT_ITEM_FASTERATTACKRATE, 0);
+
+    int32_t attackSpeedIndex = 5; // Very Slow Attack Speed
+    if (weaponAttackSpeed < 28)
+    {
+        attackSpeedIndex = 1; // Very Fast Attack Speed
+        if (weaponAttackSpeed >= 10)
+        {
+            bool isBowOrCrossbow = D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_CROSSBOW) || D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_BOW);
+            int32_t classId = -1;
+            if (pCurrentPlayer)
+            {
+                classId = pCurrentPlayer->dwClassId;
+            }
+            attackSpeedIndex = D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360[5 * weaponAttackSpeed - 50 + D2Client_pDWORD_6FB794C8[2 * classId + isBowOrCrossbow]];
+        }
+    }
+
+    // D2Client_pWeaponClassStringIndices_6FB792D8 = [
+    //   {id = 26 stringIndex = 4085 }  // Staff Class
+    //   {id = 28 stringIndex = 4078 }  // Axe Class
+    //   {id = 30 stringIndex = 4079 }  // Sword Class
+    //   {id = 32 stringIndex = 4080 }  // Dagger Class
+    //   {id = 38 stringIndex = 4081 }  // Equip to Throw
+    //   {id = 44 stringIndex = 4082 }  // Javelin Class
+    //   {id = 33 stringIndex = 4083 }  // Spear Class
+    //   {id = 27 stringIndex = 4084 }  // Bow Class
+    //   {id = 34 stringIndex = 4086 }  // Polearm Class
+    //   {id = 35 stringIndex = 4087 }  // Crossbow Class
+    //   {id = 67 stringIndex = 21258 } // Claw Class
+    //   {id = 88 stringIndex = 21258 } // Claw Class
+    //   {id = 68 stringIndex = 4085 }  // Staff Class
+    //   {id = 25 stringIndex = 4085 }  // Staff Class
+    //   {id = 57 stringIndex = 4077 }  // Mace Class
+    // ]
+    for (int32_t i = 0; i < 15; i++)
+    {
+        if (!D2Common_10731_ITEMS_CheckItemTypeId(pItem, D2Client_pWeaponClassStringIndices_6FB792D8[i].id))
+        {
+            continue;
+        }
+
+        const wchar_t* strWeaponClass = (const wchar_t*)D2LANG_GetStringFromTblIndex(D2Client_pWeaponClassStringIndices_6FB792D8[i].stringIndex);
+        outBuff.append(strWeaponClass);
+        outBuff.append(strSpace);
+        outBuff.append(strDash);
+        outBuff.append(strSpace);
+
+        break;
+    }
+
+    // D2Client_pAttackSpeedStringIndices_6FB79334 = [
+    //   {id = 0 stringIndex = 4088 } // Fastest Attack Speed
+    //   {id = 1 stringIndex = 4089 } // Very Fast Attack Speed
+    //   {id = 2 stringIndex = 4090 } // Fast Attack Speed
+    //   {id = 3 stringIndex = 4091 } // Normal Attack Speed
+    //   {id = 4 stringIndex = 4092 } // Slow Attack Speed
+    //   {id = 5 stringIndex = 4093 } // Very Slow Attack Speed
+    //   {id = 6 stringIndex = 4094 } // Slowest Attack Speed
+    // ];
+    std::wstring strAttackSpeed((const wchar_t*)D2LANG_GetStringFromTblIndex(D2Client_pAttackSpeedStringIndices_6FB79334[attackSpeedIndex].stringIndex));
+    if (fasterCastRateBonus != 0)
+    {
+        ColorizeString(strAttackSpeed, 3);
+    }
+    
+    outBuff.append(strAttackSpeed);
+    outBuff.append(strNewLine);
+}
+
 void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
 {
     std::wstring itemDescription;
@@ -2188,9 +2345,7 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
             BOOL bRequiresLevel = false;
             ITEMS_CheckRequirements(pItemUnderCursor, pUnit_, 0, &bRequiresStr, &bRequiresDex, &bRequiresLevel);
 
-            scratchpad[0] = 0;
-            D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
-            itemLineDurability.append(scratchpad);
+            ESE_D2Client_GetItemTextLineDurability_6FAE4060(pItemUnderCursor, itemLineDurability, pItemsTxtRecord);
 
             auto levelRequirement = ITEMS_GetLevelRequirement(pItemUnderCursor, pUnit_);
             if (levelRequirement > 1)
@@ -2200,9 +2355,7 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                     colorCodeLevelRequirement = 1;
                 }
 
-                scratchpad[0] = 0;
-                D2Client_GetItemTextLineLevelRequirement_6FAE41B0((Unicode*)scratchpad, levelRequirement);
-                itemLineLevelRequirement.append(scratchpad);
+                ESE_D2Client_GetItemTextLineLevelRequirement_6FAE41B0(itemLineLevelRequirement, levelRequirement);
             }
             if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_WEAPON) || D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_ANY_ARMOR))
             {
@@ -2227,9 +2380,7 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                         colorCodeStrRequirement = 1;
                     }
 
-                    scratchpad[0] = 0;
-                    D2Client_GetItemTextStrRequirement_6FAE4250((Unicode*)scratchpad, pItemsTxtRecord, strRequirement);
-                    itemLineStrRequirement.append(scratchpad);
+                    ESE_D2Client_GetItemTextStrRequirement_6FAE4250(itemLineStrRequirement, pItemsTxtRecord, strRequirement);
                 }
                 if (pItemsTxtRecord->wReqDex)
                 {
@@ -2238,9 +2389,7 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                         colorCodeDexRequirement = 1;
                     }
 
-                    scratchpad[0] = 0;
-                    D2Client_GetItemTextDexRequirement_6FAE4310((Unicode*)scratchpad, pItemsTxtRecord, dexRequirement);
-                    itemLineDexRequirement.append(scratchpad);
+                    ESE_D2Client_GetItemTextDexRequirement_6FAE4310(itemLineDexRequirement, pItemsTxtRecord, dexRequirement);
                 }
             }
 
@@ -2267,9 +2416,9 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
 
             if (D2Common_10731_ITEMS_CheckItemTypeId(pItemUnderCursor, ITEMTYPE_WEAPON))
             {
-                scratchpad[0] = 0;
-                D2Client_GetItemTextLineAttackSpeed_6FAE5570(pItemUnderCursor, (Unicode*)scratchpad, pItemsTxtRecord);
-                AppendColorizedString(itemLineBasicInfo, scratchpad, 0);
+                std::wstring attackSpeed;
+                ESE_D2Client_GetItemTextLineAttackSpeed_6FAE5570(pItemUnderCursor, attackSpeed, pItemsTxtRecord);
+                AppendColorizedString(itemLineBasicInfo, attackSpeed, 0);
 
                 if (STATLIST_GetMinDamageFromUnit(pItemUnderCursor, 0) >= 0 && STATLIST_GetMaxDamageFromUnit(pItemUnderCursor, 0) >= 0)
                 {

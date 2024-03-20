@@ -87,6 +87,11 @@ ElixirDesc_6FB7A440* D2Client_pElixirDescs_6FB7A440 = nullptr; // DA440
 D2DrlgActStrc** D2Client_pDWORD_6FBA7984 = nullptr; // 6A440
 uint16_t* D2Client_pWORD_6FB6FA30 = nullptr; // CFA30
 
+int32_t* D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360 = nullptr; // D9360
+int32_t* D2Client_pDWORD_6FB794C8 = nullptr; // D94C8
+IdToStringIndexPair* D2Client_pAttackSpeedStringIndices_6FB79334 = nullptr; // D9334
+IdToStringIndexPair* D2Client_pWeaponClassStringIndices_6FB792D8 = nullptr; // D92D8
+
 void InitD2ClientExports()
 {
     auto d2ClientModule = GetModuleHandle("D2Client");
@@ -172,4 +177,9 @@ void InitD2ClientExports()
     D2Client_pElixirDescs_6FB7A440 = (ElixirDesc_6FB7A440*)((char*)d2ClientModule + 0xDA440);
     D2Client_pDWORD_6FBA7984 = (D2DrlgActStrc**)((char*)d2ClientModule + 0x107984);
     D2Client_pWORD_6FB6FA30 = (uint16_t*)((char*)d2ClientModule + 0xCFA30);
+
+    D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360 = (int32_t * )((char *)d2ClientModule + 0xD9360);
+    D2Client_pDWORD_6FB794C8 = (int32_t*)((char*)d2ClientModule + 0xD94C8);
+    D2Client_pAttackSpeedStringIndices_6FB79334 = (IdToStringIndexPair*)((char*)d2ClientModule + 0xD9334);
+    D2Client_pWeaponClassStringIndices_6FB792D8 = (IdToStringIndexPair*)((char*)d2ClientModule + 0xD92D8);
 }
