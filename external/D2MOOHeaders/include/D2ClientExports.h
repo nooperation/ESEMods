@@ -7,6 +7,7 @@
 #include <D2StatList.h>
 #include <D2Inventory.h>
 #include <Units/UnitFinds.h>
+#include <D2BitManip.h>
 
 struct Unicode;
 struct D2SkillStrc;
@@ -79,13 +80,17 @@ typedef void (__fastcall* D2Client_GetItemTextSet_6FAF32B0_t)(D2UnitStrc* pUnit,
 typedef void (__fastcall* D2Client_GetItemTextSetB_6FAF33C0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* outBuff, int maxLength);
 typedef void (__stdcall* D2Client_sub_6FADCFE0_t)(struct Unicode* outBuff, const struct Unicode* format, ...);
 typedef D2UnitStrc* (__fastcall* D2Client_sub_6FAE5990_t)(D2InventoryStrc* pInventory, int nSetItemId);
-typedef bool (__fastcall* D2Client_GetItemTextPriceMaybe_6FAFB200_t)(D2UnitStrc* pItem, int a2, int* hasChargedSkills, struct Unicode* outBuff, int maxLength);
+typedef bool (__fastcall* D2Client_GetItemTextLinePrice_6FAFB200_t)(D2UnitStrc* pItem, int a2, int* pTransactionCost, struct Unicode* outBuff, int maxLength);
 
 // UI-Inv-Mod
 typedef __int16(__fastcall* D2Client_GetSkillStringId_6FB0A440_t)(int nSkillsTxtIndex, int offset);
 typedef void(__fastcall* D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffLen);
 typedef int(__fastcall* D2Client_sub_6FAF3460_t)(int* statValues, D2C_ItemStats nStatId, struct Unicode* outBuff);
 typedef int(__fastcall* D2Client_GetItemPropertyLine_6FAF21C0_t)(D2UnitStrc* pUnit, D2StatListStrc* pStatListEx, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, Unicode* outputBuffer256);
+
+typedef D2UnitStrc* (__fastcall* D2Client_FindUnit_6FB269F0_t)(int32_t unitId, int32_t unitType); // 869F0
+typedef int8_t (__fastcall* D2Client_GetCurrentDifficulty_6FAAC090_t)(); // C090
+typedef int32_t (__fastcall* D2Client_IsVendorRepairActive_6FAEB930_t)(); // 4B930
 
 extern D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0; // 883D0                                       | 6FB283D0
 extern D2Client_IsBeltOpen_6FAFE9E0_t D2Client_IsBeltOpen_6FAFE9E0; // 5E9E0                                                   | 6FAFE9E0
@@ -121,7 +126,7 @@ extern D2Client_GetItemTextSet_6FAF32B0_t D2Client_GetItemTextSet_6FAF32B0; // 5
 extern D2Client_GetItemTextSetB_6FAF33C0_t D2Client_GetItemTextSetB_6FAF33C0; // 533C0                                         | 6FAF33C0
 extern D2Client_sub_6FADCFE0_t D2Client_sub_6FADCFE0; // 3CFE0                                                                 | 6FADCFE0
 extern D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990; // 45990                                                                 | 6FAE5990
-extern D2Client_GetItemTextPriceMaybe_6FAFB200_t D2Client_GetItemTextPriceMaybe_6FAFB200; // 5B200                             | 6FAFB200
+extern D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200; // 5B200                             | 6FAFB200
 
 extern int32_t* D2Client_pScreenXOffset; // 11A748                                                                             | 6FBBA748
 extern int32_t* D2Client_pScreenYOffset; // 11A74C                                                                             | 6FBBA74C
@@ -152,7 +157,11 @@ extern D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440; 
 extern D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLineDamageToUndead_6FAF12C0; //512C0                                                                  | 6FAF12C0
 extern D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460; //53460                                                                  | 6FAF3460
 extern D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0; //521C0                                  | 6FAF21C0
-                                                                                                                                 
+
+extern D2Client_FindUnit_6FB269F0_t D2Client_FindUnit_6FB269F0; // 869F0
+extern D2Client_GetCurrentDifficulty_6FAAC090_t D2Client_GetCurrentDifficulty_6FAAC090; // C090
+extern D2Client_IsVendorRepairActive_6FAEB930_t D2Client_IsVendorRepairActive_6FAEB930; // 4B930
+
 extern int32_t* D2Client_pDWORD_6FB7A438; // DA438                                                                             | 6FB7A438
 extern int32_t* D2Client_pDWORD_6FB79B48; // D9B48                                                                             | 6FB79B48
 extern int32_t* D2Client_pElixirDescCount_6FB7A4A0; // DA4A0                                                                             | 6FB7A4A0
@@ -168,9 +177,15 @@ struct IdToStringIndexPair
 };
 #pragma pack(pop)
 
-extern int32_t* D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360;
-extern int32_t* D2Client_pDWORD_6FB794C8;
-extern IdToStringIndexPair* D2Client_pAttackSpeedStringIndices_6FB79334;
-extern IdToStringIndexPair* D2Client_pWeaponClassStringIndices_6FB792D8;
+extern int32_t* D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360; // D9360
+extern int32_t* D2Client_pDWORD_6FB794C8; // D94C8
+extern IdToStringIndexPair* D2Client_pAttackSpeedStringIndices_6FB79334; // D9334
+extern IdToStringIndexPair* D2Client_pWeaponClassStringIndices_6FB792D8; // D92D8
 
-extern const char* D2Client_pUnknownStr_6FB9A828;
+extern const char* D2Client_pUnknownStr_6FB9A828; // FA828
+
+extern D2BitBufferStrc** D2Client_pQuestFlags_6FBB5D13; // 115D13
+extern int32_t* D2Client_pIsNpcDialogOpen_6FBB5CF9; // 115CF9
+extern int32_t* D2Client_pActiveNpcId_6FBB5CF5; // 115CF5
+extern int32_t* D2Client_pIsGamblingSession_6FBB5D7C; // 115D7C
+extern D2UnitStrc** D2Client_pGameUnits_6FBBAA00; // 11AA00

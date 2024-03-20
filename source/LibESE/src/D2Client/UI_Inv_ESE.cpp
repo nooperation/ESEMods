@@ -1651,6 +1651,198 @@ void __fastcall ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(D2UnitStr
     outBuff.append(strNewLine);
 }
 
+int __fastcall ESE_D2Client_GetItemTextLinePrice_6FAFB200(D2UnitStrc* pItem, int a2, int* pTransactionCost, std::wstring &outBuff)
+{
+    *pTransactionCost = 0;
+    if (!pItem)
+    {
+        return 0;
+    }
+
+    if (ITEMS_GetItemType(pItem) == ITEMTYPE_GOLD)
+    {
+        return 0;
+    }
+
+    int32_t stringIndex;
+    if (!a2)
+    {
+        D2C_TransactionTypes transactionType = TRANSACTIONTYPE_BUY;
+        if (D2Client_pIsGamblingSession_6FBB5D7C)
+        {
+            transactionType = TRANSACTIONTYPE_GAMBLE;
+        }
+
+        D2UnitStrc* activeNpc;
+        int32_t activeNpcClassId = -1;
+        if (D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
+        {
+            activeNpcClassId = activeNpc->dwClassId;
+        }
+
+        D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
+        D2UnitStrc* currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+        *pTransactionCost = ITEMS_GetTransactionCost(currentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, transactionType);
+        stringIndex = STR_IDX_3329_cost;
+        goto LABEL_54;
+    }
+
+    if (!D2Client_pIsNpcDialogOpen_6FBB5CF9 || !D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1))
+    {
+        return 0;
+    }
+
+    D2UnitStrc* activeNpc = nullptr;
+    int32_t activeNpcClassId = -1;
+    if (D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
+    {
+        activeNpcClassId = activeNpc->dwClassId;
+    }
+
+    DATATBLS_GetItemsTxtRecord(pItem->dwClassId);
+    if (activeNpcClassId > 0xFC)
+    {
+        if (activeNpcClassId > 0x109)
+        {
+            switch (activeNpcClassId)
+            {
+            case 0x195u:
+            case 0x200u:
+            case 0x201u:
+            case 0x202u:
+                goto LABEL_23;
+            case 0x1FFu:
+            {            
+            LABEL_27:
+                if (!D2Client_IsVendorRepairActive_6FAEB930())
+                {
+                    goto LABEL_23;
+                }
+                if (!ITEMS_CheckItemFlag(pItem, IFLAG_IDENTIFIED, __LINE__, __FILE__))
+                {
+                    std::wstring v17 = std::wstring((const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4022_strCannotDoThisToUnknown));
+                    ColorizeString(v17, 1);
+
+                    outBuff.append(v17);
+                    return 1;
+                }
+                if (ITEMS_GetItemType(pItem) == ITEMTYPE_GOLD || !ITEMS_IsRepairable(pItem))
+                {
+                    return 0;
+                }
+
+                int32_t v19;
+                int32_t v20;
+                if (!ITEMS_HasDurability(pItem) || (v19 = STATLIST_GetMaxDurabilityFromUnit(pItem)) == 0 || STATLIST_UnitGetStatValue(pItem, STAT_DURABILITY, 0) >= v19)
+                {
+                    if (!ITEMS_CheckIfStackable(pItem) || (v20 = STATLIST_UnitGetStatValue(pItem, STAT_QUANTITY, 0), v20 >= ITEMS_GetTotalMaxStack(pItem)))
+                    {
+                        if (!ITEMS_HasUsedCharges(pItem, (BOOL*)&pTransactionCost) || pTransactionCost)
+                        {
+                            return 0;
+                        }
+                    }
+                }
+
+                activeNpcClassId = -1;
+                if (D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
+                {
+                    activeNpcClassId = activeNpc->dwClassId;
+                }
+
+                D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
+                D2UnitStrc* pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+                *pTransactionCost = ITEMS_GetTransactionCost(pCurrentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, TRANSACTIONTYPE_REPAIR);
+                stringIndex = STR_IDX_3330_Repair;
+                break;
+            }
+            default:
+                return 0;
+            }
+        }
+        else
+        {
+            if (activeNpcClassId != 265)
+            {
+                switch (activeNpcClassId)
+                {
+                case 0xFDu:
+                case 0x101u:
+                    goto LABEL_27;
+                case 0xFEu:
+                case 0xFFu:
+                    goto LABEL_23;
+                default:
+                    return 0;
+                }
+            }
+        LABEL_19:
+            auto isIdentified = ITEMS_CheckItemFlag(pItem, IFLAG_IDENTIFIED, __LINE__, __FILE__);
+            if (isIdentified)
+            {
+                outBuff.clear();
+                return true;
+            }
+
+            auto v12 = -(QUESTRECORD_GetQuestState(*D2Client_pQuestFlags_6FBB5D13, QUEST_A1Q4_CAIN, 0) != 0);
+            stringIndex = STR_IDX_3332_Identify;
+
+            v12 = (v12 & 0xFFFFFF00) | (v12 & 0x9C);
+            *pTransactionCost = v12 + 100;
+        }
+        goto LABEL_54;
+    }
+    if (activeNpcClassId != 252)
+    {
+        switch (activeNpcClassId)
+        {
+        case 0x93u:
+        case 0x94u:
+        case 0xB1u:
+        case 0xC7u:
+        case 0xCAu:
+        case 0xF6u:
+            break;
+        case 0x9Au:
+        case 0xB2u:
+            goto LABEL_27;
+        case 0xF4u:
+        case 0xF5u:
+            goto LABEL_19;
+        default:
+            return 0;
+        }
+    }
+
+LABEL_23:
+    int32_t isNotQuestItem = ITEMS_IsNotQuestItem(pItem);
+    if (isNotQuestItem)
+    {
+        D2UnitStrc* activeNpc;
+        int32_t activeNpcClassId = -1;
+        if (*D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
+        {
+            activeNpcClassId = activeNpc->dwClassId;
+        }
+
+        D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
+        D2UnitStrc *currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+
+        *pTransactionCost = ITEMS_GetTransactionCost(currentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, TRANSACTIONTYPE_SELL);
+        stringIndex = STR_IDX_3331_Sell;
+
+    LABEL_54:
+        const wchar_t* strString = (const wchar_t*)D2LANG_GetStringFromTblIndex(stringIndex);
+
+        outBuff.assign(strString);
+        outBuff.append(std::to_wstring(*pTransactionCost));
+
+        return 1;
+    }
+
+    return 0;
+}
+
 void ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(std::wstring &outBuff)
 {
     const wchar_t* newlineChar1 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
@@ -1666,16 +1858,16 @@ void ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(std::wstring &outBuff)
         outBuff.append(cannotBeTradedString);
     }
 
-    wchar_t scratchpad[1024] = { 0 };
-    int32_t hasChargedSkills = false;
-    if (D2Client_GetItemTextPriceMaybe_6FAFB200(*D2Client_pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &hasChargedSkills, (struct Unicode*)&scratchpad, std::size(scratchpad)))
+    std::wstring itemPriceString;
+    int32_t transactionCost = 0;
+    if (ESE_D2Client_GetItemTextLinePrice_6FAFB200(*D2Client_pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &transactionCost, itemPriceString))
     {
-        if (scratchpad[0] != 0)
+        if (itemPriceString[0] != 0)
         {
             outBuff.append(newlineChar1);
         }
 
-        outBuff.append(scratchpad);
+        outBuff.append(itemPriceString);
     }
     else if (*D2Client_pVendorMode_6FBB58EC != VENDORMODE_REPAIR)
     {
@@ -2643,9 +2835,9 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
 
             if (*D2Client_pVendorMode_6FBB58EC != VENDORMODE_NONE && *D2Client_pVendorMode_6FBB58EC >= 1 && *D2Client_pVendorMode_6FBB58EC <= 9)
             {
-                int32_t hasSkillCharges = false;
-                scratchpad[0] = 0;
-                if (D2Client_GetItemTextPriceMaybe_6FAFB200(pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &hasSkillCharges, (Unicode*)scratchpad, std::size(scratchpad)))
+                int32_t transactionCost = 0;
+                std::wstring itemPriceString;
+                if (ESE_D2Client_GetItemTextLinePrice_6FAFB200(pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &transactionCost, itemPriceString))
                 {
                     pTextToDisplay.append(scratchpadBuffer);
                     if (scratchpad[0])

@@ -45,7 +45,11 @@ D2Client_GetItemTextSet_6FAF32B0_t D2Client_GetItemTextSet_6FAF32B0 = nullptr; /
 D2Client_GetItemTextSetB_6FAF33C0_t D2Client_GetItemTextSetB_6FAF33C0 = nullptr; // 533C0
 D2Client_sub_6FADCFE0_t D2Client_sub_6FADCFE0 = nullptr; // 3CFE0
 D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990 = nullptr; // 45990
-D2Client_GetItemTextPriceMaybe_6FAFB200_t D2Client_GetItemTextPriceMaybe_6FAFB200 = nullptr; // 5B200
+D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200 = nullptr; // 5B200
+
+D2Client_FindUnit_6FB269F0_t D2Client_FindUnit_6FB269F0 = nullptr; // 869F0
+D2Client_GetCurrentDifficulty_6FAAC090_t D2Client_GetCurrentDifficulty_6FAAC090 = nullptr; // C090
+D2Client_IsVendorRepairActive_6FAEB930_t D2Client_IsVendorRepairActive_6FAEB930 = nullptr; // 4B930
 
 // UI-INV-MOD stuff
 D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440 = nullptr; //6A440
@@ -92,6 +96,12 @@ int32_t* D2Client_pDWORD_6FB794C8 = nullptr; // D94C8
 IdToStringIndexPair* D2Client_pAttackSpeedStringIndices_6FB79334 = nullptr; // D9334
 IdToStringIndexPair* D2Client_pWeaponClassStringIndices_6FB792D8 = nullptr; // D92D8
 const char* D2Client_pUnknownStr_6FB9A828 = nullptr; // FA828
+
+D2BitBufferStrc** D2Client_pQuestFlags_6FBB5D13 = nullptr; // 115D13
+int32_t* D2Client_pIsNpcDialogOpen_6FBB5CF9 = nullptr; // 115CF9
+int32_t* D2Client_pActiveNpcId_6FBB5CF5 = nullptr; // 115CF5
+int32_t* D2Client_pIsGamblingSession_6FBB5D7C = nullptr; // 115D7C
+D2UnitStrc** D2Client_pGameUnits_6FBBAA00 = nullptr; // 11AA00
 
 void InitD2ClientExports()
 {
@@ -141,12 +151,16 @@ void InitD2ClientExports()
     D2Client_GetItemTextSetB_6FAF33C0 = (D2Client_GetItemTextSetB_6FAF33C0_t)((char*)d2ClientModule + 0x533C0);
     D2Client_sub_6FADCFE0 = (D2Client_sub_6FADCFE0_t)((char*)d2ClientModule + 0x3CFE0);
     D2Client_sub_6FAE5990 = (D2Client_sub_6FAE5990_t)((char*)d2ClientModule + 0x45990);
-    D2Client_GetItemTextPriceMaybe_6FAFB200 = (D2Client_GetItemTextPriceMaybe_6FAFB200_t)((char*)d2ClientModule + 0x5B200);
+    D2Client_GetItemTextLinePrice_6FAFB200 = (D2Client_GetItemTextLinePrice_6FAFB200_t)((char*)d2ClientModule + 0x5B200);
 
     D2Client_GetSkillStringId_6FB0A440 = (D2Client_GetSkillStringId_6FB0A440_t)((char*)d2ClientModule + 0x6A440);
     D2Client_GetItemTextLineDamageToUndead_6FAF12C0 = (D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t)((char*)d2ClientModule + 0x512C0);
     D2Client_sub_6FAF3460 = (D2Client_sub_6FAF3460_t)((char*)d2ClientModule + 0x53460);
     D2Client_GetItemPropertyLine_6FAF21C0 = (D2Client_GetItemPropertyLine_6FAF21C0_t)((char*)d2ClientModule + 0x521C0);
+
+    D2Client_FindUnit_6FB269F0 = (D2Client_FindUnit_6FB269F0_t)((char*)d2ClientModule + 0x869F0);
+    D2Client_GetCurrentDifficulty_6FAAC090 = (D2Client_GetCurrentDifficulty_6FAAC090_t)((char*)d2ClientModule + 0xC090);
+    D2Client_IsVendorRepairActive_6FAEB930 = (D2Client_IsVendorRepairActive_6FAEB930_t)((char*)d2ClientModule + 0x4B930);
 
     D2Client_pScreenXOffset = (int32_t*)((char*)d2ClientModule + 0x11A748);
     D2Client_pScreenYOffset = (int32_t*)((char*)d2ClientModule + 0x11A74C);
@@ -185,4 +199,10 @@ void InitD2ClientExports()
     D2Client_pWeaponClassStringIndices_6FB792D8 = (IdToStringIndexPair*)((char*)d2ClientModule + 0xD92D8);
 
     D2Client_pUnknownStr_6FB9A828 = (const char*)((char*)d2ClientModule + 0xFA828);
+
+    D2Client_pQuestFlags_6FBB5D13 = (D2BitBufferStrc**)((char*)d2ClientModule + 0x115D13);
+    D2Client_pIsNpcDialogOpen_6FBB5CF9 = (int32_t*)((char*)d2ClientModule + 0x115CF9);
+    D2Client_pActiveNpcId_6FBB5CF5 = (int32_t*)((char*)d2ClientModule + 0x115CF5);
+    D2Client_pIsGamblingSession_6FBB5D7C = (int32_t*)((char*)d2ClientModule + 0x115D7C);
+    D2Client_pGameUnits_6FBBAA00 = (D2UnitStrc**)((char*)d2ClientModule + 0x11AA00);
 }
