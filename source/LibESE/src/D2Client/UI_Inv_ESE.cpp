@@ -372,16 +372,16 @@ int ESE_GetItemPropertyLine_HelperA(D2UnitStrc* pUnit, int nDescGrpFunc, int sta
         int32_t preiodOfDay = 0;
         int32_t pItemModPeriodOfDay = 0;
         int32_t baseTime = 0;
-        if (*D2Client_pDWORD_6FBA7984)
+        if (*D2Client_pCurrentDrlgAct_6FBA7984)
         {
-            preiodOfDay = ENVIRONMENT_GetPeriodOfDayFromAct(*D2Client_pDWORD_6FBA7984, &baseTime);
+            preiodOfDay = ENVIRONMENT_GetPeriodOfDayFromAct(*D2Client_pCurrentDrlgAct_6FBA7984, &baseTime);
             pItemModPeriodOfDay = preiodOfDay;
         }
 
         int32_t itemModMin = 0;
         int32_t itemModMax = 0;
         auto timeAdjustmentThing = ITEMMODS_GetByTimeAdjustment(statValue, preiodOfDay, baseTime, &pItemModPeriodOfDay, &itemModMin, &itemModMax);
-        if (!*D2Client_pDWORD_6FBA7984)
+        if (!*D2Client_pCurrentDrlgAct_6FBA7984)
         {
             timeAdjustmentThing = itemModMin;
         }
@@ -1651,10 +1651,36 @@ void __fastcall ESE_D2Client_GetItemTextLineSmiteOrKickDamage_6FAE5040(D2UnitStr
     outBuff.append(strNewLine);
 }
 
-int __fastcall ESE_D2Client_GetItemTextLinePrice_6FAFB200(D2UnitStrc* pItem, int a2, int* pTransactionCost, std::wstring &outBuff)
+enum MERCHANT_CLASSID
+{
+    MERCHANT_CLASSID_Cain1 = 146,
+    MERCHANT_CLASSID_Gheed = 147,
+    MERCHANT_CLASSID_Akara = 148,
+    MERCHANT_CLASSID_Charsi = 154,
+    MERCHANT_CLASSID_Drognan = 177,
+    MERCHANT_CLASSID_Fara = 178,
+    MERCHANT_CLASSID_Elzix = 199,
+    MERCHANT_CLASSID_Lysander = 202,
+    MERCHANT_CLASSID_Cain2 = 244,
+    MERCHANT_CLASSID_Cain3 = 245,
+    MERCHANT_CLASSID_Cain4 = 246,
+    MERCHANT_CLASSID_Asheara = 252,
+    MERCHANT_CLASSID_Hratli = 253,
+    MERCHANT_CLASSID_Alkor = 254,
+    MERCHANT_CLASSID_Ormus = 255,
+    MERCHANT_CLASSID_Halbu = 257,
+    MERCHANT_CLASSID_Cain5 = 265,
+    MERCHANT_CLASSID_Jamella = 405,
+    MERCHANT_CLASSID_Larzuk = 511,
+    MERCHANT_CLASSID_Drehya = 512,
+    MERCHANT_CLASSID_Malah = 513,
+    MERCHANT_CLASSID_Nihlathak = 514,
+};
+int __fastcall ESE_D2Client_GetItemTextLinePrice_6FAFB200(D2UnitStrc* pItem, int a2, int* pTransactionCost, std::wstring& outBuff)
 {
     *pTransactionCost = 0;
-    if (!pItem)
+
+    if (pItem == nullptr)
     {
         return 0;
     }
@@ -1668,156 +1694,11 @@ int __fastcall ESE_D2Client_GetItemTextLinePrice_6FAFB200(D2UnitStrc* pItem, int
     if (!a2)
     {
         D2C_TransactionTypes transactionType = TRANSACTIONTYPE_BUY;
-        if (D2Client_pIsGamblingSession_6FBB5D7C)
+        if (*D2Client_pIsGamblingSession_6FBB5D7C)
         {
             transactionType = TRANSACTIONTYPE_GAMBLE;
         }
 
-        D2UnitStrc* activeNpc;
-        int32_t activeNpcClassId = -1;
-        if (D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
-        {
-            activeNpcClassId = activeNpc->dwClassId;
-        }
-
-        D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
-        D2UnitStrc* currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
-        *pTransactionCost = ITEMS_GetTransactionCost(currentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, transactionType);
-        stringIndex = STR_IDX_3329_cost;
-        goto LABEL_54;
-    }
-
-    if (!D2Client_pIsNpcDialogOpen_6FBB5CF9 || !D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1))
-    {
-        return 0;
-    }
-
-    D2UnitStrc* activeNpc = nullptr;
-    int32_t activeNpcClassId = -1;
-    if (D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
-    {
-        activeNpcClassId = activeNpc->dwClassId;
-    }
-
-    DATATBLS_GetItemsTxtRecord(pItem->dwClassId);
-    if (activeNpcClassId > 0xFC)
-    {
-        if (activeNpcClassId > 0x109)
-        {
-            switch (activeNpcClassId)
-            {
-            case 0x195u:
-            case 0x200u:
-            case 0x201u:
-            case 0x202u:
-                goto LABEL_23;
-            case 0x1FFu:
-            {            
-            LABEL_27:
-                if (!D2Client_IsVendorRepairActive_6FAEB930())
-                {
-                    goto LABEL_23;
-                }
-                if (!ITEMS_CheckItemFlag(pItem, IFLAG_IDENTIFIED, __LINE__, __FILE__))
-                {
-                    std::wstring v17 = std::wstring((const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4022_strCannotDoThisToUnknown));
-                    ColorizeString(v17, 1);
-
-                    outBuff.append(v17);
-                    return 1;
-                }
-                if (ITEMS_GetItemType(pItem) == ITEMTYPE_GOLD || !ITEMS_IsRepairable(pItem))
-                {
-                    return 0;
-                }
-
-                int32_t v19;
-                int32_t v20;
-                if (!ITEMS_HasDurability(pItem) || (v19 = STATLIST_GetMaxDurabilityFromUnit(pItem)) == 0 || STATLIST_UnitGetStatValue(pItem, STAT_DURABILITY, 0) >= v19)
-                {
-                    if (!ITEMS_CheckIfStackable(pItem) || (v20 = STATLIST_UnitGetStatValue(pItem, STAT_QUANTITY, 0), v20 >= ITEMS_GetTotalMaxStack(pItem)))
-                    {
-                        if (!ITEMS_HasUsedCharges(pItem, (BOOL*)&pTransactionCost) || pTransactionCost)
-                        {
-                            return 0;
-                        }
-                    }
-                }
-
-                activeNpcClassId = -1;
-                if (D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
-                {
-                    activeNpcClassId = activeNpc->dwClassId;
-                }
-
-                D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
-                D2UnitStrc* pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
-                *pTransactionCost = ITEMS_GetTransactionCost(pCurrentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, TRANSACTIONTYPE_REPAIR);
-                stringIndex = STR_IDX_3330_Repair;
-                break;
-            }
-            default:
-                return 0;
-            }
-        }
-        else
-        {
-            if (activeNpcClassId != 265)
-            {
-                switch (activeNpcClassId)
-                {
-                case 0xFDu:
-                case 0x101u:
-                    goto LABEL_27;
-                case 0xFEu:
-                case 0xFFu:
-                    goto LABEL_23;
-                default:
-                    return 0;
-                }
-            }
-        LABEL_19:
-            auto isIdentified = ITEMS_CheckItemFlag(pItem, IFLAG_IDENTIFIED, __LINE__, __FILE__);
-            if (isIdentified)
-            {
-                outBuff.clear();
-                return true;
-            }
-
-            auto v12 = -(QUESTRECORD_GetQuestState(*D2Client_pQuestFlags_6FBB5D13, QUEST_A1Q4_CAIN, 0) != 0);
-            stringIndex = STR_IDX_3332_Identify;
-
-            v12 = (v12 & 0xFFFFFF00) | (v12 & 0x9C);
-            *pTransactionCost = v12 + 100;
-        }
-        goto LABEL_54;
-    }
-    if (activeNpcClassId != 252)
-    {
-        switch (activeNpcClassId)
-        {
-        case 0x93u:
-        case 0x94u:
-        case 0xB1u:
-        case 0xC7u:
-        case 0xCAu:
-        case 0xF6u:
-            break;
-        case 0x9Au:
-        case 0xB2u:
-            goto LABEL_27;
-        case 0xF4u:
-        case 0xF5u:
-            goto LABEL_19;
-        default:
-            return 0;
-        }
-    }
-
-LABEL_23:
-    int32_t isNotQuestItem = ITEMS_IsNotQuestItem(pItem);
-    if (isNotQuestItem)
-    {
         D2UnitStrc* activeNpc;
         int32_t activeNpcClassId = -1;
         if (*D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
@@ -1826,13 +1707,142 @@ LABEL_23:
         }
 
         D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
-        D2UnitStrc *currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+        D2UnitStrc* currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+        *pTransactionCost = ITEMS_GetTransactionCost(currentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, transactionType);
+        const wchar_t* strString = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3329_cost);
+
+        outBuff.assign(strString);
+        outBuff.append(std::to_wstring(*pTransactionCost));
+
+        return 1;
+    }
+
+    if (!*D2Client_pIsNpcDialogOpen_6FBB5CF9 || !D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1))
+    {
+        return 0;
+    }
+
+    D2UnitStrc* activeNpc = nullptr;
+    int32_t activeNpcClassId = -1;
+    if (*D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
+    {
+        activeNpcClassId = activeNpc->dwClassId;
+    }
+
+    DATATBLS_GetItemsTxtRecord(pItem->dwClassId);
+
+    if ((activeNpcClassId == MERCHANT_CLASSID_Larzuk ||
+        activeNpcClassId == MERCHANT_CLASSID_Hratli ||
+        activeNpcClassId == MERCHANT_CLASSID_Halbu ||
+        activeNpcClassId == MERCHANT_CLASSID_Charsi ||
+        activeNpcClassId == MERCHANT_CLASSID_Fara) && D2Client_IsVendorRepairActive_6FAEB930())
+    {
+        if (!ITEMS_CheckItemFlag(pItem, IFLAG_IDENTIFIED, __LINE__, __FILE__))
+        {
+            std::wstring v17 = std::wstring((const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4022_strCannotDoThisToUnknown));
+            ColorizeString(v17, 1);
+
+            outBuff.append(v17);
+            return 1;
+        }
+
+        if (ITEMS_GetItemType(pItem) == ITEMTYPE_GOLD || !ITEMS_IsRepairable(pItem))
+        {
+            return 0;
+        }
+
+        int32_t maxDurability = STATLIST_GetMaxDurabilityFromUnit(pItem);
+        if (!ITEMS_HasDurability(pItem) || maxDurability == 0 || STATLIST_UnitGetStatValue(pItem, STAT_DURABILITY, 0) >= maxDurability)
+        {
+            int32_t quantity = STATLIST_UnitGetStatValue(pItem, STAT_QUANTITY, 0);
+            if (!ITEMS_CheckIfStackable(pItem) || (quantity >= ITEMS_GetTotalMaxStack(pItem)))
+            {
+                if (!ITEMS_HasUsedCharges(pItem, (BOOL*)&pTransactionCost) || pTransactionCost)
+                {
+                    return 0;
+                }
+            }
+        }
+
+        activeNpcClassId = -1;
+        if (*D2Client_pIsNpcDialogOpen_6FBB5CF9 && (activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1)) != 0)
+        {
+            activeNpcClassId = activeNpc->dwClassId;
+        }
+
+        D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
+        D2UnitStrc* pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+        *pTransactionCost = ITEMS_GetTransactionCost(pCurrentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, TRANSACTIONTYPE_REPAIR);
+        const wchar_t* strString = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3330_Repair);
+
+        outBuff.assign(strString);
+        outBuff.append(std::to_wstring(*pTransactionCost));
+
+        return 1;
+    }
+
+    if (activeNpcClassId == MERCHANT_CLASSID_Cain5 || activeNpcClassId == MERCHANT_CLASSID_Cain2 || activeNpcClassId == MERCHANT_CLASSID_Cain3)
+    {
+        auto isIdentified = ITEMS_CheckItemFlag(pItem, IFLAG_IDENTIFIED, __LINE__, __FILE__);
+        if (isIdentified)
+        {
+            outBuff.clear();
+            return 1;
+        }
+
+        auto v12 = -(QUESTRECORD_GetQuestState(*D2Client_pQuestFlags_6FBB5D13, QUEST_A1Q4_CAIN, 0) != 0);
+        stringIndex = STR_IDX_3332_Identify;
+
+        v12 = (v12 & 0xFFFFFF00) | (v12 & 0x9C);
+        *pTransactionCost = v12 + 100;
+
+        const wchar_t* strString = (const wchar_t*)D2LANG_GetStringFromTblIndex(stringIndex);
+
+        outBuff.assign(strString);
+        outBuff.append(std::to_wstring(*pTransactionCost));
+
+        return 1;
+    }
+
+    if (activeNpcClassId != MERCHANT_CLASSID_Gheed &&
+        activeNpcClassId != MERCHANT_CLASSID_Akara &&
+        activeNpcClassId != MERCHANT_CLASSID_Charsi &&
+        activeNpcClassId != MERCHANT_CLASSID_Drognan &&
+        activeNpcClassId != MERCHANT_CLASSID_Fara &&
+        activeNpcClassId != MERCHANT_CLASSID_Elzix &&
+        activeNpcClassId != MERCHANT_CLASSID_Lysander &&
+        activeNpcClassId != MERCHANT_CLASSID_Cain4 &&
+        activeNpcClassId != MERCHANT_CLASSID_Asheara &&
+        activeNpcClassId != MERCHANT_CLASSID_Hratli &&
+        activeNpcClassId != MERCHANT_CLASSID_Alkor &&
+        activeNpcClassId != MERCHANT_CLASSID_Ormus &&
+        activeNpcClassId != MERCHANT_CLASSID_Halbu &&
+        activeNpcClassId != MERCHANT_CLASSID_Jamella &&
+        activeNpcClassId != MERCHANT_CLASSID_Larzuk &&
+        activeNpcClassId != MERCHANT_CLASSID_Drehya &&
+        activeNpcClassId != MERCHANT_CLASSID_Malah &&
+        activeNpcClassId != MERCHANT_CLASSID_Nihlathak)
+    {
+        return 0;
+    }
+
+    if (ITEMS_IsNotQuestItem(pItem))
+    {
+        int32_t activeNpcClassId = -1;
+        if (*D2Client_pIsNpcDialogOpen_6FBB5CF9)
+        {
+            D2UnitStrc* activeNpc = D2Client_FindUnit_6FB269F0(*D2Client_pActiveNpcId_6FBB5CF5, 1);
+            if (activeNpc != nullptr)
+            {
+                activeNpcClassId = activeNpc->dwClassId;
+            }
+        }
+
+        D2C_Difficulties currentDifficulty = (D2C_Difficulties)D2Client_GetCurrentDifficulty_6FAAC090();
+        D2UnitStrc* currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
 
         *pTransactionCost = ITEMS_GetTransactionCost(currentPlayer, pItem, currentDifficulty, *D2Client_pQuestFlags_6FBB5D13, activeNpcClassId, TRANSACTIONTYPE_SELL);
-        stringIndex = STR_IDX_3331_Sell;
-
-    LABEL_54:
-        const wchar_t* strString = (const wchar_t*)D2LANG_GetStringFromTblIndex(stringIndex);
+        const wchar_t* strString = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3331_Sell);
 
         outBuff.assign(strString);
         outBuff.append(std::to_wstring(*pTransactionCost));
@@ -1843,7 +1853,7 @@ LABEL_23:
     return 0;
 }
 
-void ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(std::wstring &outBuff)
+void ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(std::wstring& outBuff)
 {
     const wchar_t* newlineChar1 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
 
@@ -1969,9 +1979,9 @@ void __fastcall ESE_D2Client_GetItemTextLineDurability_6FAE4060(D2UnitStrc* pUni
     outBuff.append(strNewLine);
 }
 
-void ESE_D2Client_GetItemTextSocketed_6FAE3EE0(D2UnitStrc* pItem, std::wstring &outBuff)
+void ESE_D2Client_GetItemTextSocketed_6FAE3EE0(D2UnitStrc* pItem, std::wstring& outBuff)
 {
-    const wchar_t* strNewLine = (const wchar_t* )D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
 
     bool isEthereal = false;
@@ -1981,7 +1991,7 @@ void ESE_D2Client_GetItemTextSocketed_6FAE3EE0(D2UnitStrc* pItem, std::wstring &
     {
         std::wstring strEtherealUnused = L"Ethereal";
 
-        const wchar_t* strCannotBeRepaired = (const wchar_t*) D2LANG_GetStringFromTblIndex(STR_IDX_22745_X_Ethereal_CanNotBeRepaired);
+        const wchar_t* strCannotBeRepaired = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_22745_X_Ethereal_CanNotBeRepaired);
         outBuff.append(strCannotBeRepaired);
 
         isEthereal = true;
@@ -1994,7 +2004,7 @@ void ESE_D2Client_GetItemTextSocketed_6FAE3EE0(D2UnitStrc* pItem, std::wstring &
             outBuff.append(L", ");
         }
 
-        const wchar_t* strSocketed = (const wchar_t*) D2LANG_GetStringFromTblIndex(STR_IDX_3453_Socketable);
+        const wchar_t* strSocketed = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3453_Socketable);
         int32_t numSockets = ITEMS_GetSockets(pItem);
 
         outBuff.append(strSocketed);
@@ -2008,7 +2018,7 @@ void ESE_D2Client_GetItemTextSocketed_6FAE3EE0(D2UnitStrc* pItem, std::wstring &
     }
 }
 
-void ESE_D2Client_GetItemTextLineBlockChance_6FAE4EE0(D2UnitStrc* pUnit, std::wstring &outBuff, D2ItemsTxt* pItemTxtRecord)
+void ESE_D2Client_GetItemTextLineBlockChance_6FAE4EE0(D2UnitStrc* pUnit, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord)
 {
     int32_t blockChance = STATLIST_UnitGetStatValue(pUnit, STAT_TOBLOCK, 0);
     const auto pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
@@ -2047,7 +2057,7 @@ void ESE_D2Client_GetItemTextLineBlockChance_6FAE4EE0(D2UnitStrc* pUnit, std::ws
         ColorizeString(blockChanceString, 3);
     }
 
-    std::wstring strChanceToBlock = (const wchar_t *)D2LANG_GetStringFromTblIndex(STR_IDX_11018_ItemStats1r);
+    std::wstring strChanceToBlock = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11018_ItemStats1r);
     ColorizeString(strChanceToBlock, 0);
 
     outBuff.append(strChanceToBlock);
@@ -2598,7 +2608,7 @@ void ESE_D2Client_GetItemTextLineAttackSpeed_6FAE5570(D2UnitStrc* pItem, std::ws
     {
         ColorizeString(strAttackSpeed, 3);
     }
-    
+
     outBuff.append(strAttackSpeed);
     outBuff.append(strNewLine);
 }

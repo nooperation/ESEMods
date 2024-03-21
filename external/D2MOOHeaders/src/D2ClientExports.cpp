@@ -88,7 +88,7 @@ int32_t* D2Client_pDWORD_6FB7A438 = nullptr; // DA438
 int32_t* D2Client_pDWORD_6FB79B48 = nullptr; // D9B48
 int32_t* D2Client_pElixirDescCount_6FB7A4A0 = nullptr; // DA4A0
 ElixirDesc_6FB7A440* D2Client_pElixirDescs_6FB7A440 = nullptr; // DA440
-D2DrlgActStrc** D2Client_pDWORD_6FBA7984 = nullptr; // 6A440
+D2DrlgActStrc** D2Client_pCurrentDrlgAct_6FBA7984 = nullptr; // 6A440
 uint16_t* D2Client_pWORD_6FB6FA30 = nullptr; // CFA30
 
 int32_t* D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360 = nullptr; // D9360
@@ -190,7 +190,7 @@ void InitD2ClientExports()
     D2Client_pDWORD_6FB79B48 = (int32_t*)((char*)d2ClientModule + 0xD9B48);
     D2Client_pElixirDescCount_6FB7A4A0 = (int32_t*)((char*)d2ClientModule + 0xDA4A0);
     D2Client_pElixirDescs_6FB7A440 = (ElixirDesc_6FB7A440*)((char*)d2ClientModule + 0xDA440);
-    D2Client_pDWORD_6FBA7984 = (D2DrlgActStrc**)((char*)d2ClientModule + 0x107984);
+    D2Client_pCurrentDrlgAct_6FBA7984 = (D2DrlgActStrc**)((char*)d2ClientModule + 0x107984);
     D2Client_pWORD_6FB6FA30 = (uint16_t*)((char*)d2ClientModule + 0xCFA30);
 
     D2Client_pWeaponSpeedStringIndexLookupTable_6FB79360 = (int32_t * )((char *)d2ClientModule + 0xD9360);

@@ -166,7 +166,7 @@ extern int32_t* D2Client_pDWORD_6FB7A438; // DA438                              
 extern int32_t* D2Client_pDWORD_6FB79B48; // D9B48                                                                             | 6FB79B48
 extern int32_t* D2Client_pElixirDescCount_6FB7A4A0; // DA4A0                                                                             | 6FB7A4A0
 extern ElixirDesc_6FB7A440* D2Client_pElixirDescs_6FB7A440; // DA440                                                              | 6FB7A440
-extern D2DrlgActStrc** D2Client_pDWORD_6FBA7984; // 6A440                                                                      | 6FBA7984
+extern D2DrlgActStrc** D2Client_pCurrentDrlgAct_6FBA7984; // current act? // 6A440                                                                      | 6FBA7984
 extern uint16_t* D2Client_pWORD_6FB6FA30; // CFA30                                                                             | 6FB6FA30
 
 #pragma pack(push, 1)
