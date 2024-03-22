@@ -87,6 +87,7 @@ typedef __int16(__fastcall* D2Client_GetSkillStringId_6FB0A440_t)(int nSkillsTxt
 typedef void(__fastcall* D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffLen);
 typedef int(__fastcall* D2Client_sub_6FAF3460_t)(int* statValues, D2C_ItemStats nStatId, struct Unicode* outBuff);
 typedef int(__fastcall* D2Client_GetItemPropertyLine_6FAF21C0_t)(D2UnitStrc* pUnit, D2StatListStrc* pStatListEx, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, Unicode* outputBuffer256);
+typedef void(__fastcall* D2Client_GetItemDamage_6FAE4C60_t)(D2UnitStrc* pCurrentPlayer, D2UnitStrc* pItem, D2C_ItemStats minDamageStat, D2C_ItemStats maxDamageStat, int32_t* outMinDamage, int32_t* outMaxDamage, int32_t* isDamageModified); // 44C60
 
 typedef D2UnitStrc* (__fastcall* D2Client_FindUnit_6FB269F0_t)(int32_t unitId, int32_t unitType); // 869F0
 typedef int8_t (__fastcall* D2Client_GetCurrentDifficulty_6FAAC090_t)(); // C090
@@ -157,6 +158,7 @@ extern D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440; 
 extern D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLineDamageToUndead_6FAF12C0; //512C0                                                                  | 6FAF12C0
 extern D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460; //53460                                                                  | 6FAF3460
 extern D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0; //521C0                                  | 6FAF21C0
+extern D2Client_GetItemDamage_6FAE4C60_t D2Client_GetItemDamage_6FAE4C60; // 44C60
 
 extern D2Client_FindUnit_6FB269F0_t D2Client_FindUnit_6FB269F0; // 869F0
 extern D2Client_GetCurrentDifficulty_6FAAC090_t D2Client_GetCurrentDifficulty_6FAAC090; // C090

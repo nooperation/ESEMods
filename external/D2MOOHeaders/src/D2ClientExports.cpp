@@ -46,6 +46,7 @@ D2Client_GetItemTextSetB_6FAF33C0_t D2Client_GetItemTextSetB_6FAF33C0 = nullptr;
 D2Client_sub_6FADCFE0_t D2Client_sub_6FADCFE0 = nullptr; // 3CFE0
 D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990 = nullptr; // 45990
 D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200 = nullptr; // 5B200
+D2Client_GetItemDamage_6FAE4C60_t D2Client_GetItemDamage_6FAE4C60 = nullptr; // 44C60
 
 D2Client_FindUnit_6FB269F0_t D2Client_FindUnit_6FB269F0 = nullptr; // 869F0
 D2Client_GetCurrentDifficulty_6FAAC090_t D2Client_GetCurrentDifficulty_6FAAC090 = nullptr; // C090
@@ -157,6 +158,7 @@ void InitD2ClientExports()
     D2Client_GetItemTextLineDamageToUndead_6FAF12C0 = (D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t)((char*)d2ClientModule + 0x512C0);
     D2Client_sub_6FAF3460 = (D2Client_sub_6FAF3460_t)((char*)d2ClientModule + 0x53460);
     D2Client_GetItemPropertyLine_6FAF21C0 = (D2Client_GetItemPropertyLine_6FAF21C0_t)((char*)d2ClientModule + 0x521C0);
+    D2Client_GetItemDamage_6FAE4C60 = (D2Client_GetItemDamage_6FAE4C60_t)((char*)d2ClientModule + 0x44C60);
 
     D2Client_FindUnit_6FB269F0 = (D2Client_FindUnit_6FB269F0_t)((char*)d2ClientModule + 0x869F0);
     D2Client_GetCurrentDifficulty_6FAAC090 = (D2Client_GetCurrentDifficulty_6FAAC090_t)((char*)d2ClientModule + 0xC090);

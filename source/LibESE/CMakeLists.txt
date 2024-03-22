@@ -17,7 +17,7 @@ target_include_directories(LibESE PUBLIC include)
 target_link_libraries(LibESE D2MOOHeaders D2.Detours)
 add_dependencies(LibESE D2.DetoursLauncher)
 
-target_compile_features(LibESE PUBLIC cxx_std_17)
+target_compile_features(LibESE PUBLIC cxx_std_20)
 
 # Include D2MOO's headers
 target_include_directories(LibESE 
