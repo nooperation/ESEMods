@@ -95,7 +95,7 @@ void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t 
     dest.append(src);
 }
 
-void ESE_D2LANG_UnicodePersonalize_6FC11D50(std::wstring &outBuff, const std::wstring &subjectName, const std::wstring &itemName, int32_t language)
+void ESE_D2LANG_UnicodePersonalize_6FC11D50(std::wstring& outBuff, const std::wstring& subjectName, const std::wstring& itemName, int32_t language)
 {
     // static const char* byte_6FC1D100 = "s"; // D100
     // static const char* byte_6FC1D0FC = "'s "; // D0FC
@@ -140,11 +140,11 @@ void ESE_D2LANG_UnicodePersonalize_6FC11D50(std::wstring &outBuff, const std::ws
 
         outBuff.assign(subjectName);
 
-        if (lastChar == L's' || lastChar == 'z') 
+        if (lastChar == L's' || lastChar == L'z')
         {
             outBuff.append(L"' ");
         }
-        else 
+        else
         {
             outBuff.append(L"s ");
         }
@@ -158,11 +158,11 @@ void ESE_D2LANG_UnicodePersonalize_6FC11D50(std::wstring &outBuff, const std::ws
 
         if (subjectName[0] == L'a' || subjectName[0] == L'e' || subjectName[0] == L'i' || subjectName[0] == L'o' || subjectName[0] == L'u')
         {
-            outBuff.assign(L" de ");
+            outBuff.assign(L" d'");
         }
         else
         {
-            outBuff.assign(L" d'");
+            outBuff.assign(L" de ");
         }
 
         outBuff.append(subjectName);
@@ -295,14 +295,14 @@ void ESE_D2Client_FormatName_6FADCFE0(std::wstring& outBuff, const wchar_t* form
         {
             std::wstring customMarker = defaultMarker;
 
-            if (arguments[argumentIndexN][0] == '[')
+            if (arguments[argumentIndexN][0] == L'[')
             {
                 customMarker = arguments[argumentIndexN].substr(0, 4);
                 arguments[argumentIndexN] = arguments[argumentIndexN].substr(4);
             }
 
             const auto& argumentA = arguments[argumentIndexA];
-            if (argumentA[0] == '[')
+            if (argumentA[0] == L'[')
             {
                 auto markerIndex = argumentA.find(customMarker);
                 if (markerIndex != std::wstring::npos)
@@ -3196,10 +3196,10 @@ void ESE_D2Client_GetItemTextLineRuneGemStats_6FAF1480(D2UnitStrc* pItem, std::w
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
 
-    const wchar_t* v32 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11073_GemXp1);
-    const wchar_t* v29 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11074_GemXp2);
-    const wchar_t* v38 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11075_GemXp3);
-    const wchar_t* v35 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11076_GemXp4);
+    const wchar_t* strHelmsAndBoots = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11073_GemXp1);
+    const wchar_t* strShieldsArmorAndBelts = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11074_GemXp2);
+    const wchar_t* strWeaponsAndGloves = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11075_GemXp3);
+    const wchar_t* strRingsAmuletsAndCharms = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11076_GemXp4);
 
     if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_GEM))
     {
@@ -3213,75 +3213,80 @@ void ESE_D2Client_GetItemTextLineRuneGemStats_6FAF1480(D2UnitStrc* pItem, std::w
         outBuff.append(strNewLine);
 
         std::wstring temp;
-        temp.append(v29);
+        temp.append(strShieldsArmorAndBelts);
         temp.append(strSpace);
 
         ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 2, 0);
         ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
 
-        D2StatListStrc* v14 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
-        if (v14)
+        D2StatListStrc* tempStatList = nullptr;
+
+        tempStatList = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (tempStatList)
         {
-            D2Common_10474(pItem, v14);
-            STATLIST_FreeStatList(v14);
+            D2Common_10474(pItem, tempStatList);
+            STATLIST_FreeStatList(tempStatList);
         }
-        if (outBuff[outBuff.length() - 1] == 10)
+
+        if (outBuff.ends_with(L'\n'))
         {
-            outBuff[outBuff.length() - 1] = 0;
+            outBuff.pop_back();
         }
         outBuff.append(strNewLine);
 
         temp.clear();
-        temp.append(v32);
+        temp.append(strHelmsAndBoots);
         temp.append(strSpace);
         ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 1, 0);
         ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
 
-        D2StatListStrc* v18 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
-        if (v18)
+        tempStatList = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (tempStatList)
         {
-            D2Common_10474(pItem, v18);
-            STATLIST_FreeStatList(v18);
+            D2Common_10474(pItem, tempStatList);
+            STATLIST_FreeStatList(tempStatList);
         }
 
-        if (outBuff[outBuff.length() - 1] == 10)
+        if (outBuff.ends_with(L'\n'))
         {
-            outBuff[outBuff.length() - 1] = 0;
+            outBuff.pop_back();
         }
         outBuff.append(strNewLine);
 
         temp.clear();
-        temp.append(v35);
+        temp.append(strRingsAmuletsAndCharms);
         temp.append(strSpace);
         ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 1, 0);
         ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
-        D2StatListStrc* v22 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
-        if (v22)
+        tempStatList = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (tempStatList)
         {
-            D2Common_10474(pItem, v22);
-            STATLIST_FreeStatList(v22);
+            D2Common_10474(pItem, tempStatList);
+            STATLIST_FreeStatList(tempStatList);
         }
-        if (outBuff[outBuff.length() - 1] == 10)
+
+        if (outBuff.ends_with(L'\n'))
         {
             outBuff[outBuff.length() - 1] = 0;
         }
         outBuff.append(strNewLine);
 
         temp.clear();
-        temp.append(v38);
+        temp.append(strWeaponsAndGloves);
         temp.append(strSpace);
         ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 0, 0);
         ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
 
-        D2StatListStrc* v26 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
-        if (v26)
+        tempStatList = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (tempStatList)
         {
-            D2Common_10474(pItem, v26);
-            STATLIST_FreeStatList(v26);
+            D2Common_10474(pItem, tempStatList);
+            STATLIST_FreeStatList(tempStatList);
         }
-        if (outBuff[outBuff.length() - 1] == 10)
+
+        if (outBuff.ends_with(L'\n'))
         {
-            outBuff[outBuff.length() - 1] = 0;
+            outBuff.pop_back();
         }
     }
     else
@@ -3301,25 +3306,25 @@ void ESE_D2Client_GetItemTextLineRuneGemStats_6FAF1480(D2UnitStrc* pItem, std::w
         outBuff.append(strNewLine);
 
         std::wstring temp;
-        temp.append(v29);
+        temp.append(strShieldsArmorAndBelts);
         temp.append(strSpace);
         ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 2, outBuff, &temp);
         outBuff.append(strNewLine);
 
         temp.clear();
-        temp.append(v32);
+        temp.append(strHelmsAndBoots);
         temp.append(strSpace);
         ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 1, outBuff, &temp);
         outBuff.append(strNewLine);
 
         temp.clear();
-        temp.append(v35);
+        temp.append(strRingsAmuletsAndCharms);
         temp.append(strSpace);
         ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 1, outBuff, &temp);
         outBuff.append(strNewLine);
 
         temp.clear();
-        temp.append(v38);
+        temp.append(strWeaponsAndGloves);
         temp.append(strSpace);
         ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 0, outBuff, &temp);
     }
