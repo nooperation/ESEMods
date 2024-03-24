@@ -78,7 +78,8 @@ typedef void (__fastcall* D2Client_GetItemTextDexRequirement_6FAE4310_t)(struct 
 typedef void (__fastcall* D2Client_GetItemTextSocketed_6FAE3EE0_t)(D2UnitStrc* pItem, struct Unicode* outBuff);
 typedef void (__fastcall* D2Client_GetItemTextSet_6FAF32B0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* outBuff, int maxLength);
 typedef void (__fastcall* D2Client_GetItemTextSetB_6FAF33C0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* outBuff, int maxLength);
-typedef void (__stdcall* D2Client_sub_6FADCFE0_t)(struct Unicode* outBuff, const struct Unicode* format, ...);
+typedef void (__stdcall* D2Client_FormatName_6FADCFE0_t)(struct Unicode* outBuff, const struct Unicode* format, ...);
+typedef void (__stdcall* D2Client_ReplaceNameFormatToken_6FADCF10_t)(struct Unicode* format, int32_t tokenIndex, const struct Unicode* replacement);
 typedef D2UnitStrc* (__fastcall* D2Client_sub_6FAE5990_t)(D2InventoryStrc* pInventory, int nSetItemId);
 typedef bool (__fastcall* D2Client_GetItemTextLinePrice_6FAFB200_t)(D2UnitStrc* pItem, int a2, int* pTransactionCost, struct Unicode* outBuff, int maxLength);
 
@@ -88,6 +89,7 @@ typedef void(__fastcall* D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t)(D2Un
 typedef int(__fastcall* D2Client_sub_6FAF3460_t)(int* statValues, D2C_ItemStats nStatId, struct Unicode* outBuff);
 typedef int(__fastcall* D2Client_GetItemPropertyLine_6FAF21C0_t)(D2UnitStrc* pUnit, D2StatListStrc* pStatListEx, int nStatId, int charStatsTxtRecordIndex, int statValueModifier, Unicode* outputBuffer256);
 typedef void(__fastcall* D2Client_GetItemDamage_6FAE4C60_t)(D2UnitStrc* pCurrentPlayer, D2UnitStrc* pItem, D2C_ItemStats minDamageStat, D2C_ItemStats maxDamageStat, int32_t* outMinDamage, int32_t* outMaxDamage, int32_t* isDamageModified); // 44C60
+typedef void(__fastcall* D2Client_sub_6FAF13C0_t)(D2UnitStrc* pItem, D2GemsTxt* pMods, int32_t nPropSet, struct Unicode* outBuff, int maxLen, struct Unicode* existingContents);
 
 typedef D2UnitStrc* (__fastcall* D2Client_FindUnit_6FB269F0_t)(int32_t unitId, int32_t unitType); // 869F0
 typedef int8_t (__fastcall* D2Client_GetCurrentDifficulty_6FAAC090_t)(); // C090
@@ -125,9 +127,10 @@ extern D2Client_GetItemTextDexRequirement_6FAE4310_t D2Client_GetItemTextDexRequ
 extern D2Client_GetItemTextSocketed_6FAE3EE0_t D2Client_GetItemTextSocketed_6FAE3EE0; // 43EE0                                 | 6FAE3EE0
 extern D2Client_GetItemTextSet_6FAF32B0_t D2Client_GetItemTextSet_6FAF32B0; // 532B0                                           | 6FAF32B0
 extern D2Client_GetItemTextSetB_6FAF33C0_t D2Client_GetItemTextSetB_6FAF33C0; // 533C0                                         | 6FAF33C0
-extern D2Client_sub_6FADCFE0_t D2Client_sub_6FADCFE0; // 3CFE0                                                                 | 6FADCFE0
+extern D2Client_FormatName_6FADCFE0_t D2Client_FormatName_6FADCFE0; // 3CFE0                                                   | 6FADCFE0
+extern D2Client_ReplaceNameFormatToken_6FADCF10_t D2Client_ReplaceNameFormatToken_6FADCF10; // 3CF10                           | 6FADCF10
 extern D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990; // 45990                                                                 | 6FAE5990
-extern D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200; // 5B200                             | 6FAFB200
+extern D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200; // 5B200                               | 6FAFB200
 
 extern int32_t* D2Client_pScreenXOffset; // 11A748                                                                             | 6FBBA748
 extern int32_t* D2Client_pScreenYOffset; // 11A74C                                                                             | 6FBBA74C
@@ -159,6 +162,7 @@ extern D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLin
 extern D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460; //53460                                                                  | 6FAF3460
 extern D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0; //521C0                                  | 6FAF21C0
 extern D2Client_GetItemDamage_6FAE4C60_t D2Client_GetItemDamage_6FAE4C60; // 44C60
+extern D2Client_sub_6FAF13C0_t D2Client_sub_6FAF13C0; // 513C0
 
 extern D2Client_FindUnit_6FB269F0_t D2Client_FindUnit_6FB269F0; // 869F0
 extern D2Client_GetCurrentDifficulty_6FAAC090_t D2Client_GetCurrentDifficulty_6FAAC090; // C090

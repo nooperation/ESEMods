@@ -34,7 +34,7 @@ std::wstring FormatWideString(const wchar_t* fmt, ...)
     return buffer;
 }
 
-void AppendFormattedWideString(std::wstring &outBuff, const wchar_t* fmt, ...)
+void AppendFormattedWideString(std::wstring& outBuff, const wchar_t* fmt, ...)
 {
     va_list ap;
 
@@ -93,6 +93,150 @@ void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t 
     dest.append(colorCodeToken);
     dest.append(std::to_wstring(color));
     dest.append(src);
+}
+
+/*
+    Replaces a single format token when the specified replacement string, storing the results in 'formatBuff'
+
+    Replace token 1 "%1" with L"World":
+        ESE_D2Client_ReplaceNameFormatToken_6FADCF10(formatBuff, 1, L"%0 %1", L"World", 0);
+        formatBuff == L"%0 World";
+
+    Replace token 0 "%0" with L"Hello"
+        ESE_D2Client_ReplaceNameFormatToken_6FADCF10(formatBuff, 0, L"%0 World", L"Hello", 0);
+        formatBuff == L"Hello World";
+*/
+void ESE_D2Client_ReplaceNameFormatToken_6FADCF10(std::wstring& formatBuff, int tokenIndex, const wchar_t* replacement)
+{
+    std::wstring indexStr = L"%" + std::to_wstring(tokenIndex);
+
+    size_t indexPos = formatBuff.find(indexStr);
+    if (indexPos != std::wstring::npos) {
+        formatBuff.replace(indexPos, indexStr.length(), replacement);
+    }
+}
+
+/*
+     All of the following should result in buff equal to L"Hello World". Note that any call to this MUST have 0 or nullptr as the last argument
+
+         D2Client_FormatName_6FADCFE0(buff, L"a0n1:%0 %1", L"Hello", L"World", 0);
+         D2Client_FormatName_6FADCFE0(buff, L"a0n1:%0 %1", L"[ns]incorrect[dd]bad bad bad[ms]Hello[mb]wrong", L"[ms]World", 0);
+         D2Client_FormatName_6FADCFE0(buff, L"a0:%0", L"[ns]incorrect[ms]Hello World[fs]wrong", 0);
+         D2Client_FormatName_6FADCFE0(buff, L"a0:%0", L"[ns]incorrect[ms]Hello World", 0);
+         D2Client_FormatName_6FADCFE0(buff, L"n0:%0", L"[ms]Hello World", 0);
+         D2Client_FormatName_6FADCFE0(buff, L"%0", L"Hello World", 0);
+         D2Client_FormatName_6FADCFE0(buff, L"%0 %1", L"Hello", L"World", 0);
+ */
+void ESE_D2Client_FormatName_6FADCFE0(std::wstring& outBuff, const wchar_t* format, ...)
+{
+    if (!format)
+    {
+        return;
+    }
+
+    std::vector<std::wstring> arguments;
+    va_list args;
+    va_start(args, format);
+
+    while (true)
+    {
+        wchar_t* currentArg = va_arg(args, wchar_t*);
+        if (currentArg == nullptr)
+        {
+            break;
+        }
+
+        arguments.push_back(std::wstring(currentArg));
+    }
+
+    std::wstring formatStr(format);
+    va_end(args);
+
+    auto colonIndex = formatStr.find_first_of(L':');
+    if (colonIndex != std::wstring::npos)
+    {
+        // Hiquality 	    Superior 	[fs]superior[ms]superior[fp]superiores[mp]superiores
+        // HiqualityFormat 	%0 %1 	    a0n1:%1 %0
+        // 
+        // HiqualityFormat "a0n1:%0 %1"
+        // Monster2Format "a0n1:%1 %0 %2"
+
+        const std::wstring defaultMarker = L"[ms]";
+
+        int32_t argumentIndexA = -1;
+        int32_t argumentIndexN = -1;
+
+        auto formatIndexA = formatStr.find_first_of(L'a');
+        if (formatIndexA != std::wstring::npos && formatIndexA < colonIndex)
+        {
+            argumentIndexA = formatStr[formatIndexA + 1] - '0';
+        }
+
+        auto formatIndexN = formatStr.find_first_of(L'n');
+        if (formatIndexN != std::wstring::npos && formatIndexN < colonIndex)
+        {
+            argumentIndexN = formatStr[formatIndexN + 1] - '0';
+        }
+
+        if (argumentIndexA == -1)
+        {
+            if (argumentIndexN != -1)
+            {
+                arguments[argumentIndexN] = arguments[argumentIndexN].substr(4);
+            }
+        }
+        else if (argumentIndexN == -1)
+        {
+            const auto& argument = arguments[argumentIndexA];
+            auto markerIndex = argument.find(defaultMarker);
+            if (markerIndex != std::wstring::npos)
+            {
+                auto nextMarkerIndex = argument.find_first_of(L'[', markerIndex + 1);
+                if (nextMarkerIndex != std::wstring::npos)
+                {
+                    arguments[argumentIndexA] = argument.substr(markerIndex + 4, nextMarkerIndex - (markerIndex + 4));
+                }
+                else
+                {
+                    arguments[argumentIndexA] = argument.substr(markerIndex + 4);
+                }
+            }
+        }
+        else
+        {
+            std::wstring customMarker = defaultMarker;
+
+            if (arguments[argumentIndexN][0] == '[')
+            {
+                customMarker = arguments[argumentIndexN].substr(0, 4);
+                arguments[argumentIndexN] = arguments[argumentIndexN].substr(4);
+            }
+
+            const auto& argumentA = arguments[argumentIndexA];
+            if (argumentA[0] == '[')
+            {
+                auto markerIndex = argumentA.find(customMarker);
+                if (markerIndex != std::wstring::npos)
+                {
+                    auto nextMarkerIndex = argumentA.find_first_of(L'[', markerIndex + 1);
+
+                    auto parsedArgument = argumentA.substr(markerIndex + 4, nextMarkerIndex - (markerIndex + 4));
+                    arguments[argumentIndexA] = parsedArgument;
+                }
+            }
+        }
+
+        outBuff.assign(formatStr.substr(colonIndex + 1));
+    }
+    else
+    {
+        outBuff.assign(formatStr);
+    }
+
+    for (size_t i = 0; i < arguments.size(); i++)
+    {
+        ESE_D2Client_ReplaceNameFormatToken_6FADCF10(outBuff, i, arguments[i].c_str());
+    }
 }
 
 void ESE_D2Client_GetItemTextLineDefense_6FAE51D0(D2UnitStrc* pUnit, D2UnitStrc* pItem, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord)
@@ -455,9 +599,9 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                 const wchar_t* v177 = (const wchar_t*)D2LANG_GetStringFromTblIndex(lowQualityItemTxtRecord->wTblId);
                 const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1712_LowqualityFormat);
 
-                wchar_t scratchpad[1024] = { 0 };
-                D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strFormat, v177, strItemName, 0);
-                outBuff.append(scratchpad);
+                std::wstring formattedName;
+                ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, v177, strItemName, 0);
+                outBuff.append(formattedName);
             }
             break;
         }
@@ -535,7 +679,7 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                     wchar_t personalizedName[1024] = { 0 };
                     D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)earName.c_str(), (const Unicode*)v43, std::size(personalizedName), STRTABLE_GetLanguage());
 
-                    outBuff.assign(personalizedName);
+                    outBuff.append(personalizedName);
                     break;
                 }
                 if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_BODY_PART))
@@ -551,9 +695,9 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                     const wchar_t* v47 = (const wchar_t*)D2LANG_GetStringFromTblIndex(v46->wNameStr);
                     const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1716_BodyPartsFormat);
 
-                    wchar_t scratchpad[1024] = { 0 };
-                    D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strFormat, v47, v182, 0);
-                    outBuff.append(scratchpad);
+                    std::wstring formattedName;
+                    ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, v47, v182, 0);
+                    outBuff.append(formattedName);
 
                     break;
                 }
@@ -564,9 +708,9 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                     const wchar_t* v178 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1728_Gemmed);
                     const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1715_GemmedNormalName);
 
-                    wchar_t scratchpad[1024] = { 0 };
-                    D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strFormat, v178, v183, 0);
-                    outBuff.append(scratchpad);
+                    std::wstring formattedName;
+                    ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, v178, v183, 0);
+                    outBuff.append(formattedName);
 
                     break;
                 }
@@ -611,9 +755,9 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
             const wchar_t* v47 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1727_Hiquality);
             const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1711_HiqualityFormat);
 
-            wchar_t scratchpad[1024] = { 0 };
-            D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strFormat, v47, v182, 0);
-            outBuff.append(scratchpad);
+            std::wstring formattedName;
+            ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, v47, v182, 0);
+            outBuff.append(formattedName);
 
             break;
         }
@@ -660,9 +804,9 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
             const wchar_t* strItemName = (const wchar_t*)D2LANG_GetStringFromTblIndex(pItemTxtRecord->wNameStr);
             const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1714_MagicFormat);
 
-            wchar_t scratchpad[1024] = { 0 };
-            D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strFormat, itemNamePrefix.c_str(), strItemName, itemNameSuffix.c_str(), 0);
-            outBuff.append(scratchpad);
+            std::wstring formattedName;
+            ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, itemNamePrefix.c_str(), strItemName, itemNameSuffix.c_str(), 0);
+            outBuff.append(formattedName);
 
             break;
         }
@@ -705,9 +849,9 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                 {
                     const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_10089_SetItemFormatX);
 
-                    wchar_t scratchpad[1024] = { 0 };
-                    D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strFormat, v132, 0);
-                    outBuff.append(scratchpad);
+                    std::wstring formattedName;
+                    ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, v132, 0);
+                    outBuff.append(formattedName);
                 }
             }
             break;
@@ -760,8 +904,8 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
 
             const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_1718_RareFormat);
 
-            wchar_t scratchpadItemName[1024] = { 0 };
-            D2Client_sub_6FADCFE0((Unicode*)scratchpadItemName, (const Unicode*)strFormat, itemNamePrefix.c_str(), itemNameSuffix.c_str(), 0);
+            std::wstring formattedName;
+            ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, itemNamePrefix.c_str(), itemNameSuffix.c_str(), 0);
 
             if (ITEMS_CheckItemFlag(pItem, IFLAG_PERSONALIZED, __LINE__, __FILE__))
             {
@@ -769,13 +913,13 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
 
                 wchar_t personalizedName[1024] = { 0 };
 
-                D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)earName.c_str(), (const Unicode*)scratchpadItemName, std::size(personalizedName), STRTABLE_GetLanguage());
+                D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)earName.c_str(), (const Unicode*)formattedName.c_str(), std::size(personalizedName), STRTABLE_GetLanguage());
 
                 outBuff.append(personalizedName);
             }
             else
             {
-                outBuff.append(scratchpadItemName);
+                outBuff.append(formattedName);
             }
 
             break;
@@ -2846,11 +2990,262 @@ void ESE_D2Client_GetItemTextLineBlockChance_6FAE4EE0(D2UnitStrc* pUnit, std::ws
     outBuff.append(blockChanceString);
 }
 
+void ESE_D2Client_GetItemTextLineQuantity_6FAE5710(D2UnitStrc* pUnit, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord)
+{
+    if (!pUnit)
+    {
+        return;
+    }
+    if (!pItemTxtRecord)
+    {
+        return;
+    }
+
+    if (!pItemTxtRecord->nSpellDesc)
+    {
+        return;
+    }
+
+    auto pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+    if (!pCurrentPlayer)
+    {
+        return;
+    }
+
+    if (pItemTxtRecord->wSpellDescStr == 5382)
+    {
+        return;
+    }
+
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+
+    if (pItemTxtRecord->nSpellDesc == 1)
+    {
+        const wchar_t* v6 = (const wchar_t*)D2LANG_GetStringFromTblIndex((D2C_StringIndices)pItemTxtRecord->wSpellDescStr);
+        outBuff.assign(v6);
+        outBuff.append(strNewLine);
+        return;
+    }
+
+    int v8 = 0;
+    if (pItemTxtRecord->nSpellDesc == 2)
+    {
+        v8 = ITEMMODS_EvaluateItemFormula(pCurrentPlayer, pUnit, pItemTxtRecord->dwCalc[0]);
+
+        if (pItemTxtRecord->wStat[0] == STAT_HITPOINTS || pItemTxtRecord->wStat[0] == STAT_HPREGEN)
+        {
+            v8 = ITEMS_GetBonusLifeBasedOnClass(pCurrentPlayer, v8);
+        }
+        else if (pItemTxtRecord->wStat[0] == STAT_MANA || pItemTxtRecord->wStat[0] == STAT_MANARECOVERY)
+        {
+            v8 = ITEMS_GetBonusManaBasedOnClass(pCurrentPlayer, v8);
+        }
+    }
+    else if (pItemTxtRecord->nSpellDesc == 3)
+    {
+        v8 = ITEMMODS_EvaluateItemFormula(pCurrentPlayer, pUnit, pItemTxtRecord->dwCalc[0]);
+    }
+    else if (pItemTxtRecord->nSpellDesc == 4)
+    {
+        int32_t v14 = ITEMMODS_EvaluateItemFormula(pCurrentPlayer, pUnit, pItemTxtRecord->dwCalc[0]);
+        const wchar_t* format = (const wchar_t*)D2LANG_GetStringFromTblIndex((D2C_StringIndices)pItemTxtRecord->wSpellDescStr);
+
+        AppendFormattedWideString(outBuff, format, v14);
+        outBuff.append(strNewLine);
+    }
+    else
+    {
+        return;
+    }
+
+    const wchar_t* v11 = (const wchar_t*)D2LANG_GetStringFromTblIndex((D2C_StringIndices)pItemTxtRecord->wSpellDescStr);
+
+    outBuff.assign(v11);
+    outBuff.append(strSpace);
+    outBuff.append(std::to_wstring(v8));
+    outBuff.append(strNewLine);
+}
+
+void ESE_D2Client_sub_6FAF13C0(D2UnitStrc* pItem, D2GemsTxt* pMods, int32_t nPropSet, std::wstring& outBuff, std::wstring* existingContents)
+{
+    ITEMMODS_AssignProperty(5, 0, pItem, pMods, nPropSet, 0);
+
+    ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 1, existingContents);
+
+    D2StatListStrc* v9 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+    if (v9)
+    {
+        D2Common_10474(pItem, v9);
+        STATLIST_FreeStatList(v9);
+    }
+
+    if (outBuff[outBuff.length() - 1] == 10)
+    {
+        outBuff[outBuff.length() - 1] = 0;
+    }
+}
+
+void ESE_D2Client_GetItemTextLineRuneGemStats_6FAF1480(D2UnitStrc* pItem, std::wstring& outBuff)
+{
+    if (!D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_SOCKET_FILLER))
+    {
+        FOG_DisplayAssert("ITEMSIsA(hItem, ITEMTYPE_SOCKETFILLER_TYPE)", __FILE__, __LINE__);
+        exit(-1);
+    }
+
+    auto classId = -1;
+    if (pItem)
+    {
+        classId = pItem->dwClassId;
+    }
+
+    auto ptItemStats = DATATBLS_GetItemsTxtRecord(classId);
+    if (!ptItemStats)
+    {
+        FOG_DisplayAssert("ptItemStats", __FILE__, __LINE__);
+        exit(-1);
+    }
+
+    const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
+    const wchar_t* strSpace = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3995_space);
+
+    const wchar_t* v32 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11073_GemXp1);
+    const wchar_t* v29 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11074_GemXp2);
+    const wchar_t* v38 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11075_GemXp3);
+    const wchar_t* v35 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11076_GemXp4);
+
+    if (D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_GEM))
+    {
+        auto ptGemMods = DATATBLS_GetGemsTxtRecord(ptItemStats->dwGemOffset);
+        if (!ptGemMods)
+        {
+            FOG_DisplayAssert("ptGemMods", __FILE__, __LINE__);
+            exit(-1);
+        }
+
+        outBuff.append(strNewLine);
+
+        std::wstring temp;
+        temp.append(v29);
+        temp.append(strSpace);
+
+        ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 2, 0);
+        ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
+
+        D2StatListStrc* v14 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (v14)
+        {
+            D2Common_10474(pItem, v14);
+            STATLIST_FreeStatList(v14);
+        }
+        if (outBuff[outBuff.length() - 1] == 10)
+        {
+            outBuff[outBuff.length() - 1] = 0;
+        }
+        outBuff.append(strNewLine);
+
+        temp.clear();
+        temp.append(v32);
+        temp.append(strSpace);
+        ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 1, 0);
+        ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
+
+        D2StatListStrc* v18 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (v18)
+        {
+            D2Common_10474(pItem, v18);
+            STATLIST_FreeStatList(v18);
+        }
+
+        if (outBuff[outBuff.length() - 1] == 10)
+        {
+            outBuff[outBuff.length() - 1] = 0;
+        }
+        outBuff.append(strNewLine);
+
+        temp.clear();
+        temp.append(v35);
+        temp.append(strSpace);
+        ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 1, 0);
+        ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
+        D2StatListStrc* v22 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (v22)
+        {
+            D2Common_10474(pItem, v22);
+            STATLIST_FreeStatList(v22);
+        }
+        if (outBuff[outBuff.length() - 1] == 10)
+        {
+            outBuff[outBuff.length() - 1] = 0;
+        }
+        outBuff.append(strNewLine);
+
+        temp.clear();
+        temp.append(v38);
+        temp.append(strSpace);
+        ITEMMODS_AssignProperty(2, 0, pItem, ptGemMods, 0, 0);
+        ESE_D2Client_GetItemTextLineProperties_6FAF3160(pItem, outBuff, 0, &temp);
+
+        D2StatListStrc* v26 = (D2StatListStrc*)STATLIST_GetStatListFromUnitStateOrFlag(pItem, 0, 64);
+        if (v26)
+        {
+            D2Common_10474(pItem, v26);
+            STATLIST_FreeStatList(v26);
+        }
+        if (outBuff[outBuff.length() - 1] == 10)
+        {
+            outBuff[outBuff.length() - 1] = 0;
+        }
+    }
+    else
+    {
+        if (!D2Common_10731_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_RUNE))
+        {
+            return;
+        }
+
+        auto ptGemMods = DATATBLS_GetGemsTxtRecord(ptItemStats->dwGemOffset);
+        if (!ptGemMods)
+        {
+            FOG_DisplayAssert("ptGemMods", __FILE__, __LINE__);
+            exit(-1);
+        }
+
+        outBuff.append(strNewLine);
+
+        std::wstring temp;
+        temp.append(v29);
+        temp.append(strSpace);
+        ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 2, outBuff, &temp);
+        outBuff.append(strNewLine);
+
+        temp.clear();
+        temp.append(v32);
+        temp.append(strSpace);
+        ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 1, outBuff, &temp);
+        outBuff.append(strNewLine);
+
+        temp.clear();
+        temp.append(v35);
+        temp.append(strSpace);
+        ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 1, outBuff, &temp);
+        outBuff.append(strNewLine);
+
+        temp.clear();
+        temp.append(v38);
+        temp.append(strSpace);
+        ESE_D2Client_sub_6FAF13C0(pItem, ptGemMods, 0, outBuff, &temp);
+    }
+
+    outBuff.append(strNewLine);
+    outBuff.append(strNewLine);
+}
+
 void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQuality)
 {
     std::wstring itemDescription;
     itemDescription.reserve(4096);
-    wchar_t scratchpad[1024] = { 0 };
 
     auto pItemUnderCursor = *D2Client_pItemUnderCursor;
     if (pItemUnderCursor == nullptr)
@@ -2954,11 +3349,10 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
             FOG_DisplayAssert("ITEMSIsA(sghSelItem, ITEMTYPE_SOCKETFILLER_TYPE)", __FILE__, __LINE__);
             exit(-1);
         }
-        scratchpad[0] = 0;
-        D2Client_GetItemTextLineRuneGemStats_6FAF1480(pItemUnderCursor, (Unicode*)scratchpad, std::size(scratchpad));
+
         auto strCanBeInsertedIntoSocket = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_11080_ExInsertSocketsX);
 
-        statLine_RuneGemStats_512.append(scratchpad);
+        ESE_D2Client_GetItemTextLineRuneGemStats_6FAF1480(pItemUnderCursor, statLine_RuneGemStats_512);
         statLine_RuneGemStats_512.append(strCanBeInsertedIntoSocket);
         statLine_RuneGemStats_512.append(strNewLine);
     }
@@ -3179,9 +3573,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
         itemLineUnidentified.append(strNewLine);
     }
 
-    scratchpad[0] = 0;
-    D2Client_GetItemTextLineQuantity_6FAE5710(pItemUnderCursor, (Unicode*)scratchpad, itemTxtRecord);
-    statLine_Quantity_512.append(scratchpad);
+    ESE_D2Client_GetItemTextLineQuantity_6FAE5710(pItemUnderCursor, statLine_Quantity_512, itemTxtRecord);
 
     std::wstring itemLineName;
     ESE_D2Client_BuildItemName_6FADD360(pItemUnderCursor, itemLineName);
@@ -3505,7 +3897,6 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
 {
     std::wstring itemDescription;
     itemDescription.reserve(4096);
-    wchar_t scratchpad[8192] = { 0 };
 
     auto pItemUnderCursor = *D2Client_pItemUnderCursor;
     if (pItemUnderCursor == nullptr)
@@ -3678,7 +4069,6 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
             }
 
             std::wstring textLineSetNames;
-            std::wstring scratchpadBuffer;
 
             if (setsTxtRecord->nSetItems > 0)
             {
@@ -3692,41 +4082,40 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                     }
 
                     D2UnitStrc* setItem = D2Client_sub_6FAE5990(pUnit_->pInventory, pUnita->wSetItemId);
-                    scratchpadBuffer.clear();
 
+                    std::wstring setNameLine;
                     if (pUnita->wStringId)
                     {
                         auto strSetItemName = (const wchar_t*)D2LANG_GetStringFromTblIndex(pUnita->wStringId);
                         auto strSetItemNameFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_10089_SetItemFormatX);
 
-                        scratchpad[0] = 0;
-                        D2Client_sub_6FADCFE0((Unicode*)scratchpad, (const Unicode*)strSetItemNameFormat, (const Unicode*)strSetItemName, 0);
-                        scratchpadBuffer.append(scratchpad);
-                        scratchpadBuffer.append(strNewLine);
+                        std::wstring formattedName;
+                        ESE_D2Client_FormatName_6FADCFE0(formattedName, strSetItemNameFormat, strSetItemName, 0);
+                        setNameLine.append(formattedName);
+                        setNameLine.append(strNewLine);
                     }
-                    AppendColorizedString(textLineSetNames, scratchpadBuffer, setItem ? 2 : 1);
+                    AppendColorizedString(textLineSetNames, setNameLine, setItem ? 2 : 1);
                 }
             }
 
-            scratchpadBuffer.clear();
-            AppendColorizedString(scratchpadBuffer, textLineSetNames, 2);
-            AppendColorizedString(scratchpadBuffer, itemLineCompleteSetName, 4);
+            std::wstring pTextToDisplay;
+
+            AppendColorizedString(pTextToDisplay, textLineSetNames, 2);
+            AppendColorizedString(pTextToDisplay, itemLineCompleteSetName, 4);
 
             if (textLineSetBonus[0])
             {
-                scratchpadBuffer.append(strNewLine);
-                AppendColorizedString(scratchpadBuffer, textLineSetBonus, 4);
+                pTextToDisplay.append(strNewLine);
+                AppendColorizedString(pTextToDisplay, textLineSetBonus, 4);
             }
-            scratchpadBuffer.append(strNewLine);
+            pTextToDisplay.append(strNewLine);
             if (textLineSet[0])
             {
-                AppendColorizedString(scratchpadBuffer, textLineSet, 2);
+                AppendColorizedString(pTextToDisplay, textLineSet, 2);
             }
 
-            AppendColorizedString(scratchpadBuffer, textLineProperties, 3);
-            scratchpadBuffer.append(itemLineBasicInfo);
-
-            std::wstring pTextToDisplay;
+            AppendColorizedString(pTextToDisplay, textLineProperties, 3);
+            pTextToDisplay.append(itemLineBasicInfo);
 
             if (*D2Client_pVendorMode_6FBB58EC != VENDORMODE_NONE && *D2Client_pVendorMode_6FBB58EC >= 1 && *D2Client_pVendorMode_6FBB58EC <= 9)
             {
@@ -3734,7 +4123,6 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                 std::wstring itemPriceString;
                 if (ESE_D2Client_GetItemTextLinePrice_6FAFB200(pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &transactionCost, itemPriceString))
                 {
-                    pTextToDisplay.append(scratchpadBuffer);
                     if (itemPriceString[0])
                     {
                         pTextToDisplay.append(strNewLine);
@@ -3744,7 +4132,6 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                 }
                 else
                 {
-                    pTextToDisplay.append(scratchpadBuffer);
                     if (*D2Client_pVendorMode_6FBB58EC != VENDORMODE_REPAIR)
                     {
                         pTextToDisplay.append(strNewLine);
@@ -3753,10 +4140,6 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
                         AppendColorizedString(pTextToDisplay, strItemCannotBeSold, 1);
                     }
                 }
-            }
-            else
-            {
-                pTextToDisplay = scratchpadBuffer;
             }
 
             int32_t width = 0;
