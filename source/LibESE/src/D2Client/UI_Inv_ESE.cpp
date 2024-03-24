@@ -95,6 +95,95 @@ void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t 
     dest.append(src);
 }
 
+void ESE_D2LANG_UnicodePersonalize_6FC11D50(std::wstring &outBuff, const std::wstring &subjectName, const std::wstring &itemName, int32_t language)
+{
+    // static const char* byte_6FC1D100 = "s"; // D100
+    // static const char* byte_6FC1D0FC = "'s "; // D0FC
+    // static const char* byte_6FC1D0F8 = "' "; // D0F8
+    // static const char* byte_6FC1D0F0 = " de "; // D0F0
+    // static const char* byte_6FC1D0E8 = "s "; // D0E8
+    // static const char* byte_6FC1D0D4 = " di "; // D0D4
+    // static const char* byte_6FC1D0D0 = "("; // D0D0
+    // static const char* byte_6FC1D0CC = ")"; // D0CC
+    // static const char* byte_6FC1D0C8 = " "; // D0C8
+    // static const char* byte_6FC1D0DC = " d'"; // D0DC
+
+    switch (language)
+    {
+    case LANGUAGE_ENGLISH:
+    case LANGUAGE_ENGLISHKOR:
+    {
+        outBuff.assign(subjectName);
+
+        if (subjectName.ends_with(L"s"))
+        {
+            outBuff.append(L"' ");
+        }
+        else
+        {
+            outBuff.append(L"'s ");
+        }
+
+        outBuff.append(itemName);
+        return;
+    }
+    case LANGUAGE_SPANISH:
+    {
+        outBuff.assign(itemName);
+        outBuff.append(L" de ");
+        outBuff.append(subjectName);
+        return;
+    }
+    case LANGUAGE_GERMAN:
+    {
+        const wchar_t lastChar = subjectName[subjectName.length() - 1];
+
+        outBuff.assign(subjectName);
+
+        if (lastChar == L's' || lastChar == 'z') 
+        {
+            outBuff.append(L"' ");
+        }
+        else 
+        {
+            outBuff.append(L"s ");
+        }
+
+        outBuff.append(itemName);
+        return;
+    }
+    case LANGUAGE_FRENCH:
+    {
+        outBuff.assign(itemName);
+
+        if (subjectName[0] == L'a' || subjectName[0] == L'e' || subjectName[0] == L'i' || subjectName[0] == L'o' || subjectName[0] == L'u')
+        {
+            outBuff.assign(L" de ");
+        }
+        else
+        {
+            outBuff.assign(L" d'");
+        }
+
+        outBuff.append(subjectName);
+        return;
+    }
+    case LANGUAGE_ITALIAN:
+    {
+        outBuff.assign(itemName);
+        outBuff.assign(L" di ");
+        outBuff.assign(subjectName);
+        return;
+    }
+    }
+
+    outBuff.assign(L"(");
+    outBuff.append(subjectName);
+    outBuff.append(L") ");
+    outBuff.append(itemName);
+    return;
+}
+
 /*
     Replaces a single format token when the specified replacement string, storing the results in 'formatBuff'
 
@@ -674,11 +763,10 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                     outBuff.append(v38);
                     outBuff.append(strNewLine);
 
-                    const wchar_t* v43 = (const wchar_t*)D2LANG_GetStringFromTblIndex(pItemTxtRecord->wNameStr);
+                    const wchar_t* itemName = (const wchar_t*)D2LANG_GetStringFromTblIndex(pItemTxtRecord->wNameStr);
 
-                    wchar_t personalizedName[1024] = { 0 };
-                    D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)earName.c_str(), (const Unicode*)v43, std::size(personalizedName), STRTABLE_GetLanguage());
-
+                    std::wstring personalizedName;
+                    ESE_D2LANG_UnicodePersonalize_6FC11D50(personalizedName, earName, itemName, STRTABLE_GetLanguage());
                     outBuff.append(personalizedName);
                     break;
                 }
@@ -835,14 +923,14 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
             outBuff.append(strNewLine);
             if (pSetItemTxt->wStringId)
             {
-                const wchar_t* v132 = (const wchar_t*)D2LANG_GetStringFromTblIndex(pSetItemTxt->wStringId);
+                const wchar_t* itemName = (const wchar_t*)D2LANG_GetStringFromTblIndex(pSetItemTxt->wStringId);
 
                 if (ITEMS_CheckItemFlag(pItem, IFLAG_PERSONALIZED, __LINE__, __FILE__))
                 {
-                    auto v204 = ToWideString(ITEMS_GetEarName(pItem));
+                    auto subjectName = ToWideString(ITEMS_GetEarName(pItem));
 
-                    wchar_t personalizedName[1024] = { 0 };
-                    D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)v204.c_str(), (const Unicode*)v132, std::size(personalizedName), STRTABLE_GetLanguage());
+                    std::wstring personalizedName;
+                    ESE_D2LANG_UnicodePersonalize_6FC11D50(personalizedName, subjectName, itemName, STRTABLE_GetLanguage());
                     outBuff.append(personalizedName);
                 }
                 else
@@ -850,7 +938,7 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                     const wchar_t* strFormat = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_10089_SetItemFormatX);
 
                     std::wstring formattedName;
-                    ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, v132, 0);
+                    ESE_D2Client_FormatName_6FADCFE0(formattedName, strFormat, itemName, 0);
                     outBuff.append(formattedName);
                 }
             }
@@ -909,12 +997,10 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
 
             if (ITEMS_CheckItemFlag(pItem, IFLAG_PERSONALIZED, __LINE__, __FILE__))
             {
-                auto earName = ToWideString(ITEMS_GetEarName(pItem));
+                auto earOwnerName = ToWideString(ITEMS_GetEarName(pItem));
 
-                wchar_t personalizedName[1024] = { 0 };
-
-                D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)earName.c_str(), (const Unicode*)formattedName.c_str(), std::size(personalizedName), STRTABLE_GetLanguage());
-
+                std::wstring personalizedName;
+                ESE_D2LANG_UnicodePersonalize_6FC11D50(personalizedName, earOwnerName, formattedName, STRTABLE_GetLanguage());
                 outBuff.append(personalizedName);
             }
             else
@@ -953,15 +1039,15 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
                     outBuff.append(strNewLine);
                 }
 
-                std::wstring v109 = std::wstring((const wchar_t*)D2LANG_GetStringFromTblIndex(pUniqueItemTxt->wTblIndex));
-                v109 = BuildItemName_StripBracketPrefix(v109);
+                std::wstring itemName = std::wstring((const wchar_t*)D2LANG_GetStringFromTblIndex(pUniqueItemTxt->wTblIndex));
+                itemName = BuildItemName_StripBracketPrefix(itemName);
 
                 if (ITEMS_CheckItemFlag(pItem, IFLAG_PERSONALIZED, __LINE__, __FILE__))
                 {
-                    auto v203 = ToWideString(ITEMS_GetEarName(pItem));
+                    auto subjectName = ToWideString(ITEMS_GetEarName(pItem));
 
-                    wchar_t personalizedName[1024] = { 0 };
-                    D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)v203.c_str(), (const Unicode*)v109.c_str(), std::size(personalizedName), STRTABLE_GetLanguage());
+                    std::wstring personalizedName;
+                    ESE_D2LANG_UnicodePersonalize_6FC11D50(personalizedName, subjectName, itemName, STRTABLE_GetLanguage());
 
                     outBuff.append(personalizedName);
                     break;
@@ -988,10 +1074,10 @@ void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuf
         int32_t itemQuality = ITEMS_GetItemQuality(pItem);
         if (itemQuality < ITEMQUAL_SET || itemQuality > ITEMQUAL_TEMPERED)
         {
-            auto v203 = ToWideString(ITEMS_GetEarName(pItem));
+            auto subjectName = ToWideString(ITEMS_GetEarName(pItem));
 
-            wchar_t personalizedName[1024] = { 0 };
-            D2LANG_Unicode_Personalize((Unicode*)personalizedName, (const Unicode*)v203.c_str(), (const Unicode*)outBuff.c_str(), std::size(personalizedName), STRTABLE_GetLanguage());
+            std::wstring personalizedName;
+            ESE_D2LANG_UnicodePersonalize_6FC11D50(personalizedName, subjectName, outBuff.c_str(), STRTABLE_GetLanguage());
             outBuff.assign(personalizedName);
         }
     }
