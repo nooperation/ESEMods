@@ -6,6 +6,8 @@ set(D2MOOHeaders_FILES ${D2MOOHeaders_SOURCES} ${D2MOOHeaders_HEADERS})
 
 add_library(D2MOOHeaders STATIC ${D2MOOHeaders_SOURCES} ${D2MOOHeaders_HEADERS})
 
+target_compile_features(D2MOOHeaders PUBLIC cxx_std_20)
+
 target_include_directories(D2MOOHeaders 
 	PRIVATE
 		${D2MOOHeaders_SOURCE_DIR}/include/D2CMP

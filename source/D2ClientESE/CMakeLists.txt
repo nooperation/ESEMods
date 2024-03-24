@@ -17,7 +17,7 @@ target_include_directories(D2ClientESE PUBLIC include)
 target_link_libraries(D2ClientESE D2MOOHeaders D2.Detours LibESE)
 add_dependencies(D2ClientESE D2.DetoursLauncher LibESE)
 
-target_compile_features(D2ClientESE PUBLIC cxx_std_17)
+target_compile_features(D2ClientESE PUBLIC cxx_std_20)
 
 # Include D2MOO's headers
 target_include_directories(D2ClientESE 
