@@ -529,7 +529,7 @@ void __fastcall ESE_D2Client_sub_6FB20A30(D2UnitStrc* pUnit)
             }
             else
             {
-                D2Win_DrawFramedText_10129((const Unicode*)v104.c_str(), *D2Client_pUnitMouseOverTextPosX_6FB8EA28, v68 + *D2Client_pUnitMouseOverTextPosY_6FB8EA2C, 0, 1);
+                D2Win_DrawFramedText_10129((const Unicode*)v65, *D2Client_pUnitMouseOverTextPosX_6FB8EA28, v68 + *D2Client_pUnitMouseOverTextPosY_6FB8EA2C, 0, 1);
             }
         }
         return;
