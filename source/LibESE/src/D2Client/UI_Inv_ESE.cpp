@@ -3104,7 +3104,7 @@ void ESE_D2Client_sub_6FAF13C0(D2UnitStrc* pItem, D2GemsTxt* pMods, int32_t nPro
 
     if (outBuff[outBuff.length() - 1] == 10)
     {
-        outBuff[outBuff.length() - 1] = 0;
+        outBuff.pop_back();
     }
 }
 
