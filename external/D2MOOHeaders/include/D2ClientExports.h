@@ -12,6 +12,12 @@
 struct Unicode;
 struct D2SkillStrc;
 
+struct D2RosterInfoStrc;
+struct D2MonStats2Txt;
+struct D2MonStatsTxt;
+struct D2RosterPetStrc;
+struct D2RosterUnitStrc;
+
 #pragma pack(push, 1)
 struct ElixirDesc_6FB7A440
 {
@@ -95,6 +101,37 @@ typedef D2UnitStrc* (__fastcall* D2Client_FindUnit_6FB269F0_t)(int32_t unitId, i
 typedef int8_t (__fastcall* D2Client_GetCurrentDifficulty_6FAAC090_t)(); // C090
 typedef int32_t (__fastcall* D2Client_IsVendorRepairActive_6FAEB930_t)(); // 4B930
 
+// UI_GroundItem stuff
+typedef int32_t (__fastcall* D2Client_GetOpenSidePanels_6FAB5750_t)(); // 15750
+typedef int32_t (__fastcall* D2Client_GetViewXOffset_6FAB5890_t)(); // 15890
+typedef int32_t (__fastcall* D2Client_GetViewYOffset_6FAB58A0_t)(); // 158A0
+typedef int32_t (__fastcall* D2Client_GetMonsterLifeColor_6FB20670_t)(D2UnitStrc* pUnit); // 80670
+typedef const Unicode* (__fastcall* D2Client_GetUnitName_6FB297F0_t)(D2UnitStrc* pUnit); // 897F0
+typedef int32_t (__fastcall* D2Client_GetRosterPlayerNameAndColor_6FB21680_t)(D2UnitStrc* pUnit, int32_t* pOutColorBg, int32_t* pOutColor, struct Unicode* outBuff, int32_t outBuffLen); // 81680
+typedef char* (__fastcall* D2Client_GetRosterPortalOwnerName_6FAB0D00_t)(int32_t unitId); // 10D00
+typedef int32_t (__fastcall* D2Client_GetRosterPetOwnerId_6FAB1B00_t)(int32_t unitId); // 11B00
+typedef char* (__fastcall* D2Client_GetRosterUnitName_6FAB0BC0_t)(int32_t unitId); // 10BC0
+typedef int32_t (__fastcall* D2Client_GetRosterUnitLife_6FAB1460_t)(int32_t unitId); // 11460
+typedef D2RosterInfoStrc** (__fastcall* D2Client_GetRosterUnitRosterInfo_6FAB0D80_t)(int32_t unitId); // 10D80
+typedef int32_t (__fastcall* D2Client_CheckPartyMemberFlags_6FB4B900_t)(int unitIdA, int unitIdB, int32_t partyFlag); // AB900
+typedef int32_t (__fastcall* D2Client_AreUnitsHostile_6FAB07D0_t)(int unitIdA, int unitIdB); // 107D0
+typedef D2MonStats2Txt* (__fastcall* D2Client_GetMonStats2TxtFromClassId_6FB247F0_t)(int classId); // 847F0
+typedef D2MonStatsTxt* (__fastcall* D2Client_GetMonStatsTxtFromClassId_6FAAE570_t)(int classId); // E570
+typedef char* (__fastcall* D2Client_GetObjectOwnerName_6FB48550_t)(D2UnitStrc* pUnit); // A8550
+typedef BOOL (__fastcall* D2Client_CheckMonsterTypeFlag_6FB449D0_t)(D2UnitStrc* pUnit, unsigned __int16 monsterTypeFlag); // A49D0
+typedef BOOL (__fastcall* D2Client_IsMonsterUnique_6FB40D00_t)(D2UnitStrc* pUnit); // A0D00
+typedef BOOL (__fastcall* D2Client_IsMonsterChampion_6FB40CC0_t)(D2UnitStrc* pUnit); // A0CC0
+typedef BOOL (__fastcall* D2Client_IsMonsterGhostly_6FB40CE0_t)(D2UnitStrc* pUnit); // A0CE0
+typedef BOOL (__fastcall* D2Client_IsMonsterMinion_6FB40D20_t)(D2UnitStrc* pUnit); // A0D20
+typedef BOOL (__fastcall* D2Client_IsMonsterSuperUnique_6FB40D40_t)(D2UnitStrc* pUnit); // A0D40
+typedef BOOL (__fastcall* D2Client_GetScreenOffsetDimensionsTBD_6FB24690_t)(int* dimensionsOrSomething); // 84690
+typedef BOOL (__fastcall* D2Client_UpdateUniqueMonsterInfoString_6FB20600_t)(D2UnitStrc* pUnit, int32_t stringIndex); // 80600
+typedef void (__fastcall* D2Client_UpdateNormalMonsterInfoString_6FB205D0_t)(const  Unicode* newMonsterInfo, int xAdjust); // 805D0
+typedef void (__fastcall* D2Client_MonsterResistancesInfoString_6FB21570_t)(const D2UnitStrc* pUnit); // 81570
+typedef int (__fastcall* D2Client_IsActiveNpcDialogOpen_6FAFBB50_t)(int32_t** pActiveNpcId); // 5BB50
+typedef BOOL (__fastcall* D2Client_IsActiveNpcTalking_6FB1EE90_t)(); // 7EE90
+typedef int (__stdcall* D2Client_10002_t)(int32_t unused, int32_t questIndex); // 18EF0
+
 extern D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0; // 883D0                                       | 6FB283D0
 extern D2Client_IsBeltOpen_6FAFE9E0_t D2Client_IsBeltOpen_6FAFE9E0; // 5E9E0                                                   | 6FAFE9E0
 extern D2Client_IsUiOpen_6FB23230_t D2Client_IsUiOpen_6FB23230; // 83230                                                       | 6FB23230
@@ -108,7 +145,7 @@ extern D2Client_ColorizeLine_6FB20430_t D2Client_ColorizeLine_6FB20430; // 80430
 extern D2Client_AddExtraTradeStatLines_6FAE5A40_t D2Client_AddExtraTradeStatLines_6FAE5A40; // 45A40                           | 6FAE5A40
 extern D2Client_BuildItemName_6FADD360_t D2Client_BuildItemName_6FADD360; // 3D360                                             | 6FADD360
 extern D2Client_sub_6FB57CC0_t D2Client_sub_6FB57CC0; // B7CC0                                                                 | 6FB57CC0
-extern D2Client_GetItemTextLineBookQuantity_6FAE54B0_t D2Client_GetItemTextLineBookQuantity_6FAE54B0; // 454B0                                                                 | 6FAE54B0
+extern D2Client_GetItemTextLineBookQuantity_6FAE54B0_t D2Client_GetItemTextLineBookQuantity_6FAE54B0; // 454B0                 | 6FAE54B0
 extern D2Client_GetItemTextLineDurability_6FAE4060_t D2Client_GetItemTextLineDurability_6FAE4060; // 44060                     | 6FAE4060
 extern D2Client_GetItemTextLineRuneGemStats_6FAF1480_t D2Client_GetItemTextLineRuneGemStats_6FAF1480; // 51480                 | 6FAF1480
 extern D2Client_GetItemTextLineDamage_6FAE43D0_t D2Client_GetItemTextLineDamage_6FAE43D0; // 443D0                             | 6FAE43D0
@@ -132,10 +169,41 @@ extern D2Client_ReplaceNameFormatToken_6FADCF10_t D2Client_ReplaceNameFormatToke
 extern D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990; // 45990                                                                 | 6FAE5990
 extern D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200; // 5B200                               | 6FAFB200
 
-extern int32_t* D2Client_pScreenXOffset; // 11A748                                                                             | 6FBBA748
-extern int32_t* D2Client_pScreenYOffset; // 11A74C                                                                             | 6FBBA74C
-extern int32_t* D2Client_pScreenWidthUI; // D40EC                                                                              | 6FB740EC
-extern int32_t* D2Client_pScreenHeightUI; // D40F0                                                                             | 6FB740F0
+// UI_GroundItem stuff 
+extern D2Client_GetOpenSidePanels_6FAB5750_t D2Client_GetOpenSidePanels_6FAB5750; // 15750                                     | 6FAB5750
+extern D2Client_GetViewXOffset_6FAB5890_t D2Client_GetViewXOffset_6FAB5890; // 15890                                           | 6FAB5890
+extern D2Client_GetViewYOffset_6FAB58A0_t D2Client_GetViewYOffset_6FAB58A0; // 158A0                                           | 6FAB58A0
+extern D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670; // 80670                                 | 6FB20670
+extern D2Client_GetUnitName_6FB297F0_t D2Client_GetUnitName_6FB297F0; // 897F0                                                 | 6FB297F0
+extern D2Client_GetRosterPlayerNameAndColor_6FB21680_t D2Client_GetRosterPlayerNameAndColor_6FB21680; // 81680                 | 6FB21680
+extern D2Client_GetRosterPortalOwnerName_6FAB0D00_t D2Client_GetRosterPortalOwnerName_6FAB0D00; // 10D00                       | 6FAB0D00
+extern D2Client_GetRosterPetOwnerId_6FAB1B00_t D2Client_GetRosterPetOwnerId_6FAB1B00; // 11B00                                 | 6FAB1B00
+extern D2Client_GetRosterUnitName_6FAB0BC0_t D2Client_GetRosterUnitName_6FAB0BC0; // 10BC0                                     | 6FAB0BC0
+extern D2Client_GetRosterUnitLife_6FAB1460_t D2Client_GetRosterUnitLife_6FAB1460; // 11460                                     | 6FAB1460
+extern D2Client_GetRosterUnitRosterInfo_6FAB0D80_t D2Client_GetRosterUnitRosterInfo_6FAB0D80; // 10D80                         | 6FAB0D80
+extern D2Client_CheckPartyMemberFlags_6FB4B900_t D2Client_CheckPartyMemberFlags_6FB4B900; // AB900                             | 6FB4B900
+extern D2Client_AreUnitsHostile_6FAB07D0_t D2Client_AreUnitsHostile_6FAB07D0; // 107D0                                         | 6FAB07D0
+extern D2Client_GetMonStats2TxtFromClassId_6FB247F0_t D2Client_GetMonStats2TxtFromClassId_6FB247F0; // 847F0                   | 6FB247F0
+extern D2Client_GetMonStatsTxtFromClassId_6FAAE570_t D2Client_GetMonStatsTxtFromClassId_6FAAE570; // E570                      | 6FAAE570
+extern D2Client_GetObjectOwnerName_6FB48550_t D2Client_GetObjectOwnerName_6FB48550; // A8550                                   | 6FB48550
+extern D2Client_CheckMonsterTypeFlag_6FB449D0_t D2Client_CheckMonsterTypeFlag_6FB449D0; // A49D0                               | 6FB449D0
+extern D2Client_IsMonsterUnique_6FB40D00_t D2Client_IsMonsterUnique_6FB40D00; // A0D00                                         | 6FB40D00
+extern D2Client_IsMonsterChampion_6FB40CC0_t D2Client_IsMonsterChampion_6FB40CC0; // A0CC0                                     | 6FB40CC0
+extern D2Client_IsMonsterGhostly_6FB40CE0_t D2Client_IsMonsterGhostly_6FB40CE0; // A0CE0                                       | 6FB40CE0
+extern D2Client_IsMonsterMinion_6FB40D20_t D2Client_IsMonsterMinion_6FB40D20; // A0D20                                         | 6FB40D20
+extern D2Client_IsMonsterSuperUnique_6FB40D40_t D2Client_IsMonsterSuperUnique_6FB40D40; // A0D40                               | 6FB40D40
+extern D2Client_GetScreenOffsetDimensionsTBD_6FB24690_t D2Client_GetScreenOffsetDimensionsTBD_6FB24690; // 84690               | 6FB24690
+extern D2Client_UpdateUniqueMonsterInfoString_6FB20600_t D2Client_UpdateUniqueMonsterInfoString_6FB20600; // 80600             | 6FB20600
+extern D2Client_UpdateNormalMonsterInfoString_6FB205D0_t D2Client_UpdateNormalMonsterInfoString_6FB205D0; // 805D0             | 6FB205D0
+extern D2Client_MonsterResistancesInfoString_6FB21570_t D2Client_MonsterResistancesInfoString_6FB21570; // 81570               | 6FB21570
+extern D2Client_IsActiveNpcDialogOpen_6FAFBB50_t D2Client_IsActiveNpcDialogOpen_6FAFBB50; // 5BB50                             | 6FAFBB50
+extern D2Client_IsActiveNpcTalking_6FB1EE90_t D2Client_IsActiveNpcTalking_6FB1EE90; // 7EE90                                   | 6FB1EE90
+extern D2Client_10002_t D2Client_10002; // 18EF0                                                                               | 6FAB8EF0
+
+extern int32_t* D2Client_pScreenXOffset_6FBBA748; // 11A748                                                                    | 6FBBA748
+extern int32_t* D2Client_pScreenYOffset_6FBBA74C; // 11A74C                                                                    | 6FBBA74C
+extern int32_t* D2Client_pScreenWidthUI_6FB740EC; // D40EC                                                                     | 6FB740EC
+extern int32_t* D2Client_pScreenHeightUI_6FB740F0; // D40F0                                                                    | 6FB740F0
 extern int32_t* D2Client_pDWORD_6FB8CCF8; // ECCF8                                                                             | 6FB8CCF8
 
 extern int32_t* D2Client_pIsItemUnderCursorInInventory_6FBB58E0; // 1158E0                                                     | 6FBB58E0
@@ -154,7 +222,7 @@ extern int32_t* D2Client_pRightSwapWeaponButtonXLeft_6FBB59BC; // 1159BC        
 extern int32_t* D2Client_pRightSwapWeaponButtonXRight_6FBB59C0; // 1159C0                                                      | 6FBB59C0
 extern int32_t* D2Client_pRightSwapWeaponButtonYTop_6FBB59C4; // 1159C4                                                        | 6FBB59C4
 
-extern D2UnitStrc** D2Client_pItemUnderCursor; // 1158F0                                                                       | 6FBB58F0
+extern D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0; // 1158F0                                                              | 6FBB58F0
                                                                                                                                  
 // UI-Inv-Mod
 extern D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440; //6A440                                        | 6FB0A440
@@ -195,3 +263,34 @@ extern int32_t* D2Client_pIsNpcDialogOpen_6FBB5CF9; // 115CF9
 extern int32_t* D2Client_pActiveNpcId_6FBB5CF5; // 115CF5
 extern int32_t* D2Client_pIsGamblingSession_6FBB5D7C; // 115D7C
 extern D2UnitStrc** D2Client_pGameUnits_6FBBAA00; // 11AA00
+
+// UI_GroundItem stuff 
+extern int32_t* D2Client_pGameType_6FBA7960; // 107960
+extern int16_t* D2Client_pJoinId_6FBA7748; // 107748
+extern char* D2Client_pServerIp_6FB75468; // D5468
+extern char* D2Client_pGameName_6FBA7898; // 107898
+
+extern int32_t* D2Client_pUnitMouseOverTextPosX_6FB8EA28; // EEA28
+extern int32_t* D2Client_pUnitMouseOverTextPosY_6FB8EA2C; // EEA2C
+
+// 1 = right panel, 2 = left panel, 3 = left and right panels
+extern int32_t* D2Client_pOpenUIPanelMask_6FBAB9C4; // 10B9C4  
+
+extern int32_t* D2Client_pViewYOffset_6FBAB9B8; // 10B9B8
+extern int32_t* D2Client_pViewXOffset_6FBAB9BC; // 10B9BC
+
+// drawn units are offset by this amount. +320 when left ui panel is open, -320 when right ui panel is open, 0 when both or none are open
+extern int32_t* D2Client_pViewXOffsetUnits_6FBAB9C8; // 10B9C8 
+
+// not used here, but kept because it could be useful later
+extern D2RosterPetStrc* D2Client_pRosterPetRoot_6FBAB9A0; // 10B9A0
+extern D2RosterUnitStrc* D2Client_pRosterUnitRoot_6FBAB994; // 10B994
+
+extern int32_t* D2Client_pShowAllGroundItemTexts_6FBBA6DC; // 11A6DC
+
+extern wchar_t** D2Client_pNormalMonsterInfoString_6FBB9FE0; // 119FE0
+extern wchar_t** D2Client_pMonsterImmunitiesInfoString_6FBBA4A0; // 11A4A0
+extern wchar_t** D2Client_pUniqueMonsterInfoString_6FBBA2A0; // 11A2A0
+
+// UiStates[38]
+extern int32_t* D2Client_UIStates_6FBBA6A8; // 11A6A8

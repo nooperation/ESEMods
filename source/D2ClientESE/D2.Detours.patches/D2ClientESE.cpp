@@ -6,6 +6,7 @@
 
 #include "D2Client/CHARSCREENDMG_ESE_Intercepts.h"
 #include "D2Client/UI_Inv_ESE_Intercepts.h"
+#include "D2Client/UI_GroundItem_ESE_Intercepts.h"
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wmicrosoft-cast"
@@ -26,7 +27,10 @@ extern "C"
 
     static ExtraPatchAction extraPatchActions[] =
     {
-       {0x6FAE1890 - D2ClientImageBase, &ESE_INTERCEPT_UI_INV_DrawMouseOverItemFrame_6FAE1890, PatchAction::FunctionReplaceOriginalByPatch, &UI_INV_DrawMouseOverItemFrame_Original},
+       
+       {0x6FB20A30 - D2ClientImageBase, &ESE_INTERCEPT_D2Client_sub_6FB20A30, PatchAction::FunctionReplaceOriginalByPatch, &D2Client_sub_6FB20A30_Original},
+       
+        {0x6FAE1890 - D2ClientImageBase, &ESE_INTERCEPT_UI_INV_DrawMouseOverItemFrame_6FAE1890, PatchAction::FunctionReplaceOriginalByPatch, &UI_INV_DrawMouseOverItemFrame_Original},
 
        {0x6FB0C270 - D2ClientImageBase, &ESE_INTERCEPT_CHARSCREENDMG_DrawDescDam1, PatchAction::FunctionReplaceOriginalByPatch, &CHARSCREENDMG_DrawDescDam1_Original},
        {0x6FB0CD40 - D2ClientImageBase, &ESE_INTERCEPT_CHARSCREENDMG_DrawDescDam2, PatchAction::FunctionReplaceOriginalByPatch, &CHARSCREENDMG_DrawDescDam2_Original},

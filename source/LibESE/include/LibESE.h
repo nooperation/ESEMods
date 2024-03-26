@@ -21,6 +21,15 @@ inline constexpr uint32_t Clamp64To32Unsigned(const int64_t value)
 	return static_cast<uint32_t>(std::clamp<int64_t>(value, 0, UINT32_MAX));
 }
 
+std::wstring FormatWideString(const wchar_t* fmt, ...);
+void AppendFormattedWideString(std::wstring& outBuff, const wchar_t* fmt, ...);
+void AppendString(std::wstring& dest, const char* source);
+std::wstring ToWideString(const char* source);
+void ColorizeString(std::wstring& str, int32_t color);
+void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t color);
+
+void ESE_D2Client_BuildItemName_6FADD360(D2UnitStrc* pItem, std::wstring& outBuff);
+
 #pragma pack(push, 1)
 struct D2DamageReportPacket
 {

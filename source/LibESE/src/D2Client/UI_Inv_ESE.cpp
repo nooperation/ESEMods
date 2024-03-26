@@ -10,7 +10,6 @@
 #include <cinttypes>
 #include <D2States.h>
 #include <string>
-#include <codecvt>
 #include "D2Gfx.h"
 #include "D2Config.h"
 #include <bitset>
@@ -18,37 +17,6 @@
 
 void ESE_D2Client_GetItemTextLineAttackSpeed_6FAE5570(D2UnitStrc* pItem, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord);
 
-std::wstring FormatWideString(const wchar_t* fmt, ...)
-{
-    va_list ap;
-
-    va_start(ap, fmt);
-    size_t required = std::vswprintf(NULL, 0, fmt, ap);
-    va_end(ap);
-
-    va_start(ap, fmt);
-    std::wstring buffer(required, L'\0');
-    std::vswprintf(&buffer[0], buffer.size() + 1, fmt, ap);
-    va_end(ap);
-
-    return buffer;
-}
-
-void AppendFormattedWideString(std::wstring& outBuff, const wchar_t* fmt, ...)
-{
-    va_list ap;
-
-    va_start(ap, fmt);
-    size_t required = std::vswprintf(NULL, 0, fmt, ap);
-    va_end(ap);
-
-    va_start(ap, fmt);
-    std::wstring buffer(required, L'\0');
-    std::vswprintf(&buffer[0], buffer.size() + 1, fmt, ap);
-    va_end(ap);
-
-    outBuff.append(buffer);
-}
 
 std::wstring BuildItemName_StripBracketPrefix(const std::wstring& input)
 {
@@ -62,38 +30,6 @@ std::wstring BuildItemName_StripBracketPrefix(const std::wstring& input)
     return input.substr(index + 1);
 }
 
-std::wstring ToWideString(const char* source)
-{
-    std::string str(source);
-    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-
-    return converter.from_bytes(str);
-}
-
-void AppendString(std::wstring& dest, const char* source)
-{
-    std::string str(source);
-    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-
-    dest.append(converter.from_bytes(str));
-}
-
-void ColorizeString(std::wstring& str, int32_t color)
-{
-    auto colorCodeToken = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3994_colorcode);
-    std::wstring colorStr(colorCodeToken);
-    colorStr.append(std::to_wstring(color));
-
-    str.insert(0, colorStr);
-}
-
-void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t color)
-{
-    auto colorCodeToken = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3994_colorcode);
-    dest.append(colorCodeToken);
-    dest.append(std::to_wstring(color));
-    dest.append(src);
-}
 
 void ESE_D2LANG_UnicodePersonalize_6FC11D50(std::wstring& outBuff, const std::wstring& subjectName, const std::wstring& itemName, int32_t language)
 {
@@ -339,7 +275,7 @@ void ESE_D2Client_GetItemTextLineDefense_6FAE51D0(D2UnitStrc* pUnit, D2UnitStrc*
     const wchar_t* strNewLine = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
 
     int32_t pStatNotDynamic = 0;
-    D2UnitStrc* pOwner = STATLIST_GetOwner(*D2Client_pItemUnderCursor, &pStatNotDynamic);
+    D2UnitStrc* pOwner = STATLIST_GetOwner(*D2Client_pItemUnderCursor_6FBB58F0, &pStatNotDynamic);
 
     int32_t hasOwner = pOwner != 0;
     if (pOwner && pUnit != pOwner)
@@ -347,15 +283,15 @@ void ESE_D2Client_GetItemTextLineDefense_6FAE51D0(D2UnitStrc* pUnit, D2UnitStrc*
         pUnit = pOwner;
     }
 
-    STATLIST_MergeStatLists(pUnit, *D2Client_pItemUnderCursor, 1);
-    int32_t defense = STATLIST_GetDefenseFromUnit(*D2Client_pItemUnderCursor);
+    STATLIST_MergeStatLists(pUnit, *D2Client_pItemUnderCursor_6FBB58F0, 1);
+    int32_t defense = STATLIST_GetDefenseFromUnit(*D2Client_pItemUnderCursor_6FBB58F0);
     if (hasOwner)
     {
-        STATLIST_MergeStatLists(pOwner, *D2Client_pItemUnderCursor, (BOOL)pItem);
+        STATLIST_MergeStatLists(pOwner, *D2Client_pItemUnderCursor_6FBB58F0, (BOOL)pItem);
     }
     else
     {
-        STATLIST_ExpireUnitStatlist(pUnit, *D2Client_pItemUnderCursor);
+        STATLIST_ExpireUnitStatlist(pUnit, *D2Client_pItemUnderCursor_6FBB58F0);
     }
 
     pStatNotDynamic = STATLIST_GetUnitBaseStat(pItem, STAT_ARMORCLASS, 0) != defense;
@@ -2483,13 +2419,13 @@ void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wst
 
 void RenderMercCloseButtonText(int32_t mouseX, int32_t mouseY)
 {
-    auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 63;
-    auto closeButtonX = *D2Client_pScreenXOffset + 272;
+    auto closeButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 63;
+    auto closeButtonX = *D2Client_pScreenXOffset_6FBBA748 + 272;
 
     if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
     {
-        auto closeButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 98;
-        auto closeButtonTextX = *D2Client_pScreenXOffset + 287;
+        auto closeButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 98;
+        auto closeButtonTextX = *D2Client_pScreenXOffset_6FBBA748 + 287;
         auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
         D2Win_DrawFramedText_10129((Unicode*)strClose, closeButtonTextX, closeButtonTextY, 0, 1);
     }
@@ -2497,13 +2433,13 @@ void RenderMercCloseButtonText(int32_t mouseX, int32_t mouseY)
 
 void RenderCloseButtonText(int32_t mouseX, int32_t mouseY)
 {
-    auto closeButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 64;
-    auto closeButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 302;
+    auto closeButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 64;
+    auto closeButtonX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 302;
 
     if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
     {
-        auto closeButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 287;
-        auto closeButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 99;
+        auto closeButtonTextX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 287;
+        auto closeButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 99;
         auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
         D2Win_DrawFramedText_10129((Unicode*)strClose, closeButtonTextX, closeButtonTextY, 0, 1);
     }
@@ -2511,8 +2447,8 @@ void RenderCloseButtonText(int32_t mouseX, int32_t mouseY)
 
 void RenderDropGoldText(int32_t mouseX, int32_t mouseY)
 {
-    auto dropGoldButtonY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 69;
-    auto dropGoldButtonX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 237;
+    auto dropGoldButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 69;
+    auto dropGoldButtonX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 237;
 
     if (mouseX >= dropGoldButtonX && mouseX <= dropGoldButtonX + 20 && mouseY >= dropGoldButtonY - 18 && mouseY <= dropGoldButtonY && !D2Client_sub_6FAFC0E0())
     {
@@ -2538,8 +2474,8 @@ void RenderDropGoldText(int32_t mouseX, int32_t mouseY)
             break;
         }
 
-        auto dropGoldButtonTextX = *D2Client_pScreenWidthUI - *D2Client_pScreenXOffset - 222;
-        auto dropGoldButtonTextY = *D2Client_pScreenYOffset + *D2Client_pScreenHeightUI - 89;
+        auto dropGoldButtonTextX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 222;
+        auto dropGoldButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 89;
         auto strDropGoldButtonText = (const wchar_t*)D2LANG_GetStringFromTblIndex(strDropGoldButtonTextId);
         D2Win_DrawFramedText_10129((Unicode*)strDropGoldButtonText, dropGoldButtonTextX, dropGoldButtonTextY, 0, 1);
     }
@@ -2566,7 +2502,7 @@ void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY)
         const auto kWeaponSwapHotkeyIndex = 44;
 
         auto framedTextXOffset = 368;
-        if (mouseX > *D2Client_pScreenXOffset + 500)
+        if (mouseX > *D2Client_pScreenXOffset_6FBBA748 + 500)
         {
             framedTextXOffset = 600;
         }
@@ -2595,7 +2531,7 @@ void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY)
             buttonText.append(strWeaponSwapHotkey);
         }
 
-        D2Win_DrawFramedText_10129((const Unicode*)buttonText.c_str(), framedTextXOffset + *D2Client_pScreenXOffset, 21 - *D2Client_pScreenYOffset, 0, 1);
+        D2Win_DrawFramedText_10129((const Unicode*)buttonText.c_str(), framedTextXOffset + *D2Client_pScreenXOffset_6FBBA748, 21 - *D2Client_pScreenYOffset_6FBBA74C, 0, 1);
     }
 }
 
@@ -2871,7 +2807,7 @@ void ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(std::wstring& outBuff)
 {
     const wchar_t* newlineChar1 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
 
-    if (*D2Client_pVendorMode_6FBB58EC == VENDORMODE_REPAIR && ITEMS_CheckItemFlag(*D2Client_pItemUnderCursor, IFLAG_ETHEREAL, __LINE__, __FILE__))
+    if (*D2Client_pVendorMode_6FBB58EC == VENDORMODE_REPAIR && ITEMS_CheckItemFlag(*D2Client_pItemUnderCursor_6FBB58F0, IFLAG_ETHEREAL, __LINE__, __FILE__))
     {
         const wchar_t* v7 = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_22746_X_ItemCanNotBeRepaired);
 
@@ -2884,7 +2820,7 @@ void ESE_D2Client_AddExtraTradeStatLines_6FAE5A40(std::wstring& outBuff)
 
     std::wstring itemPriceString;
     int32_t transactionCost = 0;
-    if (ESE_D2Client_GetItemTextLinePrice_6FAFB200(*D2Client_pItemUnderCursor, *D2Client_pDWORD_6FB7928C, &transactionCost, itemPriceString))
+    if (ESE_D2Client_GetItemTextLinePrice_6FAFB200(*D2Client_pItemUnderCursor_6FBB58F0, *D2Client_pDWORD_6FB7928C, &transactionCost, itemPriceString))
     {
         if (itemPriceString[0] != 0)
         {
@@ -3338,7 +3274,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
     std::wstring itemDescription;
     itemDescription.reserve(4096);
 
-    auto pItemUnderCursor = *D2Client_pItemUnderCursor;
+    auto pItemUnderCursor = *D2Client_pItemUnderCursor_6FBB58F0;
     if (pItemUnderCursor == nullptr)
     {
         return;
@@ -3989,7 +3925,7 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
     std::wstring itemDescription;
     itemDescription.reserve(4096);
 
-    auto pItemUnderCursor = *D2Client_pItemUnderCursor;
+    auto pItemUnderCursor = *D2Client_pItemUnderCursor_6FBB58F0;
     if (pItemUnderCursor == nullptr)
     {
         return;
@@ -4387,7 +4323,7 @@ void DrawTextForGambleItem(D2UnitStrc* pItemUnderCursor)
 
 void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, int32_t bUnitIsMerchant)
 {
-    auto pItemUnderCursor = *D2Client_pItemUnderCursor;
+    auto pItemUnderCursor = *D2Client_pItemUnderCursor_6FBB58F0;
 
     D2UnitStrc* currentPlayer = pUnit;
     if (bUnitIsMerchant && D2Client_GetCurrentPlayer_6FB283D0())

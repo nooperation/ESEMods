@@ -2,8 +2,73 @@
 #include "LibESE.h"
 #include "../D2MooHeaders.h"
 #include <D2Game/MISSILES/MissMode_ESE.h>
+#include <codecvt>
+#include <DataTbls/StringIds.h>
 
+std::wstring FormatWideString(const wchar_t* fmt, ...)
+{
+	va_list ap;
 
+	va_start(ap, fmt);
+	size_t required = std::vswprintf(NULL, 0, fmt, ap);
+	va_end(ap);
+
+	va_start(ap, fmt);
+	std::wstring buffer(required, L'\0');
+	std::vswprintf(&buffer[0], buffer.size() + 1, fmt, ap);
+	va_end(ap);
+
+	return buffer;
+}
+
+void AppendFormattedWideString(std::wstring& outBuff, const wchar_t* fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	size_t required = std::vswprintf(NULL, 0, fmt, ap);
+	va_end(ap);
+
+	va_start(ap, fmt);
+	std::wstring buffer(required, L'\0');
+	std::vswprintf(&buffer[0], buffer.size() + 1, fmt, ap);
+	va_end(ap);
+
+	outBuff.append(buffer);
+}
+
+std::wstring ToWideString(const char* source)
+{
+	std::string str(source);
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+
+	return converter.from_bytes(str);
+}
+
+void AppendString(std::wstring& dest, const char* source)
+{
+	std::string str(source);
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+
+	dest.append(converter.from_bytes(str));
+}
+
+void ColorizeString(std::wstring& str, int32_t color)
+{
+	auto colorCodeToken = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3994_colorcode);
+	std::wstring colorStr(colorCodeToken);
+	colorStr.append(std::to_wstring(color));
+
+	str.insert(0, colorStr);
+}
+
+void AppendColorizedString(std::wstring& dest, const std::wstring& src, int32_t color)
+{
+	auto colorCodeToken = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3994_colorcode);
+	dest.append(colorCodeToken);
+	dest.append(std::to_wstring(color));
+	dest.append(src);
+}
 
 ESE_D2DamageStrc::ESE_D2DamageStrc()
 {

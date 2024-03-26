@@ -1,5 +1,7 @@
 #pragma once
 
+struct D2CellFileStrc;
+
 #pragma pack(1)
 
 enum D2C_RosterInfoFlags
