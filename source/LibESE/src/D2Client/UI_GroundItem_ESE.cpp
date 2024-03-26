@@ -123,7 +123,7 @@ void __fastcall ESE_D2Client_DrawGroundItemText_sub_6FB20740(D2UnitStrc* pItem, 
     }
 }
 
-void __fastcall ESE_D2Client_sub_6FB20A30(D2UnitStrc* pUnit)
+void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pUnit)
 {
     if (D2Client_GetOpenSidePanels_6FAB5750() == 3)
     {
