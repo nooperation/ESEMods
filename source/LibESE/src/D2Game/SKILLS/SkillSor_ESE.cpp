@@ -368,18 +368,6 @@ int32_t __fastcall ESE_SKILLS_SrvDo018_DefensiveBuff(D2GameStrc* pGame, D2UnitSt
     STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_SKILL, nSkillId, 0);
     STATLIST_SetStatIfListIsValid(pStatList, STAT_MODIFIERLIST_LEVEL, nSkillLevel, 0);
 
-    for (auto i = 0; i < pStatList->Stats.nStatCount; ++i)
-    {
-        auto stat = pStatList->Stats.pStat[i];
-        auto buff = FormatWideString(
-            L"skillId %d statId %d -> %d\n",
-            nSkillId,
-            stat.nStat,
-            stat.nValue
-        );
-        OutputDebugStringW(buff.c_str());
-    }
-
     if (pSkillsTxtRecord->wAuraEvent[0] >= 0)
     {
         ESE_SUNITEVENT_FreeTimer(pGame, pUnit, 1, pSkillsTxtRecord->nAuraState);
