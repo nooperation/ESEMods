@@ -21,7 +21,7 @@
 #include <DataTbls/MonsterIds.h>
 #include <DataTbls/LevelsIds.h>
 
-int __fastcall ESE_D2Client_sub_6FB09D80(int* drawModeMaybe, int* xPosSomething, int* yPosSomething, int* a4, int a5, int a6, int a7)
+int __fastcall ESE_D2Client_sub_6FB09D80(const std::vector<GroundItemText> &groundItems, std::size_t numGroundItemsToShow, int* drawModeMaybe, int* xPosSomething, int* yPosSomething, int* a4, int a5, int a6, int a7)
 {
     auto v24 = *D2Client_pScreenHeightUI_6FB740F0 - 48;
 
@@ -51,29 +51,23 @@ int __fastcall ESE_D2Client_sub_6FB09D80(int* drawModeMaybe, int* xPosSomething,
         *xPosSomething -= v10 - v24;
     }
 
-    if (*D2Client_pNumGroundItemsToShow_6FBB9428 >= 32)
-    {
-        FOG_DisplayAssert("sgnNumShowItems < MAX_SHOW_ITEMS", __FILE__, __LINE__);
-        exit(-1);
-    }
-
-    if (*D2Client_pNumGroundItemsToShow_6FBB9428 <= 0)
+    if (numGroundItemsToShow <= 0)
     {
         return 1;
     }
 
     int32_t v11 = 0;
-    for (GroundItemText* i = D2Client_pGroundItemsToShow_6FBB7028; ; ++i)
+    for (const auto& i : groundItems)
     {
-        auto v15 = *drawModeMaybe <= i->UnknownB && *yPosSomething >= i->nX;
-        auto v16 = *xPosSomething <= i->nY && *a4 >= i->UnknownA;
+        auto v15 = *drawModeMaybe <= i.UnknownB && *yPosSomething >= i.nX;
+        auto v16 = *xPosSomething <= i.nY && *a4 >= i.UnknownA;
 
         if (v15 && v16)
         {
             break;
         }
 
-        if (++v11 >= *D2Client_pNumGroundItemsToShow_6FBB9428)
+        if (++v11 >= numGroundItemsToShow)
         {
             return 1;
         }
@@ -86,11 +80,11 @@ int __fastcall ESE_D2Client_sub_6FB09D80(int* drawModeMaybe, int* xPosSomething,
         int32_t v22 = 0;
         if ((*a4 - *xPosSomething) / 2 && *xPosSomething <= v24)
         {
-            v22 = D2Client_pGroundItemsToShow_6FBB7028[v11].UnknownA - *a4 - 3;
+            v22 = groundItems[v11].UnknownA - *a4 - 3;
         }
         else
         {
-            v22 = D2Client_pGroundItemsToShow_6FBB7028[v11].nY - *xPosSomething + 5;
+            v22 = groundItems[v11].nY - *xPosSomething + 5;
         }
 
         *xPosSomething = v22 + *xPosSomething;
@@ -99,33 +93,34 @@ int __fastcall ESE_D2Client_sub_6FB09D80(int* drawModeMaybe, int* xPosSomething,
     }
     else if ((*yPosSomething - *drawModeMaybe) / 2 && *drawModeMaybe >= a6)
     {
-        *drawModeMaybe += D2Client_pGroundItemsToShow_6FBB7028[v11].nX - *yPosSomething - 1 ;
-        *yPosSomething = D2Client_pGroundItemsToShow_6FBB7028[v11].nX - *yPosSomething - 1;
+        *drawModeMaybe += groundItems[v11].nX - *yPosSomething - 1 ;
+        *yPosSomething = groundItems[v11].nX - *yPosSomething - 1;
         return 0;
     }
     else
     {
-        *yPosSomething += D2Client_pGroundItemsToShow_6FBB7028[v11].UnknownB - *drawModeMaybe + 1;
-        *drawModeMaybe = D2Client_pGroundItemsToShow_6FBB7028[v11].UnknownB + 1;
+        *yPosSomething += groundItems[v11].UnknownB - *drawModeMaybe + 1;
+        *drawModeMaybe = groundItems[v11].UnknownB + 1;
         return 0;
     }
 
     return 0;
 }
 
-void ESE_D2Client_DrawAllGroundItemTexts_Helper(
+bool ESE_D2Client_DrawAllGroundItemTexts_Helper(
+    std::vector<GroundItemText> &groundItems,
+    std::size_t numGroundItemsToShow,
     GroundItemText* pGroundItemToShowIter,
     D2UnitStrc* pItem,
     D2UnitStrc* pSelectedUnit,
     int32_t mouseX,
     int32_t mouseY,
-    int32_t finalCoordX,
-    int32_t finalCoordY,
+    int32_t itemPosX,
+    int32_t itemPosY,
     int32_t nColorRgb,
     int32_t& v36
 )
 {
-    auto v39 = finalCoordY;
     auto screenXOffsetFromOpenSidePanel = 0;
     auto screenXMiddle = *D2Client_pScreenWidthUI_6FB740EC;
     auto isSidenPanelOpen = D2Client_GetOpenUiPanelMask_6FAB5750() - 1;
@@ -141,30 +136,40 @@ void ESE_D2Client_DrawAllGroundItemTexts_Helper(
         screenXMiddle = *D2Client_pScreenWidthUI_6FB740EC / 2 - 32;
     }
 
-    if (finalCoordX >= screenXOffsetFromOpenSidePanel
-        && finalCoordX <= screenXMiddle
-        && finalCoordY >= -8
-        && finalCoordY <= *D2Client_pScreenHeightUI_6FB740F0 - 16)
+    if (itemPosX >= screenXOffsetFromOpenSidePanel
+        && itemPosX <= screenXMiddle
+        && itemPosY >= -8
+        && itemPosY <= *D2Client_pScreenHeightUI_6FB740F0 - 16)
     {
         pGroundItemToShowIter->wszText[0] = 0;
         ESE_D2Client_DrawGroundItemText_sub_6FB20740(pItem, (struct Unicode*)pGroundItemToShowIter->wszText, std::size(pGroundItemToShowIter->wszText));
 
-        int32_t pWidth = 0;
-        int32_t pHeight = 0;
-        D2Win_GetTextDimensions_10131((const Unicode*)pGroundItemToShowIter->wszText, &pWidth, &pHeight);
-        pWidth += 8;
-        auto v42 = finalCoordX - (pWidth >> 1);
-        pHeight = finalCoordY - pHeight + 4;
-        auto v41 = v42 + pWidth;
+        int32_t textWidth = 0;
+        int32_t textHeight = 0;
+        D2Win_GetTextDimensions_10131((const Unicode*)pGroundItemToShowIter->wszText, &textWidth, &textHeight);
+        
+        int32_t pWidth = textWidth + 8;
+
+        auto itemTextPosLeft = itemPosX - (pWidth >> 1);
+        auto itemTextPosRight = itemTextPosLeft + pWidth;
+
+        int32_t itemTextPosTop = itemPosY - textHeight + 4;
         auto v19 = 0;
-
-        auto v20 = screenXOffsetFromOpenSidePanel;
-        auto v21 = screenXMiddle;
-
         auto v22 = 1;
+
         while (1)
         {
-            if (ESE_D2Client_sub_6FB09D80(&v42, &pHeight, &v41, &v39, v19, screenXMiddle, screenXOffsetFromOpenSidePanel))
+            if (ESE_D2Client_sub_6FB09D80(
+                groundItems,
+                numGroundItemsToShow,
+                &itemTextPosLeft,
+                &itemTextPosTop,
+                &itemTextPosRight,
+                &itemPosY,
+                v19,
+                screenXMiddle,
+                screenXOffsetFromOpenSidePanel
+            ))
             {
                 break;
             }
@@ -175,26 +180,24 @@ void ESE_D2Client_DrawAllGroundItemTexts_Helper(
             }
         }
 
-        if (v41 <= v21)
+        if (itemTextPosRight <= screenXMiddle)
         {
-            auto v24 = v42;
-            if (v42 >= v20 && v22)
+            if (itemTextPosLeft >= screenXOffsetFromOpenSidePanel && v22)
             {
-                pGroundItemToShowIter->nX = v42;
-                pGroundItemToShowIter->UnknownA = pHeight;
-                pGroundItemToShowIter->UnknownB = v41;
-                pGroundItemToShowIter->nY = v39;
+                pGroundItemToShowIter->nX = itemTextPosLeft;
+                pGroundItemToShowIter->UnknownA = itemTextPosTop;
+                pGroundItemToShowIter->UnknownB = itemTextPosRight;
+                pGroundItemToShowIter->nY = itemPosY;
                 if (v36 == 0)
                 {
-                    if (mouseX >= v24 && mouseX <= v41 && mouseY >= pHeight && mouseY <= v39 + 4)
+                    if (mouseX >= itemTextPosLeft && mouseX <= itemTextPosRight && mouseY >= itemTextPosTop && mouseY <= itemPosY + 4)
                     {
                         pGroundItemToShowIter->nDrawMode = 5;
                         pGroundItemToShowIter->nColor = 0;
                         pGroundItemToShowIter->colorRgb = nColorRgb;
                         D2Client_sub_6FAB5A90(pItem);
                         v36 = 1;
-                        ++(*D2Client_pNumGroundItemsToShow_6FBB9428);
-                        return;
+                        return true;
                     }
 
                     if (pItem == pSelectedUnit)
@@ -205,8 +208,7 @@ void ESE_D2Client_DrawAllGroundItemTexts_Helper(
                         D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
                         D2Client_ClearUnitSelection_6FAB5D40();
                         v36 = 1;
-                        ++(*D2Client_pNumGroundItemsToShow_6FBB9428);
-                        return;
+                        return true;
                     }
                 }
 
@@ -248,15 +250,18 @@ void ESE_D2Client_DrawAllGroundItemTexts_Helper(
                 {
                     pGroundItemToShowIter->nColor = 4;
                 }
-                ++(*D2Client_pNumGroundItemsToShow_6FBB9428);
-                return;
+                return true;
             }
         }
     }
+
+    return false;
 }
 
 void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
 {
+    static std::vector<GroundItemText> groundItems(512);
+
     auto isPerspective = D2Gfx_CheckPerspective_10010();
 
     auto pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
@@ -281,7 +286,8 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
 
     int32_t nColorRgb = D2Win_MixRGB_10034(0, 0x40u, 0x80u);
     auto roomIndex = 0;
-    *D2Client_pNumGroundItemsToShow_6FBB9428 = 0;
+
+    std::size_t numGroundItemsToShow = 0;
     auto v36 = 0;
     if (pNumRooms)
     {
@@ -294,85 +300,86 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
                 continue;
             }
 
-            while (1)
+            while (pUnit != nullptr)
             {
-                if ((pUnit->dwFlagEx & UNITFLAGEX_ISINLOS) && pUnit->dwUnitType == UNIT_ITEM && *D2Client_pNumGroundItemsToShow_6FBB9428 < 32)
+                if ((pUnit->dwFlagEx & UNITFLAGEX_ISINLOS) && pUnit->dwUnitType == UNIT_ITEM)
                 {
-                    auto pGroundItemToShowIter = &D2Client_pGroundItemsToShow_6FBB7028[*D2Client_pNumGroundItemsToShow_6FBB9428];
+                    if (numGroundItemsToShow + 1 > groundItems.size()) {
+                        groundItems.resize(groundItems.size() * 2);
+                    }
+
+                    auto pGroundItemToShowIter = &groundItems[numGroundItemsToShow];
                     pGroundItemToShowIter->pUnit = pUnit;
+
+                    auto finalCoordX = 0;
+                    auto finalCoordY = 0;
 
                     if (isPerspective == 0)
                     {
-                        auto clientCoordX = UNITS_GetClientCoordX(pUnit);
-                        auto finalCoordX = clientCoordX - D2Client_GetViewXOffset_6FAB5890();
-                        auto viewOffsetY = -16 - D2Client_GetViewYOffset_6FAB58A0();
-                        auto clinetCoordY = UNITS_GetClientCoordY(pUnit);
-                        auto finalCoordY = clinetCoordY + viewOffsetY;
+                        auto unitClientCoordX = UNITS_GetClientCoordX(pUnit);
+                        auto unitClientCoordY = UNITS_GetClientCoordY(pUnit);
 
-                        ESE_D2Client_DrawAllGroundItemTexts_Helper(
-                            pGroundItemToShowIter,
-                            pUnit,
-                            pSelectedUnit,
-                            mouseX,
-                            mouseY,
-                            finalCoordX,
-                            finalCoordY,
-                            nColorRgb,
-                            v36
-                        );
+                        finalCoordX = unitClientCoordX - D2Client_GetViewXOffset_6FAB5890();
+                        finalCoordY = unitClientCoordY - D2Client_GetViewYOffset_6FAB58A0() - 16;
                     }
                     else
                     {
-                        auto v7 = UNITS_GetPrecisionX(pUnit);
-                        auto v8 = UNITS_GetPrecisionY(pUnit);
-                        if (D2Gfx_SCALE_CheckPerspectivePosition_10065(v7, v8))
+                        auto unitPosX = UNITS_GetPrecisionX(pUnit);
+                        auto unitPosY = UNITS_GetPrecisionY(pUnit);
+
+                        if (D2Gfx_SCALE_CheckPerspectivePosition_10065(unitPosX, unitPosY))
                         {
                             int32_t pXAdjust;
                             int32_t pYAdjust;
-                            D2Gfx_SCALE_AdjustPerspectivePosition_10066(v7, v8, 0, &pXAdjust, &pYAdjust);
-                            auto v9 = D2Client_GetOpenUiPanelMask_6FAB5750();
+                            D2Gfx_SCALE_AdjustPerspectivePosition_10066(unitPosX, unitPosY, 0, &pXAdjust, &pYAdjust);
 
-                            if (v9 - 1 == 0)
+                            auto openUiPanelMask = D2Client_GetOpenUiPanelMask_6FAB5750();
+                            if (openUiPanelMask == 1)
                             {
                                 pXAdjust += *D2Client_pScreenWidthUI_6FB740EC / -4;
                             }
-                            else if (v9 - 1 == 1)
+                            else if (openUiPanelMask == 2)
                             {
                                 pXAdjust += *D2Client_pScreenWidthUI_6FB740EC / 4;
                             }
 
-                            auto finalCoordX = pXAdjust;
-                            auto finalCoordY = pYAdjust;
-                            ESE_D2Client_DrawAllGroundItemTexts_Helper(
-                                pGroundItemToShowIter,
-                                pUnit,
-                                pSelectedUnit,
-                                mouseX,
-                                mouseY,
-                                finalCoordX,
-                                finalCoordY,
-                                nColorRgb,
-                                v36
-                            );
+                            finalCoordX = pXAdjust;
+                            finalCoordY = pYAdjust;
                         }
+                        else 
+                        {
+                            pUnit = pUnit->pRoomNext;
+                            continue;
+                        }
+                    }
+
+                    if (ESE_D2Client_DrawAllGroundItemTexts_Helper(
+                        groundItems,
+                        numGroundItemsToShow,
+                        pGroundItemToShowIter,
+                        pUnit,
+                        pSelectedUnit,
+                        mouseX,
+                        mouseY,
+                        finalCoordX,
+                        finalCoordY,
+                        nColorRgb,
+                        v36
+                    )) {
+                        numGroundItemsToShow++;
                     }
                 }
 
-            LABEL_63:
                 pUnit = pUnit->pRoomNext;
-                if (!pUnit)
-                {
-                    break;
-                }
             }
 
             ++roomIndex;
         } while (roomIndex < pNumRooms);
     }
 
-    for (int32_t i = 0; i < *D2Client_pNumGroundItemsToShow_6FBB9428; ++i)
+    for (int32_t i = 0; i < numGroundItemsToShow; ++i)
     {
-        auto currentGroundItemToShow = &D2Client_pGroundItemsToShow_6FBB7028[i];
+        auto currentGroundItemToShow = &groundItems[i];
 
         D2Win_10132(
             (const Unicode*)currentGroundItemToShow->wszText,
