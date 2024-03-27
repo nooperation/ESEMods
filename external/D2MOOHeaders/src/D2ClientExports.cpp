@@ -122,7 +122,7 @@ int32_t* D2Client_pRightSwapWeaponButtonYTop_6FBB59C4 = nullptr;
 
 D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0 = nullptr; // 1158F0
 
-GroundItemText* D2Client_ppGroundItemsToShow_6FBB7028 = nullptr; // 117028
+GroundItemText* D2Client_pGroundItemsToShow_6FBB7028 = nullptr; // 117028
 int32_t* D2Client_pNumGroundItemsToShow_6FBB9428 = nullptr; // 119428
 int32_t* D2Client_pSelectedUnitId_6FBAB9D0 = nullptr; // 10B9D0
 int32_t* D2Client_pSelectedUnitType_6FBAB9CC = nullptr; // 10B9CC
@@ -276,7 +276,7 @@ void InitD2ClientExports()
     D2Client_pIsGamblingSession_6FBB5D7C = (int32_t*)((char*)d2ClientModule + 0x115D7C);
     D2Client_pGameUnits_6FBBAA00 = (D2UnitStrc**)((char*)d2ClientModule + 0x11AA00);
 
-    D2Client_ppGroundItemsToShow_6FBB7028 = (GroundItemText*)((char*)d2ClientModule + 0x117028);
+    D2Client_pGroundItemsToShow_6FBB7028 = (GroundItemText*)((char*)d2ClientModule + 0x117028);
     D2Client_pNumGroundItemsToShow_6FBB9428 = (int32_t*)((char*)d2ClientModule + 0x119428);
     D2Client_pSelectedUnitId_6FBAB9D0 = (int32_t*)((char*)d2ClientModule + 0x10B9D0);
     D2Client_pSelectedUnitType_6FBAB9CC = (int32_t*)((char*)d2ClientModule + 0x10B9CC);

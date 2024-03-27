@@ -247,7 +247,7 @@ extern int32_t* D2Client_pRightSwapWeaponButtonYTop_6FBB59C4; // 1159C4         
 
 extern D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0; // 1158F0                                                              | 6FBB58F0
 
-extern GroundItemText* D2Client_ppGroundItemsToShow_6FBB7028; // 117028                                                        | 6FBB7028
+extern GroundItemText* D2Client_pGroundItemsToShow_6FBB7028; // 117028                                                        | 6FBB7028
 extern int32_t* D2Client_pNumGroundItemsToShow_6FBB9428; // 119428                                                             | 6FBB9428
 extern int32_t* D2Client_pSelectedUnitId_6FBAB9D0; // 10B9D0                                                                   | 6FBAB9D0
 extern int32_t* D2Client_pSelectedUnitType_6FBAB9CC; // 10B9CC                                                                 | 6FBAB9CC

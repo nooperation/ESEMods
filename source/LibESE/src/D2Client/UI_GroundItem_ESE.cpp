@@ -21,6 +21,98 @@
 #include <DataTbls/MonsterIds.h>
 #include <DataTbls/LevelsIds.h>
 
+int __fastcall ESE_D2Client_sub_6FB09D80(int* drawModeMaybe, int* xPosSomething, int* yPosSomething, int* a4, int a5, int a6, int a7)
+{
+    auto v24 = *D2Client_pScreenHeightUI_6FB740F0 - 48;
+
+    if (*drawModeMaybe < a7)
+    {
+        *yPosSomething += a7 - *drawModeMaybe;
+        *drawModeMaybe = 6;
+    }
+
+    if (*xPosSomething < 6)
+    {
+        *a4 += 6 - *xPosSomething;
+        *xPosSomething = 6;
+    }
+
+    auto v9 = *yPosSomething;
+    if (*yPosSomething >= a6)
+    {
+        *yPosSomething = a6 - 1;
+        *drawModeMaybe -= v9 - a6 + 1;
+    }
+
+    auto v10 = *a4;
+    if (*a4 >= v24)
+    {
+        *a4 = v24;
+        *xPosSomething -= v10 - v24;
+    }
+
+    if (*D2Client_pNumGroundItemsToShow_6FBB9428 >= 32)
+    {
+        FOG_DisplayAssert("sgnNumShowItems < MAX_SHOW_ITEMS", __FILE__, __LINE__);
+        exit(-1);
+    }
+
+    if (*D2Client_pNumGroundItemsToShow_6FBB9428 <= 0)
+    {
+        return 1;
+    }
+
+    int32_t v11 = 0;
+    for (GroundItemText* i = D2Client_pGroundItemsToShow_6FBB7028; ; ++i)
+    {
+        auto v15 = *drawModeMaybe <= i->UnknownB && *yPosSomething >= i->nX;
+        auto v16 = *xPosSomething <= i->nY && *a4 >= i->UnknownA;
+
+        if (v15 && v16)
+        {
+            break;
+        }
+
+        if (++v11 >= *D2Client_pNumGroundItemsToShow_6FBB9428)
+        {
+            return 1;
+        }
+
+        yPosSomething = yPosSomething;
+    }
+
+    if (a5 <= 6)
+    {
+        int32_t v22 = 0;
+        if ((*a4 - *xPosSomething) / 2 && *xPosSomething <= v24)
+        {
+            v22 = D2Client_pGroundItemsToShow_6FBB7028[v11].UnknownA - *a4 - 3;
+        }
+        else
+        {
+            v22 = D2Client_pGroundItemsToShow_6FBB7028[v11].nY - *xPosSomething + 5;
+        }
+
+        *xPosSomething = v22 + *xPosSomething;
+        *a4 = v22 + *a4;
+        return 0;
+    }
+    else if ((*yPosSomething - *drawModeMaybe) / 2 && *drawModeMaybe >= a6)
+    {
+        *drawModeMaybe += D2Client_pGroundItemsToShow_6FBB7028[v11].nX - *yPosSomething - 1 ;
+        *yPosSomething = D2Client_pGroundItemsToShow_6FBB7028[v11].nX - *yPosSomething - 1;
+        return 0;
+    }
+    else
+    {
+        *yPosSomething += D2Client_pGroundItemsToShow_6FBB7028[v11].UnknownB - *drawModeMaybe + 1;
+        *drawModeMaybe = D2Client_pGroundItemsToShow_6FBB7028[v11].UnknownB + 1;
+        return 0;
+    }
+
+    return 0;
+}
+
 void ESE_D2Client_DrawAllGroundItemTexts_Helper(
     GroundItemText* pGroundItemToShowIter,
     D2UnitStrc* pItem,
@@ -72,7 +164,7 @@ void ESE_D2Client_DrawAllGroundItemTexts_Helper(
         auto v22 = 1;
         while (1)
         {
-            if (D2Client_sub_6FB09D80(&v42, &pHeight, &v41, &v39, v19, screenXMiddle, screenXOffsetFromOpenSidePanel))
+            if (ESE_D2Client_sub_6FB09D80(&v42, &pHeight, &v41, &v39, v19, screenXMiddle, screenXOffsetFromOpenSidePanel))
             {
                 break;
             }
@@ -206,7 +298,7 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
             {
                 if ((pUnit->dwFlagEx & UNITFLAGEX_ISINLOS) && pUnit->dwUnitType == UNIT_ITEM && *D2Client_pNumGroundItemsToShow_6FBB9428 < 32)
                 {
-                    auto pGroundItemToShowIter = &D2Client_ppGroundItemsToShow_6FBB7028[*D2Client_pNumGroundItemsToShow_6FBB9428];
+                    auto pGroundItemToShowIter = &D2Client_pGroundItemsToShow_6FBB7028[*D2Client_pNumGroundItemsToShow_6FBB9428];
                     pGroundItemToShowIter->pUnit = pUnit;
 
                     if (isPerspective == 0)
@@ -280,7 +372,7 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
 
     for (int32_t i = 0; i < *D2Client_pNumGroundItemsToShow_6FBB9428; ++i)
     {
-        auto currentGroundItemToShow = &D2Client_ppGroundItemsToShow_6FBB7028[i];
+        auto currentGroundItemToShow = &D2Client_pGroundItemsToShow_6FBB7028[i];
 
         D2Win_10132(
             (const Unicode*)currentGroundItemToShow->wszText,
