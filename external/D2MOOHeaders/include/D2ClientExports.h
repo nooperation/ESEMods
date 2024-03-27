@@ -27,6 +27,20 @@ struct ElixirDesc_6FB7A440
     int16_t PositiveStatStringIndex;
     int32_t UnknownMustBeTwo;
 };
+
+// 288 bytes
+struct GroundItemText
+{
+    int32_t nX;         		// 0x0
+    int32_t UnknownA;           // 0x4
+    int32_t UnknownB;           // 0x8
+    int32_t nY;              	// 0xC
+    D2UnitStrc* pUnit;          // 0x10
+    wchar_t wszText[128];       // 0x14
+    int colorRgb;               // 0x114
+    int nDrawMode;              // 0x118
+    int nColor;                 // 0x11C
+};
 #pragma pack(pop)
 
 void InitD2ClientExports();
@@ -53,41 +67,41 @@ extern D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580; //                        
 
 // UI-Inv
 typedef D2UnitStrc* (__fastcall* D2Client_GetCurrentPlayer_6FB283D0_t)();
-typedef bool (__fastcall* D2Client_IsBeltOpen_6FAFE9E0_t)();
-typedef int32_t (__fastcall* D2Client_IsUiOpen_6FB23230_t)(D2C_UIvars uiId);
-typedef int32_t (__fastcall* D2Client_GetMouseYPos_t)();
-typedef int32_t (__fastcall* D2Client_GetMouseXPos_t)();
-typedef bool (__fastcall* D2Client_sub_6FAFC0E0_t)();
-typedef int16_t (__fastcall* D2Client_GetHotkeyCharCode_6FAD4B60_t)(int32_t a1, int32_t a2);
+typedef bool(__fastcall* D2Client_IsBeltOpen_6FAFE9E0_t)();
+typedef int32_t(__fastcall* D2Client_IsUiOpen_6FB23230_t)(D2C_UIvars uiId);
+typedef int32_t(__fastcall* D2Client_GetMouseYPos_t)();
+typedef int32_t(__fastcall* D2Client_GetMouseXPos_t)();
+typedef bool(__fastcall* D2Client_sub_6FAFC0E0_t)();
+typedef int16_t(__fastcall* D2Client_GetHotkeyCharCode_6FAD4B60_t)(int32_t a1, int32_t a2);
 typedef Unicode* (__fastcall* D2Client_GetHotkeyString_6FAD56B0_t)(int32_t hotkeyId, int32_t useAlternativeHotkey);
-typedef int32_t (__fastcall* D2Client_IsGambling_6FAFC130_t)();
+typedef int32_t(__fastcall* D2Client_IsGambling_6FAFC130_t)();
 typedef Unicode* (__fastcall* D2Client_ColorizeLine_6FB20430_t)(const struct Unicode* sourceStr, char colorCode);
-typedef void (__fastcall* D2Client_BuildItemName_6FADD360_t)(D2UnitStrc* pItem, struct Unicode* buff, int maxLen);
+typedef void(__fastcall* D2Client_BuildItemName_6FADD360_t)(D2UnitStrc* pItem, struct Unicode* buff, int maxLen);
 typedef Unicode* (__fastcall* D2Client_AddExtraTradeStatLines_6FAE5A40_t)(const struct Unicode* sourceStr, struct Unicode* newOutput);
-typedef int32_t (__fastcall* D2Client_sub_6FB57CC0_t)();
-typedef void (__fastcall* D2Client_GetItemTextLineBookQuantity_6FAE54B0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
-typedef void (__fastcall* D2Client_GetItemTextLineDurability_6FAE4060_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
-typedef void (__fastcall* D2Client_GetItemTextLineRuneGemStats_6FAF1480_t)(D2UnitStrc* pItem, struct Unicode* outBuff, int maxLen);
-typedef void (__fastcall* D2Client_GetItemTextLineDamage_6FAE43D0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
-typedef void (__fastcall* D2Client_GetItemTextLineAttackSpeed_6FAE5570_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
-typedef void (__fastcall* D2Client_GetItemTextLineUnknownA_6FAE5040_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
-typedef void (__fastcall* D2Client_GetItemTextLineBlockChance_6FAE4EE0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
-typedef void (__fastcall* D2Client_GetItemTextLineDefense_6FAE51D0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
-typedef void (__fastcall* D2Client_GetItemTextLineProperties_6FAF3160_t)(D2UnitStrc* pItem, struct Unicode* outBuff, int maxLen, int bFlag, const struct Unicode* existingContents);
-typedef void (__fastcall* D2Client_GetItemTextLinePropertiesInternal_6FAF19C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffMaxLen, int bUnknownFlag1, int unitState, int nUnitState, int nUnitFlags, int bUnknownFlag2);
-typedef void (__fastcall* D2Client_GetItemTextLineQuantity_6FAE5710_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef int32_t(__fastcall* D2Client_sub_6FB57CC0_t)();
+typedef void(__fastcall* D2Client_GetItemTextLineBookQuantity_6FAE54B0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void(__fastcall* D2Client_GetItemTextLineDurability_6FAE4060_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void(__fastcall* D2Client_GetItemTextLineRuneGemStats_6FAF1480_t)(D2UnitStrc* pItem, struct Unicode* outBuff, int maxLen);
+typedef void(__fastcall* D2Client_GetItemTextLineDamage_6FAE43D0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void(__fastcall* D2Client_GetItemTextLineAttackSpeed_6FAE5570_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void(__fastcall* D2Client_GetItemTextLineUnknownA_6FAE5040_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void(__fastcall* D2Client_GetItemTextLineBlockChance_6FAE4EE0_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void(__fastcall* D2Client_GetItemTextLineDefense_6FAE51D0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
+typedef void(__fastcall* D2Client_GetItemTextLineProperties_6FAF3160_t)(D2UnitStrc* pItem, struct Unicode* outBuff, int maxLen, int bFlag, const struct Unicode* existingContents);
+typedef void(__fastcall* D2Client_GetItemTextLinePropertiesInternal_6FAF19C0_t)(D2UnitStrc* pUnit, struct Unicode* outBuff, int outBuffMaxLen, int bUnknownFlag1, int unitState, int nUnitState, int nUnitFlags, int bUnknownFlag2);
+typedef void(__fastcall* D2Client_GetItemTextLineQuantity_6FAE5710_t)(D2UnitStrc* pUnit, struct Unicode* pBuffer, D2ItemsTxt* pItemTxtRecord);
 typedef D2SetsTxt* (__fastcall* D2Client_sub_6FAE5C50_t)(int32_t setsTxtIndex);
 typedef D2SetItemsTxt* (__fastcall* D2Client_GetSetItemsTxt_6FAE5C80_t)(int32_t setsTxtIndex);
-typedef void (__fastcall* D2Client_GetItemTextLineLevelRequirement_6FAE41B0_t)(struct Unicode* outBuff, int levelRequirement);
-typedef void (__fastcall* D2Client_GetItemTextStrRequirement_6FAE4250_t)(struct Unicode* outBuff, D2ItemsTxt* pItemTxtRecord, int requiredStr);
-typedef void (__fastcall* D2Client_GetItemTextDexRequirement_6FAE4310_t)(struct Unicode* outBuff, D2ItemsTxt* pItemTxtRecord, int requiredDex);
-typedef void (__fastcall* D2Client_GetItemTextSocketed_6FAE3EE0_t)(D2UnitStrc* pItem, struct Unicode* outBuff);
-typedef void (__fastcall* D2Client_GetItemTextSet_6FAF32B0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* outBuff, int maxLength);
-typedef void (__fastcall* D2Client_GetItemTextSetB_6FAF33C0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* outBuff, int maxLength);
-typedef void (__stdcall* D2Client_FormatName_6FADCFE0_t)(struct Unicode* outBuff, const struct Unicode* format, ...);
-typedef void (__stdcall* D2Client_ReplaceNameFormatToken_6FADCF10_t)(struct Unicode* format, int32_t tokenIndex, const struct Unicode* replacement);
+typedef void(__fastcall* D2Client_GetItemTextLineLevelRequirement_6FAE41B0_t)(struct Unicode* outBuff, int levelRequirement);
+typedef void(__fastcall* D2Client_GetItemTextStrRequirement_6FAE4250_t)(struct Unicode* outBuff, D2ItemsTxt* pItemTxtRecord, int requiredStr);
+typedef void(__fastcall* D2Client_GetItemTextDexRequirement_6FAE4310_t)(struct Unicode* outBuff, D2ItemsTxt* pItemTxtRecord, int requiredDex);
+typedef void(__fastcall* D2Client_GetItemTextSocketed_6FAE3EE0_t)(D2UnitStrc* pItem, struct Unicode* outBuff);
+typedef void(__fastcall* D2Client_GetItemTextSet_6FAF32B0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* outBuff, int maxLength);
+typedef void(__fastcall* D2Client_GetItemTextSetB_6FAF33C0_t)(D2UnitStrc* pUnit, D2UnitStrc* pItem, struct Unicode* outBuff, int maxLength);
+typedef void(__stdcall* D2Client_FormatName_6FADCFE0_t)(struct Unicode* outBuff, const struct Unicode* format, ...);
+typedef void(__stdcall* D2Client_ReplaceNameFormatToken_6FADCF10_t)(struct Unicode* format, int32_t tokenIndex, const struct Unicode* replacement);
 typedef D2UnitStrc* (__fastcall* D2Client_sub_6FAE5990_t)(D2InventoryStrc* pInventory, int nSetItemId);
-typedef bool (__fastcall* D2Client_GetItemTextLinePrice_6FAFB200_t)(D2UnitStrc* pItem, int a2, int* pTransactionCost, struct Unicode* outBuff, int maxLength);
+typedef bool(__fastcall* D2Client_GetItemTextLinePrice_6FAFB200_t)(D2UnitStrc* pItem, int a2, int* pTransactionCost, struct Unicode* outBuff, int maxLength);
 
 // UI-Inv-Mod
 typedef __int16(__fastcall* D2Client_GetSkillStringId_6FB0A440_t)(int nSkillsTxtIndex, int offset);
@@ -98,39 +112,44 @@ typedef void(__fastcall* D2Client_GetItemDamage_6FAE4C60_t)(D2UnitStrc* pCurrent
 typedef void(__fastcall* D2Client_sub_6FAF13C0_t)(D2UnitStrc* pItem, D2GemsTxt* pMods, int32_t nPropSet, struct Unicode* outBuff, int maxLen, struct Unicode* existingContents);
 
 typedef D2UnitStrc* (__fastcall* D2Client_FindUnit_6FB269F0_t)(int32_t unitId, int32_t unitType); // 869F0
-typedef int8_t (__fastcall* D2Client_GetCurrentDifficulty_6FAAC090_t)(); // C090
-typedef int32_t (__fastcall* D2Client_IsVendorRepairActive_6FAEB930_t)(); // 4B930
+typedef int8_t(__fastcall* D2Client_GetCurrentDifficulty_6FAAC090_t)(); // C090
+typedef int32_t(__fastcall* D2Client_IsVendorRepairActive_6FAEB930_t)(); // 4B930
 
 // UI_GroundItem stuff
-typedef int32_t (__fastcall* D2Client_GetOpenSidePanels_6FAB5750_t)(); // 15750
-typedef int32_t (__fastcall* D2Client_GetViewXOffset_6FAB5890_t)(); // 15890
-typedef int32_t (__fastcall* D2Client_GetViewYOffset_6FAB58A0_t)(); // 158A0
-typedef int32_t (__fastcall* D2Client_GetMonsterLifeColor_6FB20670_t)(D2UnitStrc* pUnit); // 80670
+typedef int32_t(__fastcall* D2Client_GetOpenUiPanelMask_6FAB5750_t)(); // 15750
+typedef int32_t(__fastcall* D2Client_GetViewXOffset_6FAB5890_t)(); // 15890
+typedef int32_t(__fastcall* D2Client_GetViewYOffset_6FAB58A0_t)(); // 158A0
+typedef int32_t(__fastcall* D2Client_GetMonsterLifeColor_6FB20670_t)(D2UnitStrc* pUnit); // 80670
 typedef const Unicode* (__fastcall* D2Client_GetUnitName_6FB297F0_t)(D2UnitStrc* pUnit); // 897F0
-typedef int32_t (__fastcall* D2Client_GetRosterPlayerNameAndColor_6FB21680_t)(D2UnitStrc* pUnit, int32_t* pOutColorBg, int32_t* pOutColor, struct Unicode* outBuff, int32_t outBuffLen); // 81680
+typedef int32_t(__fastcall* D2Client_GetRosterPlayerNameAndColor_6FB21680_t)(D2UnitStrc* pUnit, int32_t* pOutColorBg, int32_t* pOutColor, struct Unicode* outBuff, int32_t outBuffLen); // 81680
 typedef char* (__fastcall* D2Client_GetRosterPortalOwnerName_6FAB0D00_t)(int32_t unitId); // 10D00
-typedef int32_t (__fastcall* D2Client_GetRosterPetOwnerId_6FAB1B00_t)(int32_t unitId); // 11B00
+typedef int32_t(__fastcall* D2Client_GetRosterPetOwnerId_6FAB1B00_t)(int32_t unitId); // 11B00
 typedef char* (__fastcall* D2Client_GetRosterUnitName_6FAB0BC0_t)(int32_t unitId); // 10BC0
-typedef int32_t (__fastcall* D2Client_GetRosterUnitLife_6FAB1460_t)(int32_t unitId); // 11460
+typedef int32_t(__fastcall* D2Client_GetRosterUnitLife_6FAB1460_t)(int32_t unitId); // 11460
 typedef D2RosterInfoStrc** (__fastcall* D2Client_GetRosterUnitRosterInfo_6FAB0D80_t)(int32_t unitId); // 10D80
-typedef int32_t (__fastcall* D2Client_CheckPartyMemberFlags_6FB4B900_t)(int unitIdA, int unitIdB, int32_t partyFlag); // AB900
-typedef int32_t (__fastcall* D2Client_AreUnitsHostile_6FAB07D0_t)(int unitIdA, int unitIdB); // 107D0
+typedef int32_t(__fastcall* D2Client_CheckPartyMemberFlags_6FB4B900_t)(int unitIdA, int unitIdB, int32_t partyFlag); // AB900
+typedef int32_t(__fastcall* D2Client_AreUnitsHostile_6FAB07D0_t)(int unitIdA, int unitIdB); // 107D0
 typedef D2MonStats2Txt* (__fastcall* D2Client_GetMonStats2TxtFromClassId_6FB247F0_t)(int classId); // 847F0
 typedef D2MonStatsTxt* (__fastcall* D2Client_GetMonStatsTxtFromClassId_6FAAE570_t)(int classId); // E570
 typedef char* (__fastcall* D2Client_GetObjectOwnerName_6FB48550_t)(D2UnitStrc* pUnit); // A8550
-typedef BOOL (__fastcall* D2Client_CheckMonsterTypeFlag_6FB449D0_t)(D2UnitStrc* pUnit, unsigned __int16 monsterTypeFlag); // A49D0
-typedef BOOL (__fastcall* D2Client_IsMonsterUnique_6FB40D00_t)(D2UnitStrc* pUnit); // A0D00
-typedef BOOL (__fastcall* D2Client_IsMonsterChampion_6FB40CC0_t)(D2UnitStrc* pUnit); // A0CC0
-typedef BOOL (__fastcall* D2Client_IsMonsterGhostly_6FB40CE0_t)(D2UnitStrc* pUnit); // A0CE0
-typedef BOOL (__fastcall* D2Client_IsMonsterMinion_6FB40D20_t)(D2UnitStrc* pUnit); // A0D20
-typedef BOOL (__fastcall* D2Client_IsMonsterSuperUnique_6FB40D40_t)(D2UnitStrc* pUnit); // A0D40
-typedef BOOL (__fastcall* D2Client_GetScreenOffsetDimensionsTBD_6FB24690_t)(int* dimensionsOrSomething); // 84690
-typedef BOOL (__fastcall* D2Client_UpdateUniqueMonsterInfoString_6FB20600_t)(D2UnitStrc* pUnit, int32_t stringIndex); // 80600
-typedef void (__fastcall* D2Client_UpdateNormalMonsterInfoString_6FB205D0_t)(const  Unicode* newMonsterInfo, int xAdjust); // 805D0
-typedef void (__fastcall* D2Client_MonsterResistancesInfoString_6FB21570_t)(const D2UnitStrc* pUnit); // 81570
-typedef int (__fastcall* D2Client_IsActiveNpcDialogOpen_6FAFBB50_t)(int32_t** pActiveNpcId); // 5BB50
-typedef BOOL (__fastcall* D2Client_IsActiveNpcTalking_6FB1EE90_t)(); // 7EE90
-typedef int (__stdcall* D2Client_10002_t)(int32_t unused, int32_t questIndex); // 18EF0
+typedef BOOL(__fastcall* D2Client_CheckMonsterTypeFlag_6FB449D0_t)(D2UnitStrc* pUnit, unsigned __int16 monsterTypeFlag); // A49D0
+typedef BOOL(__fastcall* D2Client_IsMonsterUnique_6FB40D00_t)(D2UnitStrc* pUnit); // A0D00
+typedef BOOL(__fastcall* D2Client_IsMonsterChampion_6FB40CC0_t)(D2UnitStrc* pUnit); // A0CC0
+typedef BOOL(__fastcall* D2Client_IsMonsterGhostly_6FB40CE0_t)(D2UnitStrc* pUnit); // A0CE0
+typedef BOOL(__fastcall* D2Client_IsMonsterMinion_6FB40D20_t)(D2UnitStrc* pUnit); // A0D20
+typedef BOOL(__fastcall* D2Client_IsMonsterSuperUnique_6FB40D40_t)(D2UnitStrc* pUnit); // A0D40
+typedef BOOL(__fastcall* D2Client_GetScreenOffsetDimensionsTBD_6FB24690_t)(int* dimensionsOrSomething); // 84690
+typedef BOOL(__fastcall* D2Client_UpdateUniqueMonsterInfoString_6FB20600_t)(D2UnitStrc* pUnit, int32_t stringIndex); // 80600
+typedef void(__fastcall* D2Client_UpdateNormalMonsterInfoString_6FB205D0_t)(const  Unicode* newMonsterInfo, int xAdjust); // 805D0
+typedef void(__fastcall* D2Client_MonsterResistancesInfoString_6FB21570_t)(const D2UnitStrc* pUnit); // 81570
+typedef int(__fastcall* D2Client_IsActiveNpcDialogOpen_6FAFBB50_t)(int32_t** pActiveNpcId); // 5BB50
+typedef BOOL(__fastcall* D2Client_IsActiveNpcTalking_6FB1EE90_t)(); // 7EE90
+typedef int(__stdcall* D2Client_10002_t)(int32_t unused, int32_t questIndex); // 18EF0
+
+typedef D2UnitStrc* (__fastcall* D2Client_GetSelectedUnit_6FAB5A20_t)(); // 15A20
+typedef int(__fastcall* D2Client_sub_6FB09D80_t)(int* drawModeMaybe, int* xPosSomething, int* yPosSomething, int* a4, int a5, int a6, int a7); // 69D80
+typedef void(__fastcall* D2Client_sub_6FAB5A90_t)(D2UnitStrc* pUnit); // 15A90
+typedef void(__fastcall* D2Client_ClearUnitSelection_6FAB5D40_t)(); // 15D40
 
 extern D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0; // 883D0                                       | 6FB283D0
 extern D2Client_IsBeltOpen_6FAFE9E0_t D2Client_IsBeltOpen_6FAFE9E0; // 5E9E0                                                   | 6FAFE9E0
@@ -170,7 +189,7 @@ extern D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990; // 45990                  
 extern D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200; // 5B200                               | 6FAFB200
 
 // UI_GroundItem stuff 
-extern D2Client_GetOpenSidePanels_6FAB5750_t D2Client_GetOpenSidePanels_6FAB5750; // 15750                                     | 6FAB5750
+extern D2Client_GetOpenUiPanelMask_6FAB5750_t D2Client_GetOpenUiPanelMask_6FAB5750; // 15750                                   | 6FAB5750
 extern D2Client_GetViewXOffset_6FAB5890_t D2Client_GetViewXOffset_6FAB5890; // 15890                                           | 6FAB5890
 extern D2Client_GetViewYOffset_6FAB58A0_t D2Client_GetViewYOffset_6FAB58A0; // 158A0                                           | 6FAB58A0
 extern D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670; // 80670                                 | 6FB20670
@@ -199,6 +218,10 @@ extern D2Client_MonsterResistancesInfoString_6FB21570_t D2Client_MonsterResistan
 extern D2Client_IsActiveNpcDialogOpen_6FAFBB50_t D2Client_IsActiveNpcDialogOpen_6FAFBB50; // 5BB50                             | 6FAFBB50
 extern D2Client_IsActiveNpcTalking_6FB1EE90_t D2Client_IsActiveNpcTalking_6FB1EE90; // 7EE90                                   | 6FB1EE90
 extern D2Client_10002_t D2Client_10002; // 18EF0                                                                               | 6FAB8EF0
+extern D2Client_GetSelectedUnit_6FAB5A20_t D2Client_GetSelectedUnit_6FAB5A20; // 15A20                                         | 6FAB5A20
+extern D2Client_sub_6FB09D80_t D2Client_sub_6FB09D80; // 69D80                                                                 | 6FB09D80
+extern D2Client_sub_6FAB5A90_t D2Client_sub_6FAB5A90; // 15A90                                                                 | 6FAB5A90
+extern D2Client_ClearUnitSelection_6FAB5D40_t D2Client_ClearUnitSelection_6FAB5D40; // 15D40                                   | 6FAB5D40
 
 extern int32_t* D2Client_pScreenXOffset_6FBBA748; // 11A748                                                                    | 6FBBA748
 extern int32_t* D2Client_pScreenYOffset_6FBBA74C; // 11A74C                                                                    | 6FBBA74C
@@ -223,24 +246,30 @@ extern int32_t* D2Client_pRightSwapWeaponButtonXRight_6FBB59C0; // 1159C0       
 extern int32_t* D2Client_pRightSwapWeaponButtonYTop_6FBB59C4; // 1159C4                                                        | 6FBB59C4
 
 extern D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0; // 1158F0                                                              | 6FBB58F0
-                                                                                                                                 
+
+extern GroundItemText* D2Client_ppGroundItemsToShow_6FBB7028; // 117028                                                        | 6FBB7028
+extern int32_t* D2Client_pNumGroundItemsToShow_6FBB9428; // 119428                                                             | 6FBB9428
+extern int32_t* D2Client_pSelectedUnitId_6FBAB9D0; // 10B9D0                                                                   | 6FBAB9D0
+extern int32_t* D2Client_pSelectedUnitType_6FBAB9CC; // 10B9CC                                                                 | 6FBAB9CC
+extern int32_t* D2Client_pSelectedUnitIsSelected_6FBAB9E8; // 10B9E8                                                           | 6FBAB9E8
+extern int32_t* D2Client_pIsUnitSelectionDisabled_6FBAB9EC; // 10B9EC                                                          | 6FBAB9EC
+
 // UI-Inv-Mod
 extern D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440; //6A440                                        | 6FB0A440
-extern D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLineDamageToUndead_6FAF12C0; //512C0                                                                  | 6FAF12C0
+extern D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLineDamageToUndead_6FAF12C0; //512C0              | 6FAF12C0
 extern D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460; //53460                                                                  | 6FAF3460
 extern D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0; //521C0                                  | 6FAF21C0
-extern D2Client_GetItemDamage_6FAE4C60_t D2Client_GetItemDamage_6FAE4C60; // 44C60
-extern D2Client_sub_6FAF13C0_t D2Client_sub_6FAF13C0; // 513C0
-
-extern D2Client_FindUnit_6FB269F0_t D2Client_FindUnit_6FB269F0; // 869F0
-extern D2Client_GetCurrentDifficulty_6FAAC090_t D2Client_GetCurrentDifficulty_6FAAC090; // C090
-extern D2Client_IsVendorRepairActive_6FAEB930_t D2Client_IsVendorRepairActive_6FAEB930; // 4B930
+extern D2Client_GetItemDamage_6FAE4C60_t D2Client_GetItemDamage_6FAE4C60; // 44C60                                             | 6FAE4C60
+extern D2Client_sub_6FAF13C0_t D2Client_sub_6FAF13C0; // 513C0                                                                 | 6FAF13C0
+extern D2Client_FindUnit_6FB269F0_t D2Client_FindUnit_6FB269F0; // 869F0                                                       | 6FB269F0
+extern D2Client_GetCurrentDifficulty_6FAAC090_t D2Client_GetCurrentDifficulty_6FAAC090; // C090                                | 6FAAC090
+extern D2Client_IsVendorRepairActive_6FAEB930_t D2Client_IsVendorRepairActive_6FAEB930; // 4B930                               | 6FAEB930
 
 extern int32_t* D2Client_pDWORD_6FB7A438; // DA438                                                                             | 6FB7A438
 extern int32_t* D2Client_pDWORD_6FB79B48; // D9B48                                                                             | 6FB79B48
-extern int32_t* D2Client_pElixirDescCount_6FB7A4A0; // DA4A0                                                                             | 6FB7A4A0
-extern ElixirDesc_6FB7A440* D2Client_pElixirDescs_6FB7A440; // DA440                                                              | 6FB7A440
-extern D2DrlgActStrc** D2Client_pCurrentDrlgAct_6FBA7984; // current act? // 6A440                                                                      | 6FBA7984
+extern int32_t* D2Client_pElixirDescCount_6FB7A4A0; // DA4A0                                                                   | 6FB7A4A0
+extern ElixirDesc_6FB7A440* D2Client_pElixirDescs_6FB7A440; // DA440                                                           | 6FB7A440
+extern D2DrlgActStrc** D2Client_pCurrentDrlgAct_6FBA7984; // current act? // 6A440                                             | 6FBA7984
 extern uint16_t* D2Client_pWORD_6FB6FA30; // CFA30                                                                             | 6FB6FA30
 
 #pragma pack(push, 1)

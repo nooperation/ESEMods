@@ -21,6 +21,284 @@
 #include <DataTbls/MonsterIds.h>
 #include <DataTbls/LevelsIds.h>
 
+void ESE_D2Client_DrawAllGroundItemTexts_Helper(
+    GroundItemText* pGroundItemToShowIter,
+    D2UnitStrc* pItem,
+    D2UnitStrc* pSelectedUnit,
+    int32_t mouseX,
+    int32_t mouseY,
+    int32_t finalCoordX,
+    int32_t finalCoordY,
+    int32_t nColorRgb,
+    int32_t& v36
+)
+{
+    auto v39 = finalCoordY;
+    auto screenXOffsetFromOpenSidePanel = 0;
+    auto screenXMiddle = *D2Client_pScreenWidthUI_6FB740EC;
+    auto isSidenPanelOpen = D2Client_GetOpenUiPanelMask_6FAB5750() - 1;
+    if (isSidenPanelOpen)
+    {
+        if (isSidenPanelOpen == 1)
+        {
+            screenXOffsetFromOpenSidePanel = *D2Client_pScreenWidthUI_6FB740EC / 2;
+        }
+    }
+    else
+    {
+        screenXMiddle = *D2Client_pScreenWidthUI_6FB740EC / 2 - 32;
+    }
+
+    if (finalCoordX >= screenXOffsetFromOpenSidePanel
+        && finalCoordX <= screenXMiddle
+        && finalCoordY >= -8
+        && finalCoordY <= *D2Client_pScreenHeightUI_6FB740F0 - 16)
+    {
+        pGroundItemToShowIter->wszText[0] = 0;
+        ESE_D2Client_DrawGroundItemText_sub_6FB20740(pItem, (struct Unicode*)pGroundItemToShowIter->wszText, std::size(pGroundItemToShowIter->wszText));
+
+        int32_t pWidth = 0;
+        int32_t pHeight = 0;
+        D2Win_GetTextDimensions_10131((const Unicode*)pGroundItemToShowIter->wszText, &pWidth, &pHeight);
+        pWidth += 8;
+        auto v42 = finalCoordX - (pWidth >> 1);
+        pHeight = finalCoordY - pHeight + 4;
+        auto v41 = v42 + pWidth;
+        auto v19 = 0;
+
+        auto v20 = screenXOffsetFromOpenSidePanel;
+        auto v21 = screenXMiddle;
+
+        auto v22 = 1;
+        while (1)
+        {
+            if (D2Client_sub_6FB09D80(&v42, &pHeight, &v41, &v39, v19, screenXMiddle, screenXOffsetFromOpenSidePanel))
+            {
+                break;
+            }
+            if (++v19 >= 12)
+            {
+                v22 = 0;
+                break;
+            }
+        }
+
+        if (v41 <= v21)
+        {
+            auto v24 = v42;
+            if (v42 >= v20 && v22)
+            {
+                pGroundItemToShowIter->nX = v42;
+                pGroundItemToShowIter->UnknownA = pHeight;
+                pGroundItemToShowIter->UnknownB = v41;
+                pGroundItemToShowIter->nY = v39;
+                if (v36 == 0)
+                {
+                    if (mouseX >= v24 && mouseX <= v41 && mouseY >= pHeight && mouseY <= v39 + 4)
+                    {
+                        pGroundItemToShowIter->nDrawMode = 5;
+                        pGroundItemToShowIter->nColor = 0;
+                        pGroundItemToShowIter->colorRgb = nColorRgb;
+                        D2Client_sub_6FAB5A90(pItem);
+                        v36 = 1;
+                        ++(*D2Client_pNumGroundItemsToShow_6FBB9428);
+                        return;
+                    }
+
+                    if (pItem == pSelectedUnit)
+                    {
+                        pGroundItemToShowIter->colorRgb = (unsigned __int8)nColorRgb;
+                        pGroundItemToShowIter->nDrawMode = 5;
+                        pGroundItemToShowIter->nColor = 0;
+                        D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
+                        D2Client_ClearUnitSelection_6FAB5D40();
+                        v36 = 1;
+                        ++(*D2Client_pNumGroundItemsToShow_6FBB9428);
+                        return;
+                    }
+                }
+
+
+                pGroundItemToShowIter->colorRgb = 0;
+                pGroundItemToShowIter->nDrawMode = 1;
+                switch (ITEMS_GetItemQuality(pItem))
+                {
+                case ITEMQUAL_MAGIC:
+                    pGroundItemToShowIter->nColor = 3;
+                    break;
+                case ITEMQUAL_SET:
+                    pGroundItemToShowIter->nColor = 2;
+                    break;
+                case ITEMQUAL_RARE:
+                    pGroundItemToShowIter->nColor = 9;
+                    break;
+                case ITEMQUAL_UNIQUE:
+                    pGroundItemToShowIter->nColor = 4;
+                    break;
+                case ITEMQUAL_CRAFT:
+                    pGroundItemToShowIter->nColor = 8;
+                    break;
+                case ITEMQUAL_TEMPERED:
+                    pGroundItemToShowIter->nColor = 10;
+                    break;
+                default:
+                    if (ITEMS_CheckItemFlag(pItem, IFLAG_SOCKETED, __LINE__, __FILE__)
+                        && ITEMS_CheckIfSocketable(pItem)
+                        && ITEMS_GetMaxSockets(pItem)
+                        || ITEMS_CheckItemFlag(pItem, IFLAG_ETHEREAL, __LINE__, __FILE__))
+                    {
+                        pGroundItemToShowIter->nColor = 5;
+                    }
+                    break;
+                }
+                auto pItemTxtRecord = DATATBLS_GetItemsTxtRecord(pItem->dwClassId);
+                if (pItemTxtRecord->nQuest && pItemTxtRecord->dwCode != 543647084)
+                {
+                    pGroundItemToShowIter->nColor = 4;
+                }
+                ++(*D2Client_pNumGroundItemsToShow_6FBB9428);
+                return;
+            }
+        }
+    }
+}
+
+void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
+{
+    auto isPerspective = D2Gfx_CheckPerspective_10010();
+
+    auto pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+    if (!pCurrentPlayer)
+    {
+        return;
+    }
+
+    auto currentPlayerRoom = UNITS_GetRoom(pCurrentPlayer);
+    if (!currentPlayerRoom)
+    {
+        return;
+    }
+
+    auto pSelectedUnit = D2Client_GetSelectedUnit_6FAB5A20();
+    auto mouseX = D2Client_GetMouseXPos();
+    auto mouseY = D2Client_GetMouseYPos();
+
+    D2ActiveRoomStrc** pppRoomList;
+    int32_t pNumRooms;
+    DUNGEON_GetAdjacentRoomsListFromRoom(currentPlayerRoom, &pppRoomList, &pNumRooms);
+
+    int32_t nColorRgb = D2Win_MixRGB_10034(0, 0x40u, 0x80u);
+    auto roomIndex = 0;
+    *D2Client_pNumGroundItemsToShow_6FBB9428 = 0;
+    auto v36 = 0;
+    if (pNumRooms)
+    {
+        do
+        {
+            auto pUnit = pppRoomList[roomIndex]->pUnitFirst;
+            if (!pUnit)
+            {
+                ++roomIndex;
+                continue;
+            }
+
+            while (1)
+            {
+                if ((pUnit->dwFlagEx & UNITFLAGEX_ISINLOS) && pUnit->dwUnitType == UNIT_ITEM && *D2Client_pNumGroundItemsToShow_6FBB9428 < 32)
+                {
+                    auto pGroundItemToShowIter = &D2Client_ppGroundItemsToShow_6FBB7028[*D2Client_pNumGroundItemsToShow_6FBB9428];
+                    pGroundItemToShowIter->pUnit = pUnit;
+
+                    if (isPerspective == 0)
+                    {
+                        auto clientCoordX = UNITS_GetClientCoordX(pUnit);
+                        auto finalCoordX = clientCoordX - D2Client_GetViewXOffset_6FAB5890();
+                        auto viewOffsetY = -16 - D2Client_GetViewYOffset_6FAB58A0();
+                        auto clinetCoordY = UNITS_GetClientCoordY(pUnit);
+                        auto finalCoordY = clinetCoordY + viewOffsetY;
+
+                        ESE_D2Client_DrawAllGroundItemTexts_Helper(
+                            pGroundItemToShowIter,
+                            pUnit,
+                            pSelectedUnit,
+                            mouseX,
+                            mouseY,
+                            finalCoordX,
+                            finalCoordY,
+                            nColorRgb,
+                            v36
+                        );
+                    }
+                    else
+                    {
+                        auto v7 = UNITS_GetPrecisionX(pUnit);
+                        auto v8 = UNITS_GetPrecisionY(pUnit);
+                        if (D2Gfx_SCALE_CheckPerspectivePosition_10065(v7, v8))
+                        {
+                            int32_t pXAdjust;
+                            int32_t pYAdjust;
+                            D2Gfx_SCALE_AdjustPerspectivePosition_10066(v7, v8, 0, &pXAdjust, &pYAdjust);
+                            auto v9 = D2Client_GetOpenUiPanelMask_6FAB5750();
+
+                            if (v9 - 1 == 0)
+                            {
+                                pXAdjust += *D2Client_pScreenWidthUI_6FB740EC / -4;
+                            }
+                            else if (v9 - 1 == 1)
+                            {
+                                pXAdjust += *D2Client_pScreenWidthUI_6FB740EC / 4;
+                            }
+
+                            auto finalCoordX = pXAdjust;
+                            auto finalCoordY = pYAdjust;
+                            ESE_D2Client_DrawAllGroundItemTexts_Helper(
+                                pGroundItemToShowIter,
+                                pUnit,
+                                pSelectedUnit,
+                                mouseX,
+                                mouseY,
+                                finalCoordX,
+                                finalCoordY,
+                                nColorRgb,
+                                v36
+                            );
+                        }
+                    }
+                }
+
+            LABEL_63:
+                pUnit = pUnit->pRoomNext;
+                if (!pUnit)
+                {
+                    break;
+                }
+            }
+
+            ++roomIndex;
+        } while (roomIndex < pNumRooms);
+    }
+
+    for (int32_t i = 0; i < *D2Client_pNumGroundItemsToShow_6FBB9428; ++i)
+    {
+        auto currentGroundItemToShow = &D2Client_ppGroundItemsToShow_6FBB7028[i];
+
+        D2Win_10132(
+            (const Unicode*)currentGroundItemToShow->wszText,
+            currentGroundItemToShow->nX,
+            currentGroundItemToShow->nY,
+            currentGroundItemToShow->colorRgb,
+            (DrawMode)currentGroundItemToShow->nDrawMode,
+            currentGroundItemToShow->nColor
+        );
+    }
+
+    if (!v36)
+    {
+        D2Client_ClearUnitSelection_6FAB5D40();
+        D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
+    }
+}
+
 void __fastcall ESE_D2Client_DrawGroundItemText_sub_6FB20740(D2UnitStrc* pItem, struct Unicode* outBuff, int outBuffSize)
 {
     *D2Client_pUnitMouseOverTextPosY_6FB8EA2C -= 16;
@@ -125,7 +403,7 @@ void __fastcall ESE_D2Client_DrawGroundItemText_sub_6FB20740(D2UnitStrc* pItem, 
 
 void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pUnit)
 {
-    if (D2Client_GetOpenSidePanels_6FAB5750() == 3)
+    if (D2Client_GetOpenUiPanelMask_6FAB5750() == 3)
     {
         return;
     }
@@ -166,7 +444,7 @@ void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pU
         int32_t pYAdjust;
         D2Gfx_SCALE_AdjustPerspectivePosition_10066(unitX, unitY, 0, &pXAdjust, &pYAdjust);
 
-        int32_t openSidePanelStatus = D2Client_GetOpenSidePanels_6FAB5750();
+        int32_t openSidePanelStatus = D2Client_GetOpenUiPanelMask_6FAB5750();
         if (openSidePanelStatus == 1)
         {
             int32_t openPanelOffset = *D2Client_pScreenWidthUI_6FB740EC / -4;

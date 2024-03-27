@@ -8,3 +8,5 @@ void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pU
 
 //D2Client.6FB20740 ()
 void __fastcall ESE_D2Client_DrawGroundItemText_sub_6FB20740(D2UnitStrc* pItem, struct Unicode* outBuff, int outBuffSize);
+
+void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60();

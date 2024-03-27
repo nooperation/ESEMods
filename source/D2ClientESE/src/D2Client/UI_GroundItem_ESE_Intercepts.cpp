@@ -3,6 +3,7 @@
 
 extern D2Client_DrawGroundItemMouseOverText_6FB20A30_t D2Client_DrawGroundItemMouseOverText_6FB20A30_Original = nullptr;
 extern D2Client_DrawGroundItemText_sub_6FB20740_t D2Client_DrawGroundItemText_sub_6FB20740_Original = nullptr;
+extern D2Client_DrawAllGroundItemTexts_6FB09F60_t D2Client_DrawAllGroundItemTexts_6FB09F60_Original = nullptr;
 
 //D2Client.0x6FB20A30 (80A30)
 void __fastcall ESE_INTERCEPT_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pUnit)
@@ -14,4 +15,11 @@ void __fastcall ESE_INTERCEPT_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2Un
 void __fastcall ESE_INTERCEPT_D2Client_DrawGroundItemText_sub_6FB20740(D2UnitStrc* pItem, struct Unicode* outBuff, int outBuffSize)
 {
     ESE_D2Client_DrawGroundItemText_sub_6FB20740(pItem, outBuff, outBuffSize);
+}
+
+//D2Client.6FB09F60 ()
+void __stdcall ESE_INTERCEPT_D2Client_DrawAllGroundItemTexts_6FB09F60()
+{
+    ESE_D2Client_DrawAllGroundItemTexts_6FB09F60();
+    //D2Client_DrawAllGroundItemTexts_6FB09F60_Original();
 }

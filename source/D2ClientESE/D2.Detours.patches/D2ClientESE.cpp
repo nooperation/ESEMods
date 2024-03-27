@@ -28,6 +28,8 @@ extern "C"
     static ExtraPatchAction extraPatchActions[] =
     {
        
+       {0x6FB09F60 - D2ClientImageBase, &ESE_INTERCEPT_D2Client_DrawAllGroundItemTexts_6FB09F60, PatchAction::FunctionReplaceOriginalByPatch, &D2Client_DrawAllGroundItemTexts_6FB09F60_Original},
+
        {0x6FB20740 - D2ClientImageBase, &ESE_INTERCEPT_D2Client_DrawGroundItemText_sub_6FB20740, PatchAction::FunctionReplaceOriginalByPatch, &D2Client_DrawGroundItemMouseOverText_6FB20A30_Original},
        {0x6FB20A30 - D2ClientImageBase, &ESE_INTERCEPT_D2Client_DrawGroundItemMouseOverText_6FB20A30, PatchAction::FunctionReplaceOriginalByPatch, &D2Client_DrawGroundItemMouseOverText_6FB20A30_Original},
        

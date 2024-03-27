@@ -63,7 +63,7 @@ D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460 = nullptr; //53460
 D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0 = nullptr; //521C0
 
 // UI_GroundItem functions
-D2Client_GetOpenSidePanels_6FAB5750_t D2Client_GetOpenSidePanels_6FAB5750 = nullptr; // 15750
+D2Client_GetOpenUiPanelMask_6FAB5750_t D2Client_GetOpenUiPanelMask_6FAB5750 = nullptr; // 15750
 D2Client_GetViewXOffset_6FAB5890_t D2Client_GetViewXOffset_6FAB5890 = nullptr; // 15890
 D2Client_GetViewYOffset_6FAB58A0_t D2Client_GetViewYOffset_6FAB58A0 = nullptr; // 158A0
 D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670 = nullptr; // 80670
@@ -92,6 +92,11 @@ D2Client_MonsterResistancesInfoString_6FB21570_t D2Client_MonsterResistancesInfo
 D2Client_IsActiveNpcDialogOpen_6FAFBB50_t D2Client_IsActiveNpcDialogOpen_6FAFBB50 = nullptr; // 5BB50
 D2Client_IsActiveNpcTalking_6FB1EE90_t D2Client_IsActiveNpcTalking_6FB1EE90 = nullptr; // 7EE90
 D2Client_10002_t D2Client_10002 = nullptr; // 18EF0
+D2Client_GetSelectedUnit_6FAB5A20_t D2Client_GetSelectedUnit_6FAB5A20 = nullptr; // 15A20
+D2Client_sub_6FB09D80_t D2Client_sub_6FB09D80 = nullptr; // 69D80
+D2Client_sub_6FAB5A90_t D2Client_sub_6FAB5A90 = nullptr; // 15A90
+D2Client_ClearUnitSelection_6FAB5D40_t D2Client_ClearUnitSelection_6FAB5D40 = nullptr; // 15D40
+
 
 int32_t* D2Client_pScreenXOffset_6FBBA748 = nullptr;
 int32_t* D2Client_pScreenYOffset_6FBBA74C = nullptr;
@@ -116,6 +121,14 @@ int32_t* D2Client_pRightSwapWeaponButtonXRight_6FBB59C0 = nullptr;
 int32_t* D2Client_pRightSwapWeaponButtonYTop_6FBB59C4 = nullptr;
 
 D2UnitStrc** D2Client_pItemUnderCursor_6FBB58F0 = nullptr; // 1158F0
+
+GroundItemText* D2Client_ppGroundItemsToShow_6FBB7028 = nullptr; // 117028
+int32_t* D2Client_pNumGroundItemsToShow_6FBB9428 = nullptr; // 119428
+int32_t* D2Client_pSelectedUnitId_6FBAB9D0 = nullptr; // 10B9D0
+int32_t* D2Client_pSelectedUnitType_6FBAB9CC = nullptr; // 10B9CC
+int32_t* D2Client_pSelectedUnitIsSelected_6FBAB9E8 = nullptr; // 10B9E8
+int32_t* D2Client_pIsUnitSelectionDisabled_6FBAB9EC = nullptr; // 10B9EC
+
 
 // UI-INV-MOD stuff
 
@@ -263,9 +276,15 @@ void InitD2ClientExports()
     D2Client_pIsGamblingSession_6FBB5D7C = (int32_t*)((char*)d2ClientModule + 0x115D7C);
     D2Client_pGameUnits_6FBBAA00 = (D2UnitStrc**)((char*)d2ClientModule + 0x11AA00);
 
+    D2Client_ppGroundItemsToShow_6FBB7028 = (GroundItemText*)((char*)d2ClientModule + 0x117028);
+    D2Client_pNumGroundItemsToShow_6FBB9428 = (int32_t*)((char*)d2ClientModule + 0x119428);
+    D2Client_pSelectedUnitId_6FBAB9D0 = (int32_t*)((char*)d2ClientModule + 0x10B9D0);
+    D2Client_pSelectedUnitType_6FBAB9CC = (int32_t*)((char*)d2ClientModule + 0x10B9CC);
+    D2Client_pSelectedUnitIsSelected_6FBAB9E8 = (int32_t*)((char*)d2ClientModule + 0x10B9E8);
+    D2Client_pIsUnitSelectionDisabled_6FBAB9EC = (int32_t*)((char*)d2ClientModule + 0x10B9EC);
 
     // UI_GroundItem stuff 
-    D2Client_GetOpenSidePanels_6FAB5750 = (D2Client_GetOpenSidePanels_6FAB5750_t)((char*)d2ClientModule + 0x15750);
+    D2Client_GetOpenUiPanelMask_6FAB5750 = (D2Client_GetOpenUiPanelMask_6FAB5750_t)((char*)d2ClientModule + 0x15750);
     D2Client_GetViewXOffset_6FAB5890 = (D2Client_GetViewXOffset_6FAB5890_t)((char*)d2ClientModule + 0x15890);
     D2Client_GetViewYOffset_6FAB58A0 = (D2Client_GetViewYOffset_6FAB58A0_t)((char*)d2ClientModule + 0x158A0);
     D2Client_GetMonsterLifeColor_6FB20670 = (D2Client_GetMonsterLifeColor_6FB20670_t)((char*)d2ClientModule + 0x80670);
@@ -294,6 +313,10 @@ void InitD2ClientExports()
     D2Client_IsActiveNpcDialogOpen_6FAFBB50 = (D2Client_IsActiveNpcDialogOpen_6FAFBB50_t)((char*)d2ClientModule + 0x5BB50);
     D2Client_IsActiveNpcTalking_6FB1EE90 = (D2Client_IsActiveNpcTalking_6FB1EE90_t)((char*)d2ClientModule + 0x7EE90);
     D2Client_10002 = (D2Client_10002_t)((char*)d2ClientModule + 0x18EF0);
+    D2Client_GetSelectedUnit_6FAB5A20 = (D2Client_GetSelectedUnit_6FAB5A20_t)((char *)d2ClientModule + 0x15A20);
+    D2Client_sub_6FB09D80 = (D2Client_sub_6FB09D80_t)((char *)d2ClientModule + 0x69D80);
+    D2Client_sub_6FAB5A90 = (D2Client_sub_6FAB5A90_t)((char *)d2ClientModule + 0x15A90);
+    D2Client_ClearUnitSelection_6FAB5D40 = (D2Client_ClearUnitSelection_6FAB5D40_t)((char*)d2ClientModule + 0x15D40);
 
     D2Client_pGameType_6FBA7960 = (int32_t*)((char*)d2ClientModule + 0x107960);
     D2Client_pJoinId_6FBA7748 = (int16_t*)((char*)d2ClientModule + 0x107748);
