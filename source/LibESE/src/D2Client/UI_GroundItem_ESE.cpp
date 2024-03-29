@@ -608,10 +608,15 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Monster(D2UnitStrc* pUnit)
     {
         pMonStatsTxt = &sgptDataTables->pMonStatsTxt[unitClassId];
     }
+    else
+    {
+        return;
+    }
 
-    int32_t unknownFlag = 0;
-    auto v29 = pMonStatsTxt->nMonStatsFlags[1];
-    if ((v29 & gdwBitMasks[1]) == 0 && (v29 & gdwBitMasks[7]) != 0 && pMonStatsTxt->wNameStr)
+    int32_t isCorpse = 0;
+    auto monstatsFlags = (pMonStatsTxt->nMonStatsFlags[1]) << 8;
+
+    if ((monstatsFlags & MONSTATSFLAG_INTERACT) == 0 && (monstatsFlags & MONSTATSFLAG_KILLABLE) != 0 && pMonStatsTxt->wNameStr)
     {
         D2MonStats2Txt* v30 = D2Client_GetMonStats2TxtFromClassId_6FB247F0(pUnit->dwClassId);
         if (v30)
@@ -638,7 +643,7 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Monster(D2UnitStrc* pUnit)
                 return;
             }
 
-            unknownFlag = 1;
+            isCorpse = 1;
             if (STRTABLE_GetLanguage())
             {
                 displayName.append(L"(");
@@ -668,7 +673,7 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Monster(D2UnitStrc* pUnit)
             textColor = 3;
             pXAdjust = 3;
         }
-        if (unknownFlag)
+        if (isCorpse)
         {
             textColor = 1;
             pXAdjust = 1;
@@ -703,7 +708,7 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Monster(D2UnitStrc* pUnit)
             0,
             backgroundColor
         );
-        if (unknownFlag)
+        if (isCorpse)
         {
             *D2Client_pUniqueMonsterInfoString256_6FBBA2A0 = 0;
             D2Win_SetFont_10127(originalFont);
