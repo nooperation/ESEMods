@@ -168,9 +168,9 @@ int32_t* D2Client_pViewXOffsetUnits_6FBAB9C8 = nullptr; // 10B9C8
 D2RosterPetStrc* D2Client_pRosterPetRoot_6FBAB9A0 = nullptr; // 10B9A0
 D2RosterUnitStrc* D2Client_pRosterUnitRoot_6FBAB994 = nullptr; // 10B994
 int32_t* D2Client_pShowAllGroundItemTexts_6FBBA6DC = nullptr; // 11A6DC
-wchar_t** D2Client_pNormalMonsterInfoString_6FBB9FE0 = nullptr; // 119FE0
-wchar_t** D2Client_pMonsterImmunitiesInfoString_6FBBA4A0 = nullptr; // 11A4A0
-wchar_t** D2Client_pUniqueMonsterInfoString_6FBBA2A0 = nullptr; // 11A2A0
+wchar_t* D2Client_pNormalMonsterInfoString256_6FBB9FE0 = nullptr; // 119FE0
+wchar_t* D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0 = nullptr; // 11A4A0
+wchar_t* D2Client_pUniqueMonsterInfoString256_6FBBA2A0 = nullptr; // 11A2A0
 int32_t* D2Client_UIStates_6FBBA6A8 = nullptr; // 11A6A8
 
 // Belt stuff
@@ -338,9 +338,9 @@ void InitD2ClientExports()
     D2Client_pRosterPetRoot_6FBAB9A0 = (D2RosterPetStrc*)((char*)d2ClientModule + 0x10B9A0);
     D2Client_pRosterUnitRoot_6FBAB994 = (D2RosterUnitStrc*)((char*)d2ClientModule + 0x10B994);
     D2Client_pShowAllGroundItemTexts_6FBBA6DC = (int32_t*)((char*)d2ClientModule + 0x11A6DC);
-    D2Client_pNormalMonsterInfoString_6FBB9FE0 = (wchar_t**)((char*)d2ClientModule + 0x119FE0);
-    D2Client_pMonsterImmunitiesInfoString_6FBBA4A0 = (wchar_t**)((char*)d2ClientModule + 0x11A4A0);
-    D2Client_pUniqueMonsterInfoString_6FBBA2A0 = (wchar_t**)((char*)d2ClientModule + 0x11A2A0);
+    D2Client_pNormalMonsterInfoString256_6FBB9FE0 = (wchar_t*)((char*)d2ClientModule + 0x119FE0);
+    D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0 = (wchar_t*)((char*)d2ClientModule + 0x11A4A0);
+    D2Client_pUniqueMonsterInfoString256_6FBBA2A0 = (wchar_t*)((char*)d2ClientModule + 0x11A2A0);
     D2Client_UIStates_6FBBA6A8 = (int32_t*)((char*)d2ClientModule + 0x11A6A8);
 
     D2Client_OpenBeltUi_6FB01C20 = (D2Client_OpenBeltUi_6FB01C20_t)((char*)d2ClientModule + 0x61C20);

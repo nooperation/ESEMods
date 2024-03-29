@@ -317,9 +317,9 @@ extern D2RosterUnitStrc* D2Client_pRosterUnitRoot_6FBAB994; // 10B994
 
 extern int32_t* D2Client_pShowAllGroundItemTexts_6FBBA6DC; // 11A6DC
 
-extern wchar_t** D2Client_pNormalMonsterInfoString_6FBB9FE0; // 119FE0
-extern wchar_t** D2Client_pMonsterImmunitiesInfoString_6FBBA4A0; // 11A4A0
-extern wchar_t** D2Client_pUniqueMonsterInfoString_6FBBA2A0; // 11A2A0
+extern wchar_t* D2Client_pNormalMonsterInfoString256_6FBB9FE0; // 119FE0
+extern wchar_t* D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0; // 11A4A0
+extern wchar_t* D2Client_pUniqueMonsterInfoString256_6FBBA2A0; // 11A2A0
 
 // UiStates[38]
 extern int32_t* D2Client_UIStates_6FBBA6A8; // 11A6A8
