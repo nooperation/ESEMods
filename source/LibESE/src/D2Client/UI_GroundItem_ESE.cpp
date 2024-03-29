@@ -63,18 +63,18 @@ int __fastcall ESE_D2Client_sub_6FB09D80(
         return 1;
     }
 
-    int32_t v11 = 0;
-    for (const auto& i : groundItems)
+    int32_t groundItemIndex = 0;
+    for (const auto& groundItem : groundItems)
     {
-        auto v15 = *itemTextPosLeft <= i.UnknownB && *itemTextPosRight >= i.nX;
-        auto v16 = *itemTextPosTop <= i.nY && *itemPosY >= i.UnknownA;
+        auto v15 = *itemTextPosLeft <= groundItem.nRight && *itemTextPosRight >= groundItem.nLeft;
+        auto v16 = *itemTextPosTop <= groundItem.nBottom && *itemPosY >= groundItem.nTop;
 
         if (v15 && v16)
         {
             break;
         }
 
-        if (++v11 >= numGroundItemsToShow)
+        if (++groundItemIndex >= numGroundItemsToShow)
         {
             return 1;
         }
@@ -84,30 +84,30 @@ int __fastcall ESE_D2Client_sub_6FB09D80(
 
     if (v19 <= 6)
     {
-        int32_t v22 = 0;
+        int32_t yOffset = 0;
         if ((*itemPosY - *itemTextPosTop) / 2 && *itemTextPosTop <= screenHeightIsh)
         {
-            v22 = groundItems[v11].UnknownA - *itemPosY - 3;
+            yOffset = groundItems[groundItemIndex].nTop - *itemPosY - 3;
         }
         else
         {
-            v22 = groundItems[v11].nY - *itemTextPosTop + 5;
+            yOffset = groundItems[groundItemIndex].nBottom - *itemTextPosTop + 5;
         }
-
-        *itemTextPosTop = v22 + *itemTextPosTop;
-        *itemPosY = v22 + *itemPosY;
+    
+        *itemTextPosTop = yOffset + *itemTextPosTop;
+        *itemPosY = yOffset + *itemPosY;
         return 0;
     }
-
+    
     if ((*itemTextPosRight - *itemTextPosLeft) / 2 && *itemTextPosLeft >= screenRight)
     {
-        *itemTextPosLeft += groundItems[v11].nX - *itemTextPosRight - 1 ;
-        *itemTextPosRight = groundItems[v11].nX - *itemTextPosRight - 1;
+        *itemTextPosLeft += groundItems[groundItemIndex].nLeft - *itemTextPosRight - 1 ;
+        *itemTextPosRight = groundItems[groundItemIndex].nLeft - *itemTextPosRight - 1;
         return 0;
     }
 
-    *itemTextPosRight += groundItems[v11].UnknownB - *itemTextPosLeft + 1;
-    *itemTextPosLeft = groundItems[v11].UnknownB + 1;
+    *itemTextPosRight += groundItems[groundItemIndex].nRight - *itemTextPosLeft + 1;
+    *itemTextPosLeft = groundItems[groundItemIndex].nRight + 1;
     return 0;
 }
 
@@ -138,127 +138,131 @@ bool ESE_D2Client_DrawAllGroundItemTexts_Helper(
         screenLeft = *D2Client_pScreenWidthUI_6FB740EC / 2;
     }
 
-    if (itemPosX >= screenLeft
-        && itemPosX <= screenRight
-        && itemPosY >= -8
-        && itemPosY <= *D2Client_pScreenHeightUI_6FB740F0 - 16)
+    if (itemPosX < screenLeft || itemPosX > screenRight || itemPosY < -8 || itemPosY > *D2Client_pScreenHeightUI_6FB740F0 - 16)
     {
-        pGroundItemToShowIter->wszText[0] = 0;
-        ESE_D2Client_DrawGroundItemText_sub_6FB20740(pItem, (struct Unicode*)pGroundItemToShowIter->wszText, std::size(pGroundItemToShowIter->wszText));
+        return false;
+    }
 
-        int32_t textWidth = 0;
-        int32_t textHeight = 0;
-        D2Win_GetTextDimensions_10131((const Unicode*)pGroundItemToShowIter->wszText, &textWidth, &textHeight);
+    pGroundItemToShowIter->wszText[0] = 0;
+    ESE_D2Client_DrawGroundItemText_sub_6FB20740(pItem, (struct Unicode*)pGroundItemToShowIter->wszText, std::size(pGroundItemToShowIter->wszText));
+
+    int32_t textWidth = 0;
+    int32_t textHeight = 0;
+    D2Win_GetTextDimensions_10131((const Unicode*)pGroundItemToShowIter->wszText, &textWidth, &textHeight);
         
-        int32_t pWidth = textWidth + 8;
+    int32_t pWidth = textWidth + 8;
 
-        auto itemTextPosLeft = itemPosX - (pWidth >> 1);
-        auto itemTextPosRight = itemTextPosLeft + pWidth;
+    auto itemTextPosLeft = itemPosX - (pWidth >> 1);
+    auto itemTextPosRight = itemTextPosLeft + pWidth;
 
-        int32_t itemTextPosTop = itemPosY - textHeight + 4;
-        auto v19 = 0;
-        auto v22 = 1;
+    int32_t itemTextPosTop = itemPosY - textHeight + 4;
+    auto v19 = 0;
+    auto v22 = 1;
 
-        while (1)
+    while (1)
+    {
+        if (ESE_D2Client_sub_6FB09D80(
+            groundItems,
+            numGroundItemsToShow,
+            &itemTextPosLeft,
+            &itemTextPosTop,
+            &itemTextPosRight,
+            &itemPosY,
+            v19,
+            screenRight,
+            screenLeft
+        ))
         {
-            if (ESE_D2Client_sub_6FB09D80(
-                groundItems,
-                numGroundItemsToShow,
-                &itemTextPosLeft,
-                &itemTextPosTop,
-                &itemTextPosRight,
-                &itemPosY,
-                v19,
-                screenRight,
-                screenLeft
-            ))
-            {
-                break;
-            }
-
-            if (++v19 >= 12)
-            {
-                v22 = 0;
-                break;
-            }
+            break;
         }
 
-        if (itemTextPosRight <= screenRight)
+        if (++v19 >= 12)
         {
-            if (itemTextPosLeft >= screenLeft && v22)
-            {
-                pGroundItemToShowIter->nX = itemTextPosLeft;
-                pGroundItemToShowIter->UnknownA = itemTextPosTop;
-                pGroundItemToShowIter->UnknownB = itemTextPosRight;
-                pGroundItemToShowIter->nY = itemPosY;
-                if (hasItemSelected == 0)
-                {
-                    if (mouseX >= itemTextPosLeft && mouseX <= itemTextPosRight && mouseY >= itemTextPosTop && mouseY <= itemPosY + 4)
-                    {
-                        pGroundItemToShowIter->nDrawMode = DRAWMODE_NORMAL;
-                        pGroundItemToShowIter->nColor = 0;
-                        pGroundItemToShowIter->colorRgb = nColorRgb;
-                        D2Client_sub_6FAB5A90(pItem);
-                        hasItemSelected = 1;
-                        return true;
-                    }
-
-                    if (pItem == pSelectedUnit)
-                    {
-                        pGroundItemToShowIter->colorRgb = (unsigned __int8)nColorRgb;
-                        pGroundItemToShowIter->nDrawMode = DRAWMODE_NORMAL;
-                        pGroundItemToShowIter->nColor = 0;
-                        D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
-                        D2Client_ClearUnitSelection_6FAB5D40();
-                        hasItemSelected = 1;
-                        return true;
-                    }
-                }
-
-                pGroundItemToShowIter->colorRgb = 0;
-                pGroundItemToShowIter->nDrawMode = DRAWMODE_TRANS50;
-                switch (ITEMS_GetItemQuality(pItem))
-                {
-                case ITEMQUAL_MAGIC:
-                    pGroundItemToShowIter->nColor = 3;
-                    break;
-                case ITEMQUAL_SET:
-                    pGroundItemToShowIter->nColor = 2;
-                    break;
-                case ITEMQUAL_RARE:
-                    pGroundItemToShowIter->nColor = 9;
-                    break;
-                case ITEMQUAL_UNIQUE:
-                    pGroundItemToShowIter->nColor = 4;
-                    break;
-                case ITEMQUAL_CRAFT:
-                    pGroundItemToShowIter->nColor = 8;
-                    break;
-                case ITEMQUAL_TEMPERED:
-                    pGroundItemToShowIter->nColor = 10;
-                    break;
-                default:
-                    if (ITEMS_CheckItemFlag(pItem, IFLAG_SOCKETED, __LINE__, __FILE__)
-                        && ITEMS_CheckIfSocketable(pItem)
-                        && ITEMS_GetMaxSockets(pItem)
-                        || ITEMS_CheckItemFlag(pItem, IFLAG_ETHEREAL, __LINE__, __FILE__))
-                    {
-                        pGroundItemToShowIter->nColor = 5;
-                    }
-                    break;
-                }
-
-                auto pItemTxtRecord = DATATBLS_GetItemsTxtRecord(pItem->dwClassId);
-                if (pItemTxtRecord->nQuest && pItemTxtRecord->dwCode != 543647084)
-                {
-                    pGroundItemToShowIter->nColor = 4;
-                }
-                return true;
-            }
+            v22 = 0;
+            break;
         }
     }
 
-    return false;
+    if (itemTextPosRight > screenRight)
+    {
+        return false;
+    }
+
+    if (itemTextPosLeft < screenLeft || !v22)
+    {
+        return false;
+    }
+
+    pGroundItemToShowIter->nLeft = itemTextPosLeft;
+    pGroundItemToShowIter->nTop = itemTextPosTop;
+    pGroundItemToShowIter->nRight = itemTextPosRight;
+    pGroundItemToShowIter->nBottom = itemPosY;
+    pGroundItemToShowIter->nColor = 0;
+
+    if (hasItemSelected == 0)
+    {
+        if (mouseX >= itemTextPosLeft && mouseX <= itemTextPosRight && mouseY >= itemTextPosTop && mouseY <= itemPosY + 4)
+        {
+            // mouse is over an item, select it
+            pGroundItemToShowIter->nDrawMode = DRAWMODE_NORMAL;
+            pGroundItemToShowIter->colorRgb = nColorRgb;
+            D2Client_sub_6FAB5A90(pItem);
+            hasItemSelected = 1;
+            return true;
+        }
+
+        if (pItem == pSelectedUnit)
+        {
+            // mouse is no longer over the item we have selected
+            pGroundItemToShowIter->nDrawMode = DRAWMODE_NORMAL;
+            pGroundItemToShowIter->colorRgb = (unsigned __int8)nColorRgb;
+            D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
+            D2Client_ClearUnitSelection_6FAB5D40();
+            hasItemSelected = 1;
+            return true;
+        }
+    }
+
+    pGroundItemToShowIter->colorRgb = 0;
+    pGroundItemToShowIter->nDrawMode = DRAWMODE_TRANS50;
+    switch (ITEMS_GetItemQuality(pItem))
+    {
+    case ITEMQUAL_MAGIC:
+        pGroundItemToShowIter->nColor = 3;
+        break;
+    case ITEMQUAL_SET:
+        pGroundItemToShowIter->nColor = 2;
+        break;
+    case ITEMQUAL_RARE:
+        pGroundItemToShowIter->nColor = 9;
+        break;
+    case ITEMQUAL_UNIQUE:
+        pGroundItemToShowIter->nColor = 4;
+        break;
+    case ITEMQUAL_CRAFT:
+        pGroundItemToShowIter->nColor = 8;
+        break;
+    case ITEMQUAL_TEMPERED:
+        pGroundItemToShowIter->nColor = 10;
+        break;
+    default:
+        if (ITEMS_CheckItemFlag(pItem, IFLAG_SOCKETED, __LINE__, __FILE__)
+            && ITEMS_CheckIfSocketable(pItem)
+            && ITEMS_GetMaxSockets(pItem)
+            || ITEMS_CheckItemFlag(pItem, IFLAG_ETHEREAL, __LINE__, __FILE__))
+        {
+            pGroundItemToShowIter->nColor = 5;
+        }
+        break;
+    }
+
+    auto pItemTxtRecord = DATATBLS_GetItemsTxtRecord(pItem->dwClassId);
+    if (pItemTxtRecord->nQuest && pItemTxtRecord->dwCode != 543647084)
+    {
+        pGroundItemToShowIter->nColor = 4;
+    }
+
+    return true;
 }
 
 void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
@@ -387,8 +391,8 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
 
         D2Win_10132(
             (const Unicode*)currentGroundItemToShow->wszText,
-            currentGroundItemToShow->nX,
-            currentGroundItemToShow->nY,
+            currentGroundItemToShow->nLeft,
+            currentGroundItemToShow->nBottom,
             currentGroundItemToShow->colorRgb,
             (DrawMode)currentGroundItemToShow->nDrawMode,
             currentGroundItemToShow->nColor

@@ -31,10 +31,10 @@ struct ElixirDesc_6FB7A440
 // 288 bytes
 struct GroundItemText
 {
-    int32_t nX;         		// 0x0
-    int32_t UnknownA;           // 0x4
-    int32_t UnknownB;           // 0x8
-    int32_t nY;              	// 0xC
+    int32_t nLeft;         		// 0x0
+    int32_t nTop;               // 0x4
+    int32_t nRight;             // 0x8
+    int32_t nBottom;          	// 0xC
     D2UnitStrc* pUnit;          // 0x10
     wchar_t wszText[128];       // 0x14
     int colorRgb;               // 0x114
@@ -323,3 +323,13 @@ extern wchar_t** D2Client_pUniqueMonsterInfoString_6FBBA2A0; // 11A2A0
 
 // UiStates[38]
 extern int32_t* D2Client_UIStates_6FBBA6A8; // 11A6A8
+
+
+
+// Belt Stuff
+typedef void(__fastcall* D2Client_OpenBeltUi_6FB01C20_t)(); // 61C20
+
+extern D2Client_OpenBeltUi_6FB01C20_t D2Client_OpenBeltUi_6FB01C20; // 61C20                                   | 6FB01C20
+
+extern BOOL* D2Client_pIsBeltUiOpen_6FBB5EA4; // 115EA4
+extern int32_t* D2Client_pBeltType_6FB7CD70; // DCD70

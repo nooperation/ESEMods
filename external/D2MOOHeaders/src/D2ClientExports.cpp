@@ -97,6 +97,9 @@ D2Client_sub_6FB09D80_t D2Client_sub_6FB09D80 = nullptr; // 69D80
 D2Client_sub_6FAB5A90_t D2Client_sub_6FAB5A90 = nullptr; // 15A90
 D2Client_ClearUnitSelection_6FAB5D40_t D2Client_ClearUnitSelection_6FAB5D40 = nullptr; // 15D40
 
+// Belt stuff
+D2Client_OpenBeltUi_6FB01C20_t D2Client_OpenBeltUi_6FB01C20 = nullptr; // 61C20
+
 
 int32_t* D2Client_pScreenXOffset_6FBBA748 = nullptr;
 int32_t* D2Client_pScreenYOffset_6FBBA74C = nullptr;
@@ -169,6 +172,10 @@ wchar_t** D2Client_pNormalMonsterInfoString_6FBB9FE0 = nullptr; // 119FE0
 wchar_t** D2Client_pMonsterImmunitiesInfoString_6FBBA4A0 = nullptr; // 11A4A0
 wchar_t** D2Client_pUniqueMonsterInfoString_6FBBA2A0 = nullptr; // 11A2A0
 int32_t* D2Client_UIStates_6FBBA6A8 = nullptr; // 11A6A8
+
+// Belt stuff
+BOOL* D2Client_pIsBeltUiOpen_6FBB5EA4 = nullptr; // 115EA4
+int32_t* D2Client_pBeltType_6FB7CD70 = nullptr; // DCD70
 
 void InitD2ClientExports()
 {
@@ -335,4 +342,8 @@ void InitD2ClientExports()
     D2Client_pMonsterImmunitiesInfoString_6FBBA4A0 = (wchar_t**)((char*)d2ClientModule + 0x11A4A0);
     D2Client_pUniqueMonsterInfoString_6FBBA2A0 = (wchar_t**)((char*)d2ClientModule + 0x11A2A0);
     D2Client_UIStates_6FBBA6A8 = (int32_t*)((char*)d2ClientModule + 0x11A6A8);
+
+    D2Client_OpenBeltUi_6FB01C20 = (D2Client_OpenBeltUi_6FB01C20_t)((char*)d2ClientModule + 0x61C20);
+    D2Client_pIsBeltUiOpen_6FBB5EA4 = (BOOL*)((char*)d2ClientModule + 0x115EA4);
+    D2Client_pBeltType_6FB7CD70 = (int32_t*)((char*)d2ClientModule + 0xDCD70);
 }
