@@ -2107,7 +2107,7 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
         }
         else
         {
-            pStatList = STATLIST_AllocStatList(0, 0, 0, 6, -1);
+            pStatList = STATLIST_AllocStatList(0, 0, 0, UNIT_TYPES_COUNT, -1);
         }
 
         STATLIST_MergeBaseStats(pStatList, unitStatList);
@@ -2229,8 +2229,8 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
             D2StatStrc d2StatStrcBuffer[511];
             for (int32_t statsWithDescIndex = 0; statsWithDescIndex < sgptDataTables->nStatsWithDescFunc; ++statsWithDescIndex)
             {
-                uint16_t nStatId = sgptDataTables->pStatsWithDescFunc[statsWithDescIndex];
-                if (nStatId >= sgptDataTables->nItemStatCostTxtRecordCount)
+                int16_t nStatId = sgptDataTables->pStatsWithDescFunc[statsWithDescIndex];
+                if (nStatId < 0 || nStatId >= sgptDataTables->nItemStatCostTxtRecordCount)
                 {
                     continue;
                 }
@@ -2269,7 +2269,7 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
                         statValue = D2Common_10466_STATLIST_GetStatValue(pStatList, STAT_MAXDAMAGE, 0);
                     }
 
-                    if (statValue != 0 || (nStatId != STAT_SECONDARY_MINDAMAGE && nStatId != STAT_SECONDARY_MAXDAMAGE))
+                    if (statValue == 0)
                     {
                         if (hasSecondaryMinMaxDmg && !addNewline)
                         {
