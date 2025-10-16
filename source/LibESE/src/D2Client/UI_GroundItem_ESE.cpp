@@ -514,7 +514,7 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Player(D2UnitStrc* pUnit)
     int32_t nTextColor = 0;
     wchar_t nameBuff[128] = { 0 };
     int32_t pYAdjust = 0;
-    D2Client_GetRosterPlayerNameAndColor_6FB21680(pUnit, &pYAdjust, &nTextColor, (struct Unicode*)nameBuff, std::size(nameBuff));
+    D2Client_GetPlayerNameAndColor_6FB21680(pUnit, &pYAdjust, &nTextColor, (struct Unicode*)nameBuff, std::size(nameBuff));
     D2Win_DrawFramedTextEx_10130((const Unicode*)nameBuff, *D2Client_pUnitMouseOverTextPosX_6FB8EA28, *D2Client_pUnitMouseOverTextPosY_6FB8EA2C - 72, nTextColor, 1, pYAdjust);
 }
 
@@ -568,7 +568,7 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Monster(D2UnitStrc* pUnit)
 
     if (pUnit->dwClassId == MONSTER_DOPPLEZON)
     {
-        auto rosterPetOwnerId = D2Client_GetRosterPetOwnerId_6FAB1B00(pUnit->dwUnitId);
+        auto rosterPetOwnerId = D2Client_Roster_GetPetOwnerId_6FAB1B00(pUnit->dwUnitId);
         if (rosterPetOwnerId != -1)
         {
             if (pUnit->dwAnimMode == MONMODE_DEATH || pUnit->dwAnimMode == MONMODE_DEAD)
@@ -576,10 +576,10 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Monster(D2UnitStrc* pUnit)
                 return;
             }
 
-            const char* rosterUnitName = (const char*)D2Client_GetRosterUnitName_6FAB0BC0(rosterPetOwnerId);
+            const char* rosterUnitName = (const char*)D2Client_Roster_GetUnitNameFromId_6FAB0BC0(rosterPetOwnerId);
             if (rosterUnitName)
             {
-                auto rectangleColor = (D2Client_GetRosterUnitLife_6FAB1460(rosterPetOwnerId) << 7) / 100;
+                auto rectangleColor = (D2Client_Roster_GetUnitLife_6FAB1460(rosterPetOwnerId) << 7) / 100;
                 auto pCurrentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
 
                 int32_t currentPlayerUnitId = -1;
@@ -827,7 +827,7 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Object(D2UnitStrc* pUnit)
             return;
         }
 
-        auto portalOwnerName = D2Client_GetRosterPortalOwnerName_6FAB0D00(pUnit->dwUnitId);
+        auto portalOwnerName = D2Client_Roster_GetPortalOwnerName_6FAB0D00(pUnit->dwUnitId);
         if (portalOwnerName)
         {
             displayName.append(L" (");

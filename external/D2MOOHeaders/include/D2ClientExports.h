@@ -9,6 +9,7 @@
 #include <Units/UnitFinds.h>
 #include <D2BitManip.h>
 
+enum D2C_UnitTypes;
 struct Unicode;
 struct D2SkillStrc;
 
@@ -41,6 +42,105 @@ struct GroundItemText
     int nDrawMode;              // 0x118
     int nColor;                 // 0x11C
 };
+
+
+// Unknown stuff, not in use
+struct D2WallUnknown2
+{
+	int32_t xPos;                               // 0
+	int32_t yPos;                               // 4
+	int32_t unknown8;                           // 8
+	int32_t unknown12;                          // 12
+	int32_t unknown16;                          // 16
+	int32_t unknown20;                          // 20
+	D2TileLibraryEntryStrc** tileLibraryEntry;   // 24
+};
+
+struct D2WallUnknown
+{
+	int32_t flags;                       // 0
+	int32_t xPos;                        // 4
+	int32_t yPos;                        // 8
+	union {
+		D2UnitStrc* pUnit;
+		D2DrlgTileDataStrc* pTileData;
+	};
+	D2WallUnknown* pNext;                // 16
+};
+
+struct D2Wall
+{
+	int32_t* pSquares;						// 0 | 0
+	int32_t unknown4;						// 1 | 4
+	int32_t unknown8;						// 2 | 8
+	int32_t unknown12;						// 3 | 12
+	D2WallUnknown* pWallUnknownShadows;		// 4 | 16
+	D2WallUnknown* pWallUnknownBackground;  // 5 | 20
+	int32_t unknown24;						// 6 | 24
+	D2WallUnknown* pWallUnknownRoofs;		// 7 | 28
+	D2WallUnknown* pWallEdgeOfWorldLedges;  // 8 | 32
+};
+
+struct D2ViewElement
+{
+	int32_t xPos;		// 0 | 0
+	int32_t yPos;		// 1 | 4
+	int32_t unknown8;	// 2 | 8
+	D2UnitStrc* unit;	// 3 | 12
+	D2DrlgActStrc* pAct; // 4 | 16 UNKNOWN
+};
+
+struct D2ViewStruct
+{
+	int32_t flags;                       //     0 | 0
+	int32_t xLeft;                       //     1 | 4
+	int32_t yTop;                        //     2 | 8
+	int32_t xRight;                      //     3 | 12
+	int32_t yBottom;                     //     4 | 16
+	int32_t xLeft2;                      //     5 | 20
+	int32_t yTop2;                       //     6 | 24
+	int32_t xRight2;                     //     7 | 28
+	int32_t yBottom2;                    //     8 | 32
+	int32_t tileDrawPosX;                //     9 | 36
+	int32_t tileDrawPosY;                //    10 | 40
+	int32_t gouraudTblX;                 //    11 | 44--
+	int32_t gouraudTbly;                 //    12 | 48
+	int32_t gouraudTblXVal;              //    13 | 52
+	int32_t unknownFlags;                //    14 | 56
+	D2ViewElement elements[3000];        //    15 | 60 pEntries? 
+	int32_t numElements;                 // 15015 |    0 someCounter  (pRenderer[56 + 20*(someCounter + 1)]
+	int32_t gameCoordsPosX;              // 15016 |    tileDrawPosXToGameCoords - 3
+	int32_t gameCoordsPosY;              // 15017 |    tileDrawPosYToGameCoords - [15021](widh)
+	D2Wall* pWall;                       // 15018 |    pWall[pWallSize]
+	int32_t numWallElements;                   // 15019 |    (height+width-1)*(height+width-1)
+	int32_t wallWidthPlusHeightMinusOne; // 15020 |    (height+width-1)
+	int32_t wallWidth;                   // 15021 |    width
+	int32_t wallHeight;                  // 15022 |    height
+};
+
+
+struct D2UnitLightSource
+{
+	D2C_UnitTypes dwUnitType;  // 0x00
+	uint32_t dwUnitId;         // 0x04
+	int32_t unknown08;         // 0x08
+	int32_t unknownArg2;       // 0x0C
+	int32_t posX;              // 0x10
+	int32_t posY;              // 0x14
+	int32_t unknown18;         // 0x18
+	int32_t nLightRadiusMult8; // 0x1C = nLight * 8
+	int32_t unknown20;         // 0x20
+
+	int8_t nAlphaMaybe;        // 0x24
+	int8_t nRed;               // 0x25
+	int8_t nGreen;             // 0x26
+	int8_t nBlue;              // 0x27
+
+	D2UnitLightSource* pNext;  // 0x28
+	int32_t Zero2C;            // 0x2C
+	int32_t* pLightMapData;    // 0x30
+};
+
 #pragma pack(pop)
 
 void InitD2ClientExports();
@@ -121,12 +221,12 @@ typedef int32_t(__fastcall* D2Client_GetViewXOffset_6FAB5890_t)(); // 15890
 typedef int32_t(__fastcall* D2Client_GetViewYOffset_6FAB58A0_t)(); // 158A0
 typedef int32_t(__fastcall* D2Client_GetMonsterLifeColor_6FB20670_t)(D2UnitStrc* pUnit); // 80670
 typedef const Unicode* (__fastcall* D2Client_GetUnitName_6FB297F0_t)(D2UnitStrc* pUnit); // 897F0
-typedef int32_t(__fastcall* D2Client_GetRosterPlayerNameAndColor_6FB21680_t)(D2UnitStrc* pUnit, int32_t* pOutColorBg, int32_t* pOutColor, struct Unicode* outBuff, int32_t outBuffLen); // 81680
-typedef char* (__fastcall* D2Client_GetRosterPortalOwnerName_6FAB0D00_t)(int32_t unitId); // 10D00
-typedef int32_t(__fastcall* D2Client_GetRosterPetOwnerId_6FAB1B00_t)(int32_t unitId); // 11B00
-typedef char* (__fastcall* D2Client_GetRosterUnitName_6FAB0BC0_t)(int32_t unitId); // 10BC0
-typedef int32_t(__fastcall* D2Client_GetRosterUnitLife_6FAB1460_t)(int32_t unitId); // 11460
-typedef D2RosterInfoStrc** (__fastcall* D2Client_GetRosterUnitRosterInfo_6FAB0D80_t)(int32_t unitId); // 10D80
+typedef int32_t(__fastcall* D2Client_GetPlayerNameAndColor_6FB21680_t)(D2UnitStrc* pUnit, int32_t* pOutColorBg, int32_t* pOutColor, struct Unicode* outBuff, int32_t outBuffLen); // 81680
+typedef char* (__fastcall* D2Client_Roster_GetPortalOwnerName_6FAB0D00_t)(int32_t unitId); // 10D00
+typedef int32_t(__fastcall* D2Client_Roster_GetPetOwnerId_6FAB1B00_t)(int32_t unitId); // 11B00
+typedef char* (__fastcall* D2Client_Roster_GetUnitNameFromId_6FAB0BC0_t)(int32_t unitId); // 10BC0
+typedef int32_t(__fastcall* D2Client_Roster_GetUnitLife_6FAB1460_t)(int32_t unitId); // 11460
+typedef D2RosterInfoStrc** (__fastcall* D2Client_Roster_GetUnitRosterInfoFromId_6FAB0D80_t)(int32_t unitId); // 10D80
 typedef int32_t(__fastcall* D2Client_CheckPartyMemberFlags_6FB4B900_t)(int unitIdA, int unitIdB, int32_t partyFlag); // AB900
 typedef int32_t(__fastcall* D2Client_AreUnitsHostile_6FAB07D0_t)(int unitIdA, int unitIdB); // 107D0
 typedef D2MonStats2Txt* (__fastcall* D2Client_GetMonStats2TxtFromClassId_6FB247F0_t)(int classId); // 847F0
@@ -194,12 +294,12 @@ extern D2Client_GetViewXOffset_6FAB5890_t D2Client_GetViewXOffset_6FAB5890; // 1
 extern D2Client_GetViewYOffset_6FAB58A0_t D2Client_GetViewYOffset_6FAB58A0; // 158A0                                           | 6FAB58A0
 extern D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670; // 80670                                 | 6FB20670
 extern D2Client_GetUnitName_6FB297F0_t D2Client_GetUnitName_6FB297F0; // 897F0                                                 | 6FB297F0
-extern D2Client_GetRosterPlayerNameAndColor_6FB21680_t D2Client_GetRosterPlayerNameAndColor_6FB21680; // 81680                 | 6FB21680
-extern D2Client_GetRosterPortalOwnerName_6FAB0D00_t D2Client_GetRosterPortalOwnerName_6FAB0D00; // 10D00                       | 6FAB0D00
-extern D2Client_GetRosterPetOwnerId_6FAB1B00_t D2Client_GetRosterPetOwnerId_6FAB1B00; // 11B00                                 | 6FAB1B00
-extern D2Client_GetRosterUnitName_6FAB0BC0_t D2Client_GetRosterUnitName_6FAB0BC0; // 10BC0                                     | 6FAB0BC0
-extern D2Client_GetRosterUnitLife_6FAB1460_t D2Client_GetRosterUnitLife_6FAB1460; // 11460                                     | 6FAB1460
-extern D2Client_GetRosterUnitRosterInfo_6FAB0D80_t D2Client_GetRosterUnitRosterInfo_6FAB0D80; // 10D80                         | 6FAB0D80
+extern D2Client_GetPlayerNameAndColor_6FB21680_t D2Client_GetPlayerNameAndColor_6FB21680; // 81680                 | 6FB21680
+extern D2Client_Roster_GetPortalOwnerName_6FAB0D00_t D2Client_Roster_GetPortalOwnerName_6FAB0D00; // 10D00                       | 6FAB0D00
+extern D2Client_Roster_GetPetOwnerId_6FAB1B00_t D2Client_Roster_GetPetOwnerId_6FAB1B00; // 11B00                                 | 6FAB1B00
+extern D2Client_Roster_GetUnitNameFromId_6FAB0BC0_t D2Client_Roster_GetUnitNameFromId_6FAB0BC0; // 10BC0                                     | 6FAB0BC0
+extern D2Client_Roster_GetUnitLife_6FAB1460_t D2Client_Roster_GetUnitLife_6FAB1460; // 11460                                     | 6FAB1460
+extern D2Client_Roster_GetUnitRosterInfoFromId_6FAB0D80_t D2Client_Roster_GetUnitRosterInfoFromId_6FAB0D80; // 10D80                         | 6FAB0D80
 extern D2Client_CheckPartyMemberFlags_6FB4B900_t D2Client_CheckPartyMemberFlags_6FB4B900; // AB900                             | 6FB4B900
 extern D2Client_AreUnitsHostile_6FAB07D0_t D2Client_AreUnitsHostile_6FAB07D0; // 107D0                                         | 6FAB07D0
 extern D2Client_GetMonStats2TxtFromClassId_6FB247F0_t D2Client_GetMonStats2TxtFromClassId_6FB247F0; // 847F0                   | 6FB247F0
@@ -311,10 +411,6 @@ extern int32_t* D2Client_pViewXOffset_6FBAB9BC; // 10B9BC
 // drawn units are offset by this amount. +320 when left ui panel is open, -320 when right ui panel is open, 0 when both or none are open
 extern int32_t* D2Client_pViewXOffsetUnits_6FBAB9C8; // 10B9C8 
 
-// not used here, but kept because it could be useful later
-extern D2RosterPetStrc* D2Client_pRosterPetRoot_6FBAB9A0; // 10B9A0
-extern D2RosterUnitStrc* D2Client_pRosterUnitRoot_6FBAB994; // 10B994
-
 extern int32_t* D2Client_pShowAllGroundItemTexts_6FBBA6DC; // 11A6DC
 
 extern wchar_t* D2Client_pNormalMonsterInfoString256_6FBB9FE0; // 119FE0
@@ -333,3 +429,26 @@ extern D2Client_OpenBeltUi_6FB01C20_t D2Client_OpenBeltUi_6FB01C20; // 61C20    
 
 extern BOOL* D2Client_pIsBeltUiOpen_6FBB5EA4; // 115EA4
 extern int32_t* D2Client_pBeltType_6FB7CD70; // DCD70
+
+
+//////////////////////
+// Roster stuff
+//////////////////////
+
+#pragma pack(push, 1)
+struct D2RosterParty
+{
+	int32_t partyId;
+	D2RosterUnitStrc* pRoster;
+	D2RosterParty* pNext;
+};
+#pragma pack(pop)
+
+extern D2RosterPetStrc* D2Client_pRosterPetRoot_6FBAB9A0; // 10B9A0
+extern D2RosterUnitStrc* D2Client_pRosterUnitRoot_6FBAB994; // 10B994
+extern D2RosterParty* D2Client_pRosterPartyRoot_6FBAB99C; //
+
+// extern uint32_t D2Client_Msg_pNumBytesSentViaClientSend_6FBC1AF4;
+// extern uint32_t D2Client_Msg_pNumGameMessagesSentViaClientSend_6FBC1AFC;
+// extern uint32_t D2Client_Msg_pLastSendGameMessageTickCount_6FBA7BF8;
+// extern uint32_t* D2Client_Msg_pLastSentGameMessage512_6FBA79F8;
