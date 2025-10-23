@@ -15,6 +15,273 @@
 #include <bitset>
 #include <bit>
 
+
+// ESE Specific stuff
+bool AppendStatPropertyRange(std::wstring& propertyString, D2ItemDataStrc* pItemData, const D2PropertyStrc& prop, const D2ItemStatCostTxt& itemStatCostTxt, int statId, int statValue)
+{
+    auto propertyTxt = &sgptDataTables->pPropertiesTxt[prop.nProperty];
+    if (propertyTxt == nullptr)
+    {
+        return false;
+    }
+
+    if (prop.nMin == prop.nMax)
+    {
+        return false;
+    }
+
+    for (int i = 0; i < sizeof(propertyTxt->wStat) / sizeof(propertyTxt->wStat[0]); i++)
+    {
+        if (propertyTxt->wStat[i] != statId)
+        {
+            continue;
+        }
+
+        if (propertyTxt->nFunc[i] == 19) // level {prop.nMax} skill ({prop.nMin} charges)
+        {
+            return false;
+        }
+
+        if (propertyTxt->nFunc[i] == 11) // {prop.nMin}% ctc level %{prop.nMax} skill on action
+        {
+            return false;
+        }
+
+        const auto actualValue = statValue >> itemStatCostTxt.nValShift;
+        const auto minimumValue = std::min(prop.nMin, prop.nMax);
+        const auto maximumValue = std::max(prop.nMin, prop.nMax);
+
+        wchar_t colorCode = '1';
+        if (actualValue == prop.nMax)
+        {
+            colorCode = '2';
+        }
+        else if (actualValue > maximumValue || actualValue < minimumValue)
+        {
+            colorCode = ':'; // 8 highlights modified values, but it's probably too much information 
+        }
+
+        propertyString.append(L" ÿc");
+        propertyString.push_back(colorCode);
+        propertyString.append(L"[");
+        propertyString.append(std::to_wstring(prop.nMin));
+        propertyString.append(L" - ");
+        propertyString.append(std::to_wstring(prop.nMax));
+        propertyString.append(L"]ÿc3");
+
+        return true;
+    }
+
+    return false;
+}
+
+bool AppendItemStatRangeMagicAffix(std::wstring& propertyString, D2ItemDataStrc* pItemData, const D2ItemStatCostTxt& itemStatCostTxt, int statId, int statValue, D2MagicAffixTxt* magicAffixTxt)
+{
+    for (auto propertyIndex = 0; propertyIndex < sizeof(magicAffixTxt->pProperties) / sizeof(magicAffixTxt->pProperties[0]); ++propertyIndex)
+    {
+        const auto& currentProperty = magicAffixTxt->pProperties[propertyIndex];
+        if (currentProperty.nProperty < 0)
+        {
+            break;
+        }
+
+        if (AppendStatPropertyRange(propertyString, pItemData, currentProperty, itemStatCostTxt, statId, statValue))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void AppendItemStatRangeRare(std::wstring& propertyString, D2UnitStrc* pItem, D2ItemDataStrc* pItemData, const D2ItemStatCostTxt& itemStatCostTxt, int statId, int statValue)
+{
+    const auto numAffix = sgptDataTables->pMagicAffixDataTables.nMagicAffixTxtRecordCount;
+
+    if (pItemData->wAutoAffix > 0 && pItemData->wAutoAffix < numAffix)
+    {
+        auto magicAffixTxt = &sgptDataTables->pMagicAffixDataTables.pMagicAffixTxt[pItemData->wAutoAffix - 1];
+        if (AppendItemStatRangeMagicAffix(propertyString, pItemData, itemStatCostTxt, statId, statValue, magicAffixTxt))
+        {
+            return;
+        }
+    }
+
+    if (pItemData->dwItemFlags & IFLAG_RUNEWORD)
+    {
+        const auto runeTxt = D2Common_10822_ITEMS_GetRunesTxtRecordFromItem(pItem);
+        if (runeTxt != nullptr)
+        {
+            for (auto propertyIndex = 0; propertyIndex < sizeof(runeTxt->pProperties) / sizeof(runeTxt->pProperties[0]); ++propertyIndex)
+            {
+                const auto& currentProperty = runeTxt->pProperties[propertyIndex];
+                if (currentProperty.nProperty < 0)
+                {
+                    break;
+                }
+
+                if (AppendStatPropertyRange(propertyString, pItemData, currentProperty, itemStatCostTxt, statId, statValue))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < ITEMS_MAX_MODS; i++)
+    {
+        if (pItemData->wMagicPrefix[i] == 0)
+        {
+            break;
+        }
+
+        if (pItemData->wMagicPrefix[i] >= numAffix)
+        {
+            continue;
+        }
+
+        auto magicAffixTxt = &sgptDataTables->pMagicAffixDataTables.pMagicAffixTxt[pItemData->wMagicPrefix[i] - 1];
+        if (AppendItemStatRangeMagicAffix(propertyString, pItemData, itemStatCostTxt, statId, statValue, magicAffixTxt))
+        {
+            return;
+        }
+    }
+
+    for (int i = 0; i < ITEMS_MAX_MODS; i++)
+    {
+        if (pItemData->wMagicSuffix[i] == 0)
+        {
+            break;
+        }
+
+        if (pItemData->wMagicSuffix[i] >= numAffix)
+        {
+            continue;
+        }
+
+        auto magicAffixTxt = &sgptDataTables->pMagicAffixDataTables.pMagicAffixTxt[pItemData->wMagicSuffix[i] - 1];
+        if (AppendItemStatRangeMagicAffix(propertyString, pItemData, itemStatCostTxt, statId, statValue, magicAffixTxt))
+        {
+            return;
+        }
+    }
+}
+
+void AppendItemStatRangeSet(std::wstring& propertyString, D2ItemDataStrc* pItemData, const D2ItemStatCostTxt& itemStatCostTxt, int statId, int statValue)
+{
+    if (pItemData->dwFileIndex <= 0 || pItemData->dwFileIndex >= sgptDataTables->nSetItemsTxtRecordCount)
+    {
+        return;
+    }
+
+    const auto setTxt = &sgptDataTables->pSetItemsTxt[pItemData->dwFileIndex];
+    if (setTxt == nullptr)
+    {
+        return;
+    }
+
+    for (auto i = 0; i < sizeof(setTxt->pProperties) / sizeof(setTxt->pProperties[0]); ++i)
+    {
+        const auto& currentProperty = setTxt->pProperties[i];
+        if (currentProperty.nProperty <= 0)
+        {
+            break;
+        }
+
+        if (currentProperty.nProperty >= sgptDataTables->nPropertiesTxtRecordCount)
+        {
+            continue;
+        }
+
+        if (AppendStatPropertyRange(propertyString, pItemData, currentProperty, itemStatCostTxt, statId, statValue))
+        {
+            return;
+        }
+    }
+}
+
+void AppendItemStatRangeUnique(std::wstring& propertyString, D2ItemDataStrc* pItemData, const D2ItemStatCostTxt& itemStatCostTxt, int statId, int statValue)
+{
+    if (pItemData->dwFileIndex <= 0 || pItemData->dwFileIndex >= sgptDataTables->nUniqueItemsTxtRecordCount)
+    {
+        return;
+    }
+
+    const auto uniqueTxt = &sgptDataTables->pUniqueItemsTxt[pItemData->dwFileIndex];
+    if (uniqueTxt == nullptr)
+    {
+        return;
+    }
+
+    for (auto i = 0; i < sizeof(uniqueTxt->pProperties) / sizeof(uniqueTxt->pProperties[0]); ++i)
+    {
+        const auto& currentProperty = uniqueTxt->pProperties[i];
+        if (currentProperty.nProperty <= 0)
+        {
+            break;
+        }
+
+        if (currentProperty.nProperty >= sgptDataTables->nPropertiesTxtRecordCount)
+        {
+            continue;
+        }
+
+        if (AppendStatPropertyRange(propertyString, pItemData, currentProperty, itemStatCostTxt, statId, statValue))
+        {
+            return;
+        }
+    }
+}
+
+void AppendItemStatRange(std::wstring& propertyString, D2UnitStrc* pUnit, int statId, int statValue)
+{
+    auto pItemData = pUnit->pItemData;
+    if (pItemData == nullptr)
+    {
+        return;
+    }
+
+    if (statId <= 0 || statId >= sgptDataTables->nItemStatCostTxtRecordCount)
+    {
+        return;
+    }
+
+    const auto& itemStatCostTxt = sgptDataTables->pItemStatCostTxt[statId];
+    switch (pItemData->dwQualityNo)
+    {
+    case ITEMQUAL_NORMAL:
+    case ITEMQUAL_INFERIOR:
+    case ITEMQUAL_SUPERIOR:
+    case ITEMQUAL_TEMPERED:
+    case ITEMQUAL_MAGIC:
+    case ITEMQUAL_RARE:
+    case ITEMQUAL_CRAFT:
+        AppendItemStatRangeRare(propertyString, pUnit, pItemData, itemStatCostTxt, statId, statValue);
+        break;
+    case ITEMQUAL_UNIQUE:
+        AppendItemStatRangeUnique(propertyString, pItemData, itemStatCostTxt, statId, statValue);
+        break;
+    case ITEMQUAL_SET:
+        AppendItemStatRangeSet(propertyString, pItemData, itemStatCostTxt, statId, statValue);
+        break;
+    }
+}
+
+void AppendItemNameExtras(std::wstring& itemName, D2UnitStrc* pUnit)
+{
+    if (pUnit->pItemData == nullptr)
+    {
+        return;
+    }
+
+    itemName.append(L" (");
+    itemName.append(std::to_wstring(pUnit->pItemData->dwItemLevel));
+    itemName.append(L")");
+}
+
+// -ESE Specific stuff
+
+
 void ESE_D2Client_GetItemTextLineAttackSpeed_6FAE5570(D2UnitStrc* pItem, std::wstring& outBuff, D2ItemsTxt* pItemTxtRecord);
 
 
@@ -2120,7 +2387,7 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
             }
         }
 
-        if (pUnit && pUnit->dwUnitType == UNIT_ITEM && pUnit->pInventory != nullptr)
+        if (!GetAsyncKeyState(VK_CONTROL) && pUnit && pUnit->dwUnitType == UNIT_ITEM && pUnit->pInventory != nullptr)
         {
             auto childItem = INVENTORY_GetFirstItem(pUnit->pInventory);
             while (childItem)
@@ -2258,6 +2525,8 @@ void ESE_D2Client_GetItemTextLinePropertiesInternal_6FAF19C0(D2UnitStrc* pUnit, 
                     {
                         continue;
                     }
+
+                    AppendItemStatRange(propertyLineBuffer, pUnit, nStatId, d2StatStrcBuffer[copiedStatIndex].nValue);
 
                     int32_t statValue = 0;
                     if (nStatId == STAT_SECONDARY_MINDAMAGE)
@@ -2873,6 +3142,8 @@ void DrawTextForBookItem(D2UnitStrc* pItemUnderCursor)
 
     std::wstring itemName;
     ESE_D2Client_BuildItemName_6FADD360(pItemUnderCursor, itemName);
+    AppendItemNameExtras(itemName, pItemUnderCursor);
+
     itemDescription.append(itemName);
 
     if (*D2Client_pVendorMode_6FBB58EC >= VENDORMODE_TRADE && *D2Client_pVendorMode_6FBB58EC <= VENDORMODE_UNKNOWN)
@@ -3604,6 +3875,7 @@ void DrawTextForNonSetOrUnidSetItem(D2UnitStrc* v229, int32_t bFlag, int itemQua
 
     std::wstring itemLineName;
     ESE_D2Client_BuildItemName_6FADD360(pItemUnderCursor, itemLineName);
+    AppendItemNameExtras(itemLineName, pItemUnderCursor);
 
     itemDescription.clear();
     AppendColorizedString(itemDescription, statLine_Socketed_512, 3);
@@ -4076,6 +4348,8 @@ void DrawTextForSetItem(D2UnitStrc* pUnit_, int32_t bFlag, int itemQuality)
 
             std::wstring itemNameBuff;
             ESE_D2Client_BuildItemName_6FADD360(pItemUnderCursor, itemNameBuff);
+            AppendItemNameExtras(itemNameBuff, pItemUnderCursor);
+
             AppendColorizedString(itemLineBasicInfo, itemNameBuff, isItemBroken ? 1 : 2);
 
             std::wstring textLineProperties;
@@ -4218,6 +4492,7 @@ void DrawTextForTransmogrifyItem(D2UnitStrc* pItemUnderCursor)
 
     std::wstring itemNameBuff;
     ESE_D2Client_BuildItemName_6FADD360(pItemUnderCursor, itemNameBuff);
+    AppendItemNameExtras(itemNameBuff, pItemUnderCursor);
 
     itemDescription.append(strItemName);
     itemDescription.append(strNewLine);
@@ -4252,6 +4527,7 @@ void DrawTextForGambleItem(D2UnitStrc* pItemUnderCursor)
 
     std::wstring itemNameBuff;
     ESE_D2Client_BuildItemName_6FADD360(pItemUnderCursor, itemNameBuff);
+    AppendItemNameExtras(itemNameBuff, pItemUnderCursor);
 
     auto strUnidentified = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_3455_ItemStats1b);
     itemDescription.append(strUnidentified);
