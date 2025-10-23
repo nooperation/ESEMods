@@ -132,6 +132,8 @@ int32_t* D2Client_pSelectedUnitType_6FBAB9CC = nullptr; // 10B9CC
 int32_t* D2Client_pSelectedUnitIsSelected_6FBAB9E8 = nullptr; // 10B9E8
 int32_t* D2Client_pIsUnitSelectionDisabled_6FBAB9EC = nullptr; // 10B9EC
 
+// MAP stuff
+D2UnitStrc** D2Client_pOwner_6FBBC200 = nullptr; //	11C200	
 
 // UI-INV-MOD stuff
 
@@ -260,6 +262,9 @@ void InitD2ClientExports()
     D2Client_pRightSwapWeaponButtonXLeft_6FBB59BC = (int32_t*)((char*)d2ClientModule + 0x1159BC);
     D2Client_pRightSwapWeaponButtonXRight_6FBB59C0 = (int32_t*)((char*)d2ClientModule + 0x1159C0);
     D2Client_pRightSwapWeaponButtonYTop_6FBB59C4 = (int32_t*)((char*)d2ClientModule + 0x1159C4);
+
+    // MAP stuff
+    D2Client_pOwner_6FBBC200 = (D2UnitStrc**)((char*)d2ClientModule + 0x11C200);
 
     D2Client_pItemUnderCursor_6FBB58F0 = (D2UnitStrc**)((char*)d2ClientModule + 0x1158F0);
 

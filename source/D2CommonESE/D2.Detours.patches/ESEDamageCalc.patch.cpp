@@ -6,6 +6,7 @@
 
 #include "D2Common/D2Skills_ESE_Intercepts.h"
 #include "D2Common/Units/Missile_ESE_Intercepts.h"
+#include "D2Common/UnitRoom/UnitRoom_ESE_Intercepts.h"
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wmicrosoft-cast"
@@ -26,6 +27,10 @@ extern "C"
 
     static ExtraPatchAction extraPatchActions[] =
     {
+        // UnitMap - anti-crash stuff
+        {0x6FDBCF10 - D2CommonImageBase, &ESE_INTERCEPT_UNITROOM_AddUnitToRoomEx, PatchAction::FunctionReplaceOriginalByPatch, &D2Common_11279_UNITROOM_AddUnitToRoomEx_Original},
+        {0x6FDBD100 - D2CommonImageBase, &ESE_INTERCEPT_UNITROOM_AddUnitToRoom, PatchAction::FunctionReplaceOriginalByPatch, &D2Common_10384_UNITROOM_AddUnitToRoom_Original},
+
         // Missile
         {0x6FDBA5B0 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_CalculateDamageData, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_CalculateDamageData_Original},
         {0x6FDBAED0 - D2CommonImageBase, &ESE_INTERCEPT_MISSILE_AddStatsToDamage, PatchAction::FunctionReplaceOriginalByPatch, &MISSILE_AddStatsToDamage_Original},

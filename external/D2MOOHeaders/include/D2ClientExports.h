@@ -354,6 +354,9 @@ extern int32_t* D2Client_pSelectedUnitType_6FBAB9CC; // 10B9CC                  
 extern int32_t* D2Client_pSelectedUnitIsSelected_6FBAB9E8; // 10B9E8                                                           | 6FBAB9E8
 extern int32_t* D2Client_pIsUnitSelectionDisabled_6FBAB9EC; // 10B9EC                                                          | 6FBAB9EC
 
+// MAP stuff
+extern D2UnitStrc** D2Client_pOwner_6FBBC200; //	11C200																	   | 6FBBC200
+
 // UI-Inv-Mod
 extern D2Client_GetSkillStringId_6FB0A440_t D2Client_GetSkillStringId_6FB0A440; //6A440                                        | 6FB0A440
 extern D2Client_GetItemTextLineDamageToUndead_6FAF12C0_t D2Client_GetItemTextLineDamageToUndead_6FAF12C0; //512C0              | 6FAF12C0

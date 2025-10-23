@@ -7,6 +7,7 @@
 #include "D2Client/CHARSCREENDMG_ESE_Intercepts.h"
 #include "D2Client/UI_Inv_ESE_Intercepts.h"
 #include "D2Client/UI_GroundItem_ESE_Intercepts.h"
+#include "D2Client/Map_ESE_Intercepts.h"
 
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wmicrosoft-cast"
@@ -27,6 +28,9 @@ extern "C"
 
     static ExtraPatchAction extraPatchActions[] =
     {
+       
+       {0x6FB26C90 - D2ClientImageBase, &ESE_INTERCEPT_D2Client_Unit_FindRoomContainingSubtile_6FB26C90, PatchAction::FunctionReplaceOriginalByPatch, &D2Client_Unit_FindRoomContainingSubtile_6FB26C90_Original},
+       {0x6FAA5E10 - D2ClientImageBase, &ESE_INTERCEPT_D2Client_Light_pActCallbackFunction_6FAA5E10, PatchAction::FunctionReplaceOriginalByPatch, &D2Client_Light_pActCallbackFunction_6FAA5E10_Original},
        
        {0x6FB09F60 - D2ClientImageBase, &ESE_INTERCEPT_D2Client_DrawAllGroundItemTexts_6FB09F60, PatchAction::FunctionReplaceOriginalByPatch, &D2Client_DrawAllGroundItemTexts_6FB09F60_Original},
 

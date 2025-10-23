@@ -1,1 +1,1 @@
-NameOfModuleToPatch 256 { L"D2Game.dll\0" }
+NameOfModuleToPatch 256 { L"D2Common.dll\0" }
