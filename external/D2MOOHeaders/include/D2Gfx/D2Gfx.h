@@ -59,6 +59,14 @@ struct D2CellFileStrc
 	D2GfxCellStrc* pGfxCells;				//0x18
 };
 
+struct UnknownGfxStreamStrc
+{
+	int32_t nMode;
+	int32_t nClassID;
+	void* iostream;
+	UnknownGfxStreamStrc* pNext;
+};
+
 struct D2GfxDataStrc
 {
 	D2GfxCellStrc* pCurrentCell;			//0x00
@@ -78,7 +86,7 @@ struct D2GfxDataStrc
 	uint8_t unk0x1F;							//0x1F
 	int32_t nUnitType;							//0x20
 	int32_t nUnitIndex;							//0x24
-	int32_t nMode;								//0x28
+	UnknownGfxStreamStrc* nMode;				//0x28
 	int32_t nOverlay;							//0x2C
 	union
 	{
