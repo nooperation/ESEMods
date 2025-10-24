@@ -327,8 +327,8 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
                         auto unitClientCoordX = UNITS_GetClientCoordX(pUnit);
                         auto unitClientCoordY = UNITS_GetClientCoordY(pUnit);
 
-                        finalCoordX = unitClientCoordX - D2Client_GetViewXOffset_6FAB5890();
-                        finalCoordY = unitClientCoordY - D2Client_GetViewYOffset_6FAB58A0() - 16;
+                        finalCoordX = unitClientCoordX - D2Client_GetAdjustedViewOffsetX_6FAB5890();
+                        finalCoordY = unitClientCoordY - D2Client_GetAdjustedViewOffsetY_6FAB58A0() - 16;
                     }
                     else
                     {
@@ -938,8 +938,8 @@ void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pU
         int32_t unitX = UNITS_GetClientCoordX(pUnit);
         int32_t unitY = UNITS_GetClientCoordY(pUnit);
 
-        *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = unitX - D2Client_GetViewXOffset_6FAB5890();
-        *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = unitY - D2Client_GetViewYOffset_6FAB58A0();
+        *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = unitX - D2Client_GetAdjustedViewOffsetX_6FAB5890();
+        *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = unitY - D2Client_GetAdjustedViewOffsetY_6FAB58A0();
     }
     else
     {

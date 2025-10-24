@@ -36,7 +36,7 @@ D2Win_SetFont_10127_t D2Win_SetFont_10127 = nullptr;
 D2Win_10123_t D2Win_10123 = nullptr;
 D2Win_10122_t D2Win_10122 = nullptr;
 D2Win_GetTextWidth_10121_t D2Win_GetTextWidth_10121 = nullptr;
-D2Win_10125_t D2Win_10125 = nullptr;
+D2Win_GetFontHeight_10125_t D2Win_GetFontHeight_10125 = nullptr;
 D2Win_DrawCroppedText_10119_t D2Win_DrawCroppedText_10119 = nullptr;
 D2Win_10124_t D2Win_10124 = nullptr;
 D2Win_DrawFramedText_10129_t D2Win_DrawFramedText_10129 = nullptr;
@@ -178,7 +178,7 @@ void InitD2WinExports()
     D2Win_10123 = (D2Win_10123_t)GetProcAddress(d2WinModule, (LPCSTR)10123);
     D2Win_10122 = (D2Win_10122_t)GetProcAddress(d2WinModule, (LPCSTR)10122);
     D2Win_GetTextWidth_10121 = (D2Win_GetTextWidth_10121_t)GetProcAddress(d2WinModule, (LPCSTR)10121);
-    D2Win_10125 = (D2Win_10125_t)GetProcAddress(d2WinModule, (LPCSTR)10125);
+    D2Win_GetFontHeight_10125 = (D2Win_GetFontHeight_10125_t)GetProcAddress(d2WinModule, (LPCSTR)10125);
     D2Win_DrawCroppedText_10119 = (D2Win_DrawCroppedText_10119_t)GetProcAddress(d2WinModule, (LPCSTR)10119);
     D2Win_10124 = (D2Win_10124_t)GetProcAddress(d2WinModule, (LPCSTR)10124);
     D2Win_DrawFramedText_10129 = (D2Win_DrawFramedText_10129_t)GetProcAddress(d2WinModule, (LPCSTR)10129);

@@ -11,11 +11,6 @@
 #include <bitset>
 #include <bit>
 
-void __fastcall ESE_D2Client_Light_pActCallbackFunction_6FAA5E10(D2ActiveRoomStrc* a1)
-{
-    // I don't care about lighting stuff. it just crashes sometimes so we're not doing it.
-}
-
 //D2Client.0x6FB26C90 ()
 D2ActiveRoomStrc* __fastcall ESE_D2Client_Unit_FindRoomContainingSubtile_6FB26C90(int nX, int nY)
 {
@@ -104,3 +99,8 @@ D2ActiveRoomStrc* __fastcall ESE_D2Client_Unit_FindRoomContainingSubtile_6FB26C9
     return result;
 }
 
+
+void __fastcall ESE_D2Client_Light_pActCallbackFunction_6FAA5E10(D2ActiveRoomStrc* a1)
+{
+    // I don't care about lighting stuff. it just crashes sometimes so we're not doing it.
+}

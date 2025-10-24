@@ -13,6 +13,7 @@ D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580 = nullptr;
 D2Client_IsLod_6FAAC080_t D2Client_IsLod_6FAAC080 = nullptr;
 
 // UI-INV stuff
+D2Client_GetCurrentRoom_6FB29370_t D2Client_GetCurrentRoom_6FB29370 = nullptr; // 89370
 D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0 = nullptr; // 883D0
 D2Client_IsBeltOpen_6FAFE9E0_t D2Client_IsBeltOpen_6FAFE9E0 = nullptr; // 5E9E0
 D2Client_IsUiOpen_6FB23230_t D2Client_IsUiOpen_6FB23230 = nullptr; // 83230
@@ -64,12 +65,14 @@ D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0 = 
 
 // UI_GroundItem functions
 D2Client_GetOpenUiPanelMask_6FAB5750_t D2Client_GetOpenUiPanelMask_6FAB5750 = nullptr; // 15750
-D2Client_GetViewXOffset_6FAB5890_t D2Client_GetViewXOffset_6FAB5890 = nullptr; // 15890
-D2Client_GetViewYOffset_6FAB58A0_t D2Client_GetViewYOffset_6FAB58A0 = nullptr; // 158A0
+D2Client_GetAdjustedViewOffsetX_6FAB5890_t D2Client_GetAdjustedViewOffsetX_6FAB5890 = nullptr; // 15890
+D2Client_GetAdjustedViewOffsetY_6FAB58A0_t D2Client_GetAdjustedViewOffsetY_6FAB58A0 = nullptr; // 158A0
 D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670 = nullptr; // 80670
 D2Client_GetUnitName_6FB297F0_t D2Client_GetUnitName_6FB297F0 = nullptr; // 897F0
 D2Client_GetPlayerNameAndColor_6FB21680_t D2Client_GetPlayerNameAndColor_6FB21680 = nullptr; // 81680
 D2Client_Roster_GetPortalOwnerName_6FAB0D00_t D2Client_Roster_GetPortalOwnerName_6FAB0D00 = nullptr; // 10D00
+D2Client_Roster_GetPetUNK24_6FAB18D0_t D2Client_Roster_GetPetUNK24_6FAB18D0 = nullptr; // 118D0
+D2Client_Roster_GetPetByUnitIdType_6FAB1920_t D2Client_Roster_GetPetByUnitIdType_6FAB1920 = nullptr; // 11920
 D2Client_Roster_GetPetOwnerId_6FAB1B00_t D2Client_Roster_GetPetOwnerId_6FAB1B00 = nullptr; // 11B00
 D2Client_Roster_GetUnitNameFromId_6FAB0BC0_t D2Client_Roster_GetUnitNameFromId_6FAB0BC0 = nullptr; // 10BC0
 D2Client_Roster_GetUnitLife_6FAB1460_t D2Client_Roster_GetUnitLife_6FAB1460 = nullptr; // 11460
@@ -193,6 +196,7 @@ void InitD2ClientExports()
     D2Client_sub_6FB0B580 = (D2Client_sub_6FB0B580_t)((char*)d2ClientModule + 0x6B580);
     D2Client_IsLod_6FAAC080 = (D2Client_IsLod_6FAAC080_t)((char*)d2ClientModule + 0xC080);
 
+    D2Client_GetCurrentRoom_6FB29370 = (D2Client_GetCurrentRoom_6FB29370_t)((char*)d2ClientModule + 0x89370);
     D2Client_GetCurrentPlayer_6FB283D0 = (D2Client_GetCurrentPlayer_6FB283D0_t)((char*)d2ClientModule + 0x883D0);
     D2Client_IsBeltOpen_6FAFE9E0 = (D2Client_IsBeltOpen_6FAFE9E0_t)((char*)d2ClientModule + 0x5E9E0);
     D2Client_IsUiOpen_6FB23230 = (D2Client_IsUiOpen_6FB23230_t)((char*)d2ClientModule + 0x83230);
@@ -297,12 +301,14 @@ void InitD2ClientExports()
 
     // UI_GroundItem stuff 
     D2Client_GetOpenUiPanelMask_6FAB5750 = (D2Client_GetOpenUiPanelMask_6FAB5750_t)((char*)d2ClientModule + 0x15750);
-    D2Client_GetViewXOffset_6FAB5890 = (D2Client_GetViewXOffset_6FAB5890_t)((char*)d2ClientModule + 0x15890);
-    D2Client_GetViewYOffset_6FAB58A0 = (D2Client_GetViewYOffset_6FAB58A0_t)((char*)d2ClientModule + 0x158A0);
+    D2Client_GetAdjustedViewOffsetX_6FAB5890 = (D2Client_GetAdjustedViewOffsetX_6FAB5890_t)((char*)d2ClientModule + 0x15890);
+    D2Client_GetAdjustedViewOffsetY_6FAB58A0 = (D2Client_GetAdjustedViewOffsetY_6FAB58A0_t)((char*)d2ClientModule + 0x158A0);
     D2Client_GetMonsterLifeColor_6FB20670 = (D2Client_GetMonsterLifeColor_6FB20670_t)((char*)d2ClientModule + 0x80670);
     D2Client_GetUnitName_6FB297F0 = (D2Client_GetUnitName_6FB297F0_t)((char*)d2ClientModule + 0x897F0);
     D2Client_GetPlayerNameAndColor_6FB21680 = (D2Client_GetPlayerNameAndColor_6FB21680_t)((char*)d2ClientModule + 0x81680);
     D2Client_Roster_GetPortalOwnerName_6FAB0D00 = (D2Client_Roster_GetPortalOwnerName_6FAB0D00_t)((char*)d2ClientModule + 0x10D00);
+    D2Client_Roster_GetPetUNK24_6FAB18D0 = (D2Client_Roster_GetPetUNK24_6FAB18D0_t)((char*)d2ClientModule + 0x118D0);
+    D2Client_Roster_GetPetByUnitIdType_6FAB1920 = (D2Client_Roster_GetPetByUnitIdType_6FAB1920_t)((char*)d2ClientModule + 0x11920);
     D2Client_Roster_GetPetOwnerId_6FAB1B00 = (D2Client_Roster_GetPetOwnerId_6FAB1B00_t)((char*)d2ClientModule + 0x11B00);
     D2Client_Roster_GetUnitNameFromId_6FAB0BC0 = (D2Client_Roster_GetUnitNameFromId_6FAB0BC0_t)((char*)d2ClientModule + 0x10BC0);
     D2Client_Roster_GetUnitLife_6FAB1460 = (D2Client_Roster_GetUnitLife_6FAB1460_t)((char*)d2ClientModule + 0x11460);

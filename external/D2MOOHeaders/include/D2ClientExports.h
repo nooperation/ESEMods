@@ -8,6 +8,7 @@
 #include <D2Inventory.h>
 #include <Units/UnitFinds.h>
 #include <D2BitManip.h>
+#include <PLAYER/PlayerPets.h>
 
 enum D2C_UnitTypes;
 struct Unicode;
@@ -166,6 +167,7 @@ extern D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580; //                        
 
 
 // UI-Inv
+typedef D2ActiveRoomStrc* (__fastcall* D2Client_GetCurrentRoom_6FB29370_t)();
 typedef D2UnitStrc* (__fastcall* D2Client_GetCurrentPlayer_6FB283D0_t)();
 typedef bool(__fastcall* D2Client_IsBeltOpen_6FAFE9E0_t)();
 typedef int32_t(__fastcall* D2Client_IsUiOpen_6FB23230_t)(D2C_UIvars uiId);
@@ -217,12 +219,14 @@ typedef int32_t(__fastcall* D2Client_IsVendorRepairActive_6FAEB930_t)(); // 4B93
 
 // UI_GroundItem stuff
 typedef int32_t(__fastcall* D2Client_GetOpenUiPanelMask_6FAB5750_t)(); // 15750
-typedef int32_t(__fastcall* D2Client_GetViewXOffset_6FAB5890_t)(); // 15890
-typedef int32_t(__fastcall* D2Client_GetViewYOffset_6FAB58A0_t)(); // 158A0
+typedef int32_t(__fastcall* D2Client_GetAdjustedViewOffsetX_6FAB5890_t)(); // 15890
+typedef int32_t(__fastcall* D2Client_GetAdjustedViewOffsetY_6FAB58A0_t)(); // 158A0
 typedef int32_t(__fastcall* D2Client_GetMonsterLifeColor_6FB20670_t)(D2UnitStrc* pUnit); // 80670
 typedef const Unicode* (__fastcall* D2Client_GetUnitName_6FB297F0_t)(D2UnitStrc* pUnit); // 897F0
 typedef int32_t(__fastcall* D2Client_GetPlayerNameAndColor_6FB21680_t)(D2UnitStrc* pUnit, int32_t* pOutColorBg, int32_t* pOutColor, struct Unicode* outBuff, int32_t outBuffLen); // 81680
 typedef char* (__fastcall* D2Client_Roster_GetPortalOwnerName_6FAB0D00_t)(int32_t unitId); // 10D00
+typedef void* (__fastcall* D2Client_Roster_GetPetUNK24_6FAB18D0_t)(uint32_t dwUnitId); // 118D0
+typedef int32_t(__fastcall* D2Client_Roster_GetPetByUnitIdType_6FAB1920_t)(D2UnitStrc* pOwner, D2PetTypes petType, int bIgnoreDrawnIcon); // 11920
 typedef int32_t(__fastcall* D2Client_Roster_GetPetOwnerId_6FAB1B00_t)(int32_t unitId); // 11B00
 typedef char* (__fastcall* D2Client_Roster_GetUnitNameFromId_6FAB0BC0_t)(int32_t unitId); // 10BC0
 typedef int32_t(__fastcall* D2Client_Roster_GetUnitLife_6FAB1460_t)(int32_t unitId); // 11460
@@ -251,6 +255,7 @@ typedef int(__fastcall* D2Client_sub_6FB09D80_t)(int* drawModeMaybe, int* xPosSo
 typedef void(__fastcall* D2Client_sub_6FAB5A90_t)(D2UnitStrc* pUnit); // 15A90
 typedef void(__fastcall* D2Client_ClearUnitSelection_6FAB5D40_t)(); // 15D40
 
+extern D2Client_GetCurrentRoom_6FB29370_t D2Client_GetCurrentRoom_6FB29370; // 89370                                       | 6FB29370
 extern D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0; // 883D0                                       | 6FB283D0
 extern D2Client_IsBeltOpen_6FAFE9E0_t D2Client_IsBeltOpen_6FAFE9E0; // 5E9E0                                                   | 6FAFE9E0
 extern D2Client_IsUiOpen_6FB23230_t D2Client_IsUiOpen_6FB23230; // 83230                                                       | 6FB23230
@@ -290,16 +295,18 @@ extern D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6F
 
 // UI_GroundItem stuff 
 extern D2Client_GetOpenUiPanelMask_6FAB5750_t D2Client_GetOpenUiPanelMask_6FAB5750; // 15750                                   | 6FAB5750
-extern D2Client_GetViewXOffset_6FAB5890_t D2Client_GetViewXOffset_6FAB5890; // 15890                                           | 6FAB5890
-extern D2Client_GetViewYOffset_6FAB58A0_t D2Client_GetViewYOffset_6FAB58A0; // 158A0                                           | 6FAB58A0
+extern D2Client_GetAdjustedViewOffsetX_6FAB5890_t D2Client_GetAdjustedViewOffsetX_6FAB5890; // 15890                                           | 6FAB5890
+extern D2Client_GetAdjustedViewOffsetY_6FAB58A0_t D2Client_GetAdjustedViewOffsetY_6FAB58A0; // 158A0                                           | 6FAB58A0
 extern D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670; // 80670                                 | 6FB20670
 extern D2Client_GetUnitName_6FB297F0_t D2Client_GetUnitName_6FB297F0; // 897F0                                                 | 6FB297F0
-extern D2Client_GetPlayerNameAndColor_6FB21680_t D2Client_GetPlayerNameAndColor_6FB21680; // 81680                 | 6FB21680
-extern D2Client_Roster_GetPortalOwnerName_6FAB0D00_t D2Client_Roster_GetPortalOwnerName_6FAB0D00; // 10D00                       | 6FAB0D00
-extern D2Client_Roster_GetPetOwnerId_6FAB1B00_t D2Client_Roster_GetPetOwnerId_6FAB1B00; // 11B00                                 | 6FAB1B00
-extern D2Client_Roster_GetUnitNameFromId_6FAB0BC0_t D2Client_Roster_GetUnitNameFromId_6FAB0BC0; // 10BC0                                     | 6FAB0BC0
-extern D2Client_Roster_GetUnitLife_6FAB1460_t D2Client_Roster_GetUnitLife_6FAB1460; // 11460                                     | 6FAB1460
-extern D2Client_Roster_GetUnitRosterInfoFromId_6FAB0D80_t D2Client_Roster_GetUnitRosterInfoFromId_6FAB0D80; // 10D80                         | 6FAB0D80
+extern D2Client_GetPlayerNameAndColor_6FB21680_t D2Client_GetPlayerNameAndColor_6FB21680; // 81680                             | 6FB21680
+extern D2Client_Roster_GetPortalOwnerName_6FAB0D00_t D2Client_Roster_GetPortalOwnerName_6FAB0D00; // 10D00                     | 6FAB0D00
+extern D2Client_Roster_GetPetUNK24_6FAB18D0_t D2Client_Roster_GetPetUNK24_6FAB18D0; // 118D0                     | 6FAB18D0
+extern D2Client_Roster_GetPetByUnitIdType_6FAB1920_t D2Client_Roster_GetPetByUnitIdType_6FAB1920; // 11920                     | 6FAB1920
+extern D2Client_Roster_GetPetOwnerId_6FAB1B00_t D2Client_Roster_GetPetOwnerId_6FAB1B00; // 11B00                               | 6FAB1B00
+extern D2Client_Roster_GetUnitNameFromId_6FAB0BC0_t D2Client_Roster_GetUnitNameFromId_6FAB0BC0; // 10BC0                       | 6FAB0BC0
+extern D2Client_Roster_GetUnitLife_6FAB1460_t D2Client_Roster_GetUnitLife_6FAB1460; // 11460                                   | 6FAB1460
+extern D2Client_Roster_GetUnitRosterInfoFromId_6FAB0D80_t D2Client_Roster_GetUnitRosterInfoFromId_6FAB0D80; // 10D80           | 6FAB0D80
 extern D2Client_CheckPartyMemberFlags_6FB4B900_t D2Client_CheckPartyMemberFlags_6FB4B900; // AB900                             | 6FB4B900
 extern D2Client_AreUnitsHostile_6FAB07D0_t D2Client_AreUnitsHostile_6FAB07D0; // 107D0                                         | 6FAB07D0
 extern D2Client_GetMonStats2TxtFromClassId_6FB247F0_t D2Client_GetMonStats2TxtFromClassId_6FB247F0; // 847F0                   | 6FB247F0
