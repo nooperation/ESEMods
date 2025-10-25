@@ -428,7 +428,7 @@ extern wchar_t* D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0; // 11A4A0
 extern wchar_t* D2Client_pUniqueMonsterInfoString256_6FBBA2A0; // 11A2A0
 
 // UiStates[38]
-extern int32_t* D2Client_UIStates_6FBBA6A8; // 11A6A8
+extern int32_t* D2Client_UI_pUIStates_6FBBA6A8; // 11A6A8
 
 
 

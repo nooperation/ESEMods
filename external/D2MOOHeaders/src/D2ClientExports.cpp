@@ -176,7 +176,7 @@ int32_t* D2Client_pShowAllGroundItemTexts_6FBBA6DC = nullptr; // 11A6DC
 wchar_t* D2Client_pNormalMonsterInfoString256_6FBB9FE0 = nullptr; // 119FE0
 wchar_t* D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0 = nullptr; // 11A4A0
 wchar_t* D2Client_pUniqueMonsterInfoString256_6FBBA2A0 = nullptr; // 11A2A0
-int32_t* D2Client_UIStates_6FBBA6A8 = nullptr; // 11A6A8
+int32_t* D2Client_UI_pUIStates_6FBBA6A8 = nullptr; // 11A6A8
 
 // Belt stuff
 BOOL* D2Client_pIsBeltUiOpen_6FBB5EA4 = nullptr; // 115EA4
@@ -342,7 +342,7 @@ void InitD2ClientExports()
     D2Client_pGameName_6FBA7898 = (char*)((char*)d2ClientModule + 0x107898);
     D2Client_pUnitMouseOverTextPosX_6FB8EA28 = (int32_t*)((char*)d2ClientModule + 0xEEA28);
     D2Client_pUnitMouseOverTextPosY_6FB8EA2C = (int32_t*)((char*)d2ClientModule + 0xEEA2C);
-    D2Client_UI_pGlobalUiState_6FBAB9C4 = (int32_t*)((char*)d2ClientModule + 0x10B9C4);
+    D2Client_UI_pGlobalUiState_6FBAB9C4 = (D2C_GlobalUiStates*)((char*)d2ClientModule + 0x10B9C4);
     D2Client_pViewYOffset_6FBAB9B8 = (int32_t*)((char*)d2ClientModule + 0x10B9B8);
     D2Client_pViewXOffset_6FBAB9BC = (int32_t*)((char*)d2ClientModule + 0x10B9BC);
     D2Client_pViewXOffsetUnits_6FBAB9C8 = (int32_t*)((char*)d2ClientModule + 0x10B9C8);
@@ -352,9 +352,84 @@ void InitD2ClientExports()
     D2Client_pNormalMonsterInfoString256_6FBB9FE0 = (wchar_t*)((char*)d2ClientModule + 0x119FE0);
     D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0 = (wchar_t*)((char*)d2ClientModule + 0x11A4A0);
     D2Client_pUniqueMonsterInfoString256_6FBBA2A0 = (wchar_t*)((char*)d2ClientModule + 0x11A2A0);
-    D2Client_UIStates_6FBBA6A8 = (int32_t*)((char*)d2ClientModule + 0x11A6A8);
+    D2Client_UI_pUIStates_6FBBA6A8 = (int32_t*)((char*)d2ClientModule + 0x11A6A8);
 
     D2Client_OpenBeltUi_6FB01C20 = (D2Client_OpenBeltUi_6FB01C20_t)((char*)d2ClientModule + 0x61C20);
     D2Client_pIsBeltUiOpen_6FBB5EA4 = (BOOL*)((char*)d2ClientModule + 0x115EA4);
     D2Client_pBeltType_6FB7CD70 = (int32_t*)((char*)d2ClientModule + 0xDCD70);
+
+    // UI stuff
+    /*
+    6FAA0000
+
+    Data:
+    D2CellFileStrc** D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
+    uint32_t* D2Client_UI_pCurrentLevelId_6FBBA784;
+    uint32_t* D2Client_UI_pNewLevelTickCount120_6FBBA788;
+    QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54;
+    int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70;
+    int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0;
+    int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0;
+    void* D2Client_UI_pGoldTransferDialog_6FBB9FC4;
+    int32_t* D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8
+
+    Functions:
+    void __fastcall D2Client_UI_DrawEscapeMenu_6FB088B0()
+    void __fastcall D2Client_UI_DrawConfigMenu_6FAFC620()
+    void __fastcall D2Client_UI_DrawDurabilityWarning_6FAFEE70()
+    void __fastcall D2Client_UI_DrawAmmoDurability_6FAFEA40()
+    void __fastcall D2Client_UI_DrawAutomap_6FACDCB0()
+    void __fastcall D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890()
+    void __fastcall D2Client_UI_DrawPartyMemberIcons_6FADAB00()
+    void __fastcall D2Client_UI_DrawMercInventoryScreen_6FAED5D0()
+    void __fastcall D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0()
+    void __fastcall D2Client_UI_DrawQuestScreen_6FB042D0()
+    void __fastcall D2Client_UI_DrawInventoryScreen_6FADEAC0()
+    void __fastcall D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390()
+    void __fastcall D2Client_UI_DrawProgressiveStates_6FB21A00()
+    void __fastcall D2Client_UI_DrawSkillsTree_6FB16C00()
+    void __fastcall D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
+    void __fastcall D2Client_UI_DrawPartyScreen_6FB01F10()
+    void __fastcall D2Client_UI_DrawGoldTransferDialog_6FAD6EB0()
+    void __fastcall D2Client_UI_DrawInifussScrollPanel_6FB1E990()
+    void __fastcall D2Client_UI_DrawWaypointScreen_6FB25C70()
+    void __fastcall D2Client_UI_DrawHelpScreen_6FAD81F0()
+    void __fastcall D2Client_UI_DrawHelpScreenBackground_6FAD82E0()
+    void __fastcall D2Client_UI_DrawBackground_6FAFF480()
+    void __fastcall D2Client_UI_DrawMiniSkills_6FB19660()
+    void __fastcall D2Client_UI_DrawBeltRows_6FB01C20()
+    void __fastcall D2Client_UI_RefreshUIState_6FAEEC00()
+    void __fastcall D2Client_UI_DrawHelpButton_6FADA350()
+    void __fastcall D2Client_UI_DrawNewStatsButton_6FAEF360()
+    void __fastcall D2Client_UI_DrawStatsButton_6FAEF2A0()
+    void __fastcall D2Client_UI_DrawNewSkillsButton_6FAEF730()
+    void __fastcall D2Client_UI_DrawSkillsButton_6FAEF670()
+    void __fastcall D2Client_UI_DrawQuestLogButton_6FB065F0()
+    void __fastcall D2Client_UI_DrawLifeAndManaOrbText_6FAFF0B0()
+    void __fastcall D2Client_UI_DrawMiniPanel_6FB08DE0()
+    void __fastcall D2Client_UI_DrawChatBox_6FAD2100()
+    void __fastcall D2Client_ClearItemUnderCursorInfo_6FAE8F10()
+    void __fastcall D2Client_UI_DrawHelpScreen_6FAD8310()
+    void __fastcall D2Client_GetGameType_6FAABFF0()
+    void __fastcall D2Client_UI_DrawNpcMenu_6FAF6070()
+    void __fastcall D2Client_UI_DrawAnvilScreen_6FB25320()
+    void __fastcall D2Client_UI_DrawHostilePlayerIndicator_6FAFE650()
+    void __fastcall D2Client_UI_DrawMercFloatingText_6FB21970()
+    void __fastcall D2Client_Roster_IsSortingByKillCount_6FAA6990()
+    void __fastcall D2Client_UI_DrawDeathScreen_6FB22320()
+    void __fastcall D2Client_UI_DrawLordOfTerrorDiedMessage_6FABA4A0()
+
+    int __fastcall D2Client_UI_UpdateMercFloatingText_6FB20590(const struct Unicode *text, int textPosX, int textPosY, int a4)
+    void __fastcall D2Client_UI_UpdateRosterHealthColors_6FADA970(bool bForceUpdate)
+    void __fastcall D2Client_Archive_FreeCellFile_6FAA1140(D2CellFileStrc *pCellFile)
+    int __stdcall D2Lang_10006(const char *a1, int a2)
+    void __fastcall D2Client_UI_SetUIState_6FB23260(D2C_UIvars nUIId, D2C_UiStates nUIState, int bAdjustCursor)
+    void __fastcall D2Client_Unit_EnumUnits_6FB29700(void (__fastcall *sub_6FB22560)(D2UnitStrc *pUnit))
+    void __fastcall D2Client_UI_EnumUnitsCallback_6FB22560(D2UnitStrc *pUnit)
+    void __fastcall D2Client_UI_DrawNPCScrollingDialog_6FB1BA00(D2ViewStruct *pRenderer)
+    void __fastcall D2Client_UI_DrawText_6FB22280(const struct Unicode *text, Font font, int nY, int nColor)
+    void __fastcall D2RosterUnitStrc *__fastcall D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60(int32_t dwUnitId)
+    uint32_t __fastcall D2Client_Roster_GetKillCount_6FAAFD30(D2RosterUnitStrc *pRosterUnit)
+
+    */
 }
