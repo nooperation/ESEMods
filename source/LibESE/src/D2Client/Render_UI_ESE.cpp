@@ -79,7 +79,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
                             auto v38 = D2Client_GetMonsterLifeColor_6FB20670(currentPlayerMerc);
                             auto v37 = *D2Client_pUnitMouseOverTextPosY_6FB8EA2C - 72;
                             auto v13 = D2Client_GetUnitName_6FB297F0(currentPlayerMerc);
-                            D2Client_UI_UpdateMercFloatingText_6FB20590(v13, D2Client_pUnitMouseOverTextPosX_6FB8EA28, v37, v38); // Draw unit name over head
+                            D2Client_UI_UpdateMercFloatingText_6FB20590(v13, *D2Client_pUnitMouseOverTextPosX_6FB8EA28, v37, v38); // Draw unit name over head
                         }
                         goto LABEL_25;
                     }
@@ -138,16 +138,6 @@ LABEL_25:
 
     D2CellFileStrc* pCellFile;
     int32_t newLevelTickCount = 0;
-
-    // TEMP - need to define
-    D2CellFileStrc** D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
-    uint32_t* D2Client_UI_pCurrentLevelId_6FBBA784;
-    uint32_t* D2Client_UI_pNewLevelTickCount120_6FBBA788;
-    QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54;
-    int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70;
-    int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0;
-    int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0;
-    void* D2Client_UI_pGoldTransferDialog_6FBB9FC4;
 
     auto currentRoom = D2Client_GetCurrentRoom_6FB29370();
     if (currentRoom)
@@ -393,7 +383,7 @@ LABEL_57:
         {
             if (D2Client_UI_pUIStates_6FBBA6A8[i] == 1 && D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8[i] == 1)
             {
-                D2Client_UI_SetUIState_6FB23260(i, UI_TURNOFF, 0);
+                D2Client_UI_SetUIState_6FB23260((D2C_UIvars)i, UI_TURNOFF, 0);
                 if (i == UI_STASH || i == UI_INVENTORY)
                 {
                     D2Client_ClearItemUnderCursorInfo_6FAE8F10();
@@ -401,7 +391,7 @@ LABEL_57:
             }
         }
 
-        D2Client_UI_SetUIState_6FB23260(0x21u, UI_TOGGLE, 0);
+        D2Client_UI_SetUIState_6FB23260(UI_HELPSCREEN, UI_TOGGLE, 0);
         D2Client_UI_DrawHelpScreen_6FAD8310();
     }
 
@@ -444,13 +434,13 @@ LABEL_57:
             *D2Client_pNormalMonsterInfoStringColor_6FBBA1E0
         );
 
-        if (D2Client_pNormalMonsterInfoString256_6FBB9FE0[0] || (WORD)D2Client_pUniqueMonsterInfoString256_6FBBA2A0)
+        if (D2Client_pNormalMonsterInfoString256_6FBB9FE0[0] || D2Client_pUniqueMonsterInfoString256_6FBBA2A0[0])
         {
             fontHeight += D2Win_GetFontHeight_10125();
         }
 
         D2Client_UI_DrawText_6FB22280(
-            (const struct Unicode*)&D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0,
+            (const struct Unicode*)D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0,
             D2FONT_FONT6,
             fontHeight,
             *D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0
@@ -459,7 +449,7 @@ LABEL_57:
 
     D2Client_UI_DrawMercFloatingText_6FB21970();
 
-    if (Unicode::strlen((const struct Unicode*)&D2Client_pUniqueMonsterInfoString256_6FBBA2A0))
+    if (Unicode::strlen((const struct Unicode*)D2Client_pUniqueMonsterInfoString256_6FBBA2A0))
     {
         auto selectedUnit_1 = D2Client_GetSelectedUnit_6FAB5A20();
         if (selectedUnit_1)
@@ -479,7 +469,7 @@ LABEL_57:
 
                 auto fontHeight = D2Win_GetFontHeight_10125();
                 D2Client_UI_DrawText_6FB22280(
-                    (const struct Unicode*)&D2Client_pUniqueMonsterInfoString256_6FBBA2A0,
+                    (const struct Unicode*)D2Client_pUniqueMonsterInfoString256_6FBBA2A0,
                     D2FONT_FONT6,
                     fontHeight + 39,
                     fontColor

@@ -182,6 +182,74 @@ int32_t* D2Client_UI_pUIStates_6FBBA6A8 = nullptr; // 11A6A8
 BOOL* D2Client_pIsBeltUiOpen_6FBB5EA4 = nullptr; // 115EA4
 int32_t* D2Client_pBeltType_6FB7CD70 = nullptr; // DCD70
 
+
+// UI stuff - Data
+D2CellFileStrc** D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = nullptr;
+uint32_t* D2Client_UI_pCurrentLevelId_6FBBA784 = nullptr;
+uint32_t* D2Client_UI_pNewLevelTickCount120_6FBBA788 = nullptr;
+QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54 = nullptr;
+int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 = nullptr;
+int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0 = nullptr;
+int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0 = nullptr;
+void* D2Client_UI_pGoldTransferDialog_6FBB9FC4 = nullptr;
+int32_t* D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8 = nullptr;
+
+// UI stuff - Functions
+D2Client_UI_DrawEscapeMenu_6FB088B0_t D2Client_UI_DrawEscapeMenu_6FB088B0 = nullptr;
+D2Client_UI_DrawConfigMenu_6FAFC620_t D2Client_UI_DrawConfigMenu_6FAFC620 = nullptr;
+D2Client_UI_DrawDurabilityWarning_6FAFEE70_t D2Client_UI_DrawDurabilityWarning_6FAFEE70 = nullptr;
+D2Client_UI_DrawAmmoDurability_6FAFEA40_t D2Client_UI_DrawAmmoDurability_6FAFEA40 = nullptr;
+D2Client_UI_DrawAutomap_6FACDCB0_t D2Client_UI_DrawAutomap_6FACDCB0 = nullptr;
+D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890_t D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890 = nullptr;
+D2Client_UI_DrawPartyMemberIcons_6FADAB00_t D2Client_UI_DrawPartyMemberIcons_6FADAB00 = nullptr;
+D2Client_UI_DrawMercInventoryScreen_6FAED5D0_t D2Client_UI_DrawMercInventoryScreen_6FAED5D0 = nullptr;
+D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0_t D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0 = nullptr;
+D2Client_UI_DrawQuestScreen_6FB042D0_t D2Client_UI_DrawQuestScreen_6FB042D0 = nullptr;
+D2Client_UI_DrawInventoryScreen_6FADEAC0_t D2Client_UI_DrawInventoryScreen_6FADEAC0 = nullptr;
+D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390_t D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390 = nullptr;
+D2Client_UI_DrawProgressiveStates_6FB21A00_t D2Client_UI_DrawProgressiveStates_6FB21A00 = nullptr;
+D2Client_UI_DrawSkillsTree_6FB16C00_t D2Client_UI_DrawSkillsTree_6FB16C00 = nullptr;
+D2Client_UI_DrawCharacterStatsScreen_6FACFD60_t D2Client_UI_DrawCharacterStatsScreen_6FACFD60 = nullptr;
+D2Client_UI_DrawPartyScreen_6FB01F10_t D2Client_UI_DrawPartyScreen_6FB01F10 = nullptr;
+D2Client_UI_DrawGoldTransferDialog_6FAD6EB0_t D2Client_UI_DrawGoldTransferDialog_6FAD6EB0 = nullptr;
+D2Client_UI_DrawInifussScrollPanel_6FB1E990_t D2Client_UI_DrawInifussScrollPanel_6FB1E990 = nullptr;
+D2Client_UI_DrawWaypointScreen_6FB25C70_t D2Client_UI_DrawWaypointScreen_6FB25C70 = nullptr;
+D2Client_UI_DrawHelpScreen_6FAD81F0_t D2Client_UI_DrawHelpScreen_6FAD81F0 = nullptr;
+D2Client_UI_DrawHelpScreenBackground_6FAD82E0_t D2Client_UI_DrawHelpScreenBackground_6FAD82E0 = nullptr;
+D2Client_UI_DrawBackground_6FAFF480_t D2Client_UI_DrawBackground_6FAFF480 = nullptr;
+D2Client_UI_DrawMiniSkills_6FB19660_t D2Client_UI_DrawMiniSkills_6FB19660 = nullptr;
+D2Client_UI_DrawBeltRows_6FB01C20_t D2Client_UI_DrawBeltRows_6FB01C20 = nullptr;
+D2Client_UI_RefreshUIState_6FAEEC00_t D2Client_UI_RefreshUIState_6FAEEC00 = nullptr;
+D2Client_UI_DrawHelpButton_6FADA350_t D2Client_UI_DrawHelpButton_6FADA350 = nullptr;
+D2Client_UI_DrawNewStatsButton_6FAEF360_t D2Client_UI_DrawNewStatsButton_6FAEF360 = nullptr;
+D2Client_UI_DrawStatsButton_6FAEF2A0_t D2Client_UI_DrawStatsButton_6FAEF2A0 = nullptr;
+D2Client_UI_DrawNewSkillsButton_6FAEF730_t D2Client_UI_DrawNewSkillsButton_6FAEF730 = nullptr;
+D2Client_UI_DrawSkillsButton_6FAEF670_t D2Client_UI_DrawSkillsButton_6FAEF670 = nullptr;
+D2Client_UI_DrawQuestLogButton_6FB065F0_t D2Client_UI_DrawQuestLogButton_6FB065F0 = nullptr;
+D2Client_UI_DrawLifeAndManaOrbText_6FAFF0B0_t D2Client_UI_DrawLifeAndManaOrbText_6FAFF0B0 = nullptr;
+D2Client_UI_DrawMiniPanel_6FB08DE0_t D2Client_UI_DrawMiniPanel_6FB08DE0 = nullptr;
+D2Client_UI_DrawChatBox_6FAD2100_t D2Client_UI_DrawChatBox_6FAD2100 = nullptr;
+D2Client_ClearItemUnderCursorInfo_6FAE8F10_t D2Client_ClearItemUnderCursorInfo_6FAE8F10 = nullptr;
+D2Client_UI_DrawHelpScreen_6FAD8310_t D2Client_UI_DrawHelpScreen_6FAD8310 = nullptr;
+D2Client_GetGameType_6FAABFF0_t D2Client_GetGameType_6FAABFF0 = nullptr;
+D2Client_UI_DrawNpcMenu_6FAF6070_t D2Client_UI_DrawNpcMenu_6FAF6070 = nullptr;
+D2Client_UI_DrawAnvilScreen_6FB25320_t D2Client_UI_DrawAnvilScreen_6FB25320 = nullptr;
+D2Client_UI_DrawHostilePlayerIndicator_6FAFE650_t D2Client_UI_DrawHostilePlayerIndicator_6FAFE650 = nullptr;
+D2Client_UI_DrawMercFloatingText_6FB21970_t D2Client_UI_DrawMercFloatingText_6FB21970 = nullptr;
+D2Client_Roster_IsSortingByKillCount_6FAA6990_t D2Client_Roster_IsSortingByKillCount_6FAA6990 = nullptr;
+D2Client_UI_DrawDeathScreen_6FB22320_t D2Client_UI_DrawDeathScreen_6FB22320 = nullptr;
+D2Client_UI_DrawLordOfTerrorDiedMessage_6FABA4A0_t D2Client_UI_DrawLordOfTerrorDiedMessage_6FABA4A0 = nullptr;
+D2Client_UI_UpdateMercFloatingText_6FB20590_t D2Client_UI_UpdateMercFloatingText_6FB20590 = nullptr;
+D2Client_UI_UpdateRosterHealthColors_6FADA970_t D2Client_UI_UpdateRosterHealthColors_6FADA970 = nullptr;
+D2Client_Archive_FreeCellFile_6FAA1140_t D2Client_Archive_FreeCellFile_6FAA1140 = nullptr;
+D2Client_UI_SetUIState_6FB23260_t D2Client_UI_SetUIState_6FB23260 = nullptr;
+D2Client_Unit_EnumUnits_6FB29700_t D2Client_Unit_EnumUnits_6FB29700 = nullptr;
+D2Client_UI_EnumUnitsCallback_6FB22560_t D2Client_UI_EnumUnitsCallback_6FB22560 = nullptr;
+D2Client_UI_DrawNPCScrollingDialog_6FB1BA00_t D2Client_UI_DrawNPCScrollingDialog_6FB1BA00 = nullptr;
+D2Client_UI_DrawText_6FB22280_t D2Client_UI_DrawText_6FB22280 = nullptr;
+D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60_t D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60 = nullptr;
+D2Client_Roster_GetKillCount_6FAAFD30_t D2Client_Roster_GetKillCount_6FAAFD30 = nullptr;
+
 void InitD2ClientExports()
 {
     auto d2ClientModule = GetModuleHandle("D2Client");
@@ -358,78 +426,71 @@ void InitD2ClientExports()
     D2Client_pIsBeltUiOpen_6FBB5EA4 = (BOOL*)((char*)d2ClientModule + 0x115EA4);
     D2Client_pBeltType_6FB7CD70 = (int32_t*)((char*)d2ClientModule + 0xDCD70);
 
-    // UI stuff
-    /*
-    6FAA0000
 
-    Data:
-    D2CellFileStrc** D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
-    uint32_t* D2Client_UI_pCurrentLevelId_6FBBA784;
-    uint32_t* D2Client_UI_pNewLevelTickCount120_6FBBA788;
-    QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54;
-    int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70;
-    int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0;
-    int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0;
-    void* D2Client_UI_pGoldTransferDialog_6FBB9FC4;
-    int32_t* D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8
+    // UI stuff - Data
+    D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = (D2CellFileStrc**)((char*)d2ClientModule + 0x11A1E8);
+    D2Client_UI_pCurrentLevelId_6FBBA784 = (uint32_t*)((char*)d2ClientModule + 0x11A784);
+    D2Client_UI_pNewLevelTickCount120_6FBBA788 = (uint32_t*)((char*)d2ClientModule + 0x11A788);
+    D2Client_Quest_pQuestNameOverrides_6FB8EC54 = (QuestNameOverride*)((char*)d2ClientModule + 0xEEC54);
+    D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 = (int32_t*)((char*)d2ClientModule + 0xEEC70);
+    D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0 = (int32_t*)((char*)d2ClientModule + 0x11A6A0);
+    D2Client_pNormalMonsterInfoStringColor_6FBBA1E0 = (int32_t*)((char*)d2ClientModule + 0x11A1E0);
+    D2Client_UI_pGoldTransferDialog_6FBB9FC4 = (void*)((char*)d2ClientModule + 0x119FC4);
+    D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8 = (int32_t*)((char*)d2ClientModule + 0x11A6A8);
 
-    Functions:
-    void __fastcall D2Client_UI_DrawEscapeMenu_6FB088B0()
-    void __fastcall D2Client_UI_DrawConfigMenu_6FAFC620()
-    void __fastcall D2Client_UI_DrawDurabilityWarning_6FAFEE70()
-    void __fastcall D2Client_UI_DrawAmmoDurability_6FAFEA40()
-    void __fastcall D2Client_UI_DrawAutomap_6FACDCB0()
-    void __fastcall D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890()
-    void __fastcall D2Client_UI_DrawPartyMemberIcons_6FADAB00()
-    void __fastcall D2Client_UI_DrawMercInventoryScreen_6FAED5D0()
-    void __fastcall D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0()
-    void __fastcall D2Client_UI_DrawQuestScreen_6FB042D0()
-    void __fastcall D2Client_UI_DrawInventoryScreen_6FADEAC0()
-    void __fastcall D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390()
-    void __fastcall D2Client_UI_DrawProgressiveStates_6FB21A00()
-    void __fastcall D2Client_UI_DrawSkillsTree_6FB16C00()
-    void __fastcall D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
-    void __fastcall D2Client_UI_DrawPartyScreen_6FB01F10()
-    void __fastcall D2Client_UI_DrawGoldTransferDialog_6FAD6EB0()
-    void __fastcall D2Client_UI_DrawInifussScrollPanel_6FB1E990()
-    void __fastcall D2Client_UI_DrawWaypointScreen_6FB25C70()
-    void __fastcall D2Client_UI_DrawHelpScreen_6FAD81F0()
-    void __fastcall D2Client_UI_DrawHelpScreenBackground_6FAD82E0()
-    void __fastcall D2Client_UI_DrawBackground_6FAFF480()
-    void __fastcall D2Client_UI_DrawMiniSkills_6FB19660()
-    void __fastcall D2Client_UI_DrawBeltRows_6FB01C20()
-    void __fastcall D2Client_UI_RefreshUIState_6FAEEC00()
-    void __fastcall D2Client_UI_DrawHelpButton_6FADA350()
-    void __fastcall D2Client_UI_DrawNewStatsButton_6FAEF360()
-    void __fastcall D2Client_UI_DrawStatsButton_6FAEF2A0()
-    void __fastcall D2Client_UI_DrawNewSkillsButton_6FAEF730()
-    void __fastcall D2Client_UI_DrawSkillsButton_6FAEF670()
-    void __fastcall D2Client_UI_DrawQuestLogButton_6FB065F0()
-    void __fastcall D2Client_UI_DrawLifeAndManaOrbText_6FAFF0B0()
-    void __fastcall D2Client_UI_DrawMiniPanel_6FB08DE0()
-    void __fastcall D2Client_UI_DrawChatBox_6FAD2100()
-    void __fastcall D2Client_ClearItemUnderCursorInfo_6FAE8F10()
-    void __fastcall D2Client_UI_DrawHelpScreen_6FAD8310()
-    void __fastcall D2Client_GetGameType_6FAABFF0()
-    void __fastcall D2Client_UI_DrawNpcMenu_6FAF6070()
-    void __fastcall D2Client_UI_DrawAnvilScreen_6FB25320()
-    void __fastcall D2Client_UI_DrawHostilePlayerIndicator_6FAFE650()
-    void __fastcall D2Client_UI_DrawMercFloatingText_6FB21970()
-    void __fastcall D2Client_Roster_IsSortingByKillCount_6FAA6990()
-    void __fastcall D2Client_UI_DrawDeathScreen_6FB22320()
-    void __fastcall D2Client_UI_DrawLordOfTerrorDiedMessage_6FABA4A0()
-
-    int __fastcall D2Client_UI_UpdateMercFloatingText_6FB20590(const struct Unicode *text, int textPosX, int textPosY, int a4)
-    void __fastcall D2Client_UI_UpdateRosterHealthColors_6FADA970(bool bForceUpdate)
-    void __fastcall D2Client_Archive_FreeCellFile_6FAA1140(D2CellFileStrc *pCellFile)
-    int __stdcall D2Lang_10006(const char *a1, int a2)
-    void __fastcall D2Client_UI_SetUIState_6FB23260(D2C_UIvars nUIId, D2C_UiStates nUIState, int bAdjustCursor)
-    void __fastcall D2Client_Unit_EnumUnits_6FB29700(void (__fastcall *sub_6FB22560)(D2UnitStrc *pUnit))
-    void __fastcall D2Client_UI_EnumUnitsCallback_6FB22560(D2UnitStrc *pUnit)
-    void __fastcall D2Client_UI_DrawNPCScrollingDialog_6FB1BA00(D2ViewStruct *pRenderer)
-    void __fastcall D2Client_UI_DrawText_6FB22280(const struct Unicode *text, Font font, int nY, int nColor)
-    void __fastcall D2RosterUnitStrc *__fastcall D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60(int32_t dwUnitId)
-    uint32_t __fastcall D2Client_Roster_GetKillCount_6FAAFD30(D2RosterUnitStrc *pRosterUnit)
-
-    */
+    // UI stuff - Functions
+    D2Client_UI_DrawEscapeMenu_6FB088B0 = (D2Client_UI_DrawEscapeMenu_6FB088B0_t)((char*)d2ClientModule + 0x688B0);
+    D2Client_UI_DrawConfigMenu_6FAFC620 = (D2Client_UI_DrawConfigMenu_6FAFC620_t)((char*)d2ClientModule + 0x5C620);
+    D2Client_UI_DrawDurabilityWarning_6FAFEE70 = (D2Client_UI_DrawDurabilityWarning_6FAFEE70_t)((char*)d2ClientModule + 0x5EE70);
+    D2Client_UI_DrawAmmoDurability_6FAFEA40 = (D2Client_UI_DrawAmmoDurability_6FAFEA40_t)((char*)d2ClientModule + 0x5EA40);
+    D2Client_UI_DrawAutomap_6FACDCB0 = (D2Client_UI_DrawAutomap_6FACDCB0_t)((char*)d2ClientModule + 0x2DCB0);
+    D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890 = (D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890_t)((char*)d2ClientModule + 0x3B890);
+    D2Client_UI_DrawPartyMemberIcons_6FADAB00 = (D2Client_UI_DrawPartyMemberIcons_6FADAB00_t)((char*)d2ClientModule + 0x3AB00);
+    D2Client_UI_DrawMercInventoryScreen_6FAED5D0 = (D2Client_UI_DrawMercInventoryScreen_6FAED5D0_t)((char*)d2ClientModule + 0x4D5D0);
+    D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0 = (D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0_t)((char*)d2ClientModule + 0x4E9C0);
+    D2Client_UI_DrawQuestScreen_6FB042D0 = (D2Client_UI_DrawQuestScreen_6FB042D0_t)((char*)d2ClientModule + 0x642D0);
+    D2Client_UI_DrawInventoryScreen_6FADEAC0 = (D2Client_UI_DrawInventoryScreen_6FADEAC0_t)((char*)d2ClientModule + 0x4EAC0);
+    D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390 = (D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390_t)((char*)d2ClientModule + 0x7F390);
+    D2Client_UI_DrawProgressiveStates_6FB21A00 = (D2Client_UI_DrawProgressiveStates_6FB21A00_t)((char*)d2ClientModule + 0x81A00);
+    D2Client_UI_DrawSkillsTree_6FB16C00 = (D2Client_UI_DrawSkillsTree_6FB16C00_t)((char*)d2ClientModule + 0x76C00);
+    D2Client_UI_DrawCharacterStatsScreen_6FACFD60 = (D2Client_UI_DrawCharacterStatsScreen_6FACFD60_t)((char*)d2ClientModule + 0x2FD60);
+    D2Client_UI_DrawPartyScreen_6FB01F10 = (D2Client_UI_DrawPartyScreen_6FB01F10_t)((char*)d2ClientModule + 0x61F10);
+    D2Client_UI_DrawGoldTransferDialog_6FAD6EB0 = (D2Client_UI_DrawGoldTransferDialog_6FAD6EB0_t)((char*)d2ClientModule + 0x36EB0);
+    D2Client_UI_DrawInifussScrollPanel_6FB1E990 = (D2Client_UI_DrawInifussScrollPanel_6FB1E990_t)((char*)d2ClientModule + 0x7E990);
+    D2Client_UI_DrawWaypointScreen_6FB25C70 = (D2Client_UI_DrawWaypointScreen_6FB25C70_t)((char*)d2ClientModule + 0x85C70);
+    D2Client_UI_DrawHelpScreen_6FAD81F0 = (D2Client_UI_DrawHelpScreen_6FAD81F0_t)((char*)d2ClientModule + 0x381F0);
+    D2Client_UI_DrawHelpScreenBackground_6FAD82E0 = (D2Client_UI_DrawHelpScreenBackground_6FAD82E0_t)((char*)d2ClientModule + 0x382E0);
+    D2Client_UI_DrawBackground_6FAFF480 = (D2Client_UI_DrawBackground_6FAFF480_t)((char*)d2ClientModule + 0x5F480);
+    D2Client_UI_DrawMiniSkills_6FB19660 = (D2Client_UI_DrawMiniSkills_6FB19660_t)((char*)d2ClientModule + 0x79660);
+    D2Client_UI_DrawBeltRows_6FB01C20 = (D2Client_UI_DrawBeltRows_6FB01C20_t)((char*)d2ClientModule + 0x61C20);
+    D2Client_UI_RefreshUIState_6FAEEC00 = (D2Client_UI_RefreshUIState_6FAEEC00_t)((char*)d2ClientModule + 0x4EC00);
+    D2Client_UI_DrawHelpButton_6FADA350 = (D2Client_UI_DrawHelpButton_6FADA350_t)((char*)d2ClientModule + 0x3A350);
+    D2Client_UI_DrawNewStatsButton_6FAEF360 = (D2Client_UI_DrawNewStatsButton_6FAEF360_t)((char*)d2ClientModule + 0x4F360);
+    D2Client_UI_DrawStatsButton_6FAEF2A0 = (D2Client_UI_DrawStatsButton_6FAEF2A0_t)((char*)d2ClientModule + 0x4F2A0);
+    D2Client_UI_DrawNewSkillsButton_6FAEF730 = (D2Client_UI_DrawNewSkillsButton_6FAEF730_t)((char*)d2ClientModule + 0x4F730);
+    D2Client_UI_DrawSkillsButton_6FAEF670 = (D2Client_UI_DrawSkillsButton_6FAEF670_t)((char*)d2ClientModule + 0x4F670);
+    D2Client_UI_DrawQuestLogButton_6FB065F0 = (D2Client_UI_DrawQuestLogButton_6FB065F0_t)((char*)d2ClientModule + 0x665F0);
+    D2Client_UI_DrawLifeAndManaOrbText_6FAFF0B0 = (D2Client_UI_DrawLifeAndManaOrbText_6FAFF0B0_t)((char*)d2ClientModule + 0x5F0B0);
+    D2Client_UI_DrawMiniPanel_6FB08DE0 = (D2Client_UI_DrawMiniPanel_6FB08DE0_t)((char*)d2ClientModule + 0x68DE0);
+    D2Client_UI_DrawChatBox_6FAD2100 = (D2Client_UI_DrawChatBox_6FAD2100_t)((char*)d2ClientModule + 0x32100);
+    D2Client_ClearItemUnderCursorInfo_6FAE8F10 = (D2Client_ClearItemUnderCursorInfo_6FAE8F10_t)((char*)d2ClientModule + 0x48F10);
+    D2Client_UI_DrawHelpScreen_6FAD8310 = (D2Client_UI_DrawHelpScreen_6FAD8310_t)((char*)d2ClientModule + 0x38310);
+    D2Client_GetGameType_6FAABFF0 = (D2Client_GetGameType_6FAABFF0_t)((char*)d2ClientModule + 0xBFF0);
+    D2Client_UI_DrawNpcMenu_6FAF6070 = (D2Client_UI_DrawNpcMenu_6FAF6070_t)((char*)d2ClientModule + 0x56070);
+    D2Client_UI_DrawAnvilScreen_6FB25320 = (D2Client_UI_DrawAnvilScreen_6FB25320_t)((char*)d2ClientModule + 0x85320);
+    D2Client_UI_DrawHostilePlayerIndicator_6FAFE650 = (D2Client_UI_DrawHostilePlayerIndicator_6FAFE650_t)((char*)d2ClientModule + 0x5E650);
+    D2Client_UI_DrawMercFloatingText_6FB21970 = (D2Client_UI_DrawMercFloatingText_6FB21970_t)((char*)d2ClientModule + 0x81970);
+    D2Client_Roster_IsSortingByKillCount_6FAA6990 = (D2Client_Roster_IsSortingByKillCount_6FAA6990_t)((char*)d2ClientModule + 0x6990);
+    D2Client_UI_DrawDeathScreen_6FB22320 = (D2Client_UI_DrawDeathScreen_6FB22320_t)((char*)d2ClientModule + 0x82320);
+    D2Client_UI_DrawLordOfTerrorDiedMessage_6FABA4A0 = (D2Client_UI_DrawLordOfTerrorDiedMessage_6FABA4A0_t)((char*)d2ClientModule + 0x1A4A0);
+    D2Client_UI_UpdateMercFloatingText_6FB20590 = (D2Client_UI_UpdateMercFloatingText_6FB20590_t)((char*)d2ClientModule + 0x80590);
+    D2Client_UI_UpdateRosterHealthColors_6FADA970 = (D2Client_UI_UpdateRosterHealthColors_6FADA970_t)((char*)d2ClientModule + 0x3A970);
+    D2Client_Archive_FreeCellFile_6FAA1140 = (D2Client_Archive_FreeCellFile_6FAA1140_t)((char*)d2ClientModule + 0x1140);
+    D2Client_UI_SetUIState_6FB23260 = (D2Client_UI_SetUIState_6FB23260_t)((char*)d2ClientModule + 0x83260);
+    D2Client_Unit_EnumUnits_6FB29700 = (D2Client_Unit_EnumUnits_6FB29700_t)((char*)d2ClientModule + 0x89700);
+    D2Client_UI_EnumUnitsCallback_6FB22560 = (D2Client_UI_EnumUnitsCallback_6FB22560_t)((char*)d2ClientModule + 0x82560);
+    D2Client_UI_DrawNPCScrollingDialog_6FB1BA00 = (D2Client_UI_DrawNPCScrollingDialog_6FB1BA00_t)((char*)d2ClientModule + 0x7BA00);
+    D2Client_UI_DrawText_6FB22280 = (D2Client_UI_DrawText_6FB22280_t)((char*)d2ClientModule + 0x82280);
+    D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60 = (D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60_t)((char*)d2ClientModule + 0xFD60);
+    D2Client_Roster_GetKillCount_6FAAFD30 = (D2Client_Roster_GetKillCount_6FAAFD30_t)((char*)d2ClientModule + 0xFD30);
 }
