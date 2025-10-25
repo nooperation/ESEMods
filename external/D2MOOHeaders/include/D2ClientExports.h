@@ -218,7 +218,7 @@ typedef int8_t(__fastcall* D2Client_GetCurrentDifficulty_6FAAC090_t)(); // C090
 typedef int32_t(__fastcall* D2Client_IsVendorRepairActive_6FAEB930_t)(); // 4B930
 
 // UI_GroundItem stuff
-typedef int32_t(__fastcall* D2Client_GetOpenUiPanelMask_6FAB5750_t)(); // 15750
+typedef D2C_GlobalUiStates(__fastcall* D2Client_UI_GetGlobalUiState_6FAB5750_t)(); // 15750
 typedef int32_t(__fastcall* D2Client_GetAdjustedViewOffsetX_6FAB5890_t)(); // 15890
 typedef int32_t(__fastcall* D2Client_GetAdjustedViewOffsetY_6FAB58A0_t)(); // 158A0
 typedef int32_t(__fastcall* D2Client_GetMonsterLifeColor_6FB20670_t)(D2UnitStrc* pUnit); // 80670
@@ -294,7 +294,7 @@ extern D2Client_sub_6FAE5990_t D2Client_sub_6FAE5990; // 45990                  
 extern D2Client_GetItemTextLinePrice_6FAFB200_t D2Client_GetItemTextLinePrice_6FAFB200; // 5B200                               | 6FAFB200
 
 // UI_GroundItem stuff 
-extern D2Client_GetOpenUiPanelMask_6FAB5750_t D2Client_GetOpenUiPanelMask_6FAB5750; // 15750                                   | 6FAB5750
+extern D2Client_UI_GetGlobalUiState_6FAB5750_t D2Client_UI_GetGlobalUiState_6FAB5750; // 15750                                   | 6FAB5750
 extern D2Client_GetAdjustedViewOffsetX_6FAB5890_t D2Client_GetAdjustedViewOffsetX_6FAB5890; // 15890                                           | 6FAB5890
 extern D2Client_GetAdjustedViewOffsetY_6FAB58A0_t D2Client_GetAdjustedViewOffsetY_6FAB58A0; // 158A0                                           | 6FAB58A0
 extern D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670; // 80670                                 | 6FB20670
@@ -413,7 +413,7 @@ extern int32_t* D2Client_pUnitMouseOverTextPosX_6FB8EA28; // EEA28
 extern int32_t* D2Client_pUnitMouseOverTextPosY_6FB8EA2C; // EEA2C
 
 // 1 = right panel, 2 = left panel, 3 = left and right panels
-extern int32_t* D2Client_pOpenUIPanelMask_6FBAB9C4; // 10B9C4  
+extern D2C_GlobalUiStates* D2Client_UI_pGlobalUiState_6FBAB9C4; // 10B9C4  
 
 extern int32_t* D2Client_pViewYOffset_6FBAB9B8; // 10B9B8
 extern int32_t* D2Client_pViewXOffset_6FBAB9BC; // 10B9BC

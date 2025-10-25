@@ -64,7 +64,7 @@ D2Client_sub_6FAF3460_t D2Client_sub_6FAF3460 = nullptr; //53460
 D2Client_GetItemPropertyLine_6FAF21C0_t D2Client_GetItemPropertyLine_6FAF21C0 = nullptr; //521C0
 
 // UI_GroundItem functions
-D2Client_GetOpenUiPanelMask_6FAB5750_t D2Client_GetOpenUiPanelMask_6FAB5750 = nullptr; // 15750
+D2Client_UI_GetGlobalUiState_6FAB5750_t D2Client_UI_GetGlobalUiState_6FAB5750 = nullptr; // 15750
 D2Client_GetAdjustedViewOffsetX_6FAB5890_t D2Client_GetAdjustedViewOffsetX_6FAB5890 = nullptr; // 15890
 D2Client_GetAdjustedViewOffsetY_6FAB58A0_t D2Client_GetAdjustedViewOffsetY_6FAB58A0 = nullptr; // 158A0
 D2Client_GetMonsterLifeColor_6FB20670_t D2Client_GetMonsterLifeColor_6FB20670 = nullptr; // 80670
@@ -166,7 +166,7 @@ char* D2Client_pServerIp_6FB75468 = nullptr; // D5468
 char* D2Client_pGameName_6FBA7898 = nullptr; // 107898
 int32_t* D2Client_pUnitMouseOverTextPosX_6FB8EA28 = nullptr; // EEA28
 int32_t* D2Client_pUnitMouseOverTextPosY_6FB8EA2C = nullptr; // EEA2C
-int32_t* D2Client_pOpenUIPanelMask_6FBAB9C4 = nullptr; // 10B9C4  
+D2C_GlobalUiStates* D2Client_UI_pGlobalUiState_6FBAB9C4 = nullptr; // 10B9C4  
 int32_t* D2Client_pViewYOffset_6FBAB9B8 = nullptr; // 10B9B8
 int32_t* D2Client_pViewXOffset_6FBAB9BC = nullptr; // 10B9BC
 int32_t* D2Client_pViewXOffsetUnits_6FBAB9C8 = nullptr; // 10B9C8 
@@ -300,7 +300,7 @@ void InitD2ClientExports()
     D2Client_pIsUnitSelectionDisabled_6FBAB9EC = (int32_t*)((char*)d2ClientModule + 0x10B9EC);
 
     // UI_GroundItem stuff 
-    D2Client_GetOpenUiPanelMask_6FAB5750 = (D2Client_GetOpenUiPanelMask_6FAB5750_t)((char*)d2ClientModule + 0x15750);
+    D2Client_UI_GetGlobalUiState_6FAB5750 = (D2Client_UI_GetGlobalUiState_6FAB5750_t)((char*)d2ClientModule + 0x15750);
     D2Client_GetAdjustedViewOffsetX_6FAB5890 = (D2Client_GetAdjustedViewOffsetX_6FAB5890_t)((char*)d2ClientModule + 0x15890);
     D2Client_GetAdjustedViewOffsetY_6FAB58A0 = (D2Client_GetAdjustedViewOffsetY_6FAB58A0_t)((char*)d2ClientModule + 0x158A0);
     D2Client_GetMonsterLifeColor_6FB20670 = (D2Client_GetMonsterLifeColor_6FB20670_t)((char*)d2ClientModule + 0x80670);
@@ -342,7 +342,7 @@ void InitD2ClientExports()
     D2Client_pGameName_6FBA7898 = (char*)((char*)d2ClientModule + 0x107898);
     D2Client_pUnitMouseOverTextPosX_6FB8EA28 = (int32_t*)((char*)d2ClientModule + 0xEEA28);
     D2Client_pUnitMouseOverTextPosY_6FB8EA2C = (int32_t*)((char*)d2ClientModule + 0xEEA2C);
-    D2Client_pOpenUIPanelMask_6FBAB9C4 = (int32_t*)((char*)d2ClientModule + 0x10B9C4);
+    D2Client_UI_pGlobalUiState_6FBAB9C4 = (int32_t*)((char*)d2ClientModule + 0x10B9C4);
     D2Client_pViewYOffset_6FBAB9B8 = (int32_t*)((char*)d2ClientModule + 0x10B9B8);
     D2Client_pViewXOffset_6FBAB9BC = (int32_t*)((char*)d2ClientModule + 0x10B9BC);
     D2Client_pViewXOffsetUnits_6FBAB9C8 = (int32_t*)((char*)d2ClientModule + 0x10B9C8);

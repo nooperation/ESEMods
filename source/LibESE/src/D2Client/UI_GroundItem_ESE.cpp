@@ -127,7 +127,7 @@ bool ESE_D2Client_DrawAllGroundItemTexts_Helper(
 {
     auto screenLeft = 0;
     auto screenRight = *D2Client_pScreenWidthUI_6FB740EC;
-    auto openUiPanelMask = D2Client_GetOpenUiPanelMask_6FAB5750();
+    auto openUiPanelMask = D2Client_UI_GetGlobalUiState_6FAB5750();
 
     if (openUiPanelMask == 1)
     {
@@ -341,7 +341,7 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
                             int32_t pYAdjust;
                             D2Gfx_SCALE_AdjustPerspectivePosition_10066(unitPosX, unitPosY, 0, &pXAdjust, &pYAdjust);
 
-                            auto openUiPanelMask = D2Client_GetOpenUiPanelMask_6FAB5750();
+                            auto openUiPanelMask = D2Client_UI_GetGlobalUiState_6FAB5750();
                             if (openUiPanelMask == 1)
                             {
                                 pXAdjust += *D2Client_pScreenWidthUI_6FB740EC / -4;
@@ -914,7 +914,7 @@ void ESE_D2Client_DrawGroundItemMouseOverText_Tile(D2UnitStrc* pUnit)
 
 void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pUnit)
 {
-    if (D2Client_GetOpenUiPanelMask_6FAB5750() == 3)
+    if (D2Client_UI_GetGlobalUiState_6FAB5750() == 3)
     {
         return;
     }
@@ -955,7 +955,7 @@ void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pU
         int32_t pYAdjust;
         D2Gfx_SCALE_AdjustPerspectivePosition_10066(unitX, unitY, 0, &pXAdjust, &pYAdjust);
 
-        int32_t openSidePanelStatus = D2Client_GetOpenUiPanelMask_6FAB5750();
+        int32_t openSidePanelStatus = D2Client_UI_GetGlobalUiState_6FAB5750();
         if (openSidePanelStatus == 1)
         {
             int32_t openPanelOffset = *D2Client_pScreenWidthUI_6FB740EC / -4;
