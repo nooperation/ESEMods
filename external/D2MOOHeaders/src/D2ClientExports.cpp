@@ -106,8 +106,8 @@ D2Client_OpenBeltUi_6FB01C20_t D2Client_OpenBeltUi_6FB01C20 = nullptr; // 61C20
 
 int32_t* D2Client_pScreenXOffset_6FBBA748 = nullptr;
 int32_t* D2Client_pScreenYOffset_6FBBA74C = nullptr;
-int32_t* D2Client_pScreenWidthUI_6FB740EC = nullptr;
-int32_t* D2Client_pScreenHeightUI_6FB740F0 = nullptr;
+int32_t* D2Client_pResolutionWidth_6FB740EC = nullptr;
+int32_t* D2Client_pResolutionHeight_6FB740F0 = nullptr;
 int32_t* D2Client_pDWORD_6FB8CCF8 = nullptr;
 
 int32_t* D2Client_pIsItemUnderCursorInInventory_6FBB58E0 = nullptr;
@@ -191,7 +191,7 @@ QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54 = nullptr;
 int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 = nullptr;
 int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0 = nullptr;
 int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0 = nullptr;
-void* D2Client_UI_pGoldTransferDialog_6FBB9FC4 = nullptr;
+void** D2Client_UI_pGoldTransferDialog_6FBB9FC4 = nullptr;
 int32_t* D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8 = nullptr;
 
 // UI stuff - Functions
@@ -249,6 +249,7 @@ D2Client_UI_DrawNPCScrollingDialog_6FB1BA00_t D2Client_UI_DrawNPCScrollingDialog
 D2Client_UI_DrawText_6FB22280_t D2Client_UI_DrawText_6FB22280 = nullptr;
 D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60_t D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60 = nullptr;
 D2Client_Roster_GetKillCount_6FAAFD30_t D2Client_Roster_GetKillCount_6FAAFD30 = nullptr;
+D2Client_LoadCelFile_6FAA1000_t D2Client_LoadCelFile_6FAA1000 = nullptr;
 
 void InitD2ClientExports()
 {
@@ -315,8 +316,8 @@ void InitD2ClientExports()
 
     D2Client_pScreenXOffset_6FBBA748 = (int32_t*)((char*)d2ClientModule + 0x11A748);
     D2Client_pScreenYOffset_6FBBA74C = (int32_t*)((char*)d2ClientModule + 0x11A74C);
-    D2Client_pScreenWidthUI_6FB740EC = (int32_t*)((char*)d2ClientModule + 0xD40EC);
-    D2Client_pScreenHeightUI_6FB740F0 = (int32_t*)((char*)d2ClientModule + 0xD40F0);
+    D2Client_pResolutionWidth_6FB740EC = (int32_t*)((char*)d2ClientModule + 0xD40EC);
+    D2Client_pResolutionHeight_6FB740F0 = (int32_t*)((char*)d2ClientModule + 0xD40F0);
     D2Client_pDWORD_6FB8CCF8 = (int32_t*)((char*)d2ClientModule + 0xECCF8);
 
     D2Client_pIsItemUnderCursorInInventory_6FBB58E0 = (int32_t*)((char*)d2ClientModule + 0x1158E0);
@@ -435,7 +436,7 @@ void InitD2ClientExports()
     D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 = (int32_t*)((char*)d2ClientModule + 0xEEC70);
     D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0 = (int32_t*)((char*)d2ClientModule + 0x11A6A0);
     D2Client_pNormalMonsterInfoStringColor_6FBBA1E0 = (int32_t*)((char*)d2ClientModule + 0x11A1E0);
-    D2Client_UI_pGoldTransferDialog_6FBB9FC4 = (void*)((char*)d2ClientModule + 0x119FC4);
+    D2Client_UI_pGoldTransferDialog_6FBB9FC4 = (void**)((char*)d2ClientModule + 0x119FC4);
     D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8 = (int32_t*)((char*)d2ClientModule + 0x11A6A8);
 
     // UI stuff - Functions
@@ -449,7 +450,7 @@ void InitD2ClientExports()
     D2Client_UI_DrawMercInventoryScreen_6FAED5D0 = (D2Client_UI_DrawMercInventoryScreen_6FAED5D0_t)((char*)d2ClientModule + 0x4D5D0);
     D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0 = (D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0_t)((char*)d2ClientModule + 0x4E9C0);
     D2Client_UI_DrawQuestScreen_6FB042D0 = (D2Client_UI_DrawQuestScreen_6FB042D0_t)((char*)d2ClientModule + 0x642D0);
-    D2Client_UI_DrawInventoryScreen_6FADEAC0 = (D2Client_UI_DrawInventoryScreen_6FADEAC0_t)((char*)d2ClientModule + 0x4EAC0);
+    D2Client_UI_DrawInventoryScreen_6FADEAC0 = (D2Client_UI_DrawInventoryScreen_6FADEAC0_t)((char*)d2ClientModule + 0x3EAC0);
     D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390 = (D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390_t)((char*)d2ClientModule + 0x7F390);
     D2Client_UI_DrawProgressiveStates_6FB21A00 = (D2Client_UI_DrawProgressiveStates_6FB21A00_t)((char*)d2ClientModule + 0x81A00);
     D2Client_UI_DrawSkillsTree_6FB16C00 = (D2Client_UI_DrawSkillsTree_6FB16C00_t)((char*)d2ClientModule + 0x76C00);
@@ -493,4 +494,5 @@ void InitD2ClientExports()
     D2Client_UI_DrawText_6FB22280 = (D2Client_UI_DrawText_6FB22280_t)((char*)d2ClientModule + 0x82280);
     D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60 = (D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60_t)((char*)d2ClientModule + 0xFD60);
     D2Client_Roster_GetKillCount_6FAAFD30 = (D2Client_Roster_GetKillCount_6FAAFD30_t)((char*)d2ClientModule + 0xFD30);
+    D2Client_LoadCelFile_6FAA1000 = (D2Client_LoadCelFile_6FAA1000_t)((char*)d2ClientModule + 0x1000);
 }

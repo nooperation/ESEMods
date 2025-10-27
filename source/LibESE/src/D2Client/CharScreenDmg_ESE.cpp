@@ -32,7 +32,7 @@ void ESE_Helper_DrawTextCentered(wchar_t* buff, int32_t offsetA, int32_t offsetB
 
     D2Client_DrawTextCentered_6FACFCD0(
         *D2Client_pScreenXOffset_6FBBA748 + offsetA,
-        *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 + textOffsetY - 0x1e0,
+        *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 + textOffsetY - 0x1e0,
         *D2Client_pScreenXOffset_6FBBA748 + offsetC,
         (Unicode*)&buff[0],
         nColor
@@ -785,14 +785,14 @@ void __fastcall ESE_sub_6FB0AC10(Unicode* pTextA, Unicode* pTextB, int offsetA, 
 
     D2Client_DrawTextCentered_6FACFCD0(
         *D2Client_pScreenXOffset_6FBBA748 + offsetA,
-        languageOffset + *D2Client_pScreenHeightUI_6FB740F0 + *D2Client_pScreenYOffset_6FBBA74C + offsetB - 480,
+        languageOffset + *D2Client_pResolutionHeight_6FB740F0 + *D2Client_pScreenYOffset_6FBBA74C + offsetB - 480,
         *D2Client_pScreenXOffset_6FBBA748 + offsetC,
         pTextA,
         nColorA);
 
     D2Client_DrawTextCentered_6FACFCD0(
         *D2Client_pScreenXOffset_6FBBA748 + offsetA,
-        *D2Client_pScreenHeightUI_6FB740F0 + *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pDWORD_6FB8CCF8 + offsetB - 480,
+        *D2Client_pResolutionHeight_6FB740F0 + *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pDWORD_6FB8CCF8 + offsetB - 480,
         *D2Client_pScreenXOffset_6FBBA748 + offsetC,
         pTextB,
         nColorB);

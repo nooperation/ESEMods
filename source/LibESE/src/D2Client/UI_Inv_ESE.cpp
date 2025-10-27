@@ -2688,12 +2688,12 @@ void ESE_D2Client_GetItemTextLineProperties_6FAF3160(D2UnitStrc* pItem, std::wst
 
 void RenderMercCloseButtonText(int32_t mouseX, int32_t mouseY)
 {
-    auto closeButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 63;
+    auto closeButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 63;
     auto closeButtonX = *D2Client_pScreenXOffset_6FBBA748 + 272;
 
     if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
     {
-        auto closeButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 98;
+        auto closeButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 98;
         auto closeButtonTextX = *D2Client_pScreenXOffset_6FBBA748 + 287;
         auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
         D2Win_DrawFramedText_10129((Unicode*)strClose, closeButtonTextX, closeButtonTextY, 0, 1);
@@ -2702,13 +2702,13 @@ void RenderMercCloseButtonText(int32_t mouseX, int32_t mouseY)
 
 void RenderCloseButtonText(int32_t mouseX, int32_t mouseY)
 {
-    auto closeButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 64;
-    auto closeButtonX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 302;
+    auto closeButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 64;
+    auto closeButtonX = *D2Client_pResolutionWidth_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 302;
 
     if (mouseX >= closeButtonX && mouseX <= closeButtonX + 32 && mouseY >= closeButtonY - 32 && mouseY <= closeButtonY)
     {
-        auto closeButtonTextX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 287;
-        auto closeButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 99;
+        auto closeButtonTextX = *D2Client_pResolutionWidth_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 287;
+        auto closeButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 99;
         auto strClose = (const wchar_t*)D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose);
         D2Win_DrawFramedText_10129((Unicode*)strClose, closeButtonTextX, closeButtonTextY, 0, 1);
     }
@@ -2716,8 +2716,8 @@ void RenderCloseButtonText(int32_t mouseX, int32_t mouseY)
 
 void RenderDropGoldText(int32_t mouseX, int32_t mouseY)
 {
-    auto dropGoldButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 69;
-    auto dropGoldButtonX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 237;
+    auto dropGoldButtonY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 69;
+    auto dropGoldButtonX = *D2Client_pResolutionWidth_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 237;
 
     if (mouseX >= dropGoldButtonX && mouseX <= dropGoldButtonX + 20 && mouseY >= dropGoldButtonY - 18 && mouseY <= dropGoldButtonY && !D2Client_sub_6FAFC0E0())
     {
@@ -2743,8 +2743,8 @@ void RenderDropGoldText(int32_t mouseX, int32_t mouseY)
             break;
         }
 
-        auto dropGoldButtonTextX = *D2Client_pScreenWidthUI_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 222;
-        auto dropGoldButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pScreenHeightUI_6FB740F0 - 89;
+        auto dropGoldButtonTextX = *D2Client_pResolutionWidth_6FB740EC - *D2Client_pScreenXOffset_6FBBA748 - 222;
+        auto dropGoldButtonTextY = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 89;
         auto strDropGoldButtonText = (const wchar_t*)D2LANG_GetStringFromTblIndex(strDropGoldButtonTextId);
         D2Win_DrawFramedText_10129((Unicode*)strDropGoldButtonText, dropGoldButtonTextX, dropGoldButtonTextY, 0, 1);
     }

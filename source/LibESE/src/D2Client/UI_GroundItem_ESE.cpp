@@ -32,7 +32,7 @@ int __fastcall ESE_D2Client_sub_6FB09D80(
     int screenRight, 
     int screenLeft
 ) {
-    auto screenHeightIsh = *D2Client_pScreenHeightUI_6FB740F0 - 48;
+    auto screenHeightIsh = *D2Client_pResolutionHeight_6FB740F0 - 48;
 
     if (*itemTextPosLeft < screenLeft)
     {
@@ -126,19 +126,19 @@ bool ESE_D2Client_DrawAllGroundItemTexts_Helper(
 )
 {
     auto screenLeft = 0;
-    auto screenRight = *D2Client_pScreenWidthUI_6FB740EC;
+    auto screenRight = *D2Client_pResolutionWidth_6FB740EC;
     auto openUiPanelMask = D2Client_UI_GetGlobalUiState_6FAB5750();
 
     if (openUiPanelMask == 1)
     {
-        screenRight = *D2Client_pScreenWidthUI_6FB740EC / 2 - 32;
+        screenRight = *D2Client_pResolutionWidth_6FB740EC / 2 - 32;
     }
     else if (openUiPanelMask == 2)
     {
-        screenLeft = *D2Client_pScreenWidthUI_6FB740EC / 2;
+        screenLeft = *D2Client_pResolutionWidth_6FB740EC / 2;
     }
 
-    if (itemPosX < screenLeft || itemPosX > screenRight || itemPosY < -8 || itemPosY > *D2Client_pScreenHeightUI_6FB740F0 - 16)
+    if (itemPosX < screenLeft || itemPosX > screenRight || itemPosY < -8 || itemPosY > *D2Client_pResolutionHeight_6FB740F0 - 16)
     {
         return false;
     }
@@ -344,11 +344,11 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
                             auto openUiPanelMask = D2Client_UI_GetGlobalUiState_6FAB5750();
                             if (openUiPanelMask == 1)
                             {
-                                pXAdjust += *D2Client_pScreenWidthUI_6FB740EC / -4;
+                                pXAdjust += *D2Client_pResolutionWidth_6FB740EC / -4;
                             }
                             else if (openUiPanelMask == 2)
                             {
-                                pXAdjust += *D2Client_pScreenWidthUI_6FB740EC / 4;
+                                pXAdjust += *D2Client_pResolutionWidth_6FB740EC / 4;
                             }
 
                             finalCoordX = pXAdjust;
@@ -958,12 +958,12 @@ void __fastcall ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(D2UnitStrc* pU
         int32_t openSidePanelStatus = D2Client_UI_GetGlobalUiState_6FAB5750();
         if (openSidePanelStatus == 1)
         {
-            int32_t openPanelOffset = *D2Client_pScreenWidthUI_6FB740EC / -4;
+            int32_t openPanelOffset = *D2Client_pResolutionWidth_6FB740EC / -4;
             pXAdjust += openPanelOffset;
         }
         if (openSidePanelStatus == 2)
         {
-            int32_t openPanelOffset = *D2Client_pScreenWidthUI_6FB740EC / 4;
+            int32_t openPanelOffset = *D2Client_pResolutionWidth_6FB740EC / 4;
             pXAdjust += openPanelOffset;
         }
 

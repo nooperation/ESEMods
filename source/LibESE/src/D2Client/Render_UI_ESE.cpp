@@ -12,132 +12,166 @@
 #include <bitset>
 #include <bit>
 
-void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
+struct QuestNameOverride
 {
-    int32_t yAdjust = 0;
-    int32_t xAdjust = 0;
+    int32_t nLevelId;
+    int32_t nQuestId;
+    char szName[4];
+};
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[18]) // UI_MSGLOG
+static void DrawMercenaryFloatingText(D2UnitStrc* currentPlayerMerc)
+{
+    int32_t tempActiveNpcId = 0;
+    auto pTempActiveNpcId = &tempActiveNpcId;
+    if (!D2Client_IsActiveNpcDialogOpen_6FAFBB50(&pTempActiveNpcId))
+    {
+        auto lifeColor = D2Client_GetMonsterLifeColor_6FB20670(currentPlayerMerc);
+        auto posY = *D2Client_pUnitMouseOverTextPosY_6FB8EA2C - 72;
+        auto unitName = D2Client_GetUnitName_6FB297F0(currentPlayerMerc);
+        D2Client_UI_UpdateMercFloatingText_6FB20590(unitName, *D2Client_pUnitMouseOverTextPosX_6FB8EA28, posY, lifeColor);
+    }
+}
+
+static void HandleMercenaryPerspectiveRendering(D2UnitStrc* currentPlayerMerc, int32_t& xAdjust, int32_t& yAdjust)
+{
+    auto currentPlayerMercPrecisionX = UNITS_GetPrecisionX(currentPlayerMerc);
+    auto currentPlayerMercPrecisionY = UNITS_GetPrecisionY(currentPlayerMerc);
+
+    if (!D2Gfx_SCALE_CheckPerspectivePosition_10065(currentPlayerMercPrecisionX, currentPlayerMercPrecisionY))
     {
         return;
     }
 
-    if (D2Gfx_GetResolutionMode_10005() == NUM_GAME_RESOLUTIONS)
+    D2Gfx_SCALE_AdjustPerspectivePosition_10066(
+        currentPlayerMercPrecisionX,
+        currentPlayerMercPrecisionY,
+        0,
+        &xAdjust,
+        &yAdjust
+    );
+
+    int32_t screenXAdjust = 0;
+    int32_t screenYAdjust = D2Client_UI_GetGlobalUiState_6FAB5750() - 1;
+
+    if (screenYAdjust == 0)
     {
-        *D2Client_pScreenXOffset_6FBBA748 = 80;
-        *D2Client_pScreenYOffset_6FBBA74C = -60;
+        screenXAdjust = *D2Client_pResolutionWidth_6FB740EC / -4;
+    }
+    else if (screenYAdjust == 1)
+    {
+        screenXAdjust = *D2Client_pResolutionWidth_6FB740EC / 4;
+    }
+
+    xAdjust += screenXAdjust;
+    *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = xAdjust;
+    *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = yAdjust + 16;
+
+    DrawMercenaryFloatingText(currentPlayerMerc);
+}
+
+static void RenderMercenaryUI(D2UnitStrc* currentPlayerMerc, int32_t& xAdjust, int32_t& yAdjust)
+{
+    if (!D2Gfx_CheckPerspective_10010())
+    {
+        auto currentPlayerMercUIPosX = UNITS_GetClientCoordX(currentPlayerMerc);
+        *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = currentPlayerMercUIPosX - D2Client_GetAdjustedViewOffsetX_6FAB5890();
+
+        auto currentPlayerMercUIPosY = UNITS_GetClientCoordY(currentPlayerMerc);
+        *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = currentPlayerMercUIPosY - D2Client_GetAdjustedViewOffsetY_6FAB58A0();
+
+        DrawMercenaryFloatingText(currentPlayerMerc);
     }
     else
     {
-        *D2Client_pScreenXOffset_6FBBA748 = 0;
-        *D2Client_pScreenYOffset_6FBBA74C = 0;
+        HandleMercenaryPerspectiveRendering(currentPlayerMerc, xAdjust, yAdjust);
     }
+}
 
-    D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
-    D2Client_pNormalMonsterInfoString256_6FBB9FE0[0] = 0;
-    D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0[0] = 0;
-
-    if (D2Client_UI_pUIStates_6FBBA6A8[9]) // UI_ESCMENU
+static bool FindQuestNameOverride(int32_t currentLevelId, char* celFilePath, const char* languageCode)
+{
+    int32_t questNameOverrideIndex = 0;
+    if (*D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 > 0)
     {
-        D2Client_UI_DrawEscapeMenu_6FB088B0();
-    }
-
-    if (D2Client_UI_pUIStates_6FBBA6A8[11]) // UI_CONFIG
-    {
-        D2Client_UI_DrawConfigMenu_6FAFC620();
-    }
-
-    auto selectedUnit = D2Client_GetSelectedUnit_6FAB5A20();
-    ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(selectedUnit);
-
-
-    if (D2Client_UI_pUIStates_6FBBA6A8[35]) // UI_HIREICONS
-    {
-        if (D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH)
+        auto questNameOverride = D2Client_Quest_pQuestNameOverrides_6FB8EC54;
+        while (questNameOverrideIndex < *D2Client_Quest_pQuestNameOverridesCount_6FB8EC70)
         {
-            auto currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
-            auto currentPlayerMercId = D2Client_Roster_GetPetByUnitIdType_6FAB1920(currentPlayer, PETTYPE_HIREABLE, 0);
-            if (currentPlayerMercId != -1 && ((uint8_t *)D2Client_Roster_GetPetUNK24_6FAB18D0(currentPlayerMercId))[2] == 1) // TODO: This should reveal something about unk24?
+            if (currentLevelId == questNameOverride->nLevelId && D2Client_10002(0, questNameOverride->nLevelId))
             {
-                auto currentPlayerMerc = D2Client_FindUnit_6FB269F0(currentPlayerMercId, UNIT_MONSTER);
-                if (currentPlayerMerc)
-                {
-                    if (!D2Gfx_CheckPerspective_10010())
-                    {
-                        auto currentPlayerMercUIPosX = UNITS_GetClientCoordX(currentPlayerMerc);
-                        *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = currentPlayerMercUIPosX - D2Client_GetAdjustedViewOffsetX_6FAB5890();
-
-                        auto currentPlayerMercUIPosY = UNITS_GetClientCoordY(currentPlayerMerc);
-                        *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = currentPlayerMercUIPosY - D2Client_GetAdjustedViewOffsetY_6FAB58A0();
-
-                    LABEL_23:
-
-                        int32_t tempActiveNpcId = 0;
-                        auto pTempActiveNpcId = &tempActiveNpcId;
-                        if (!D2Client_IsActiveNpcDialogOpen_6FAFBB50(&pTempActiveNpcId))
-                        {
-                            auto v38 = D2Client_GetMonsterLifeColor_6FB20670(currentPlayerMerc);
-                            auto v37 = *D2Client_pUnitMouseOverTextPosY_6FB8EA2C - 72;
-                            auto v13 = D2Client_GetUnitName_6FB297F0(currentPlayerMerc);
-                            D2Client_UI_UpdateMercFloatingText_6FB20590(v13, *D2Client_pUnitMouseOverTextPosX_6FB8EA28, v37, v38); // Draw unit name over head
-                        }
-                        goto LABEL_25;
-                    }
-
-                    auto currentPlayerMercPrecisionX = UNITS_GetPrecisionX(currentPlayerMerc);
-                    auto currentPlayerMercPrecisionY = UNITS_GetPrecisionY(currentPlayerMerc);
-                    if (!D2Gfx_SCALE_CheckPerspectivePosition_10065(currentPlayerMercPrecisionX, currentPlayerMercPrecisionY))
-                    {
-                        goto LABEL_25;
-                    }
-
-                    D2Gfx_SCALE_AdjustPerspectivePosition_10066(
-                        currentPlayerMercPrecisionX,
-                        currentPlayerMercPrecisionY,
-                        0,
-                        &xAdjust,
-                        &yAdjust
-                    );
-
-                    int32_t screenXAdjust = 0;
-                    int32_t screenYAdjust = D2Client_UI_GetGlobalUiState_6FAB5750() - 1;
-                    if (screenYAdjust)
-                    {
-                        if (screenYAdjust != 1)
-                        {
-                        LABEL_21:
-                            *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = xAdjust;
-                            *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = yAdjust + 16;
-                            goto LABEL_23;
-                        }
-                        screenXAdjust = *D2Client_pScreenWidthUI_6FB740EC / 4;
-                    }
-                    else
-                    {
-                        screenXAdjust = *D2Client_pScreenWidthUI_6FB740EC / -4;
-                    }
-                    xAdjust += screenXAdjust;
-                    goto LABEL_21;
-                }
+                sprintf(
+                    celFilePath,
+                    "%s\\UI\\%s\\ACT1\\%s",
+                    "DATA\\LOCAL",
+                    languageCode,
+                    D2Client_Quest_pQuestNameOverrides_6FB8EC54[questNameOverrideIndex].szName
+                );
+                return true;
             }
+            ++questNameOverrideIndex;
+            ++questNameOverride;
         }
     }
-LABEL_25:
-    if (!D2Client_UI_pUIStates_6FBBA6A8[1] &&  // UI_INVENTORY
-        !D2Client_UI_pUIStates_6FBBA6A8[12] && // UI_NPCSHOP
-        !D2Client_UI_pUIStates_6FBBA6A8[14])   // UI_ANVIL
+    return false;
+}
+
+static void DrawLevelTitle(int32_t currentLevelId, int32_t newLevelTickCount)
+{
+    *D2Client_UI_pNewLevelTickCount120_6FBBA788 = newLevelTickCount + 1;
+
+    auto currentLevelTxt = DATATBLS_GetLevelsTxtRecord(currentLevelId);
+    char actDirectoryName[32];
+
+    if (currentLevelId < 109)
     {
-        D2Client_UI_DrawDurabilityWarning_6FAFEE70();
-        D2Client_UI_DrawAmmoDurability_6FAFEA40();
+        auto actNumber = DRLG_GetActNoFromLevelId(currentLevelId);
+        sprintf(actDirectoryName, "ACT%d", actNumber + 1);
+    }
+    else
+    {
+        sprintf(actDirectoryName, "EXPANSION");
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[10] && D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH) // UI_AUTOMAP
+    char celFilePath[MAX_PATH];
+    char languageCode[4];
+    D2Lang_10006(&languageCode[0], 0);
+    sprintf(celFilePath, "%s\\UI\\%s\\%s\\%s", "DATA\\LOCAL", languageCode, actDirectoryName, currentLevelTxt->szEntryFile);
+
+    // Try to find quest name override
+    FindQuestNameOverride(currentLevelId, celFilePath, languageCode);
+
+    auto finalCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
+    if (!finalCellFile)
     {
-        D2Client_UI_DrawAutomap_6FACDCB0();
+        finalCellFile = D2Client_LoadCelFile_6FAA1000(celFilePath, 0);
+        *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = finalCellFile;
     }
 
-    D2CellFileStrc* pCellFile;
+    // TODO: instead of the below to draw larger text size for level name
+    // TODO:    D2GL -> levelEntryTextStub -> modules::HDText::Instance().startEntryText(); 
+    if (D2GL_d2glLevelEntryText != nullptr)
+    {
+        D2GL_d2glLevelEntryText();
+    }
+
+    D2Win_DrawCellFile_10134(
+        finalCellFile,
+        *D2Client_pResolutionWidth_6FB740EC / 2,
+        *D2Client_pResolutionHeight_6FB740F0 / 2 - 140,
+        1,
+        DRAWMODE_NORMAL,
+        1
+    );
+}
+
+static void HandleLevelTitleRendering()
+{
+    D2CellFileStrc* pCellFile = nullptr;
     int32_t newLevelTickCount = 0;
+    bool shouldDrawTitle = false;
+
+    if (D2GL_d2glAutomapDrawBegin != nullptr)
+    {
+        D2GL_d2glAutomapDrawBegin();
+    }
 
     auto currentRoom = D2Client_GetCurrentRoom_6FB29370();
     if (currentRoom)
@@ -162,81 +196,15 @@ LABEL_25:
             }
 
             auto oldLevelId = *D2Client_UI_pCurrentLevelId_6FBBA784;
-
             *D2Client_UI_pCurrentLevelId_6FBBA784 = currentLevelId;
-
             newLevelTickCount = (oldLevelId == 0) ? 120 : 0;
-
             *D2Client_UI_pNewLevelTickCount120_6FBBA788 = newLevelTickCount;
         }
 
-
         if (newLevelTickCount < 120)
         {
-            *D2Client_UI_pNewLevelTickCount120_6FBBA788 = newLevelTickCount + 1;
-
-            auto currentLevelTxt = DATATBLS_GetLevelsTxtRecord(currentLevelId);
-            char actDirectoryName[32];
-
-            if (currentLevelId < 109)
-            {
-                auto actNumber = DRLG_GetActNoFromLevelId(currentLevelId);
-
-                // DATA\LOCAL\UI\ENG\Act#\filename.dc6
-                sprintf(actDirectoryName, "ACT%d", actNumber + 1);
-            }
-            else
-            {
-                // DATA\LOCAL\UI\ENG\Expansion\filename.dc6
-                sprintf(actDirectoryName, "EXPANSION");
-            }
-
-            char celFilePath[MAX_PATH];
-
-            char languageCode[4];
-            D2Lang_10006(&languageCode[0], 0);
-            sprintf(celFilePath, "%s\\UI\\%s\\%s\\%s", "DATA\\LOCAL", languageCode, actDirectoryName, currentLevelTxt->szEntryFile);
-
-            int32_t questNameOverrideIndex = 0;
-            if (*D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 > 0)
-            {
-                auto questNameOverride = D2Client_Quest_pQuestNameOverrides_6FB8EC54;
-                while (currentLevelId != questNameOverride->nLevelId || !D2Client_10002(0, questNameOverride->nLevelId))
-                {
-                    ++questNameOverrideIndex;
-                    ++questNameOverride;
-                    if (questNameOverrideIndex >= *D2Client_Quest_pQuestNameOverridesCount_6FB8EC70)
-                    {
-                        goto LABEL_54;
-                    }
-                }
-                sprintf(
-                    celFilePath,
-                    "%s\\UI\\%s\\ACT1\\%s",
-                    "DATA\\LOCAL",
-                    languageCode,
-                    D2Client_Quest_pQuestNameOverrides_6FB8EC54[questNameOverrideIndex].szName
-                );
-            }
-
-        LABEL_54:
-            auto finalCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
-            if (!finalCellFile)
-            {
-                finalCellFile = (D2CellFileStrc*)SStrChr(celFilePath, 0);
-                *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = finalCellFile;
-            }
-
-            D2Win_DrawCellFile_10134(
-                finalCellFile,
-                *D2Client_pScreenWidthUI_6FB740EC / 2,
-                *D2Client_pScreenHeightUI_6FB740F0 / 2 - 140,
-                1,
-                DRAWMODE_NORMAL,
-                1
-            );
-
-            goto LABEL_57;
+            DrawLevelTitle(currentLevelId, newLevelTickCount);
+            shouldDrawTitle = true;
         }
     }
     else
@@ -244,13 +212,178 @@ LABEL_25:
         pCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
     }
 
-    if (pCellFile)
+    if (!shouldDrawTitle && pCellFile)
     {
         D2Client_Archive_FreeCellFile_6FAA1140(pCellFile);
         *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = 0;
     }
+}
 
-LABEL_57:
+void InitializeExternalModules()
+{
+    // External mod support
+    auto d2glModule = GetModuleHandle("ddraw.dll");
+    if (d2glModule == 0)
+    {
+        d2glModule = GetModuleHandle("glide3x.dll");
+    }
+
+    if (d2glModule != NULL)
+    {
+        D2GL_d2glConfigQueryImpl = (D2GL_d2glConfigQueryImpl_t)GetProcAddress(d2glModule, "d2glConfigQueryImpl");
+        D2GL_setCustomScreenSize = (D2GL_setCustomScreenSize_t)GetProcAddress(d2glModule, "setCustomScreenSize");
+        D2GL_d2glGameDrawBegin = (D2GL_d2glGameDrawBegin_t)GetProcAddress(d2glModule, "d2glGameDrawBegin");
+        D2GL_d2glAutomapDrawBegin = (D2GL_d2glAutomapDrawBegin_t)GetProcAddress(d2glModule, "d2glAutomapDrawBegin");
+        D2GL_d2glAutomapDrawEnd = (D2GL_d2glAutomapDrawEnd_t)GetProcAddress(d2glModule, "d2glAutomapDrawEnd");
+        D2GL_d2glUIDrawBegin = (D2GL_d2glUIDrawBegin_t)GetProcAddress(d2glModule, "d2glUIDrawBegin");
+        D2GL_d2glUIDrawCursorItem = (D2GL_d2glUIDrawCursorItem_t)GetProcAddress(d2glModule, "d2glUIDrawCursorItem");
+        D2GL_d2glUIDrawEnd = (D2GL_d2glUIDrawEnd_t)GetProcAddress(d2glModule, "d2glUIDrawEnd");
+        D2GL_d2glDrawPerspectiveImage = (D2GL_d2glDrawPerspectiveImage_t)GetProcAddress(d2glModule, "d2glDrawPerspectiveImage");
+        D2GL_d2glDrawShiftedImage = (D2GL_d2glDrawShiftedImage_t)GetProcAddress(d2glModule, "d2glDrawShiftedImage");
+        D2GL_d2glDrawClippedImage = (D2GL_d2glDrawClippedImage_t)GetProcAddress(d2glModule, "d2glDrawClippedImage");
+        D2GL_d2glDrawImageFast = (D2GL_d2glDrawImageFast_t)GetProcAddress(d2glModule, "d2glDrawImageFast");
+        D2GL_d2glDrawShadow = (D2GL_d2glDrawShadow_t)GetProcAddress(d2glModule, "d2glDrawShadow");
+        D2GL_d2glTakeScreenShot = (D2GL_d2glTakeScreenShot_t)GetProcAddress(d2glModule, "d2glTakeScreenShot");
+        D2GL_d2glRectangledTextBegin = (D2GL_d2glRectangledTextBegin_t)GetProcAddress(d2glModule, "d2glRectangledTextBegin");
+        D2GL_d2glRectangledTextEnd = (D2GL_d2glRectangledTextEnd_t)GetProcAddress(d2glModule, "d2glRectangledTextEnd");
+        D2GL_d2glUnitHoverText = (D2GL_d2glUnitHoverText_t)GetProcAddress(d2glModule, "d2glUnitHoverText");
+        D2GL_d2glDrawRectFrame = (D2GL_d2glDrawRectFrame_t)GetProcAddress(d2glModule, "d2glDrawRectFrame");
+        D2GL_d2glDrawUnitHealthBar = (D2GL_d2glDrawUnitHealthBar_t)GetProcAddress(d2glModule, "d2glDrawUnitHealthBar");
+        D2GL_d2glLoadUIImage = (D2GL_d2glLoadUIImage_t)GetProcAddress(d2glModule, "d2glLoadUIImage");
+        D2GL_d2glDrawSubTextA = (D2GL_d2glDrawSubTextA_t)GetProcAddress(d2glModule, "d2glDrawSubTextA");
+        D2GL_d2glDrawSubTextB = (D2GL_d2glDrawSubTextB_t)GetProcAddress(d2glModule, "d2glDrawSubTextB");
+        D2GL_d2glDrawSubTextC = (D2GL_d2glDrawSubTextC_t)GetProcAddress(d2glModule, "d2glDrawSubTextC");
+        D2GL_d2glDrawImage = (D2GL_d2glDrawImage_t)GetProcAddress(d2glModule, "d2glDrawImage");
+        D2GL_d2glDrawVerticalCropImage = (D2GL_d2glDrawVerticalCropImage_t)GetProcAddress(d2glModule, "d2glDrawVerticalCropImage");
+        D2GL_d2glDrawSolidRectEx = (D2GL_d2glDrawSolidRectEx_t)GetProcAddress(d2glModule, "d2glDrawSolidRectEx");
+        D2GL_d2glDrawLine = (D2GL_d2glDrawLine_t)GetProcAddress(d2glModule, "d2glDrawLine");
+        D2GL_d2glDrawGroundTile = (D2GL_d2glDrawGroundTile_t)GetProcAddress(d2glModule, "d2glDrawGroundTile");
+        D2GL_d2glDrawWallTile = (D2GL_d2glDrawWallTile_t)GetProcAddress(d2glModule, "d2glDrawWallTile");
+        D2GL_d2glDrawTransWallTile = (D2GL_d2glDrawTransWallTile_t)GetProcAddress(d2glModule, "d2glDrawTransWallTile");
+        D2GL_d2glDrawShadowTile = (D2GL_d2glDrawShadowTile_t)GetProcAddress(d2glModule, "d2glDrawShadowTile");
+        D2GL_d2glDrawNormalText = (D2GL_d2glDrawNormalText_t)GetProcAddress(d2glModule, "d2glDrawNormalText");
+        D2GL_d2glDrawNormalTextEx = (D2GL_d2glDrawNormalTextEx_t)GetProcAddress(d2glModule, "d2glDrawNormalTextEx");
+        D2GL_d2glDrawFramedText = (D2GL_d2glDrawFramedText_t)GetProcAddress(d2glModule, "d2glDrawFramedText");
+        D2GL_d2glDrawRectangledText = (D2GL_d2glDrawRectangledText_t)GetProcAddress(d2glModule, "d2glDrawRectangledText");
+        D2GL_d2glGetNormalTextWidth = (D2GL_d2glGetNormalTextWidth_t)GetProcAddress(d2glModule, "d2glGetNormalTextWidth");
+        D2GL_d2glGetNormalTextNWidth = (D2GL_d2glGetNormalTextNWidth_t)GetProcAddress(d2glModule, "d2glGetNormalTextNWidth");
+        D2GL_d2glGetFramedTextSize = (D2GL_d2glGetFramedTextSize_t)GetProcAddress(d2glModule, "d2glGetFramedTextSize");
+        D2GL_d2glGetFontHeight = (D2GL_d2glGetFontHeight_t)GetProcAddress(d2glModule, "d2glGetFontHeight");
+        D2GL_d2glSetTextSize = (D2GL_d2glSetTextSize_t)GetProcAddress(d2glModule, "d2glSetTextSize");
+        D2GL_d2glAltItemsText = (D2GL_d2glAltItemsText_t)GetProcAddress(d2glModule, "d2glAltItemsText");
+        D2GL_d2glLevelEntryText = (D2GL_d2glLevelEntryText_t)GetProcAddress(d2glModule, "d2glLevelEntryText");
+    }
+
+    auto sgd2Module = GetModuleHandle("SGD2FreeRes.dll");
+    if (sgd2Module != NULL)
+    {
+        Sgd2fr_D2Client_DrawScreenBackground = (Sgd2fr_D2Client_DrawScreenBackground_t)GetProcAddress(sgd2Module, "Sgd2fr_D2Client_DrawScreenBackground");
+        Sgd2fr_D2Client_SetScreenShift = (Sgd2fr_D2Client_SetScreenShift_t)GetProcAddress(sgd2Module, "Sgd2fr_D2Client_SetScreenShift");
+    }
+}
+
+void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
+{
+    static bool InitializedModules = false;
+    if (!InitializedModules)
+    {
+        InitializeExternalModules();
+    }
+
+    int32_t yAdjust = 0;
+    int32_t xAdjust = 0;
+
+    // TODO: D2GL -> uiDrawBeginStub -> uiDrawBegin()
+    if (D2GL_d2glUIDrawBegin != nullptr)
+    {
+        D2GL_d2glUIDrawBegin();
+    }
+
+    if (D2Client_UI_pUIStates_6FBBA6A8[18]) // UI_MSGLOG
+    {
+        return;
+    }
+
+    // TODO: SGD2 -> Sgd2fr_D2Client_SetScreenShift
+    if (Sgd2fr_D2Client_SetScreenShift != nullptr)
+    {
+        Sgd2fr_D2Client_SetScreenShift();
+    }
+    else
+    {
+        if (D2Gfx_GetResolutionMode_10005() == NUM_GAME_RESOLUTIONS)
+        {
+            *D2Client_pScreenXOffset_6FBBA748 = 80;
+            *D2Client_pScreenYOffset_6FBBA74C = -60;
+        }
+        else
+        {
+            *D2Client_pScreenXOffset_6FBBA748 = 0;
+            *D2Client_pScreenYOffset_6FBBA74C = 0;
+        }
+    }
+
+    D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
+    D2Client_pNormalMonsterInfoString256_6FBB9FE0[0] = 0;
+    D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0[0] = 0;
+
+    if (D2Client_UI_pUIStates_6FBBA6A8[9]) // UI_ESCMENU
+    {
+        D2Client_UI_DrawEscapeMenu_6FB088B0();
+    }
+
+    if (D2Client_UI_pUIStates_6FBBA6A8[11]) // UI_CONFIG
+    {
+        D2Client_UI_DrawConfigMenu_6FAFC620();
+    }
+
+    auto selectedUnit = D2Client_GetSelectedUnit_6FAB5A20();
+    ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(selectedUnit);
+
+    if (D2Client_UI_pUIStates_6FBBA6A8[35]) // UI_HIREICONS
+    {
+        if (D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH)
+        {
+            auto currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
+            auto currentPlayerMercId = D2Client_Roster_GetPetByUnitIdType_6FAB1920(currentPlayer, PETTYPE_HIREABLE, 0);
+            if (currentPlayerMercId != -1 && ((uint8_t*)D2Client_Roster_GetPetUNK24_6FAB18D0(currentPlayerMercId))[2] == 1)
+            {
+                auto currentPlayerMerc = D2Client_FindUnit_6FB269F0(currentPlayerMercId, UNIT_MONSTER);
+                if (currentPlayerMerc)
+                {
+                    RenderMercenaryUI(currentPlayerMerc, xAdjust, yAdjust);
+                }
+            }
+        }
+    }
+
+    if (!D2Client_UI_pUIStates_6FBBA6A8[1] &&  // UI_INVENTORY
+        !D2Client_UI_pUIStates_6FBBA6A8[12] && // UI_NPCSHOP
+        !D2Client_UI_pUIStates_6FBBA6A8[14])   // UI_ANVIL
+    {
+        D2Client_UI_DrawDurabilityWarning_6FAFEE70();
+        D2Client_UI_DrawAmmoDurability_6FAFEA40();
+    }
+
+    if (D2Client_UI_pUIStates_6FBBA6A8[10] && D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH) // UI_AUTOMAP
+    {
+        D2Client_UI_DrawAutomap_6FACDCB0();
+
+        // TODO: D2GL -> automapDrawEndStub -> automapDrawEnd() -> "HUD" draw stage
+        if (D2GL_d2glAutomapDrawEnd != nullptr)
+        {
+            D2GL_d2glAutomapDrawEnd();
+        }
+    }
+
+    HandleLevelTitleRendering();
+
+    // TDOO: SGD2FreeRes -> sgd2freeres._Sgd2fr_D2Client_DrawScreenBackground>
+    if (Sgd2fr_D2Client_DrawScreenBackground != nullptr)
+    {
+        Sgd2fr_D2Client_DrawScreenBackground();
+    }
+
     D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890();
     if (D2Client_UI_pUIStates_6FBBA6A8[19]) // UI_HIRICONS
     {
@@ -302,7 +435,7 @@ LABEL_57:
         D2Client_UI_DrawPartyScreen_6FB01F10();
     }
 
-    if (D2Client_UI_pGoldTransferDialog_6FBB9FC4)
+    if (*D2Client_UI_pGoldTransferDialog_6FBB9FC4)
     {
         D2Client_UI_DrawGoldTransferDialog_6FAD6EB0();
     }
@@ -448,8 +581,7 @@ LABEL_57:
     }
 
     D2Client_UI_DrawMercFloatingText_6FB21970();
-
-    if (Unicode::strlen((const struct Unicode*)D2Client_pUniqueMonsterInfoString256_6FBBA2A0))
+    if (wcslen(D2Client_pUniqueMonsterInfoString256_6FBBA2A0))
     {
         auto selectedUnit_1 = D2Client_GetSelectedUnit_6FAB5A20();
         if (selectedUnit_1)
@@ -496,10 +628,7 @@ LABEL_57:
 
     D2Client_UI_DrawDeathScreen_6FB22320();
     D2Client_UI_DrawLordOfTerrorDiedMessage_6FABA4A0();
+
+    // TODO: Draw buff icons
 }
 
-struct QuestNameOverride {
-    int32_t nLevelId;
-    int32_t nQuestId;
-    char szName[4];
-};

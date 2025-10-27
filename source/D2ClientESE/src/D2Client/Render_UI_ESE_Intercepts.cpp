@@ -8,6 +8,6 @@ extern D2Client_RenderUI_6FB21B70_t D2Client_RenderUI_6FB21B70_Original = nullpt
 //D2Client.0x6FB21B70 ()
 void __fastcall ESE_INTERCEPT_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
 {
-    //auto result = ESE_D2Client_RenderUI_6FB21B70(pRenderer);
-    D2Client_RenderUI_6FB21B70_Original(pRenderer);
+    ESE_D2Client_RenderUI_6FB21B70(pRenderer);
+    //D2Client_RenderUI_6FB21B70_Original(pRenderer);
 }

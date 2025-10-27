@@ -332,8 +332,8 @@ extern D2Client_ClearUnitSelection_6FAB5D40_t D2Client_ClearUnitSelection_6FAB5D
 
 extern int32_t* D2Client_pScreenXOffset_6FBBA748; // 11A748                                                                    | 6FBBA748
 extern int32_t* D2Client_pScreenYOffset_6FBBA74C; // 11A74C                                                                    | 6FBBA74C
-extern int32_t* D2Client_pScreenWidthUI_6FB740EC; // D40EC                                                                     | 6FB740EC
-extern int32_t* D2Client_pScreenHeightUI_6FB740F0; // D40F0                                                                    | 6FB740F0
+extern int32_t* D2Client_pResolutionWidth_6FB740EC; // D40EC                                                                     | 6FB740EC
+extern int32_t* D2Client_pResolutionHeight_6FB740F0; // D40F0                                                                    | 6FB740F0
 extern int32_t* D2Client_pDWORD_6FB8CCF8; // ECCF8                                                                             | 6FB8CCF8
 
 extern int32_t* D2Client_pIsItemUnderCursorInInventory_6FBB58E0; // 1158E0                                                     | 6FBB58E0
@@ -536,6 +536,7 @@ typedef void(__fastcall* D2Client_UI_DrawNPCScrollingDialog_6FB1BA00_t)(D2ViewSt
 typedef void(__fastcall* D2Client_UI_DrawText_6FB22280_t)(const Unicode* text, Font font, int nY, int nColor);
 typedef D2RosterUnitStrc* (__fastcall* D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60_t)(int32_t dwUnitId);
 typedef uint32_t(__fastcall* D2Client_Roster_GetKillCount_6FAAFD30_t)(D2RosterUnitStrc* pRosterUnit);
+typedef D2CellFileStrc* (__fastcall* D2Client_LoadCelFile_6FAA1000_t)(char* a1, int bAllowCompressed);
 
 // UI stuff - Data extern declarations
 extern D2CellFileStrc** D2Client_UI_pCellFileLevelTitle_6FBBA1E8; // 11A1E8                                    | 6FBBA1E8
@@ -545,7 +546,7 @@ extern QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54; // EEC54 
 extern int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70; // EEC70                                     | 6FB8EC70
 extern int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0; // 11A6A0                                 | 6FBBA6A0
 extern int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0; // 11A1E0                                     | 6FBBA1E0
-extern void* D2Client_UI_pGoldTransferDialog_6FBB9FC4; // 119FC4                                                | 6FBB9FC4
+extern void** D2Client_UI_pGoldTransferDialog_6FBB9FC4; // 119FC4                                                | 6FBB9FC4
 extern int32_t* D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8; // 11A6A8                            | 6FBBA6A8
 
 // UI stuff - Function extern declarations
@@ -559,7 +560,7 @@ extern D2Client_UI_DrawPartyMemberIcons_6FADAB00_t D2Client_UI_DrawPartyMemberIc
 extern D2Client_UI_DrawMercInventoryScreen_6FAED5D0_t D2Client_UI_DrawMercInventoryScreen_6FAED5D0; // 4D5D0   | 6FAED5D0
 extern D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0_t D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0; // 4E9C0     | 6FAEE9C0
 extern D2Client_UI_DrawQuestScreen_6FB042D0_t D2Client_UI_DrawQuestScreen_6FB042D0; // 642D0                   | 6FB042D0
-extern D2Client_UI_DrawInventoryScreen_6FADEAC0_t D2Client_UI_DrawInventoryScreen_6FADEAC0; // 4EAC0           | 6FADEAC0
+extern D2Client_UI_DrawInventoryScreen_6FADEAC0_t D2Client_UI_DrawInventoryScreen_6FADEAC0; // 3EAC0           | 6FADEAC0
 extern D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390_t D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390; // 7F390 | 6FB1F390
 extern D2Client_UI_DrawProgressiveStates_6FB21A00_t D2Client_UI_DrawProgressiveStates_6FB21A00; // 81A00       | 6FB21A00
 extern D2Client_UI_DrawSkillsTree_6FB16C00_t D2Client_UI_DrawSkillsTree_6FB16C00; // 76C00                     | 6FB16C00
@@ -603,3 +604,4 @@ extern D2Client_UI_DrawNPCScrollingDialog_6FB1BA00_t D2Client_UI_DrawNPCScrollin
 extern D2Client_UI_DrawText_6FB22280_t D2Client_UI_DrawText_6FB22280; // 82280                                 | 6FB22280
 extern D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60_t D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60; // FD60 | 6FAAFD60
 extern D2Client_Roster_GetKillCount_6FAAFD30_t D2Client_Roster_GetKillCount_6FAAFD30; // FD30                  | 6FAAFD30
+extern D2Client_LoadCelFile_6FAA1000_t D2Client_LoadCelFile_6FAA1000; // 1000                  | 6FAA1000
