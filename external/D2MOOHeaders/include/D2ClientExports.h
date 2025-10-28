@@ -9,6 +9,7 @@
 #include <Units/UnitFinds.h>
 #include <D2BitManip.h>
 #include <PLAYER/PlayerPets.h>
+#include <Font.h>
 
 enum D2C_UnitTypes;
 struct Unicode;
@@ -141,6 +142,74 @@ struct D2UnitLightSource
 	int32_t Zero2C;            // 0x2C
 	int32_t* pLightMapData;    // 0x30
 };
+
+
+
+typedef struct D2DialogChildNode
+{
+	void* pObj;                  // +0x00 pointer to object with vtable at [pObj]
+	struct D2DialogChildNode* pNext; // +0x04 forward link
+} D2DialogChildNode;
+
+typedef struct D2DialogLine
+{
+	uint16_t wszText[120];   // +0x000 text buffer, used as Unicode* in DrawText (see v9 - 256) (120 wchar = 240 bytes)
+
+	int32_t  nLineStep;      // +0x0F0 per-line vertical advance (used as y accumulator) (v9 - 16)
+	int32_t  nXPad;          // +0x0F4 horizontal pad/offset within dialog, computed during autosize (v9 - 12)
+	int32_t  nTextWidth;     // +0x0F8 pixel width of text (v9 - 8)
+	int32_t  unk0FC;         // +0x0FC reserved/unknown (v14[2])
+
+	Font     nFont;          // +0x100 font for this line (v9)
+	int32_t  nColor;         // +0x104 color used in draw (v9 + 4)
+	int32_t  unk108;         // +0x108 reserved/unknown (v14[5])
+	int32_t  bSelectable;    // +0x10C selectable flag (checked in 6FAD7090/6FAD7320, at pDialog+93 + k*68)
+} D2DialogLine;
+
+#define D2_UIDIALOG_MAX_LINES 10
+
+struct D2CellFileStrc;
+
+typedef struct D2Dialog
+{
+	// header
+	uint32_t dwCreateTick;       // +0x000 GetTickCount() at creation
+	uint32_t unk004;             // +0x004 reserved/unknown (cleared)
+	D2CellFileStrc* pCel;        // +0x008 background cel file (menu .cel)
+	uint32_t bUseBackground;     // +0x00C if nonzero, draw cel background, else draw solid rect
+	uint32_t unk010;             // +0x010 reserved/unknown (cleared)
+	uint32_t bAltYMode;          // +0x014 affects Y origin computation in autosize (6FAD7320)
+	uint32_t nInitParamA6;       // +0x018 init parameter a6
+	uint32_t unk01C;             // +0x01C reserved/unknown
+	uint32_t unk020;             // +0x020 reserved/unknown
+
+	int32_t  nCenterX;           // +0x024 used by autosize as horizontal center
+	int32_t  nCenterY;           // +0x028 used by autosize as vertical anchor
+	int32_t  nLeft;              // +0x02C dialog left X (used in draw; updated by autosize)
+	int32_t  nTop;               // +0x030 dialog top Y (used in draw; updated by autosize)
+	int32_t  nWidth;             // +0x034 dialog width (cel size or autosize result)
+	int32_t  nHeight;            // +0x038 dialog height (cel size or autosize result)
+
+	uint32_t unk03C;             // +0x03C reserved/unknown
+	uint32_t unk040;             // +0x040 reserved/unknown
+	int32_t  nSelectedIndex;     // +0x044 selected line index (default -1)
+	int32_t  nHoverIndex;        // +0x048 reserved/unknown (default -1)
+	uint32_t unk04C;             // +0x04C reserved/unknown
+
+	int32_t  nNumLines;          // +0x050 number of line entries
+	uint32_t nDrawCounter;       // +0x054 increments each draw (6FAD6EB0)
+	uint32_t bAutoSize;          // +0x058 must be TRUE for autosize routine (6FAD7320)
+	uint32_t nHighlightMode;     // +0x05C 1=color highlight, 2=animated arrows (6FAD6EB0)
+
+	uint32_t nInitParamA3;       // +0x060 init parameter a3
+	uint32_t nInitParamA4;       // +0x064 init parameter a4
+
+	D2DialogLine Lines[D2_UIDIALOG_MAX_LINES]; // +0x068 .. +0xB07
+
+	// tail
+	D2DialogChildNode* pDrawChain;	// +0xB08 list of child draw nodes (each node: [0]=pObj, [1]=pNext)
+	struct D2Dialog* pNext;			// +0xB0C next dialog in global list (set to previous head on creation)
+} D2Dialog;
 
 #pragma pack(pop)
 
@@ -498,10 +567,10 @@ typedef void(__fastcall* D2Client_UI_DrawProgressiveStates_6FB21A00_t)();
 typedef void(__fastcall* D2Client_UI_DrawSkillsTree_6FB16C00_t)();
 typedef void(__fastcall* D2Client_UI_DrawCharacterStatsScreen_6FACFD60_t)();
 typedef void(__fastcall* D2Client_UI_DrawPartyScreen_6FB01F10_t)();
-typedef void(__fastcall* D2Client_UI_DrawGoldTransferDialog_6FAD6EB0_t)();
+typedef void(__fastcall* D2Client_UI_DrawDialog_6FAD6EB0_t)(D2Dialog *pDialog);
 typedef void(__fastcall* D2Client_UI_DrawInifussScrollPanel_6FB1E990_t)();
 typedef void(__fastcall* D2Client_UI_DrawWaypointScreen_6FB25C70_t)();
-typedef void(__fastcall* D2Client_UI_DrawHelpScreen_6FAD81F0_t)();
+typedef void(__fastcall* D2Client_UI_DrawHelpScreenBorder_6FAD81F0_t)();
 typedef void(__fastcall* D2Client_UI_DrawHelpScreenBackground_6FAD82E0_t)();
 typedef void(__fastcall* D2Client_UI_DrawBackground_6FAFF480_t)();
 typedef void(__fastcall* D2Client_UI_DrawMiniSkills_6FB19660_t)();
@@ -546,7 +615,7 @@ extern QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54; // EEC54 
 extern int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70; // EEC70                                     | 6FB8EC70
 extern int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0; // 11A6A0                                 | 6FBBA6A0
 extern int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0; // 11A1E0                                     | 6FBBA1E0
-extern void** D2Client_UI_pGoldTransferDialog_6FBB9FC4; // 119FC4                                                | 6FBB9FC4
+extern D2Dialog** D2Client_UI_pGoldTransferDialog_6FBB9FC4; // 119FC4                                          | 6FBB9FC4
 extern int32_t* D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8; // 11A6A8                            | 6FBBA6A8
 
 // UI stuff - Function extern declarations
@@ -566,10 +635,10 @@ extern D2Client_UI_DrawProgressiveStates_6FB21A00_t D2Client_UI_DrawProgressiveS
 extern D2Client_UI_DrawSkillsTree_6FB16C00_t D2Client_UI_DrawSkillsTree_6FB16C00; // 76C00                     | 6FB16C00
 extern D2Client_UI_DrawCharacterStatsScreen_6FACFD60_t D2Client_UI_DrawCharacterStatsScreen_6FACFD60; // 2FD60 | 6FACFD60
 extern D2Client_UI_DrawPartyScreen_6FB01F10_t D2Client_UI_DrawPartyScreen_6FB01F10; // 61F10                   | 6FB01F10
-extern D2Client_UI_DrawGoldTransferDialog_6FAD6EB0_t D2Client_UI_DrawGoldTransferDialog_6FAD6EB0; // 36EB0     | 6FAD6EB0
+extern D2Client_UI_DrawDialog_6FAD6EB0_t D2Client_UI_DrawDialog_6FAD6EB0; // 36EB0     | 6FAD6EB0
 extern D2Client_UI_DrawInifussScrollPanel_6FB1E990_t D2Client_UI_DrawInifussScrollPanel_6FB1E990; // 7E990     | 6FB1E990
 extern D2Client_UI_DrawWaypointScreen_6FB25C70_t D2Client_UI_DrawWaypointScreen_6FB25C70; // 85C70             | 6FB25C70
-extern D2Client_UI_DrawHelpScreen_6FAD81F0_t D2Client_UI_DrawHelpScreen_6FAD81F0; // 381F0                     | 6FAD81F0
+extern D2Client_UI_DrawHelpScreenBorder_6FAD81F0_t D2Client_UI_DrawHelpScreenBorder_6FAD81F0; // 381F0                     | 6FAD81F0
 extern D2Client_UI_DrawHelpScreenBackground_6FAD82E0_t D2Client_UI_DrawHelpScreenBackground_6FAD82E0; // 382E0 | 6FAD82E0
 extern D2Client_UI_DrawBackground_6FAFF480_t D2Client_UI_DrawBackground_6FAFF480; // 5F480                     | 6FAFF480
 extern D2Client_UI_DrawMiniSkills_6FB19660_t D2Client_UI_DrawMiniSkills_6FB19660; // 79660                     | 6FB19660

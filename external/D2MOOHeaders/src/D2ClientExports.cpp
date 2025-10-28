@@ -191,7 +191,7 @@ QuestNameOverride* D2Client_Quest_pQuestNameOverrides_6FB8EC54 = nullptr;
 int32_t* D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 = nullptr;
 int32_t* D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0 = nullptr;
 int32_t* D2Client_pNormalMonsterInfoStringColor_6FBBA1E0 = nullptr;
-void** D2Client_UI_pGoldTransferDialog_6FBB9FC4 = nullptr;
+D2Dialog** D2Client_UI_pGoldTransferDialog_6FBB9FC4 = nullptr;
 int32_t* D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8 = nullptr;
 
 // UI stuff - Functions
@@ -211,10 +211,10 @@ D2Client_UI_DrawProgressiveStates_6FB21A00_t D2Client_UI_DrawProgressiveStates_6
 D2Client_UI_DrawSkillsTree_6FB16C00_t D2Client_UI_DrawSkillsTree_6FB16C00 = nullptr;
 D2Client_UI_DrawCharacterStatsScreen_6FACFD60_t D2Client_UI_DrawCharacterStatsScreen_6FACFD60 = nullptr;
 D2Client_UI_DrawPartyScreen_6FB01F10_t D2Client_UI_DrawPartyScreen_6FB01F10 = nullptr;
-D2Client_UI_DrawGoldTransferDialog_6FAD6EB0_t D2Client_UI_DrawGoldTransferDialog_6FAD6EB0 = nullptr;
+D2Client_UI_DrawDialog_6FAD6EB0_t D2Client_UI_DrawDialog_6FAD6EB0 = nullptr;
 D2Client_UI_DrawInifussScrollPanel_6FB1E990_t D2Client_UI_DrawInifussScrollPanel_6FB1E990 = nullptr;
 D2Client_UI_DrawWaypointScreen_6FB25C70_t D2Client_UI_DrawWaypointScreen_6FB25C70 = nullptr;
-D2Client_UI_DrawHelpScreen_6FAD81F0_t D2Client_UI_DrawHelpScreen_6FAD81F0 = nullptr;
+D2Client_UI_DrawHelpScreenBorder_6FAD81F0_t D2Client_UI_DrawHelpScreenBorder_6FAD81F0 = nullptr;
 D2Client_UI_DrawHelpScreenBackground_6FAD82E0_t D2Client_UI_DrawHelpScreenBackground_6FAD82E0 = nullptr;
 D2Client_UI_DrawBackground_6FAFF480_t D2Client_UI_DrawBackground_6FAFF480 = nullptr;
 D2Client_UI_DrawMiniSkills_6FB19660_t D2Client_UI_DrawMiniSkills_6FB19660 = nullptr;
@@ -436,7 +436,7 @@ void InitD2ClientExports()
     D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 = (int32_t*)((char*)d2ClientModule + 0xEEC70);
     D2Client_pMonsterImmunitiesInfoStringColor_6FBBA6A0 = (int32_t*)((char*)d2ClientModule + 0x11A6A0);
     D2Client_pNormalMonsterInfoStringColor_6FBBA1E0 = (int32_t*)((char*)d2ClientModule + 0x11A1E0);
-    D2Client_UI_pGoldTransferDialog_6FBB9FC4 = (void**)((char*)d2ClientModule + 0x119FC4);
+    D2Client_UI_pGoldTransferDialog_6FBB9FC4 = (D2Dialog**)((char*)d2ClientModule + 0x119FC4);
     D2Client_UI_pUIStatesIncompatibleWithHelpScreen_6FBBA6A8 = (int32_t*)((char*)d2ClientModule + 0x11A6A8);
 
     // UI stuff - Functions
@@ -456,10 +456,10 @@ void InitD2ClientExports()
     D2Client_UI_DrawSkillsTree_6FB16C00 = (D2Client_UI_DrawSkillsTree_6FB16C00_t)((char*)d2ClientModule + 0x76C00);
     D2Client_UI_DrawCharacterStatsScreen_6FACFD60 = (D2Client_UI_DrawCharacterStatsScreen_6FACFD60_t)((char*)d2ClientModule + 0x2FD60);
     D2Client_UI_DrawPartyScreen_6FB01F10 = (D2Client_UI_DrawPartyScreen_6FB01F10_t)((char*)d2ClientModule + 0x61F10);
-    D2Client_UI_DrawGoldTransferDialog_6FAD6EB0 = (D2Client_UI_DrawGoldTransferDialog_6FAD6EB0_t)((char*)d2ClientModule + 0x36EB0);
+    D2Client_UI_DrawDialog_6FAD6EB0 = (D2Client_UI_DrawDialog_6FAD6EB0_t)((char*)d2ClientModule + 0x36EB0);
     D2Client_UI_DrawInifussScrollPanel_6FB1E990 = (D2Client_UI_DrawInifussScrollPanel_6FB1E990_t)((char*)d2ClientModule + 0x7E990);
     D2Client_UI_DrawWaypointScreen_6FB25C70 = (D2Client_UI_DrawWaypointScreen_6FB25C70_t)((char*)d2ClientModule + 0x85C70);
-    D2Client_UI_DrawHelpScreen_6FAD81F0 = (D2Client_UI_DrawHelpScreen_6FAD81F0_t)((char*)d2ClientModule + 0x381F0);
+    D2Client_UI_DrawHelpScreenBorder_6FAD81F0 = (D2Client_UI_DrawHelpScreenBorder_6FAD81F0_t)((char*)d2ClientModule + 0x381F0);
     D2Client_UI_DrawHelpScreenBackground_6FAD82E0 = (D2Client_UI_DrawHelpScreenBackground_6FAD82E0_t)((char*)d2ClientModule + 0x382E0);
     D2Client_UI_DrawBackground_6FAFF480 = (D2Client_UI_DrawBackground_6FAFF480_t)((char*)d2ClientModule + 0x5F480);
     D2Client_UI_DrawMiniSkills_6FB19660 = (D2Client_UI_DrawMiniSkills_6FB19660_t)((char*)d2ClientModule + 0x79660);

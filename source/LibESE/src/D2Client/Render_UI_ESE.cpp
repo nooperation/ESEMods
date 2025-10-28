@@ -19,205 +19,6 @@ struct QuestNameOverride
     char szName[4];
 };
 
-static void DrawMercenaryFloatingText(D2UnitStrc* currentPlayerMerc)
-{
-    int32_t tempActiveNpcId = 0;
-    auto pTempActiveNpcId = &tempActiveNpcId;
-    if (!D2Client_IsActiveNpcDialogOpen_6FAFBB50(&pTempActiveNpcId))
-    {
-        auto lifeColor = D2Client_GetMonsterLifeColor_6FB20670(currentPlayerMerc);
-        auto posY = *D2Client_pUnitMouseOverTextPosY_6FB8EA2C - 72;
-        auto unitName = D2Client_GetUnitName_6FB297F0(currentPlayerMerc);
-        D2Client_UI_UpdateMercFloatingText_6FB20590(unitName, *D2Client_pUnitMouseOverTextPosX_6FB8EA28, posY, lifeColor);
-    }
-}
-
-static void HandleMercenaryPerspectiveRendering(D2UnitStrc* currentPlayerMerc, int32_t& xAdjust, int32_t& yAdjust)
-{
-    auto currentPlayerMercPrecisionX = UNITS_GetPrecisionX(currentPlayerMerc);
-    auto currentPlayerMercPrecisionY = UNITS_GetPrecisionY(currentPlayerMerc);
-
-    if (!D2Gfx_SCALE_CheckPerspectivePosition_10065(currentPlayerMercPrecisionX, currentPlayerMercPrecisionY))
-    {
-        return;
-    }
-
-    D2Gfx_SCALE_AdjustPerspectivePosition_10066(
-        currentPlayerMercPrecisionX,
-        currentPlayerMercPrecisionY,
-        0,
-        &xAdjust,
-        &yAdjust
-    );
-
-    int32_t screenXAdjust = 0;
-    int32_t screenYAdjust = D2Client_UI_GetGlobalUiState_6FAB5750() - 1;
-
-    if (screenYAdjust == 0)
-    {
-        screenXAdjust = *D2Client_pResolutionWidth_6FB740EC / -4;
-    }
-    else if (screenYAdjust == 1)
-    {
-        screenXAdjust = *D2Client_pResolutionWidth_6FB740EC / 4;
-    }
-
-    xAdjust += screenXAdjust;
-    *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = xAdjust;
-    *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = yAdjust + 16;
-
-    DrawMercenaryFloatingText(currentPlayerMerc);
-}
-
-static void RenderMercenaryUI(D2UnitStrc* currentPlayerMerc, int32_t& xAdjust, int32_t& yAdjust)
-{
-    if (!D2Gfx_CheckPerspective_10010())
-    {
-        auto currentPlayerMercUIPosX = UNITS_GetClientCoordX(currentPlayerMerc);
-        *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = currentPlayerMercUIPosX - D2Client_GetAdjustedViewOffsetX_6FAB5890();
-
-        auto currentPlayerMercUIPosY = UNITS_GetClientCoordY(currentPlayerMerc);
-        *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = currentPlayerMercUIPosY - D2Client_GetAdjustedViewOffsetY_6FAB58A0();
-
-        DrawMercenaryFloatingText(currentPlayerMerc);
-    }
-    else
-    {
-        HandleMercenaryPerspectiveRendering(currentPlayerMerc, xAdjust, yAdjust);
-    }
-}
-
-static bool FindQuestNameOverride(int32_t currentLevelId, char* celFilePath, const char* languageCode)
-{
-    int32_t questNameOverrideIndex = 0;
-    if (*D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 > 0)
-    {
-        auto questNameOverride = D2Client_Quest_pQuestNameOverrides_6FB8EC54;
-        while (questNameOverrideIndex < *D2Client_Quest_pQuestNameOverridesCount_6FB8EC70)
-        {
-            if (currentLevelId == questNameOverride->nLevelId && D2Client_10002(0, questNameOverride->nLevelId))
-            {
-                sprintf(
-                    celFilePath,
-                    "%s\\UI\\%s\\ACT1\\%s",
-                    "DATA\\LOCAL",
-                    languageCode,
-                    D2Client_Quest_pQuestNameOverrides_6FB8EC54[questNameOverrideIndex].szName
-                );
-                return true;
-            }
-            ++questNameOverrideIndex;
-            ++questNameOverride;
-        }
-    }
-    return false;
-}
-
-static void DrawLevelTitle(int32_t currentLevelId, int32_t newLevelTickCount)
-{
-    *D2Client_UI_pNewLevelTickCount120_6FBBA788 = newLevelTickCount + 1;
-
-    auto currentLevelTxt = DATATBLS_GetLevelsTxtRecord(currentLevelId);
-    char actDirectoryName[32];
-
-    if (currentLevelId < 109)
-    {
-        auto actNumber = DRLG_GetActNoFromLevelId(currentLevelId);
-        sprintf(actDirectoryName, "ACT%d", actNumber + 1);
-    }
-    else
-    {
-        sprintf(actDirectoryName, "EXPANSION");
-    }
-
-    char celFilePath[MAX_PATH];
-    char languageCode[4];
-    D2Lang_10006(&languageCode[0], 0);
-    sprintf(celFilePath, "%s\\UI\\%s\\%s\\%s", "DATA\\LOCAL", languageCode, actDirectoryName, currentLevelTxt->szEntryFile);
-
-    // Try to find quest name override
-    FindQuestNameOverride(currentLevelId, celFilePath, languageCode);
-
-    auto finalCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
-    if (!finalCellFile)
-    {
-        finalCellFile = D2Client_LoadCelFile_6FAA1000(celFilePath, 0);
-        *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = finalCellFile;
-    }
-
-    // TODO: instead of the below to draw larger text size for level name
-    // TODO:    D2GL -> levelEntryTextStub -> modules::HDText::Instance().startEntryText(); 
-    if (D2GL_d2glLevelEntryText != nullptr)
-    {
-        D2GL_d2glLevelEntryText();
-    }
-
-    D2Win_DrawCellFile_10134(
-        finalCellFile,
-        *D2Client_pResolutionWidth_6FB740EC / 2,
-        *D2Client_pResolutionHeight_6FB740F0 / 2 - 140,
-        1,
-        DRAWMODE_NORMAL,
-        1
-    );
-}
-
-static void HandleLevelTitleRendering()
-{
-    D2CellFileStrc* pCellFile = nullptr;
-    int32_t newLevelTickCount = 0;
-    bool shouldDrawTitle = false;
-
-    if (D2GL_d2glAutomapDrawBegin != nullptr)
-    {
-        D2GL_d2glAutomapDrawBegin();
-    }
-
-    auto currentRoom = D2Client_GetCurrentRoom_6FB29370();
-    if (currentRoom)
-    {
-        auto currentLevelId = DUNGEON_GetLevelIdFromRoom(currentRoom);
-        if (currentLevelId == *D2Client_UI_pCurrentLevelId_6FBBA784)
-        {
-            pCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
-            newLevelTickCount = *D2Client_UI_pNewLevelTickCount120_6FBBA788;
-        }
-        else
-        {
-            // Something about drawing the level title when changing levels?
-            D2Client_UI_UpdateRosterHealthColors_6FADA970(true);
-
-            pCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
-            if (pCellFile)
-            {
-                D2Client_Archive_FreeCellFile_6FAA1140(pCellFile);
-                pCellFile = nullptr;
-                *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = nullptr;
-            }
-
-            auto oldLevelId = *D2Client_UI_pCurrentLevelId_6FBBA784;
-            *D2Client_UI_pCurrentLevelId_6FBBA784 = currentLevelId;
-            newLevelTickCount = (oldLevelId == 0) ? 120 : 0;
-            *D2Client_UI_pNewLevelTickCount120_6FBBA788 = newLevelTickCount;
-        }
-
-        if (newLevelTickCount < 120)
-        {
-            DrawLevelTitle(currentLevelId, newLevelTickCount);
-            shouldDrawTitle = true;
-        }
-    }
-    else
-    {
-        pCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
-    }
-
-    if (!shouldDrawTitle && pCellFile)
-    {
-        D2Client_Archive_FreeCellFile_6FAA1140(pCellFile);
-        *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = 0;
-    }
-}
 
 void InitializeExternalModules()
 {
@@ -282,29 +83,214 @@ void InitializeExternalModules()
     }
 }
 
+static void RenderMercenaryUI(D2UnitStrc* currentPlayerMerc, int32_t& xAdjust, int32_t& yAdjust)
+{
+    if (!D2Gfx_CheckPerspective_10010())
+    {
+        auto currentPlayerMercUIPosX = UNITS_GetClientCoordX(currentPlayerMerc);
+        *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = currentPlayerMercUIPosX - D2Client_GetAdjustedViewOffsetX_6FAB5890();
+
+        auto currentPlayerMercUIPosY = UNITS_GetClientCoordY(currentPlayerMerc);
+        *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = currentPlayerMercUIPosY - D2Client_GetAdjustedViewOffsetY_6FAB58A0();
+    }
+    else
+    {
+        auto currentPlayerMercPrecisionX = UNITS_GetPrecisionX(currentPlayerMerc);
+        auto currentPlayerMercPrecisionY = UNITS_GetPrecisionY(currentPlayerMerc);
+
+        if (!D2Gfx_SCALE_CheckPerspectivePosition_10065(currentPlayerMercPrecisionX, currentPlayerMercPrecisionY))
+        {
+            return;
+        }
+
+        D2Gfx_SCALE_AdjustPerspectivePosition_10066(
+            currentPlayerMercPrecisionX,
+            currentPlayerMercPrecisionY,
+            0,
+            &xAdjust,
+            &yAdjust
+        );
+
+        int32_t screenXAdjust = 0;
+        int32_t screenYAdjust = D2Client_UI_GetGlobalUiState_6FAB5750() - 1;
+
+        if (screenYAdjust == 0)
+        {
+            screenXAdjust = *D2Client_pResolutionWidth_6FB740EC / -4;
+        }
+        else if (screenYAdjust == 1)
+        {
+            screenXAdjust = *D2Client_pResolutionWidth_6FB740EC / 4;
+        }
+
+        xAdjust += screenXAdjust;
+        *D2Client_pUnitMouseOverTextPosX_6FB8EA28 = xAdjust;
+        *D2Client_pUnitMouseOverTextPosY_6FB8EA2C = yAdjust + 16;
+    }
+
+    int32_t tempActiveNpcId = 0;
+    auto pTempActiveNpcId = &tempActiveNpcId;
+    if (!D2Client_IsActiveNpcDialogOpen_6FAFBB50(&pTempActiveNpcId))
+    {
+        auto lifeColor = D2Client_GetMonsterLifeColor_6FB20670(currentPlayerMerc);
+        auto posY = *D2Client_pUnitMouseOverTextPosY_6FB8EA2C - 72;
+        auto unitName = D2Client_GetUnitName_6FB297F0(currentPlayerMerc);
+        D2Client_UI_UpdateMercFloatingText_6FB20590(unitName, *D2Client_pUnitMouseOverTextPosX_6FB8EA28, posY, lifeColor);
+    }
+}
+
+static void DrawLevelTitle(int32_t currentLevelId, int32_t newLevelTickCount)
+{
+    *D2Client_UI_pNewLevelTickCount120_6FBBA788 = newLevelTickCount + 1;
+
+    auto currentLevelTxt = DATATBLS_GetLevelsTxtRecord(currentLevelId);
+    char actDirectoryName[32];
+
+    if (currentLevelId < 109)
+    {
+        auto actNumber = DRLG_GetActNoFromLevelId(currentLevelId);
+        sprintf(actDirectoryName, "ACT%d", actNumber + 1);
+    }
+    else
+    {
+        sprintf(actDirectoryName, "EXPANSION");
+    }
+
+    char celFilePath[MAX_PATH];
+    char languageCode[4];
+    D2Lang_10006(&languageCode[0], 0);
+    sprintf(celFilePath, "%s\\UI\\%s\\%s\\%s", "DATA\\LOCAL", languageCode, actDirectoryName, currentLevelTxt->szEntryFile);
+
+    // Try to find quest name override
+    int32_t questNameOverrideIndex = 0;
+    if (*D2Client_Quest_pQuestNameOverridesCount_6FB8EC70 > 0)
+    {
+        auto questNameOverride = D2Client_Quest_pQuestNameOverrides_6FB8EC54;
+        while (questNameOverrideIndex < *D2Client_Quest_pQuestNameOverridesCount_6FB8EC70)
+        {
+            if (currentLevelId == questNameOverride->nLevelId && D2Client_10002(0, questNameOverride->nQuestId))
+            {
+                sprintf(
+                    celFilePath,
+                    "%s\\UI\\%s\\ACT1\\%s",
+                    "DATA\\LOCAL",
+                    languageCode,
+                    D2Client_Quest_pQuestNameOverrides_6FB8EC54[questNameOverrideIndex].szName
+                );
+                break;
+            }
+
+            ++questNameOverrideIndex;
+            ++questNameOverride;
+        }
+    }
+
+    auto finalCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
+    if (!finalCellFile)
+    {
+        finalCellFile = D2Client_LoadCelFile_6FAA1000(celFilePath, 0);
+        *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = finalCellFile;
+    }
+
+    // ESE HACK:    D2GL -> levelEntryTextStub -> modules::HDText::Instance().startEntryText(); 
+    if (D2GL_d2glLevelEntryText != nullptr)
+    {
+        D2GL_d2glLevelEntryText();
+    }
+    else
+    {
+        D2Win_DrawCellFile_10134(
+            finalCellFile,
+            *D2Client_pResolutionWidth_6FB740EC / 2,
+            *D2Client_pResolutionHeight_6FB740F0 / 2 - 140,
+            1,
+            DRAWMODE_NORMAL,
+            1
+        );
+    }
+}
+
+static void HandleLevelTitleRendering()
+{
+    D2CellFileStrc* pCellFile = nullptr;
+    int32_t newLevelTickCount = 0;
+    bool shouldDrawTitle = false;
+
+    if (D2GL_d2glAutomapDrawBegin != nullptr)
+    {
+        D2GL_d2glAutomapDrawBegin();
+    }
+
+    auto currentRoom = D2Client_GetCurrentRoom_6FB29370();
+    if (currentRoom)
+    {
+        auto currentLevelId = DUNGEON_GetLevelIdFromRoom(currentRoom);
+        if (currentLevelId == *D2Client_UI_pCurrentLevelId_6FBBA784)
+        {
+            pCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
+            newLevelTickCount = *D2Client_UI_pNewLevelTickCount120_6FBBA788;
+        }
+        else
+        {
+            // Something about drawing the level title when changing levels?
+            D2Client_UI_UpdateRosterHealthColors_6FADA970(true);
+
+            pCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
+            if (pCellFile)
+            {
+                D2Client_Archive_FreeCellFile_6FAA1140(pCellFile);
+                pCellFile = nullptr;
+                *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = nullptr;
+            }
+
+            auto oldLevelId = *D2Client_UI_pCurrentLevelId_6FBBA784;
+            *D2Client_UI_pCurrentLevelId_6FBBA784 = currentLevelId;
+            newLevelTickCount = (oldLevelId == 0) ? 120 : 0;
+            *D2Client_UI_pNewLevelTickCount120_6FBBA788 = newLevelTickCount;
+        }
+
+        if (newLevelTickCount < 120)
+        {
+            DrawLevelTitle(currentLevelId, newLevelTickCount);
+            shouldDrawTitle = true;
+        }
+    }
+    else
+    {
+        pCellFile = *D2Client_UI_pCellFileLevelTitle_6FBBA1E8;
+    }
+
+    if (!shouldDrawTitle && pCellFile)
+    {
+        D2Client_Archive_FreeCellFile_6FAA1140(pCellFile);
+        *D2Client_UI_pCellFileLevelTitle_6FBBA1E8 = 0;
+    }
+}
+
 void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
 {
     static bool InitializedModules = false;
     if (!InitializedModules)
     {
         InitializeExternalModules();
+        InitializedModules = true;
     }
 
     int32_t yAdjust = 0;
     int32_t xAdjust = 0;
 
-    // TODO: D2GL -> uiDrawBeginStub -> uiDrawBegin()
+    // ESE HACK: D2GL -> uiDrawBeginStub -> uiDrawBegin()
     if (D2GL_d2glUIDrawBegin != nullptr)
     {
         D2GL_d2glUIDrawBegin();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[18]) // UI_MSGLOG
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_UNKNOWN18])
     {
         return;
     }
 
-    // TODO: SGD2 -> Sgd2fr_D2Client_SetScreenShift
+    // ESE HACK: SGD2 -> Sgd2fr_D2Client_SetScreenShift (This should probably just be done in this codebase, it's just managing the offsets)
     if (Sgd2fr_D2Client_SetScreenShift != nullptr)
     {
         Sgd2fr_D2Client_SetScreenShift();
@@ -327,12 +313,12 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
     D2Client_pNormalMonsterInfoString256_6FBB9FE0[0] = 0;
     D2Client_pMonsterImmunitiesInfoString256_6FBBA4A0[0] = 0;
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[9]) // UI_ESCMENU
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_ESCMENU])
     {
         D2Client_UI_DrawEscapeMenu_6FB088B0();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[11]) // UI_CONFIG
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_CONFIG])
     {
         D2Client_UI_DrawConfigMenu_6FAFC620();
     }
@@ -340,7 +326,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
     auto selectedUnit = D2Client_GetSelectedUnit_6FAB5A20();
     ESE_D2Client_DrawGroundItemMouseOverText_6FB20A30(selectedUnit);
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[35]) // UI_HIREICONS
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HIREICONS])
     {
         if (D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH)
         {
@@ -357,19 +343,19 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
         }
     }
 
-    if (!D2Client_UI_pUIStates_6FBBA6A8[1] &&  // UI_INVENTORY
-        !D2Client_UI_pUIStates_6FBBA6A8[12] && // UI_NPCSHOP
-        !D2Client_UI_pUIStates_6FBBA6A8[14])   // UI_ANVIL
+    if (!D2Client_UI_pUIStates_6FBBA6A8[UI_INVENTORY] &&
+        !D2Client_UI_pUIStates_6FBBA6A8[UI_NPCSHOP] &&
+        !D2Client_UI_pUIStates_6FBBA6A8[UI_ANVIL])
     {
         D2Client_UI_DrawDurabilityWarning_6FAFEE70();
         D2Client_UI_DrawAmmoDurability_6FAFEA40();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[10] && D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH) // UI_AUTOMAP
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_AUTOMAP] && D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH)
     {
         D2Client_UI_DrawAutomap_6FACDCB0();
 
-        // TODO: D2GL -> automapDrawEndStub -> automapDrawEnd() -> "HUD" draw stage
+        // ESE HACK: D2GL -> automapDrawEndStub -> automapDrawEnd() -> "HUD" draw stage
         if (D2GL_d2glAutomapDrawEnd != nullptr)
         {
             D2GL_d2glAutomapDrawEnd();
@@ -378,41 +364,41 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
 
     HandleLevelTitleRendering();
 
-    // TDOO: SGD2FreeRes -> sgd2freeres._Sgd2fr_D2Client_DrawScreenBackground>
+    // ESE HACK: SGD2FreeRes -> sgd2freeres._Sgd2fr_D2Client_DrawScreenBackground>
     if (Sgd2fr_D2Client_DrawScreenBackground != nullptr)
     {
         Sgd2fr_D2Client_DrawScreenBackground();
     }
 
     D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890();
-    if (D2Client_UI_pUIStates_6FBBA6A8[19]) // UI_HIRICONS
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HIRICONS]) // 
     {
         D2Client_UI_DrawPartyMemberIcons_6FADAB00();
     }
-    if (D2Client_UI_pUIStates_6FBBA6A8[36]) // UI_MERCINV
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_MERCINV]) // 
     {
         D2Client_UI_DrawMercInventoryScreen_6FAED5D0();
     }
-    if (D2Client_UI_pUIStates_6FBBA6A8[37]) // UI_RECIPESCROLL
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_RECIPESCROLL]) // 
     {
         D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0();
     }
-    if (D2Client_UI_pUIStates_6FBBA6A8[15]) // UI_QUESTSCREEN
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_QUESTSCREEN]) // 
     {
         D2Client_UI_DrawQuestScreen_6FB042D0();
     }
-    if (D2Client_UI_pUIStates_6FBBA6A8[1]      // UI_INVENTORY
-        || D2Client_UI_pUIStates_6FBBA6A8[12]  // UI_NPCSHOP
-        || D2Client_UI_pUIStates_6FBBA6A8[14]  // UI_ANVIL
-        || D2Client_UI_pUIStates_6FBBA6A8[25]  // UI_STASH
-        || D2Client_UI_pUIStates_6FBBA6A8[26]  // UI_CUBE
-        || D2Client_UI_pUIStates_6FBBA6A8[28]  // UI_GUILDVAULT
-        || D2Client_UI_pUIStates_6FBBA6A8[29]) // UI_UNKNOWN29
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_INVENTORY]
+        || D2Client_UI_pUIStates_6FBBA6A8[UI_NPCSHOP]
+        || D2Client_UI_pUIStates_6FBBA6A8[UI_ANVIL]
+        || D2Client_UI_pUIStates_6FBBA6A8[UI_STASH]
+        || D2Client_UI_pUIStates_6FBBA6A8[UI_CUBE]
+        || D2Client_UI_pUIStates_6FBBA6A8[UI_GUILDVAULT]
+        || D2Client_UI_pUIStates_6FBBA6A8[UI_UNKNOWN29])
     {
         D2Client_UI_DrawInventoryScreen_6FADEAC0();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[23]) // UI_MPTRADE
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_MPTRADE])
     {
         D2Client_UI_DrawPlayerTradeButtonHoverText_6FB1F390();
         D2Client_UI_DrawInventoryScreen_6FADEAC0();
@@ -420,62 +406,62 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
 
     D2Client_UI_DrawProgressiveStates_6FB21A00();
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[4]) // UI_SKILLTREE
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_SKILLTREE])
     {
         D2Client_UI_DrawSkillsTree_6FB16C00();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[2]) // UI_STATSCREEN
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_STATSCREEN])
     {
         D2Client_UI_DrawCharacterStatsScreen_6FACFD60();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[22]) // UI_PARTYSCREEN
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_PARTYSCREEN])
     {
         D2Client_UI_DrawPartyScreen_6FB01F10();
     }
 
     if (*D2Client_UI_pGoldTransferDialog_6FBB9FC4)
     {
-        D2Client_UI_DrawGoldTransferDialog_6FAD6EB0();
+        D2Client_UI_DrawDialog_6FAD6EB0(*D2Client_UI_pGoldTransferDialog_6FBB9FC4);
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[16]) // UI_INISCROLL - Inifuss Tree Scroll
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_INISCROLL])
     {
         D2Client_UI_DrawInifussScrollPanel_6FB1E990();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[20]) // UI_WAYPOINT
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_WAYPOINT])
     {
         D2Client_UI_DrawWaypointScreen_6FB25C70();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[33]) // UI_HELPSCREEN
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HELPSCREEN])
     {
-        D2Client_UI_DrawHelpScreen_6FAD81F0();
+        D2Client_UI_DrawHelpScreenBorder_6FAD81F0();
         D2Client_UI_DrawHelpScreenBackground_6FAD82E0();
     }
 
     D2Client_UI_DrawBackground_6FAFF480();
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[3]) // UI_MINISKILL
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_MINISKILL])
     {
         D2Client_UI_DrawMiniSkills_6FB19660();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[31]) // UI_BELTROWS
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_BELTROWS])
     {
         D2Client_UI_DrawBeltRows_6FB01C20();
     }
 
     D2Client_UI_RefreshUIState_6FAEEC00();
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[34]) // UI_HELPBUTTON
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HELPBUTTON])
     {
         D2Client_UI_DrawHelpButton_6FADA350();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[6]) // UI_NEWSTATS
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_NEWSTATS])
     {
         D2Client_UI_DrawNewStatsButton_6FAEF360();
     }
@@ -484,7 +470,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
         D2Client_UI_DrawStatsButton_6FAEF2A0();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[7]) // UI_NEWSKILLS
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_NEWSKILLS])
     {
         D2Client_UI_DrawNewSkillsButton_6FAEF730();
     }
@@ -493,24 +479,24 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
         D2Client_UI_DrawSkillsButton_6FAEF670();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[17]) // UI_QUESTLOG
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_QUESTLOG])
     {
         D2Client_UI_DrawQuestLogButton_6FB065F0();
     }
 
     D2Client_UI_DrawLifeAndManaOrbText_6FAFF0B0();
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[21]) // UI_MINIPANEL - CtrlPnl7 Mini Popop Menu
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_MINIPANEL])
     {
         D2Client_UI_DrawMiniPanel_6FB08DE0();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[5]) // UI_CHATBOX
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_CHATBOX])
     {
         D2Client_UI_DrawChatBox_6FAD2100();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[33]) // UI_HELPSCREEN
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HELPSCREEN])
     {
         for (auto i = 0; i < 38; ++i)
         {
@@ -528,7 +514,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
         D2Client_UI_DrawHelpScreen_6FAD8310();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[13]) // UI_HOLDALT
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HOLDALT])
     {
         if (D2Client_UI_GetGlobalUiState_6FAB5750() != UISTATE_BOTH)
         {
@@ -540,12 +526,12 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
         }
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[8]) // UI_NPCMENU
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_NPCMENU])
     {
         D2Client_UI_DrawNpcMenu_6FAF6070();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[14]) // UI_ANVIL
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_ANVIL])
     {
         D2Client_UI_DrawAnvilScreen_6FB25320();
     }
