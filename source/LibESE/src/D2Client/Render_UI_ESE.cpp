@@ -83,7 +83,7 @@ void InitializeExternalModules()
     }
 }
 
-static void RenderMercenaryUI(D2UnitStrc* currentPlayerMerc, int32_t& xAdjust, int32_t& yAdjust)
+static void RenderMercenaryUI(D2UnitStrc* currentPlayerMerc)
 {
     if (!D2Gfx_CheckPerspective_10010())
     {
@@ -102,6 +102,9 @@ static void RenderMercenaryUI(D2UnitStrc* currentPlayerMerc, int32_t& xAdjust, i
         {
             return;
         }
+
+        int32_t yAdjust = 0;
+        int32_t xAdjust = 0;
 
         D2Gfx_SCALE_AdjustPerspectivePosition_10066(
             currentPlayerMercPrecisionX,
@@ -197,17 +200,15 @@ static void DrawLevelTitle(int32_t currentLevelId, int32_t newLevelTickCount)
     {
         D2GL_d2glLevelEntryText();
     }
-    else
-    {
-        D2Win_DrawCellFile_10134(
-            finalCellFile,
-            *D2Client_pResolutionWidth_6FB740EC / 2,
-            *D2Client_pResolutionHeight_6FB740F0 / 2 - 140,
-            1,
-            DRAWMODE_NORMAL,
-            1
-        );
-    }
+
+    D2Win_DrawCellFile_10134(
+        finalCellFile,
+        *D2Client_pResolutionWidth_6FB740EC / 2,
+        *D2Client_pResolutionHeight_6FB740F0 / 2 - 140,
+        1,
+        DRAWMODE_NORMAL,
+        1
+    );
 }
 
 static void HandleLevelTitleRendering()
@@ -215,11 +216,6 @@ static void HandleLevelTitleRendering()
     D2CellFileStrc* pCellFile = nullptr;
     int32_t newLevelTickCount = 0;
     bool shouldDrawTitle = false;
-
-    if (D2GL_d2glAutomapDrawBegin != nullptr)
-    {
-        D2GL_d2glAutomapDrawBegin();
-    }
 
     auto currentRoom = D2Client_GetCurrentRoom_6FB29370();
     if (currentRoom)
@@ -276,9 +272,6 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
         InitializedModules = true;
     }
 
-    int32_t yAdjust = 0;
-    int32_t xAdjust = 0;
-
     // ESE HACK: D2GL -> uiDrawBeginStub -> uiDrawBegin()
     if (D2GL_d2glUIDrawBegin != nullptr)
     {
@@ -287,6 +280,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
 
     if (D2Client_UI_pUIStates_6FBBA6A8[UI_UNKNOWN18])
     {
+        // TODO: Draw buff icons
         return;
     }
 
@@ -337,7 +331,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
                 auto currentPlayerMerc = D2Client_FindUnit_6FB269F0(currentPlayerMercId, UNIT_MONSTER);
                 if (currentPlayerMerc)
                 {
-                    RenderMercenaryUI(currentPlayerMerc, xAdjust, yAdjust);
+                    RenderMercenaryUI(currentPlayerMerc);
                 }
             }
         }
@@ -369,8 +363,11 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
     {
         Sgd2fr_D2Client_DrawScreenBackground();
     }
+    else
+    {
+        D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890();
+    }
 
-    D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890();
     if (D2Client_UI_pUIStates_6FBBA6A8[UI_HIRICONS]) // 
     {
         D2Client_UI_DrawPartyMemberIcons_6FADAB00();
