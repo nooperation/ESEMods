@@ -909,7 +909,7 @@ void __fastcall ESE_PrintRangeString_6FB0B140(wchar_t* pText, int64_t minDamage,
     }
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam6_6FB0ACE0(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buffA[32];
     wchar_t buffB[32];
@@ -1016,7 +1016,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam6(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_sub_6FB0AC10((Unicode*)&buffB[0], (Unicode*)&buffA[0], offsetA, offsetB, offsetC, nColorA, nColorB);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam7_6FB0BEC0(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1094,7 +1094,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam7(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam1(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam1_6FB0C270(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -1148,11 +1148,11 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam1(D2UnitStrc* pUnit, D2SkillStrc* p
     }
     else
     {
-        ESE_CHARSCREENDMG_DrawDescDam7(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
+        ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam7_6FB0BEC0(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
     }
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam20(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam20_6FB0C930(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -1206,11 +1206,11 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam20(D2UnitStrc* pUnit, D2SkillStrc* 
     }
     else
     {
-        ESE_CHARSCREENDMG_DrawDescDam7(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
+        ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam7_6FB0BEC0(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
     }
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam19(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam19_6FB0CA60(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -1297,7 +1297,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam19(D2UnitStrc* pUnit, D2SkillStrc* 
     }
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam21(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam21_6FB0CE90(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1375,7 +1375,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam21(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam3(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam3_6FB0D330(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1411,7 +1411,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam3(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColorA);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam4(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam4_6FB0D920(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1450,7 +1450,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam4(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam22(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam22_6FB0DAB0(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buffA[32] = {0};
     wchar_t buffB[32] = {0};
@@ -1514,7 +1514,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam22(D2UnitStrc* pUnit, D2SkillStrc* 
     }
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam5(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam5_6FB0DEC0(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1593,7 +1593,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam5(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam24(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam24_6FB0E180(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1672,7 +1672,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam24(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam23(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam23_6FB0E440(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buffA[32] = { 0 };
     wchar_t buffB[32] = { 0 };
@@ -1740,13 +1740,13 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam23(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_sub_6FB0AC10((Unicode*)&buffA[0], (Unicode*)&buffB[0], offsetA, offsetB, offsetC, nColor, nColorB);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam13(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam13_6FB0E7B0(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     int32_t damage = SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxtRecord->dwCalc[0], pSkillsTxtRecord->nSkillId, nSkillLevel);
     ESE_sub_6FB0C400(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, ESE_sub_6FB0D4F0, damage, 0, offsetA, offsetB, offsetC, 1);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam8(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam8_6FB0E800(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1833,7 +1833,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam8(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam9(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam9_6FB0EAB0(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1894,7 +1894,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam9(D2UnitStrc* pUnit, D2SkillStrc* p
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam10(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam10_6FB0ED40(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -1990,7 +1990,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam10(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam11(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam11_6FB0F080(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -2098,7 +2098,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam11(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_sub_6FB0F5E0(pUnit, nMinDamageTotal, nMaxDamageTotal, nColor, offsetA, offsetB, offsetC);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam12(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam12_6FB0F700(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -2168,7 +2168,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam12(D2UnitStrc* pUnit, D2SkillStrc* 
     }
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam14(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam14_6FB0FA50(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -2213,7 +2213,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam14(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam15(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam15_6FB0FC60(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -2261,7 +2261,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam15(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_sub_6FB0F5E0(pUnit, minDamage, maxDamage, pColor, offsetA, offsetB, offsetC);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam16(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam16_6FB10010(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
@@ -2356,7 +2356,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam16(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_Helper_DrawTextCentered(buff, offsetA, offsetB, offsetC, nColor);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam17(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam17_6FB10540(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buffA[32] = { 0 };
     wchar_t buffB[32] = { 0 };
@@ -2450,7 +2450,7 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam17(D2UnitStrc* pUnit, D2SkillStrc* 
     ESE_sub_6FB0AC10((Unicode*)&buffB[0], (Unicode*)&buffA[0], offsetA, offsetB, offsetC, nColor, nColorB);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam18(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam18_6FB108F0(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     if (pSkill == nullptr || pSkillsTxtRecord == nullptr)
     {
@@ -2481,10 +2481,10 @@ void __fastcall ESE_CHARSCREENDMG_DrawDescDam18(D2UnitStrc* pUnit, D2SkillStrc* 
         return;
     }
 
-    ESE_CHARSCREENDMG_DrawDescDam7(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
+    ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam7_6FB0BEC0(pUnit, pSkill, pSkillsTxtRecord, nSkillLevel, offsetA, offsetB, offsetC);
 }
 
-void __fastcall ESE_CHARSCREENDMG_DrawDescDam2(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
+void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam2_6FB0CD40(D2UnitStrc* pUnit, D2SkillStrc* pSkill, D2SkillsTxt* pSkillsTxtRecord, int32_t nSkillLevel, int offsetA, int offsetB, int offsetC)
 {
     wchar_t buff[32] = { 0 };
 
