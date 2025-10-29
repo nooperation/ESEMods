@@ -263,18 +263,19 @@ D2Client_Unit_GetLastSelectedEvilMonsterClassId_6FAB5A80_t D2Client_Unit_GetLast
 D2Client_GetSkillDescAtt_6FB16200_t D2Client_GetSkillDescAtt_6FB16200 = nullptr; // 76200| 6FB16200 
 D2Client_UI_GetChanceToHitMonster_6FAD10D0_t D2Client_UI_GetChanceToHitMonster_6FAD10D0 = nullptr; // 310D0| 6FAD10D0 
 D2Client_UI_DrawLeftRightSkillDescs_6FB16190_t D2Client_UI_DrawLeftRightSkillDescs_6FB16190 = nullptr; // 76190| 6FB16190 
+D2Client_UI_DrawBox_6FB5B0F0_t D2Client_UI_DrawBox_6FB5B0F0 = nullptr; // BB0F0| 6FB5B0F0 
 
 // D2 UI Character sheet - data
 int32_t* D2Client_UI_pUnknownColor2_6FBB1A50 = nullptr; // 111A50 | 6FBB1A50
 int32_t* D2Client_UI_pUnknownFlag_6FBB1A4C = nullptr; // 111A4C | 6FBB1A4C
-D2CharSheetStatRow** D2Client_UI_pD2CharSheetStatRows_6FB78120 = nullptr; // D8120 | 6FB78120
-D2CharSheetTextEntry** D2Client_UI_pCharSheetTextEntries_6FB78010 = nullptr; // D8010 | 6FB78010
-D2CharSheetButtonLocations** D2Client_UI_pD2CharSheetButtonLocations_6FB78240 = nullptr; // D8240 | 6FB78240
+D2CharSheetStatRow* D2Client_UI_pD2CharSheetStatRows_6FB78120 = nullptr; // D8120 | 6FB78120
+D2CharSheetTextEntry* D2Client_UI_pCharSheetTextEntries_6FB78010 = nullptr; // D8010 | 6FB78010
+D2CharSheetButtonLocations* D2Client_UI_pD2CharSheetButtonLocations_6FB78240 = nullptr; // D8240 | 6FB78240
 D2CellFileStrc** D2Client_UI_pCelFile_PanelSkillPoints_6FBB5E50 = nullptr; // 115E50 | 6FBB5E50
 D2CellFileStrc** D2Client_UI_pCelFile_UiInvChar_6FBB5E24 = nullptr; // 115E24 | 6FBB5E24
 D2CellFileStrc** D2Client_UI_pCelFilePanelLevelSocket_6FBB5BB8 = nullptr; // 115BB8 | 6FBB5BB8
 D2CellFileStrc** D2Client_UI_pCelFilePanelLevel_6FBB5BB4 = nullptr; // 115BB4 | 6FBB5BB4
-D2CharSheetToHitTextLocation** D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00 = nullptr; // CEF00 | 6FB6EF00
+D2CharSheetToHitTextLocation* D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00 = nullptr; // CEF00 | 6FB6EF00
 
 void InitD2ClientExports()
 {
@@ -524,14 +525,14 @@ void InitD2ClientExports()
     // D2 UI Character sheet - data
     D2Client_UI_pUnknownColor2_6FBB1A50 = (int32_t*)((char*)d2ClientModule + 0x111A50);
     D2Client_UI_pUnknownFlag_6FBB1A4C = (int32_t*)((char*)d2ClientModule + 0x111A4C);
-    D2Client_UI_pD2CharSheetStatRows_6FB78120 = (D2CharSheetStatRow**)((char*)d2ClientModule + 0xD8120);
-    D2Client_UI_pCharSheetTextEntries_6FB78010 = (D2CharSheetTextEntry**)((char*)d2ClientModule + 0xD8010);
-    D2Client_UI_pD2CharSheetButtonLocations_6FB78240 = (D2CharSheetButtonLocations**)((char*)d2ClientModule + 0xD8240);
+    D2Client_UI_pD2CharSheetStatRows_6FB78120 = (D2CharSheetStatRow*)((char*)d2ClientModule + 0xD8120);
+    D2Client_UI_pCharSheetTextEntries_6FB78010 = (D2CharSheetTextEntry*)((char*)d2ClientModule + 0xD8010);
+    D2Client_UI_pD2CharSheetButtonLocations_6FB78240 = (D2CharSheetButtonLocations*)((char*)d2ClientModule + 0xD8240);
     D2Client_UI_pCelFile_PanelSkillPoints_6FBB5E50 = (D2CellFileStrc**)((char*)d2ClientModule + 0x115E50);
     D2Client_UI_pCelFile_UiInvChar_6FBB5E24 = (D2CellFileStrc**)((char*)d2ClientModule + 0x115E24);
     D2Client_UI_pCelFilePanelLevelSocket_6FBB5BB8 = (D2CellFileStrc**)((char*)d2ClientModule + 0x115BB8);
     D2Client_UI_pCelFilePanelLevel_6FBB5BB4 = (D2CellFileStrc**)((char*)d2ClientModule + 0x115BB4);
-    D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00 = (D2CharSheetToHitTextLocation**)((char*)d2ClientModule + 0xCEF00);
+    D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00 = (D2CharSheetToHitTextLocation*)((char*)d2ClientModule + 0xCEF00);
 
     // D2 UI Character sheet - Funcs
     D2Client_Roster_GetUnitNameFromD2UnitStrc_6FAB0C00 = (D2Client_Roster_GetUnitNameFromD2UnitStrc_6FAB0C00_t)((char*)d2ClientModule + 0x10C00);
@@ -544,4 +545,5 @@ void InitD2ClientExports()
     D2Client_GetSkillDescAtt_6FB16200 = (D2Client_GetSkillDescAtt_6FB16200_t)((char*)d2ClientModule + 0x76200);
     D2Client_UI_GetChanceToHitMonster_6FAD10D0 = (D2Client_UI_GetChanceToHitMonster_6FAD10D0_t)((char*)d2ClientModule + 0x310D0);
     D2Client_UI_DrawLeftRightSkillDescs_6FB16190 = (D2Client_UI_DrawLeftRightSkillDescs_6FB16190_t)((char*)d2ClientModule + 0x76190);
+    D2Client_UI_DrawBox_6FB5B0F0 = (D2Client_UI_DrawBox_6FB5B0F0_t)((char*)d2ClientModule + 0xBB0F0);
 }

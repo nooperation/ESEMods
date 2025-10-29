@@ -1,5 +1,6 @@
 #include "D2Client/Render_UI_ESE.h"
 #include "D2Client/UI_GroundItem_ESE.h"
+#include "D2Client/UI/D2Client_UI_DrawCharacterStatsScreen.h"
 #include "../D2ClientExports.h"
 #include "LibESE.h"
 #include <D2Combat.h>
@@ -410,7 +411,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
 
     if (D2Client_UI_pUIStates_6FBBA6A8[UI_STATSCREEN])
     {
-        D2Client_UI_DrawCharacterStatsScreen_6FACFD60();
+        ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60();
     }
 
     if (D2Client_UI_pUIStates_6FBBA6A8[UI_PARTYSCREEN])

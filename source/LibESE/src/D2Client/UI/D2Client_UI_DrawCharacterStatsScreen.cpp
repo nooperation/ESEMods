@@ -144,7 +144,7 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
     {
         for (auto i = 0; i < NUM_CHARSHEETBUTTONLOCATIONS; ++i)
         {
-            const auto buttonLocationIter = &(*D2Client_UI_pD2CharSheetButtonLocations_6FB78240)[i];
+            const auto buttonLocationIter = &D2Client_UI_pD2CharSheetButtonLocations_6FB78240[i];
 
             auto buttonXLeft = buttonLocationIter->x;
             auto buttonY = *D2Client_pScreenYOffset_6FBBA74C + buttonLocationIter->y;
@@ -165,12 +165,13 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
 
     for (auto i = 0; i < NUM_CHARSHEETTEXTENTRIES; ++i)
     {
-        const auto charSheetTextEntryIter = &(*D2Client_UI_pCharSheetTextEntries_6FB78010)[i];
+        const auto charSheetTextEntryIter = &D2Client_UI_pCharSheetTextEntries_6FB78010[i];
 
         wchar_t text[100] = {};
 
         auto v28 = D2LANG_GetStringFromTblIndex(charSheetTextEntryIter->strId);
-        Unicode::strncpy((struct Unicode*)text, v28, 99);
+
+        wcsncpy(text, (wchar_t*)v28, 99);
 
         auto textXLeft = *D2Client_pScreenXOffset_6FBBA748 + charSheetTextEntryIter->xLeft;
         auto textXRight = *D2Client_pScreenXOffset_6FBBA748 + charSheetTextEntryIter->xRight;
@@ -180,7 +181,7 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
         text[99] = 0;
 
         auto textFinalY = textY + *D2Client_pResolutionHeight_6FB740F0 - 480;
-        auto textLength = Unicode::strlen((const struct Unicode*)text);
+        auto textLength = wcslen(text);
 
         int newlinePos = -1;
         for (int j = 0; j < textLength && text[j] != 0; ++j)
@@ -195,7 +196,7 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
 
         if (newlinePos < textLength)
         {
-            auto secondLineText = (Unicode*)(newlinePos + 1);
+            auto secondLineText = (Unicode*)&text[newlinePos + 1];
 
             auto firstLineWidth = D2Win_GetTextWidth_10121((const Unicode*)text);
             auto firstLineX = textXLeft;
@@ -373,16 +374,16 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
 
         auto unknownIndex = 6 * v62;
 
-        D2Gfx_DrawBox_10055(
-            *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].BoxX,
-            *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].BoxY + *D2Client_pResolutionHeight_6FB740F0 - 480,
+        D2Client_UI_DrawBox_6FB5B0F0(
+            *D2Client_pScreenXOffset_6FBBA748 + D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00[unknownIndex].BoxX,
+            *D2Client_pScreenYOffset_6FBBA74C + D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00[unknownIndex].BoxY + *D2Client_pResolutionHeight_6FB740F0 - 480,
             155,
             30,
             *D2Client_UI_pUnknownColor2_6FBB1A50,
             DRAWMODE_TRANS75);
 
-        auto strAvgHitX = *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line1X;
-        auto strAvgHitY = *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line1Y + *D2Client_pResolutionHeight_6FB740F0 - 480;
+        auto strAvgHitX = *D2Client_pScreenXOffset_6FBBA748 + D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00[unknownIndex].Line1X;
+        auto strAvgHitY = *D2Client_pScreenYOffset_6FBBA74C + D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00[unknownIndex].Line1Y + *D2Client_pResolutionHeight_6FB740F0 - 480;
         auto strAvgHitIndex = D2LANG_GetStringFromTblIndex(STR_IDX_4159_charavghit);
         D2Win_DrawText_10117(strAvgHitIndex, strAvgHitX, strAvgHitY, 0, 0);
 
@@ -400,11 +401,12 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
         wchar_t text[128] = {};
         auto lastMonsterName = D2LANG_GetStringFromTblIndex((D2C_StringIndices)lastMonsterStatsTxt->wNameStr);
         auto charMonsterXIdx = D2LANG_GetStringFromTblIndex(STR_IDX_10103_charmonsterX);
-        Unicode::sprintf(128, (struct Unicode*)text, charMonsterXIdx, lastMonsterName, v61);
+
+        swprintf_s(text, 128, (wchar_t*)charMonsterXIdx, lastMonsterName, v61);
         D2Win_DrawText_10117(
             (const Unicode*)text,
-            *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line2X,
-            *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line2Y + *D2Client_pResolutionHeight_6FB740F0 - 480,
+            *D2Client_pScreenXOffset_6FBBA748 + D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00[unknownIndex].Line2X,
+            *D2Client_pScreenYOffset_6FBBA74C + D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00[unknownIndex].Line2Y + *D2Client_pResolutionHeight_6FB740F0 - 480,
             0,
             0
         );
@@ -460,12 +462,12 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
         if (blockRate)
         {
             auto strIdxCharMonTohit2x = D2LANG_GetStringFromTblIndex(STR_IDX_10105_charmontohit2X);
-            Unicode::sprintf(128, (struct Unicode*)text, strIdxCharMonTohit2x, blockRate, v69, blockMonsterNameStrIdx, v69);
+            swprintf_s(text, 128, (wchar_t*)strIdxCharMonTohit2x, blockRate, blockMonsterNameStrIdx, v69);
         }
         else
         {
             auto strIdxCharMonTohit1x = D2LANG_GetStringFromTblIndex(STR_IDX_10104_charmontohit1X);
-            Unicode::sprintf(128, (struct Unicode*)text, strIdxCharMonTohit1x, blockMonsterNameStrIdx, v69);
+            swprintf_s(text, 128, (wchar_t*)strIdxCharMonTohit1x, blockMonsterNameStrIdx, v69);
         }
 
         D2Win_10132_DrawBoxedTextClamped(
@@ -483,7 +485,6 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
     pData.nFrame = (*D2Client_UI_pUnknownFlag_6FBB1A4C != 0) + 10;
     D2Gfx_TEXTURE_CelDraw_10072(&pData, *D2Client_pScreenXOffset_6FBBA748 + 128, *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 60, 0xFFFFFFFF, DRAWMODE_NORMAL, 0);
     
-    wchar_t v140[128] = {};
 
     // Where the hell did this code go...
     if (currentPlayer && currentPlayer->dwUnitType == UNIT_PLAYER)
@@ -510,7 +511,10 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
         D2Win_DrawText_10117(playerClassName, classNameX, classNameY, 0, 0);
         auto playerName = D2Client_Roster_GetUnitNameFromD2UnitStrc_6FAB0C00(currentPlayer);
 
-        auto playerNameUnicodeWidth = Unicode::unicodenwidth(playerName, strlen(playerName)) + 1;
+        wchar_t playerNameWide[128] = {};
+        MultiByteToWideChar(CP_ACP, 0, playerName, -1, playerNameWide, 128);
+
+        auto playerNameUnicodeWidth = wcslen(playerNameWide) + 1;
         if (playerNameUnicodeWidth > 11)
         {
             if (playerNameUnicodeWidth < 14)
@@ -523,33 +527,29 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
             }
         }
 
-        // Uh there shouldn't be a 3rd param here? double check me
-        Unicode::win2Unicode((struct Unicode*)v140, playerName, sizeof(v140));
-
         auto v89 = *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 455;
         auto v90 = *D2Client_pScreenXOffset_6FBBA748 + 13;
-        auto v91 = D2Win_GetTextWidth_10121((const Unicode*)v140);
+        auto v91 = D2Win_GetTextWidth_10121((const Unicode*)playerNameWide);
         if (v91 < 148)
         {
             v90 += (148 - v91) >> 1;
         }
-        D2Win_DrawText_10117((const Unicode*)v140, v90, v89, 0, 0);
+        D2Win_DrawText_10117((const Unicode*)playerNameWide, v90, v89, 0, 0);
         D2Win_SetFont_10127(D2FONT_FONT16);
     }
-
 
     char v138[128] = {};
 
     for (auto v123 = 0; v123 < NUM_CHARSHEETSTATROWS; ++v123)
     {
         auto v92 = 0;
-        auto StatValue = STATLIST_UnitGetStatValue(currentPlayer, (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].statId, 0);
-        auto v94 = STATLIST_GetUnitBaseStat(currentPlayer, (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].statId, 0);
+        auto StatValue = STATLIST_UnitGetStatValue(currentPlayer, D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].statId, 0);
+        auto v94 = STATLIST_GetUnitBaseStat(currentPlayer, D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].statId, 0);
         
         bool shouldDrawText = false;
         bool shouldFormatNumber = false;
         
-        switch ((*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].statId)
+        switch (D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].statId)
         {
         case STAT_HITPOINTS:
             StatValue >>= 8;
@@ -680,7 +680,7 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
             auto v98 = 0;
             auto v97 = 0;
             auto difficultyLevelsTxt = DATATBLS_GetDifficultyLevelsTxtRecord(CurrentDifficulty_6FAAC090);
-            switch ((*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].statId)
+            switch (D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].statId)
             {
             case STAT_MAGICRESIST:
                 v98 = STATLIST_UnitGetStatValue(currentPlayer, STAT_MAXMAGICRESIST, 0);
@@ -809,45 +809,48 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
         
         if (shouldFormatNumber)
         {
-            D2Lang_FormatNumberWithCommas_10010((const Unicode*)v140, StatValue, 128);
-            auto v104 = *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].y + *D2Client_pResolutionHeight_6FB740F0 - 480;
-            auto v105 = *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xLeft;
-            auto v106 = (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xRight - v105 + *D2Client_pScreenXOffset_6FBBA748 + 1;
-            auto v107 = D2Win_GetTextWidth_10121((const Unicode*)v140);
+            wchar_t textBuff[128];
+
+            D2Lang_FormatNumberWithCommas_10010((const Unicode*)textBuff, StatValue, 128);
+            auto v104 = *D2Client_pScreenYOffset_6FBBA74C + D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].y + *D2Client_pResolutionHeight_6FB740F0 - 480;
+            auto v105 = *D2Client_pScreenXOffset_6FBBA748 + D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].xLeft;
+            auto v106 = D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].xRight - v105 + *D2Client_pScreenXOffset_6FBBA748 + 1;
+            auto v107 = D2Win_GetTextWidth_10121((const Unicode*)textBuff);
             if (v107 < v106)
             {
                 v105 += (v106 - v107) >> 1;
             }
-            D2Win_DrawText_10117((const Unicode*)v140, v105, v104, 0, 0);
+            D2Win_DrawText_10117((const Unicode*)textBuff, v105, v104, 0, 0);
             nColor = 0;
         }
         else if (shouldDrawText)
         {
-            Unicode::win2Unicode((struct Unicode*)v140, v138, 128);
-            auto v108 = NUM_FONTS;
+            wchar_t textBuff[128];
+            MultiByteToWideChar(CP_ACP, 0, v138, -1, textBuff, 128);
 
+            auto v108 = NUM_FONTS;
             if (v92)
             {
                 int pWidth = 0;
                 int pHeight = 0;
 
                 if (StatValue >= 1000
-                    || ( D2Win_GetTextDimensions_10131((const Unicode*)v140, &pWidth, &pHeight),
-                        pWidth >= (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xRight - (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xLeft))
+                    || ( D2Win_GetTextDimensions_10131((const Unicode*)textBuff, &pWidth, &pHeight),
+                        pWidth >= D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].xRight - D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].xLeft))
                 {
                     v108 = D2Win_SetFont_10127(D2FONT_FONT8);
                 }
             }
 
-            auto statValueStrY = *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].y + *D2Client_pResolutionHeight_6FB740F0 - 480;
-            auto statValueStrX = *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xLeft;
-            auto statValueStrWidth = (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xRight - statValueStrX + *D2Client_pScreenXOffset_6FBBA748 + 1;
-            auto statValueStrActualTextWidth = D2Win_GetTextWidth_10121((const Unicode*)v140);
+            auto statValueStrY = *D2Client_pScreenYOffset_6FBBA74C + D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].y + *D2Client_pResolutionHeight_6FB740F0 - 480;
+            auto statValueStrX = *D2Client_pScreenXOffset_6FBBA748 + D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].xLeft;
+            auto statValueStrWidth = D2Client_UI_pD2CharSheetStatRows_6FB78120[v123].xRight - statValueStrX + *D2Client_pScreenXOffset_6FBBA748 + 1;
+            auto statValueStrActualTextWidth = D2Win_GetTextWidth_10121((const Unicode*)textBuff);
             if (statValueStrActualTextWidth < statValueStrWidth)
             {
                 statValueStrX += (statValueStrWidth - statValueStrActualTextWidth) >> 1;
             }
-            D2Win_DrawText_10117((const Unicode*)v140, statValueStrX, statValueStrY, nColor, 0);
+            D2Win_DrawText_10117((const Unicode*)textBuff, statValueStrX, statValueStrY, nColor, 0);
 
             nColor = 0;
             if (v108 != NUM_FONTS)
