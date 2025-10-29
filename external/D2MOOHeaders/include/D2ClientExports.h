@@ -49,121 +49,122 @@ struct GroundItemText
 // Unknown stuff, not in use
 struct D2WallUnknown2
 {
-	int32_t xPos;                               // 0
-	int32_t yPos;                               // 4
-	int32_t unknown8;                           // 8
-	int32_t unknown12;                          // 12
-	int32_t unknown16;                          // 16
-	int32_t unknown20;                          // 20
-	D2TileLibraryEntryStrc** tileLibraryEntry;   // 24
+    int32_t xPos;                               // 0
+    int32_t yPos;                               // 4
+    int32_t unknown8;                           // 8
+    int32_t unknown12;                          // 12
+    int32_t unknown16;                          // 16
+    int32_t unknown20;                          // 20
+    D2TileLibraryEntryStrc** tileLibraryEntry;   // 24
 };
 
 struct D2WallUnknown
 {
-	int32_t flags;                       // 0
-	int32_t xPos;                        // 4
-	int32_t yPos;                        // 8
-	union {
-		D2UnitStrc* pUnit;
-		D2DrlgTileDataStrc* pTileData;
-	};
-	D2WallUnknown* pNext;                // 16
+    int32_t flags;                       // 0
+    int32_t xPos;                        // 4
+    int32_t yPos;                        // 8
+    union
+    {
+        D2UnitStrc* pUnit;
+        D2DrlgTileDataStrc* pTileData;
+    };
+    D2WallUnknown* pNext;                // 16
 };
 
 struct D2Wall
 {
-	int32_t* pSquares;						// 0 | 0
-	int32_t unknown4;						// 1 | 4
-	int32_t unknown8;						// 2 | 8
-	int32_t unknown12;						// 3 | 12
-	D2WallUnknown* pWallUnknownShadows;		// 4 | 16
-	D2WallUnknown* pWallUnknownBackground;  // 5 | 20
-	int32_t unknown24;						// 6 | 24
-	D2WallUnknown* pWallUnknownRoofs;		// 7 | 28
-	D2WallUnknown* pWallEdgeOfWorldLedges;  // 8 | 32
+    int32_t* pSquares;						// 0 | 0
+    int32_t unknown4;						// 1 | 4
+    int32_t unknown8;						// 2 | 8
+    int32_t unknown12;						// 3 | 12
+    D2WallUnknown* pWallUnknownShadows;		// 4 | 16
+    D2WallUnknown* pWallUnknownBackground;  // 5 | 20
+    int32_t unknown24;						// 6 | 24
+    D2WallUnknown* pWallUnknownRoofs;		// 7 | 28
+    D2WallUnknown* pWallEdgeOfWorldLedges;  // 8 | 32
 };
 
 struct D2ViewElement
 {
-	int32_t xPos;		// 0 | 0
-	int32_t yPos;		// 1 | 4
-	int32_t unknown8;	// 2 | 8
-	D2UnitStrc* unit;	// 3 | 12
-	D2DrlgActStrc* pAct; // 4 | 16 UNKNOWN
+    int32_t xPos;		// 0 | 0
+    int32_t yPos;		// 1 | 4
+    int32_t unknown8;	// 2 | 8
+    D2UnitStrc* unit;	// 3 | 12
+    D2DrlgActStrc* pAct; // 4 | 16 UNKNOWN
 };
 
 struct D2ViewStruct
 {
-	int32_t flags;                       //     0 | 0
-	int32_t xLeft;                       //     1 | 4
-	int32_t yTop;                        //     2 | 8
-	int32_t xRight;                      //     3 | 12
-	int32_t yBottom;                     //     4 | 16
-	int32_t xLeft2;                      //     5 | 20
-	int32_t yTop2;                       //     6 | 24
-	int32_t xRight2;                     //     7 | 28
-	int32_t yBottom2;                    //     8 | 32
-	int32_t tileDrawPosX;                //     9 | 36
-	int32_t tileDrawPosY;                //    10 | 40
-	int32_t gouraudTblX;                 //    11 | 44--
-	int32_t gouraudTbly;                 //    12 | 48
-	int32_t gouraudTblXVal;              //    13 | 52
-	int32_t unknownFlags;                //    14 | 56
-	D2ViewElement elements[3000];        //    15 | 60 pEntries? 
-	int32_t numElements;                 // 15015 |    0 someCounter  (pRenderer[56 + 20*(someCounter + 1)]
-	int32_t gameCoordsPosX;              // 15016 |    tileDrawPosXToGameCoords - 3
-	int32_t gameCoordsPosY;              // 15017 |    tileDrawPosYToGameCoords - [15021](widh)
-	D2Wall* pWall;                       // 15018 |    pWall[pWallSize]
-	int32_t numWallElements;                   // 15019 |    (height+width-1)*(height+width-1)
-	int32_t wallWidthPlusHeightMinusOne; // 15020 |    (height+width-1)
-	int32_t wallWidth;                   // 15021 |    width
-	int32_t wallHeight;                  // 15022 |    height
+    int32_t flags;                       //     0 | 0
+    int32_t xLeft;                       //     1 | 4
+    int32_t yTop;                        //     2 | 8
+    int32_t xRight;                      //     3 | 12
+    int32_t yBottom;                     //     4 | 16
+    int32_t xLeft2;                      //     5 | 20
+    int32_t yTop2;                       //     6 | 24
+    int32_t xRight2;                     //     7 | 28
+    int32_t yBottom2;                    //     8 | 32
+    int32_t tileDrawPosX;                //     9 | 36
+    int32_t tileDrawPosY;                //    10 | 40
+    int32_t gouraudTblX;                 //    11 | 44--
+    int32_t gouraudTbly;                 //    12 | 48
+    int32_t gouraudTblXVal;              //    13 | 52
+    int32_t unknownFlags;                //    14 | 56
+    D2ViewElement elements[3000];        //    15 | 60 pEntries? 
+    int32_t numElements;                 // 15015 |    0 someCounter  (pRenderer[56 + 20*(someCounter + 1)]
+    int32_t gameCoordsPosX;              // 15016 |    tileDrawPosXToGameCoords - 3
+    int32_t gameCoordsPosY;              // 15017 |    tileDrawPosYToGameCoords - [15021](widh)
+    D2Wall* pWall;                       // 15018 |    pWall[pWallSize]
+    int32_t numWallElements;                   // 15019 |    (height+width-1)*(height+width-1)
+    int32_t wallWidthPlusHeightMinusOne; // 15020 |    (height+width-1)
+    int32_t wallWidth;                   // 15021 |    width
+    int32_t wallHeight;                  // 15022 |    height
 };
 
 
 struct D2UnitLightSource
 {
-	D2C_UnitTypes dwUnitType;  // 0x00
-	uint32_t dwUnitId;         // 0x04
-	int32_t unknown08;         // 0x08
-	int32_t unknownArg2;       // 0x0C
-	int32_t posX;              // 0x10
-	int32_t posY;              // 0x14
-	int32_t unknown18;         // 0x18
-	int32_t nLightRadiusMult8; // 0x1C = nLight * 8
-	int32_t unknown20;         // 0x20
+    D2C_UnitTypes dwUnitType;  // 0x00
+    uint32_t dwUnitId;         // 0x04
+    int32_t unknown08;         // 0x08
+    int32_t unknownArg2;       // 0x0C
+    int32_t posX;              // 0x10
+    int32_t posY;              // 0x14
+    int32_t unknown18;         // 0x18
+    int32_t nLightRadiusMult8; // 0x1C = nLight * 8
+    int32_t unknown20;         // 0x20
 
-	int8_t nAlphaMaybe;        // 0x24
-	int8_t nRed;               // 0x25
-	int8_t nGreen;             // 0x26
-	int8_t nBlue;              // 0x27
+    int8_t nAlphaMaybe;        // 0x24
+    int8_t nRed;               // 0x25
+    int8_t nGreen;             // 0x26
+    int8_t nBlue;              // 0x27
 
-	D2UnitLightSource* pNext;  // 0x28
-	int32_t Zero2C;            // 0x2C
-	int32_t* pLightMapData;    // 0x30
+    D2UnitLightSource* pNext;  // 0x28
+    int32_t Zero2C;            // 0x2C
+    int32_t* pLightMapData;    // 0x30
 };
 
 
 
 typedef struct D2DialogChildNode
 {
-	void* pObj;                  // +0x00 pointer to object with vtable at [pObj]
-	struct D2DialogChildNode* pNext; // +0x04 forward link
+    void* pObj;                  // +0x00 pointer to object with vtable at [pObj]
+    struct D2DialogChildNode* pNext; // +0x04 forward link
 } D2DialogChildNode;
 
 typedef struct D2DialogLine
 {
-	wchar_t wszText[120];   // +0x000 text buffer, used as Unicode* in DrawText (see v9 - 256) (120 wchar = 240 bytes)
+    wchar_t wszText[120];   // +0x000 text buffer, used as Unicode* in DrawText (see v9 - 256) (120 wchar = 240 bytes)
 
-	int32_t  nLineStep;      // +0x0F0 per-line vertical advance (used as y accumulator) (v9 - 16)
-	int32_t  nXPad;          // +0x0F4 horizontal pad/offset within dialog, computed during autosize (v9 - 12)
-	int32_t  nTextWidth;     // +0x0F8 pixel width of text (v9 - 8)
-	int32_t  unk0FC;         // +0x0FC reserved/unknown (v14[2])
+    int32_t  nLineStep;      // +0x0F0 per-line vertical advance (used as y accumulator) (v9 - 16)
+    int32_t  nXPad;          // +0x0F4 horizontal pad/offset within dialog, computed during autosize (v9 - 12)
+    int32_t  nTextWidth;     // +0x0F8 pixel width of text (v9 - 8)
+    int32_t  unk0FC;         // +0x0FC reserved/unknown (v14[2])
 
-	Font     nFont;          // +0x100 font for this line (v9)
-	int32_t  nColor;         // +0x104 color used in draw (v9 + 4)
-	int32_t  unk108;         // +0x108 reserved/unknown (v14[5])
-	int32_t  bSelectable;    // +0x10C selectable flag (checked in 6FAD7090/6FAD7320, at pDialog+93 + k*68)
+    Font     nFont;          // +0x100 font for this line (v9)
+    int32_t  nColor;         // +0x104 color used in draw (v9 + 4)
+    int32_t  unk108;         // +0x108 reserved/unknown (v14[5])
+    int32_t  bSelectable;    // +0x10C selectable flag (checked in 6FAD7090/6FAD7320, at pDialog+93 + k*68)
 } D2DialogLine;
 
 #define D2_UIDIALOG_MAX_LINES 10
@@ -172,43 +173,43 @@ struct D2CellFileStrc;
 
 typedef struct D2Dialog
 {
-	// header
-	uint32_t dwCreateTick;       // +0x000 GetTickCount() at creation
-	uint32_t unk004;             // +0x004 reserved/unknown (cleared)
-	D2CellFileStrc* pCel;        // +0x008 background cel file (menu .cel)
-	uint32_t bUseBackground;     // +0x00C if nonzero, draw cel background, else draw solid rect
-	uint32_t unk010;             // +0x010 reserved/unknown (cleared)
-	uint32_t bAltYMode;          // +0x014 affects Y origin computation in autosize (6FAD7320)
-	uint32_t nInitParamA6;       // +0x018 init parameter a6
-	uint32_t unk01C;             // +0x01C reserved/unknown
-	uint32_t unk020;             // +0x020 reserved/unknown
+    // header
+    uint32_t dwCreateTick;       // +0x000 GetTickCount() at creation
+    uint32_t unk004;             // +0x004 reserved/unknown (cleared)
+    D2CellFileStrc* pCel;        // +0x008 background cel file (menu .cel)
+    uint32_t bUseBackground;     // +0x00C if nonzero, draw cel background, else draw solid rect
+    uint32_t unk010;             // +0x010 reserved/unknown (cleared)
+    uint32_t bAltYMode;          // +0x014 affects Y origin computation in autosize (6FAD7320)
+    uint32_t nInitParamA6;       // +0x018 init parameter a6
+    uint32_t unk01C;             // +0x01C reserved/unknown
+    uint32_t unk020;             // +0x020 reserved/unknown
 
-	int32_t  nCenterX;           // +0x024 used by autosize as horizontal center
-	int32_t  nCenterY;           // +0x028 used by autosize as vertical anchor
-	int32_t  nLeft;              // +0x02C dialog left X (used in draw; updated by autosize)
-	int32_t  nTop;               // +0x030 dialog top Y (used in draw; updated by autosize)
-	int32_t  nWidth;             // +0x034 dialog width (cel size or autosize result)
-	int32_t  nHeight;            // +0x038 dialog height (cel size or autosize result)
+    int32_t  nCenterX;           // +0x024 used by autosize as horizontal center
+    int32_t  nCenterY;           // +0x028 used by autosize as vertical anchor
+    int32_t  nLeft;              // +0x02C dialog left X (used in draw; updated by autosize)
+    int32_t  nTop;               // +0x030 dialog top Y (used in draw; updated by autosize)
+    int32_t  nWidth;             // +0x034 dialog width (cel size or autosize result)
+    int32_t  nHeight;            // +0x038 dialog height (cel size or autosize result)
 
-	uint32_t unk03C;             // +0x03C reserved/unknown
-	uint32_t unk040;             // +0x040 reserved/unknown
-	int32_t  nSelectedIndex;     // +0x044 selected line index (default -1)
-	int32_t  nHoverIndex;        // +0x048 reserved/unknown (default -1)
-	uint32_t unk04C;             // +0x04C reserved/unknown
+    uint32_t unk03C;             // +0x03C reserved/unknown
+    uint32_t unk040;             // +0x040 reserved/unknown
+    int32_t  nSelectedIndex;     // +0x044 selected line index (default -1)
+    int32_t  nHoverIndex;        // +0x048 reserved/unknown (default -1)
+    uint32_t unk04C;             // +0x04C reserved/unknown
 
-	int32_t  nNumLines;          // +0x050 number of line entries
-	uint32_t nDrawCounter;       // +0x054 increments each draw (6FAD6EB0)
-	uint32_t bAutoSize;          // +0x058 must be TRUE for autosize routine (6FAD7320)
-	uint32_t nHighlightMode;     // +0x05C 1=color highlight, 2=animated arrows (6FAD6EB0)
+    int32_t  nNumLines;          // +0x050 number of line entries
+    uint32_t nDrawCounter;       // +0x054 increments each draw (6FAD6EB0)
+    uint32_t bAutoSize;          // +0x058 must be TRUE for autosize routine (6FAD7320)
+    uint32_t nHighlightMode;     // +0x05C 1=color highlight, 2=animated arrows (6FAD6EB0)
 
-	uint32_t nInitParamA3;       // +0x060 init parameter a3
-	uint32_t nInitParamA4;       // +0x064 init parameter a4
+    uint32_t nInitParamA3;       // +0x060 init parameter a3
+    uint32_t nInitParamA4;       // +0x064 init parameter a4
 
-	D2DialogLine Lines[D2_UIDIALOG_MAX_LINES]; // +0x068 .. +0xB07
+    D2DialogLine Lines[D2_UIDIALOG_MAX_LINES]; // +0x068 .. +0xB07
 
-	// tail
-	D2DialogChildNode* pDrawChain;	// +0xB08 list of child draw nodes (each node: [0]=pObj, [1]=pNext)
-	struct D2Dialog* pNext;			// +0xB0C next dialog in global list (set to previous head on creation)
+    // tail
+    D2DialogChildNode* pDrawChain;	// +0xB08 list of child draw nodes (each node: [0]=pObj, [1]=pNext)
+    struct D2Dialog* pNext;			// +0xB0C next dialog in global list (set to previous head on creation)
 } D2Dialog;
 
 #pragma pack(pop)
@@ -517,9 +518,9 @@ extern int32_t* D2Client_pBeltType_6FB7CD70; // DCD70
 #pragma pack(push, 1)
 struct D2RosterParty
 {
-	int32_t partyId;
-	D2RosterUnitStrc* pRoster;
-	D2RosterParty* pNext;
+    int32_t partyId;
+    D2RosterUnitStrc* pRoster;
+    D2RosterParty* pNext;
 };
 #pragma pack(pop)
 
