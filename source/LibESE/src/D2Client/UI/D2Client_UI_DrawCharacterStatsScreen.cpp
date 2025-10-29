@@ -15,6 +15,10 @@
 
 #pragma pack(push, 1)
 
+#define NUM_CHARSHEETTEXTENTRIES 15
+#define NUM_CHARSHEETBUTTONLOCATIONS 4
+#define NUM_CHARSHEETSTATROWS 18
+
 struct D2CharSheetButtonLocations
 {
   int x;
@@ -57,33 +61,6 @@ typedef void(__fastcall* D2SkillDescAttCallback_t)(D2UnitStrc*, D2SkillStrc*, D2
 
 void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
 {
-    char* __fastcall D2Client_Roster_GetUnitNameFromD2UnitStrc_6FAB0C00(D2UnitStrc* pUnit);
-    D2CellFileStrc* __cdecl D2Client_UI_GetBuySellBtnCellFile_6FB24110();
-    int __fastcall D2Client_UI_GetPassiveWeaponBlock_6FAD1010(D2UnitStrc* pUnit);
-    int __fastcall D2Client_Unit_GetLastSelectedMonsterClassId_6FAB5A70();
-    void D2Client_UI_SetUnknownColorToBlack_6FB01C50();
-    int D2Client_GetGameTypeButModified_6FAAC060();
-    int __fastcall D2Client_Unit_GetLastSelectedEvilMonsterClassId_6FAB5A80();
-    int __fastcall D2Client_GetSkillDescAtt_6FB16200(D2UnitStrc* pUnit, int bIsLeftSkill);
-    int __fastcall D2Client_UI_GetChanceToHitMonster_6FAD10D0(int baseToHit);
-    void __fastcall D2Client_UI_DrawLeftRightSkillDescs_6FB16190(D2UnitStrc* pUnit);
-
-    #define NUM_CHARSHEETTEXTENTRIES 15
-    #define NUM_CHARSHEETBUTTONLOCATIONS 4
-    #define NUM_CHARSHEETSTATROWS 18
-
-    int32_t *D2Client_UI_pUnknownColor2_6FBB1A50 = nullptr;
-    int32_t *D2Client_UI_pUnknownFlag_6FBB1A4C = nullptr;
-    D2CharSheetStatRow** D2Client_UI_pD2CharSheetStatRows_6FB78120;
-    D2CharSheetTextEntry** D2Client_UI_pCharSheetTextEntries_6FB78010;
-    D2CharSheetButtonLocations** D2Client_UI_pD2CharSheetButtonLocations_6FB78240;
-    D2CellFileStrc** D2Client_UI_pCelFile_PanelSkillPoints_6FBB5E50;
-    D2CellFileStrc** D2Client_UI_pCelFile_UiInvChar_6FBB5E24;
-    D2CellFileStrc** D2Client_UI_pCelFilePanelLevelSocket_6FBB5BB8;
-    D2CellFileStrc** D2Client_UI_pCelFilePanelLevel_6FBB5BB4;
-    D2CharSheetToHitTextLocation** D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00 = nullptr;
-
-
     auto currentPlayer = D2Client_GetCurrentPlayer_6FB283D0();
     D2GfxDataStrc pData = {};
     int32_t nColor = 0;
@@ -101,16 +78,6 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
 
     auto mousePosX = D2Client_UI_GetMouseXPos_6FB57BC0();
     auto mousePosY = D2Client_UI_GetMouseYPos_6FB57BD0();
-
-    // wchar_t v142[50] = {}
-    // v1 = &v142;
-    // v2 = 50;
-    // do
-    // {
-    //     Unicode::`default constructor closure'((int)v1);
-    //         v1 = (int*)((char*)v1 + 2);
-    //     --v2;
-    // } while (v2);
 
     if (mousePosX >= *D2Client_pScreenXOffset_6FBBA748 + 128
         && mousePosX <= *D2Client_pScreenXOffset_6FBBA748 + 160
@@ -212,7 +179,6 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
 
         text[99] = 0;
 
-        wchar_t v35 = 0;
         auto textFinalY = textY + *D2Client_pResolutionHeight_6FB740F0 - 480;
         auto textLength = Unicode::strlen((const struct Unicode*)text);
 
@@ -307,7 +273,6 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
                 monsterToHit = 10 * monsterToHit / 15;
             }
 
-            auto monsterToHit = 0;
             auto modifiedPlayerAC = currentPlayerAC;
 
             if (currentPlayerAC < 0)
@@ -316,38 +281,39 @@ void __fastcall ESE_D2Client_UI_DrawCharacterStatsScreen_6FACFD60()
                 modifiedPlayerAC = 0;
             }
 
-            if (monsterToHit >= 0)
+            if (monsterToHit > 0)
             {
-                if (monsterToHit)
-                {
-                    goto LABEL_57;
-                }
+                monsterToHit = 100 * monsterToHit / (monsterToHit + modifiedPlayerAC);
             }
             else
             {
-                modifiedPlayerAC -= monsterToHit;
-                monsterToHit = 0;
+                if(monsterToHit < 0)
+                {
+                    modifiedPlayerAC += -monsterToHit;
+                    monsterToHit = 0;
+                }
+
+                if (modifiedPlayerAC == 0)
+                {
+                    monsterToHit = 100;
+                }
+                else
+                {
+                    monsterToHit = 100 * monsterToHit / (monsterToHit + modifiedPlayerAC);
+                }
             }
 
-            if (!modifiedPlayerAC)
-            {
-                monsterToHit = 100;
-                goto LABEL_59;
-            }
-
-        LABEL_57:
-            monsterToHit = 100 * monsterToHit / (monsterToHit + modifiedPlayerAC);
-
-        LABEL_59:
-            auto monsterLevel = (__int16)monStatsTxt->nLevel[nDifficultyLevel];
             finalMonsterToHitPercentage = 2 * monsterToHit * monsterLevel / (monsterLevel + STATLIST_UnitGetStatValue((const D2UnitStrc*)currentPlayer, STAT_LEVEL, 0));
-            goto LABEL_60;
+        }
+        else
+        {
+            finalMonsterToHitPercentage = 0;
         }
     }
-    finalMonsterToHitPercentage = 0;
-LABEL_60:
-
-    wchar_t v56[128] = {0};
+    else
+    {
+        finalMonsterToHitPercentage = 0;
+    }
 
     D2Client_UI_SetUnknownColorToBlack_6FB01C50();
     auto v58 = 0;
@@ -359,10 +325,8 @@ LABEL_60:
         mousePosY <= *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 315)
     {
         v58 = 1;
-        goto LABEL_73;
     }
-
-    if (mousePosX >= *D2Client_pScreenXOffset_6FBBA748 + 162 && 
+    else if (mousePosX >= *D2Client_pScreenXOffset_6FBBA748 + 162 && 
         mousePosX <= *D2Client_pScreenXOffset_6FBBA748 + 320 && 
         mousePosY >= *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 308 &&
         mousePosY <= *D2Client_pScreenYOffset_6FBBA74C + *D2Client_pResolutionHeight_6FB740F0 - 289)
@@ -370,7 +334,6 @@ LABEL_60:
         v59 = 1;
     }
 
-LABEL_73:
     auto v62 = 0;
     auto v61 = finalToHitLeft;
 
@@ -384,70 +347,69 @@ LABEL_73:
         v59 = 0;
     }
 
-    if (v58)
+    if (v58 || v59)
     {
-        v62 = 0;
-    }
-    else
-    {
-        if (!v59)
+        if (v58)
         {
-            goto LABEL_90;
+            v62 = 0;
         }
-        v62 = 1;
-        v61 = finalToHitRight;
-    }
-    if (v61 >= 5)
-    {
-        if (v61 > 95)
+        else
         {
-            v61 = 95;
+            v62 = 1;
+            v61 = finalToHitRight;
         }
+
+        if (v61 >= 5)
+        {
+            if (v61 > 95)
+            {
+                v61 = 95;
+            }
+        }
+        else
+        {
+            v61 = 5;
+        }
+
+        auto unknownIndex = 6 * v62;
+
+        D2Gfx_DrawBox_10055(
+            *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].BoxX,
+            *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].BoxY + *D2Client_pResolutionHeight_6FB740F0 - 480,
+            155,
+            30,
+            *D2Client_UI_pUnknownColor2_6FBB1A50,
+            DRAWMODE_TRANS75);
+
+        auto strAvgHitX = *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line1X;
+        auto strAvgHitY = *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line1Y + *D2Client_pResolutionHeight_6FB740F0 - 480;
+        auto strAvgHitIndex = D2LANG_GetStringFromTblIndex(STR_IDX_4159_charavghit);
+        D2Win_DrawText_10117(strAvgHitIndex, strAvgHitX, strAvgHitY, 0, 0);
+
+        D2MonStatsTxt *lastMonsterStatsTxt = nullptr;
+
+        auto nLastSelectedMonsterClassId = D2Client_Unit_GetLastSelectedMonsterClassId_6FAB5A70();
+        if (nLastSelectedMonsterClassId < 0
+            || nLastSelectedMonsterClassId >= sgptDataTables->nMonStatsTxtRecordCount
+            || (lastMonsterStatsTxt = &sgptDataTables->pMonStatsTxt[nLastSelectedMonsterClassId]) == 0)
+        {
+            FOG_DisplayAssert("ptStats", "C:\\projects\\D2\\head\\Diablo2\\Source\\D2Client\\UI\\char.cpp", 236);
+            exit(-1);
+        }
+
+        wchar_t text[128] = {};
+        auto lastMonsterName = D2LANG_GetStringFromTblIndex((D2C_StringIndices)lastMonsterStatsTxt->wNameStr);
+        auto charMonsterXIdx = D2LANG_GetStringFromTblIndex(STR_IDX_10103_charmonsterX);
+        Unicode::sprintf(128, (struct Unicode*)text, charMonsterXIdx, lastMonsterName, v61);
+        D2Win_DrawText_10117(
+            (const Unicode*)text,
+            *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line2X,
+            *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line2Y + *D2Client_pResolutionHeight_6FB740F0 - 480,
+            0,
+            0
+        );
     }
-    else
-    {
-        v61 = 5;
-    }
 
-    auto unknownIndex = 6 * v62;
-
-    D2Gfx_DrawBox_10055(
-        *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].BoxX,
-        *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].BoxY + *D2Client_pResolutionHeight_6FB740F0 - 480,
-        155,
-        30,
-        *D2Client_UI_pUnknownColor2_6FBB1A50,
-        DRAWMODE_TRANS75);
-
-    auto strAvgHitX = *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line1X;
-    auto strAvgHitY = *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line1Y + *D2Client_pResolutionHeight_6FB740F0 - 480;
-    auto strAvgHitIndex = D2LANG_GetStringFromTblIndex(STR_IDX_4159_charavghit);
-    D2Win_DrawText_10117(strAvgHitIndex, strAvgHitX, strAvgHitY, 0, 0);
-
-    D2MonStatsTxt *lastMonsterStatsTxt = nullptr;
-
-    auto nLastSelectedMonsterClassId = D2Client_Unit_GetLastSelectedMonsterClassId_6FAB5A70();
-    if (nLastSelectedMonsterClassId < 0
-        || nLastSelectedMonsterClassId >= sgptDataTables->nMonStatsTxtRecordCount
-        || (lastMonsterStatsTxt = &sgptDataTables->pMonStatsTxt[nLastSelectedMonsterClassId]) == 0)
-    {
-        FOG_DisplayAssert("ptStats", "C:\\projects\\D2\\head\\Diablo2\\Source\\D2Client\\UI\\char.cpp", 236);
-        exit(-1);
-    }
-
-    wchar_t text[128] = {};
-    auto lastMonsterName = D2LANG_GetStringFromTblIndex((D2C_StringIndices)lastMonsterStatsTxt->wNameStr);
-    auto charMonsterXIdx = D2LANG_GetStringFromTblIndex(STR_IDX_10103_charmonsterX);
-    Unicode::sprintf(128, (struct Unicode*)text, charMonsterXIdx, lastMonsterName, v61);
-    D2Win_DrawText_10117(
-        (const Unicode*)text,
-        *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line2X,
-        *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00)[unknownIndex].Line2Y + *D2Client_pResolutionHeight_6FB740F0 - 480,
-        0,
-        0
-    );
-
-LABEL_90:
     auto v69 = finalMonsterToHitPercentage;
     if (finalMonsterToHitPercentage >= 5)
     {
@@ -491,6 +453,8 @@ LABEL_90:
             FOG_DisplayAssert("ptStats", "C:\\projects\\D2\\head\\Diablo2\\Source\\D2Client\\UI\\char.cpp", 348);
             exit(-1);
         }
+
+        wchar_t text[128] = {};
 
         auto blockMonsterNameStrIdx = D2LANG_GetStringFromTblIndex((D2C_StringIndices)v76->wNameStr);
         if (blockRate)
@@ -549,8 +513,6 @@ LABEL_90:
         auto playerNameUnicodeWidth = Unicode::unicodenwidth(playerName, strlen(playerName)) + 1;
         if (playerNameUnicodeWidth > 11)
         {
-            auto playerNameFont = D2FONT_FONT8;
-
             if (playerNameUnicodeWidth < 14)
             {
                 D2Win_SetFont_10127(D2FONT_FONT8);
@@ -576,14 +538,17 @@ LABEL_90:
     }
 
 
-    auto v123 = 0;
     char v138[128] = {};
 
-    while (2)
+    for (auto v123 = 0; v123 < NUM_CHARSHEETSTATROWS; ++v123)
     {
         auto v92 = 0;
         auto StatValue = STATLIST_UnitGetStatValue(currentPlayer, (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].statId, 0);
         auto v94 = STATLIST_GetUnitBaseStat(currentPlayer, (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].statId, 0);
+        
+        bool shouldDrawText = false;
+        bool shouldFormatNumber = false;
+        
         switch ((*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].statId)
         {
         case STAT_HITPOINTS:
@@ -592,7 +557,11 @@ LABEL_90:
             {
                 StatValue = 1;
             }
-            goto LABEL_152;
+            wsprintfA(v138, "%ld", StatValue);
+            v92 = 1;
+            shouldDrawText = true;
+            break;
+            
         case STAT_MAXHP:
             if (StatValue <= v94)
             {
@@ -600,22 +569,25 @@ LABEL_90:
                 {
                     nColor = 1;
                 }
-            LABEL_136:
-                StatValue >>= 8;
-                wsprintfA(v138, "%ld", StatValue);
-                v92 = 1;
             }
             else
             {
-                StatValue >>= 8;
                 nColor = 3;
-                wsprintfA(v138, "%ld", StatValue);
-                v92 = 1;
             }
-            goto LABEL_216;
+            StatValue >>= 8;
+            wsprintfA(v138, "%ld", StatValue);
+            v92 = 1;
+            shouldDrawText = true;
+            break;
+            
         case STAT_MANA:
         case STAT_STAMINA:
-            goto LABEL_136;
+            StatValue >>= 8;
+            wsprintfA(v138, "%ld", StatValue);
+            v92 = 1;
+            shouldDrawText = true;
+            break;
+            
         case STAT_MAXMANA:
             if (StatValue <= v94)
             {
@@ -628,7 +600,12 @@ LABEL_90:
             {
                 nColor = 3;
             }
-            goto LABEL_136;
+            StatValue >>= 8;
+            wsprintfA(v138, "%ld", StatValue);
+            v92 = 1;
+            shouldDrawText = true;
+            break;
+            
         case STAT_MAXSTAMINA:
             if (StatValue <= v94)
             {
@@ -642,13 +619,17 @@ LABEL_90:
                 nColor = 3;
             }
             StatValue >>= 8;
-        LABEL_152:
             wsprintfA(v138, "%ld", StatValue);
             v92 = 1;
-            goto LABEL_216;
+            shouldDrawText = true;
+            break;
+            
         case STAT_EXPERIENCE:
-            goto LABEL_208;
+            shouldFormatNumber = true;
+            break;
+            
         case STAT_NEXTEXP:
+        {
             auto level = STATLIST_GetUnitBaseStat(currentPlayer, STAT_LEVEL, 0);
             auto classId = -1;
 
@@ -662,19 +643,10 @@ LABEL_90:
             {
                 StatValue = DATATBLS_GetLevelThreshold(classId, level);
             }
-        LABEL_208:
-            D2Lang_FormatNumberWithCommas_10010((const Unicode*)v140, StatValue, 128);
-            auto v104 = *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].y + *D2Client_pResolutionHeight_6FB740F0 - 480;
-            auto v105 = *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xLeft;
-            auto v106 = (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xRight - v105 + *D2Client_pScreenXOffset_6FBBA748 + 1;
-            auto v107 = D2Win_GetTextWidth_10121((const Unicode*)v140);
-            if (v107 < v106)
-            {
-                v105 += (v106 - v107) >> 1;
-            }
-            D2Win_DrawText_10117((const Unicode*)v140, v105, v104, 0, 0);
-            nColor = 0;
-            goto LABEL_224;
+            shouldFormatNumber = true;
+            break;
+        }
+            
         case STAT_ARMORCLASS:
             StatValue = UNITS_GetDefense(currentPlayer);
             if (STATES_CheckStateMaskArmBlueOnUnit(currentPlayer))
@@ -695,12 +667,15 @@ LABEL_90:
             {
                 v92 = 1;
             }
-            goto LABEL_216;
+            shouldDrawText = true;
+            break;
+            
         case STAT_MAGICRESIST:
         case STAT_FIRERESIST:
         case STAT_LIGHTRESIST:
         case STAT_COLDRESIST:
         case STAT_POISONRESIST:
+        {
             auto CurrentDifficulty_6FAAC090 = D2Client_GetCurrentDifficulty_6FAAC090();
             auto v98 = 0;
             auto v97 = 0;
@@ -709,7 +684,9 @@ LABEL_90:
             {
             case STAT_MAGICRESIST:
                 v98 = STATLIST_UnitGetStatValue(currentPlayer, STAT_MAXMAGICRESIST, 0);
-                goto LABEL_175;
+                v97 = v98;
+                break;
+                
             case STAT_FIRERESIST:
                 if (STATES_CheckStateMaskRFBlueOnUnit(currentPlayer))
                 {
@@ -720,7 +697,9 @@ LABEL_90:
                     nColor = 1;
                 }
                 v98 = STATLIST_UnitGetStatValue(currentPlayer, STAT_MAXFIRERESIST, 0);
-                goto LABEL_175;
+                v97 = v98;
+                break;
+                
             case STAT_LIGHTRESIST:
                 if (STATES_CheckStateMaskRLBlueOnUnit(currentPlayer))
                 {
@@ -731,7 +710,9 @@ LABEL_90:
                     nColor = 1;
                 }
                 v98 = STATLIST_UnitGetStatValue(currentPlayer, STAT_MAXLIGHTRESIST, 0);
-                goto LABEL_175;
+                v97 = v98;
+                break;
+                
             case STAT_COLDRESIST:
                 if (STATES_CheckStateMaskRCBlueOnUnit(currentPlayer))
                 {
@@ -742,7 +723,9 @@ LABEL_90:
                     nColor = 1;
                 }
                 v98 = STATLIST_UnitGetStatValue(currentPlayer, STAT_MAXCOLDRESIST, 0);
-                goto LABEL_175;
+                v97 = v98;
+                break;
+                
             case STAT_POISONRESIST:
                 if (STATES_CheckStateMaskRPBlueOnUnit(currentPlayer))
                 {
@@ -753,12 +736,13 @@ LABEL_90:
                     nColor = 1;
                 }
                 v98 = STATLIST_UnitGetStatValue(currentPlayer, STAT_MAXPOISONRESIST, 0);
-            LABEL_175:
                 v97 = v98;
                 break;
+                
             default:
                 break;
             }
+            
             if (D2Client_IsExpansion_6FAAC080())
             {
                 StatValue += difficultyLevelsTxt->dwResistPenalty;
@@ -795,7 +779,6 @@ LABEL_90:
                 {
                     nColor = 1;
                 }
-            LABEL_215:
                 wsprintfA(v138, "%ld", StatValue);
             }
             else
@@ -803,12 +786,45 @@ LABEL_90:
                 nColor = 4;
                 wsprintfA(v138, "%ld", v100);
             }
-
-        LABEL_216:
-            Unicode::win2Unicode((struct Unicode*)v140, v138);
-            auto v141 = 0;
+            shouldDrawText = true;
+            break;
+        }
+            
+        default:
+            if (StatValue <= v94)
+            {
+                if (StatValue < v94)
+                {
+                    nColor = 1;
+                }
+            }
+            else
+            {
+                nColor = 3;
+            }
+            wsprintfA(v138, "%ld", StatValue);
+            shouldDrawText = true;
+            break;
+        }
+        
+        if (shouldFormatNumber)
+        {
+            D2Lang_FormatNumberWithCommas_10010((const Unicode*)v140, StatValue, 128);
+            auto v104 = *D2Client_pScreenYOffset_6FBBA74C + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].y + *D2Client_pResolutionHeight_6FB740F0 - 480;
+            auto v105 = *D2Client_pScreenXOffset_6FBBA748 + (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xLeft;
+            auto v106 = (*D2Client_UI_pD2CharSheetStatRows_6FB78120)[v123].xRight - v105 + *D2Client_pScreenXOffset_6FBBA748 + 1;
+            auto v107 = D2Win_GetTextWidth_10121((const Unicode*)v140);
+            if (v107 < v106)
+            {
+                v105 += (v106 - v107) >> 1;
+            }
+            D2Win_DrawText_10117((const Unicode*)v140, v105, v104, 0, 0);
+            nColor = 0;
+        }
+        else if (shouldDrawText)
+        {
+            Unicode::win2Unicode((struct Unicode*)v140, v138, 128);
             auto v108 = NUM_FONTS;
-
 
             if (v92)
             {
@@ -838,25 +854,6 @@ LABEL_90:
             {
                 D2Win_SetFont_10127(v108);
             }
-        LABEL_224:
-            if ((unsigned int)++v123 < 0x12)
-            {
-                continue;
-            }
-            return;
-        default:
-            if (StatValue <= v94)
-            {
-                if (StatValue < v94)
-                {
-                    nColor = 1;
-                }
-            }
-            else
-            {
-                nColor = 3;
-            }
-            goto LABEL_215;
         }
     }
 }

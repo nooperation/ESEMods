@@ -567,7 +567,7 @@ typedef void(__fastcall* D2Client_UI_DrawProgressiveStates_6FB21A00_t)();
 typedef void(__fastcall* D2Client_UI_DrawSkillsTree_6FB16C00_t)();
 typedef void(__fastcall* D2Client_UI_DrawCharacterStatsScreen_6FACFD60_t)();
 typedef void(__fastcall* D2Client_UI_DrawPartyScreen_6FB01F10_t)();
-typedef void(__fastcall* D2Client_UI_DrawDialog_6FAD6EB0_t)(D2Dialog *pDialog);
+typedef void(__fastcall* D2Client_UI_DrawDialog_6FAD6EB0_t)(D2Dialog* pDialog);
 typedef void(__fastcall* D2Client_UI_DrawInifussScrollPanel_6FB1E990_t)();
 typedef void(__fastcall* D2Client_UI_DrawWaypointScreen_6FB25C70_t)();
 typedef void(__fastcall* D2Client_UI_DrawHelpScreenBorder_6FAD81F0_t)();
@@ -674,3 +674,44 @@ extern D2Client_UI_DrawText_6FB22280_t D2Client_UI_DrawText_6FB22280; // 82280  
 extern D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60_t D2Client_Roster_FindUnitByIdOrCorpseId_6FAAFD60; // FD60 | 6FAAFD60
 extern D2Client_Roster_GetKillCount_6FAAFD30_t D2Client_Roster_GetKillCount_6FAAFD30; // FD30                  | 6FAAFD30
 extern D2Client_LoadCelFile_6FAA1000_t D2Client_LoadCelFile_6FAA1000; // 1000                  | 6FAA1000
+
+// Character Stats Screen - Data structures
+struct D2CharSheetButtonLocations;
+struct D2CharSheetStatRow;
+struct D2CharSheetTextEntry;
+struct D2CharSheetToHitTextLocation;
+
+// Character Stats Screen - Function types
+
+typedef char* (__fastcall* D2Client_Roster_GetUnitNameFromD2UnitStrc_6FAB0C00_t)(D2UnitStrc* pUnit); // 68608
+typedef D2CellFileStrc* (__cdecl* D2Client_UI_GetBuySellBtnCellFile_6FB24110_t)(); // 540944
+typedef int(__fastcall* D2Client_UI_GetPassiveWeaponBlock_6FAD1010_t)(D2UnitStrc* pUnit); // 200720
+typedef int(__fastcall* D2Client_Unit_GetLastSelectedMonsterClassId_6FAB5A70_t)(); // 88688
+typedef void (*D2Client_UI_SetUnknownColorToBlack_6FB01C50_t)(); // 400464
+typedef int (*D2Client_GetGameTypeButModified_6FAAC060_t)(); // 49248
+typedef int(__fastcall* D2Client_Unit_GetLastSelectedEvilMonsterClassId_6FAB5A80_t)(); // 88704
+typedef int(__fastcall* D2Client_GetSkillDescAtt_6FB16200_t)(D2UnitStrc* pUnit, int bIsLeftSkill); // 483840
+typedef int(__fastcall* D2Client_UI_GetChanceToHitMonster_6FAD10D0_t)(int baseToHit); // 200912
+typedef void(__fastcall* D2Client_UI_DrawLeftRightSkillDescs_6FB16190_t)(D2UnitStrc* pUnit); // 483728
+
+extern D2Client_Roster_GetUnitNameFromD2UnitStrc_6FAB0C00_t D2Client_Roster_GetUnitNameFromD2UnitStrc_6FAB0C00; // 10C00| 6FAB0C00
+extern D2Client_UI_GetBuySellBtnCellFile_6FB24110_t D2Client_UI_GetBuySellBtnCellFile_6FB24110; // 84110| 6FB24110
+extern D2Client_UI_GetPassiveWeaponBlock_6FAD1010_t D2Client_UI_GetPassiveWeaponBlock_6FAD1010; // 31010| 6FAD1010
+extern D2Client_Unit_GetLastSelectedMonsterClassId_6FAB5A70_t D2Client_Unit_GetLastSelectedMonsterClassId_6FAB5A70; // 15A70| 6FAB5A70
+extern D2Client_UI_SetUnknownColorToBlack_6FB01C50_t D2Client_UI_SetUnknownColorToBlack_6FB01C50; // 61C50| 6FB01C50
+extern D2Client_GetGameTypeButModified_6FAAC060_t D2Client_GetGameTypeButModified_6FAAC060; // C060| 6FAAC060
+extern D2Client_Unit_GetLastSelectedEvilMonsterClassId_6FAB5A80_t D2Client_Unit_GetLastSelectedEvilMonsterClassId_6FAB5A80; // 15A80| 6FAB5A80
+extern D2Client_GetSkillDescAtt_6FB16200_t D2Client_GetSkillDescAtt_6FB16200; // 76200| 6FB16200
+extern D2Client_UI_GetChanceToHitMonster_6FAD10D0_t D2Client_UI_GetChanceToHitMonster_6FAD10D0; // 310D0| 6FAD10D0
+extern D2Client_UI_DrawLeftRightSkillDescs_6FB16190_t D2Client_UI_DrawLeftRightSkillDescs_6FB16190; // 76190| 6FB16190
+
+extern int32_t* D2Client_UI_pUnknownColor2_6FBB1A50; // 111A50 | 6FBB1A50
+extern int32_t* D2Client_UI_pUnknownFlag_6FBB1A4C; // 111A4C | 6FBB1A4C
+extern D2CharSheetStatRow** D2Client_UI_pD2CharSheetStatRows_6FB78120; // D8120 | 6FB78120
+extern D2CharSheetTextEntry** D2Client_UI_pCharSheetTextEntries_6FB78010; // D8010 | 6FB78010
+extern D2CharSheetButtonLocations** D2Client_UI_pD2CharSheetButtonLocations_6FB78240; // D8240 | 6FB78240
+extern D2CellFileStrc** D2Client_UI_pCelFile_PanelSkillPoints_6FBB5E50; // 115E50 | 6FBB5E50
+extern D2CellFileStrc** D2Client_UI_pCelFile_UiInvChar_6FBB5E24; // 115E24 | 6FBB5E24
+extern D2CellFileStrc** D2Client_UI_pCelFilePanelLevelSocket_6FBB5BB8; // 115BB8 | 6FBB5BB8
+extern D2CellFileStrc** D2Client_UI_pCelFilePanelLevel_6FBB5BB4; // 115BB4 | 6FBB5BB4
+extern D2CharSheetToHitTextLocation** D2Client_UI_pCharSheetToHitTextLocation_6FB6EF00; // CEF00 | 6FB6EF00
