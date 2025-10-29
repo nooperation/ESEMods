@@ -153,7 +153,7 @@ typedef struct D2DialogChildNode
 
 typedef struct D2DialogLine
 {
-	uint16_t wszText[120];   // +0x000 text buffer, used as Unicode* in DrawText (see v9 - 256) (120 wchar = 240 bytes)
+	wchar_t wszText[120];   // +0x000 text buffer, used as Unicode* in DrawText (see v9 - 256) (120 wchar = 240 bytes)
 
 	int32_t  nLineStep;      // +0x0F0 per-line vertical advance (used as y accumulator) (v9 - 16)
 	int32_t  nXPad;          // +0x0F4 horizontal pad/offset within dialog, computed during autosize (v9 - 12)
@@ -223,13 +223,13 @@ typedef int32_t(__fastcall* D2Client_sub_6FB0B580_t)();
 typedef void(__fastcall* D2Client_sub_6FB0B2C0_t)(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor, int32_t unknown3, int32_t unknown4, D2SkillStrc* pSkill, int32_t unknown5, D2UnitStrc* unknown6, int32_t unknown7);
 typedef void(__fastcall* D2Client_sub_6FB0B6F0_t)(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor, D2UnitStrc* unknown3, D2SkillStrc* pSkill);
 typedef void(__fastcall* D2Client_sub_6FB0BB10_t)(D2UnitStrc* pUnit, int32_t* pUnknown1, int32_t* pUnknown2, int32_t* pColor);
-typedef int32_t(__fastcall* D2Client_IsLod_6FAAC080_t)();
+typedef int32_t(__fastcall* D2Client_IsExpansion_6FAAC080_t)();
 
 extern D2Client_DrawTextCentered_6FACFCD0_t D2Client_DrawTextCentered_6FACFCD0; //                                             | 6FACFCD0
 extern D2Client_sub_6FB0B2C0_t D2Client_sub_6FB0B2C0; //                                                                       | 6FB0B2C0
 extern D2Client_sub_6FB0B6F0_t D2Client_sub_6FB0B6F0; //                                                                       | 6FB0B6F0
 extern D2Client_sub_6FB0BB10_t D2Client_sub_6FB0BB10; //                                                                       | 6FB0BB10
-extern D2Client_IsLod_6FAAC080_t D2Client_IsLod_6FAAC080; //                                                                   | 6FAAC080
+extern D2Client_IsExpansion_6FAAC080_t D2Client_IsExpansion_6FAAC080; //                                                                   | 6FAAC080
 extern D2Client_sub_6FB0A950_t D2Client_sub_6FB0A950; //                                                                       | 6FB0A950
 extern D2Client_sub_6FB0AA00_t D2Client_sub_6FB0AA00; //                                                                       | 6FB0AA00
 extern D2Client_sub_6FB0B580_t D2Client_sub_6FB0B580; //                                                                       | 6FB0B580
@@ -240,8 +240,8 @@ typedef D2ActiveRoomStrc* (__fastcall* D2Client_GetCurrentRoom_6FB29370_t)();
 typedef D2UnitStrc* (__fastcall* D2Client_GetCurrentPlayer_6FB283D0_t)();
 typedef bool(__fastcall* D2Client_IsBeltOpen_6FAFE9E0_t)();
 typedef int32_t(__fastcall* D2Client_IsUiOpen_6FB23230_t)(D2C_UIvars uiId);
-typedef int32_t(__fastcall* D2Client_GetMouseYPos_t)();
-typedef int32_t(__fastcall* D2Client_GetMouseXPos_t)();
+typedef int32_t(__fastcall* D2Client_UI_GetMouseYPos_6FB57BD0_t)();
+typedef int32_t(__fastcall* D2Client_UI_GetMouseXPos_6FB57BC0_t)();
 typedef bool(__fastcall* D2Client_sub_6FAFC0E0_t)();
 typedef int16_t(__fastcall* D2Client_GetHotkeyCharCode_6FAD4B60_t)(int32_t a1, int32_t a2);
 typedef Unicode* (__fastcall* D2Client_GetHotkeyString_6FAD56B0_t)(int32_t hotkeyId, int32_t useAlternativeHotkey);
@@ -328,8 +328,8 @@ extern D2Client_GetCurrentRoom_6FB29370_t D2Client_GetCurrentRoom_6FB29370; // 8
 extern D2Client_GetCurrentPlayer_6FB283D0_t D2Client_GetCurrentPlayer_6FB283D0; // 883D0                                       | 6FB283D0
 extern D2Client_IsBeltOpen_6FAFE9E0_t D2Client_IsBeltOpen_6FAFE9E0; // 5E9E0                                                   | 6FAFE9E0
 extern D2Client_IsUiOpen_6FB23230_t D2Client_IsUiOpen_6FB23230; // 83230                                                       | 6FB23230
-extern D2Client_GetMouseXPos_t D2Client_GetMouseXPos; // B7BC0                                                                 | 6FB57BC0
-extern D2Client_GetMouseYPos_t D2Client_GetMouseYPos; // B7BD0                                                                 | 6FB57BD0
+extern D2Client_UI_GetMouseXPos_6FB57BC0_t D2Client_UI_GetMouseXPos_6FB57BC0; // B7BC0                                                                 | 6FB57BC0
+extern D2Client_UI_GetMouseYPos_6FB57BD0_t D2Client_UI_GetMouseYPos_6FB57BD0; // B7BD0                                                                 | 6FB57BD0
 extern D2Client_sub_6FAFC0E0_t D2Client_sub_6FAFC0E0; // 5C0E0                                                                 | 6FAFC0E0
 extern D2Client_GetHotkeyCharCode_6FAD4B60_t D2Client_GetHotkeyCharCode_6FAD4B60; // 34B60                                     | 6FAD4B60
 extern D2Client_GetHotkeyString_6FAD56B0_t D2Client_GetHotkeyString_6FAD56B0; // 356B0                                         | 6FAD56B0

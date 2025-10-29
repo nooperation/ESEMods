@@ -280,7 +280,6 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
 
     if (D2Client_UI_pUIStates_6FBBA6A8[UI_UNKNOWN18])
     {
-        // TODO: Draw buff icons
         return;
     }
 
@@ -361,6 +360,7 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
     // ESE HACK: SGD2FreeRes -> sgd2freeres._Sgd2fr_D2Client_DrawScreenBackground>
     if (Sgd2fr_D2Client_DrawScreenBackground != nullptr)
     {
+        // Sgd2fr_D2Client_DrawScreenBackground calls D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890 for us
         Sgd2fr_D2Client_DrawScreenBackground();
     }
     else
@@ -368,19 +368,19 @@ void __fastcall ESE_D2Client_RenderUI_6FB21B70(D2ViewStruct* pRenderer)
         D2Client_UI_UpdateHirePartyIconsVisibility_6FADB890();
     }
 
-    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HIRICONS]) // 
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_HIRICONS])
     {
         D2Client_UI_DrawPartyMemberIcons_6FADAB00();
     }
-    if (D2Client_UI_pUIStates_6FBBA6A8[UI_MERCINV]) // 
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_MERCINV])
     {
         D2Client_UI_DrawMercInventoryScreen_6FAED5D0();
     }
-    if (D2Client_UI_pUIStates_6FBBA6A8[UI_RECIPESCROLL]) // 
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_RECIPESCROLL])
     {
         D2Client_UI_DrawRecipeScrollScreen_6FAEE9C0();
     }
-    if (D2Client_UI_pUIStates_6FBBA6A8[UI_QUESTSCREEN]) // 
+    if (D2Client_UI_pUIStates_6FBBA6A8[UI_QUESTSCREEN])
     {
         D2Client_UI_DrawQuestScreen_6FB042D0();
     }

@@ -2107,7 +2107,7 @@ void __fastcall ESE_D2Client_UI_CHARSCREENDMG_DrawDescDam12_6FB0F700(D2UnitStrc*
         return;
     }
 
-    int32_t v9 = D2Client_IsLod_6FAAC080();
+    int32_t v9 = D2Client_IsExpansion_6FAAC080();
 
     int32_t nColor = 0;
     int64_t nMinDamage = 0;

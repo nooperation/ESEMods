@@ -9,6 +9,7 @@ void InitD2LangExports();
 
 typedef D2C_Language (__fastcall *STRTABLE_GetLanguage_t)();
 typedef int (__stdcall *D2Lang_10006_t)(const char *a1, int a2);
+typedef void (__stdcall *D2Lang_FormatNumberWithCommas_10010_t)(const Unicode* outFormattedString, uint32_t value, uint32_t maxLength);
 
 typedef const Unicode* (__fastcall* D2LANG_GetStringByReferenceString_t)(char* string);
 typedef const Unicode* (__fastcall* D2LANG_GetStringFromTblIndex_t)(short index);
@@ -18,6 +19,7 @@ typedef void(__fastcall* D2LANG_Unicode_Personalize_t)(Unicode*, const Unicode*,
 
 extern STRTABLE_GetLanguage_t STRTABLE_GetLanguage;
 extern D2Lang_10006_t D2Lang_10006;
+extern D2Lang_FormatNumberWithCommas_10010_t D2Lang_FormatNumberWithCommas_10010;
 
 extern D2LANG_GetStringByReferenceString_t D2LANG_GetStringByReferenceString;
 extern D2LANG_GetStringFromTblIndex_t D2LANG_GetStringFromTblIndex;

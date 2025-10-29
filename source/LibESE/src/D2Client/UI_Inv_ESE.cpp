@@ -2753,7 +2753,7 @@ void RenderDropGoldText(int32_t mouseX, int32_t mouseY)
 void RenderSwapWeaponsButtonText(int32_t mouseX, int32_t mouseY)
 {
     auto isExpansion = FOG_IsExpansion();
-    auto isLod = D2Client_IsLod_6FAAC080();
+    auto isLod = D2Client_IsExpansion_6FAAC080();
 
     auto mouseIsOverRightSwapWeaponButton = (mouseX >= *D2Client_pRightSwapWeaponButtonXLeft_6FBB59BC)
         && mouseX <= *D2Client_pRightSwapWeaponButtonXRight_6FBB59C0
@@ -4609,8 +4609,8 @@ void __fastcall ESE_UI_INV_DrawMouseOverItemFrame_6FAE1890(D2UnitStrc* pUnit, in
 
     if (!D2Client_IsBeltOpen_6FAFE9E0())
     {
-        auto mouseX = D2Client_GetMouseXPos();
-        auto mouseY = D2Client_GetMouseYPos();
+        auto mouseX = D2Client_UI_GetMouseXPos_6FB57BC0();
+        auto mouseY = D2Client_UI_GetMouseYPos_6FB57BD0();
 
         if (D2Client_IsUiOpen_6FB23230(UI_MERCINV))
         {

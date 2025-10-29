@@ -1,6 +1,7 @@
 #include "../D2LangExports.h"
 
 D2Lang_10006_t D2Lang_10006 = nullptr;
+D2Lang_FormatNumberWithCommas_10010_t D2Lang_FormatNumberWithCommas_10010 = nullptr;
 STRTABLE_GetLanguage_t STRTABLE_GetLanguage = nullptr;
 D2LANG_GetStringByReferenceString_t D2LANG_GetStringByReferenceString = nullptr;
 D2LANG_GetStringFromTblIndex_t D2LANG_GetStringFromTblIndex = nullptr;
@@ -12,6 +13,7 @@ void InitD2LangExports()
     auto d2LangModule = GetModuleHandle("D2Lang");
 
     D2Lang_10006 = (D2Lang_10006_t)GetProcAddress(d2LangModule, (LPCSTR)10006);
+    D2Lang_FormatNumberWithCommas_10010 = (D2Lang_FormatNumberWithCommas_10010_t)GetProcAddress(d2LangModule, (LPCSTR)10010);
 
     STRTABLE_GetLanguage = (STRTABLE_GetLanguage_t)GetProcAddress(d2LangModule, (LPCSTR)10007);
 

@@ -282,8 +282,8 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
     }
 
     auto pSelectedUnit = D2Client_GetSelectedUnit_6FAB5A20();
-    auto mouseX = D2Client_GetMouseXPos();
-    auto mouseY = D2Client_GetMouseYPos();
+    auto mouseX = D2Client_UI_GetMouseXPos_6FB57BC0();
+    auto mouseY = D2Client_UI_GetMouseYPos_6FB57BD0();
 
     D2ActiveRoomStrc** pppRoomList;
     int32_t pNumRooms;
@@ -389,7 +389,7 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
     {
         auto currentGroundItemToShow = &groundItems[i];
 
-        D2Win_10132(
+        D2Win_10132_DrawBoxedTextClamped(
             (const Unicode*)currentGroundItemToShow->wszText,
             currentGroundItemToShow->nLeft,
             currentGroundItemToShow->nBottom,
@@ -399,11 +399,11 @@ void __stdcall ESE_D2Client_DrawAllGroundItemTexts_6FB09F60()
         );
     }
 
-    if (!hasItemSelected)
-    {
-        D2Client_ClearUnitSelection_6FAB5D40();
-        D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
-    }
+    //if (!hasItemSelected)
+    //{
+    //    D2Client_ClearUnitSelection_6FAB5D40();
+    //    D2Win_DrawFramedText_10129(0, 0, 0, 0, 0);
+    //}
 }
 
 void __fastcall ESE_D2Client_DrawGroundItemText_sub_6FB20740(D2UnitStrc* pItem, struct Unicode* outBuff, int outBuffSize)
