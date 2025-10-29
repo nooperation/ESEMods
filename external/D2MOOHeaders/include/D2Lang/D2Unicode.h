@@ -292,6 +292,9 @@ struct Unicode {
   static Unicode* __fastcall win2Unicode(
       Unicode* dest, const char* src, int count);
 
+  // ?unicodenwidth@Unicode@@SIIPBDH@Z
+  static unsigned int __fastcall unicodenwidth(char const*, int);
+
   /**
    * Performs case insensitive comparison between this Unicode code
    * unit to another.
